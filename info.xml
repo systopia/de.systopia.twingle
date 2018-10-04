@@ -21,6 +21,9 @@
     <ver>4.7</ver>
   </compatibility>
   <comments></comments>
+  <requires>
+    <ext>de.systopia.xcm</ext>
+  </requires>
   <civix>
     <namespace>CRM/Twingle</namespace>
   </civix>
