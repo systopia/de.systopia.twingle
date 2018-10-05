@@ -248,10 +248,10 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
     // Do not process an already existing contribution with the given
     // transaction ID.
-    $contribution = civicrm_api3('Contribution', 'get', array(
+    $existing_contribution = civicrm_api3('Contribution', 'get', array(
       'trxn_id' => $params['trx_id']
     ));
-    if ($contribution['count'] > 0) {
+    if ($existing_contribution['count'] > 0) {
       throw new CiviCRM_API3_Exception(
         E::ts('Contribution with the given transaction ID already exists.'),
         'api_error'
@@ -433,6 +433,8 @@ function civicrm_api3_twingle_donation_Submit($params) {
           'api_error'
         );
       }
+
+      $result_values = $mandate;
     }
     else {
       // Create (recurring) contribution.
@@ -465,10 +467,11 @@ function civicrm_api3_twingle_donation_Submit($params) {
           'api_error'
         );
       }
+
+      $result_values = $contribution;
     }
 
-    // TODO: Assemble return data.
-    $result = civicrm_api3_create_success();
+    $result = civicrm_api3_create_success($result_values);
   }
   catch (CiviCRM_API3_Exception $exception) {
     $result = civicrm_api3_create_error($exception->getMessage());
