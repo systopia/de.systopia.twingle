@@ -1,0 +1,17 @@
+{*------------------------------------------------------------+
+| SYSTOPIA Twingle Integration                                |
+| Copyright (C) 2018 SYSTOPIA                                 |
+| Author: J. Schuppe (schuppe@systopia.de)                    |
++-------------------------------------------------------------+
+| This program is released as free software under the         |
+| Affero GPL license. You can redistribute it and/or          |
+| modify it under the terms of this license which you         |
+| can read by viewing the included agpl.txt or online         |
+| at www.gnu.org/licenses/agpl.html. Removal of this          |
+| copyright header is strictly prohibited without             |
+| written permission from the original author(s).             |
++-------------------------------------------------------------*}
+
+{htxt id='id-twingle_use_sepa'}
+    {ts domain="de.systopia.twingle"}When the <a href="https://github.com/project60/org.project60.sepa" target="_blank" title="Extension page">CiviSEPA (<kbd>org.project60.sepa</kbd>) extension</a> is enabled and one of its payment instruments is assigned to a Twingle payment method (practically the <em>debit_manual</em> payment method), submitting a Twingle donation through the API will create a SEPA mandate with the given data.{/ts}
+{/htxt}

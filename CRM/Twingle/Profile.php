@@ -56,7 +56,6 @@ class CRM_Twingle_Profile {
       );
   }
 
-
   /**
    * Checks whether the profile's selector matches the given project ID.
    *
@@ -166,16 +165,45 @@ class CRM_Twingle_Profile {
    * @return array
    */
   public static function allowedAttributes() {
-    // TODO: Adjust attributes for Twingle.
     return array(
       'selector',
       'location_type_id',
       'financial_type_id',
-      'campaign_id',
+      'pi_banktransfer',
+      'pi_debit_manual',
+      'pi_debit_automatic',
       'pi_creditcard',
-      'pi_sepa',
+      'pi_mobilephone_germany',
       'pi_paypal',
-      'groups',
+      'pi_sofortueberweisung',
+      'pi_amazonpay',
+      'pi_paydirekt',
+      'pi_applepay',
+      'pi_googlepay',
+      'newsletter_groups',
+      'postinfo_groups',
+      'donation_receipt_groups'
+    );
+  }
+
+  /**
+   * Retrieves a list of supported payment methods.
+   *
+   * @return array
+   */
+  public static function paymentInstruments() {
+    return array(
+      'pi_banktransfer' => E::ts('Bank transfer'),
+      'pi_debit_manual' => E::ts('Debit manual'),
+      'pi_debit_automatic' => E::ts('Debit automatic'),
+      'pi_creditcard' => E::ts('Credit card'),
+      'pi_mobilephone_germany' => E::ts('Mobile phone Germany'),
+      'pi_paypal' => E::ts('PayPal'),
+      'pi_sofortueberweisung' => E::ts('SOFORT Überweisung'),
+      'pi_amazonpay' => E::ts('Amazon Pay'),
+      'pi_paydirekt' => E::ts('paydirekt'),
+      'pi_applepay' => E::ts('Apple Pay'),
+      'pi_googlepay' =>  E::ts('Google Pay'),
     );
   }
 
@@ -188,16 +216,24 @@ class CRM_Twingle_Profile {
    * @return CRM_Twingle_Profile
    */
   public static function createDefaultProfile($name = 'default') {
-    // TODO: Adjust attributes for Twingle.
     return new CRM_Twingle_Profile($name, array(
       'selector'          => '',
       'location_type_id'  => CRM_Twingle_Submission::LOCATION_TYPE_ID_WORK,
       'financial_type_id' => 1, // "Donation"
-      'campaign_id'       => '',
-      'pi_creditcard'     => 1, // "Credit Card"
-      'pi_sepa'           => 5, // "EFT"
-      'pi_paypal'         => 3, // "Debit"
-      'groups'            => '',
+      'pi_banktransfer' => 5, // "EFT"
+      'pi_debit_manual' => '', // TODO: SEPA
+      'pi_debit_automatic' => 3, // Debit
+      'pi_creditcard' => 1, // "Credit Card"
+      'pi_mobilephone_germany' => '',
+      'pi_paypal' => '',
+      'pi_sofortueberweisung' => '',
+      'pi_amazonpay' => '',
+      'pi_paydirekt' => '',
+      'pi_applepay' => '',
+      'pi_googlepay' => '',
+      'newsletter_groups' => '',
+      'postinfo_groups' => '',
+      'donation_receipt_groups' => '',
     ));
   }
 
@@ -212,18 +248,21 @@ class CRM_Twingle_Profile {
    */
   public static function getProfileForProject($project_id) {
     $profiles = self::getProfiles();
+
+    // If none matches, use the default profile.
+    $profile = $profiles['default'];
+
     foreach ($profiles as $profile) {
       if ($profile->matches($project_id)) {
-        return $profile;
+        break;
       }
     }
 
-    // No profile matched, return default profile.
-    return $profiles['default'];
+    return $profile;
   }
 
   /**
-   * Retrieves the profil with the given name.
+   * Retrieves the profile with the given name.
    *
    * @param $name
    *

@@ -339,6 +339,15 @@ function civicrm_api3_twingle_donation_Submit($params) {
         );
       }
 
+      // Save user_extrafield as contact note.
+      if (!empty($params['user_extrafield'])) {
+        civicrm_api3('Note', 'create', array(
+          'entity_table' => 'civicrm_contact',
+          'entity_id' => $contact_id,
+          'note' => $params['user_extrafield'],
+        ));
+      }
+
       // Organisation lookup.
       if (!empty($params['organization_name'])) {
         $organisation_data = array(
@@ -378,6 +387,8 @@ function civicrm_api3_twingle_donation_Submit($params) {
       }
     }
 
+    // TODO: contact into newsletter, postinfo and donation_receipt groups.
+
     // Create contribution or SEPA mandate.
     $contribution_data = array(
       'contact_id' => (isset($organisation_id) ? $organisation_id : $contact_id),
@@ -396,7 +407,14 @@ function civicrm_api3_twingle_donation_Submit($params) {
       'full_name' => 'org.project60.sepa',
       'is_active' => 1,
     ));
-    if ($sepa_extension['count'] && CRM_Sepa_Logic_Settings::isSDD($contribution_data)) {
+    if (
+      CRM_Core_BAO_Setting::getItem(
+        'de.systopia.twingle',
+        'twingle_use_sepa'
+      )
+      && $sepa_extension['count']
+      && CRM_Sepa_Logic_Settings::isSDD($contribution_data)
+    ) {
       // If CiviSEPA is installed and the financial type is a CiviSEPA-one,
       // create SEPA mandate (and recurring contribution, using "createfull" API
       // action).

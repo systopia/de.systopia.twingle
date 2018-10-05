@@ -23,6 +23,21 @@ class CRM_Twingle_Submission {
   const LOCATION_TYPE_ID_WORK = 2;
 
   /**
+   * The option value name of the group type for newsletter subscribers.
+   */
+  const GROUP_TYPE_NEWSLETTER = 'Mailing List';
+
+  /**
+   * The option value name of the group type for postal mailing subscribers.
+   */
+  const GROUP_TYPE_POSTINFO = ''; // TODO.
+
+  /**
+   * The option value name of the group type for donation receipt requesters.
+   */
+  const GROUP_TYPE_DONATION_RECEIPT = ''; // TODO.
+
+  /**
    * The default ID of the "Employer of" relationship type.
    */
   const EMPLOYER_RELATIONSHIP_TYPE_ID = 5;
