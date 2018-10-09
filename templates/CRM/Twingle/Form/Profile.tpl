@@ -42,6 +42,26 @@
           <td class="content">{$form.financial_type_id.html}</td>
         </tr>
 
+        {if isset($form.sepa_creditor_id)}
+          <tr class="crm-section">
+            <td class="label">{$form.sepa_creditor_id.label}</td>
+            <td class="content">{$form.sepa_creditor_id.html}</td>
+          </tr>
+        {/if}
+
+        <tr class="crm-section">
+          <td class="label">{$form.gender_male.label}</td>
+          <td class="content">{$form.gender_male.html}</td>
+        </tr>
+        <tr class="crm-section">
+          <td class="label">{$form.gender_female.label}</td>
+          <td class="content">{$form.gender_female.html}</td>
+        </tr>
+        <tr class="crm-section">
+          <td class="label">{$form.gender_other.label}</td>
+          <td class="content">{$form.gender_other.html}</td>
+        </tr>
+
       </table>
 
     </fieldset>
@@ -78,8 +98,8 @@
         </tr>
 
         <tr class="crm-section">
-          <td class="label">{$form.donation_receipts_groups.label}</td>
-          <td class="content">{$form.donation_receipts_groups.html}</td>
+          <td class="label">{$form.donation_receipt_groups.label}</td>
+          <td class="content">{$form.donation_receipt_groups.html}</td>
         </tr>
 
       </table>

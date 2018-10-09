@@ -180,6 +180,10 @@ class CRM_Twingle_Profile {
       'pi_paydirekt',
       'pi_applepay',
       'pi_googlepay',
+      'sepa_creditor_id',
+      'gender_male',
+      'gender_female',
+      'gender_other',
       'newsletter_groups',
       'postinfo_groups',
       'donation_receipt_groups'
@@ -221,19 +225,23 @@ class CRM_Twingle_Profile {
       'location_type_id'  => CRM_Twingle_Submission::LOCATION_TYPE_ID_WORK,
       'financial_type_id' => 1, // "Donation"
       'pi_banktransfer' => 5, // "EFT"
-      'pi_debit_manual' => '', // TODO: SEPA
+      'pi_debit_manual' => NULL,
       'pi_debit_automatic' => 3, // Debit
       'pi_creditcard' => 1, // "Credit Card"
-      'pi_mobilephone_germany' => '',
-      'pi_paypal' => '',
-      'pi_sofortueberweisung' => '',
-      'pi_amazonpay' => '',
-      'pi_paydirekt' => '',
-      'pi_applepay' => '',
-      'pi_googlepay' => '',
-      'newsletter_groups' => '',
-      'postinfo_groups' => '',
-      'donation_receipt_groups' => '',
+      'pi_mobilephone_germany' => NULL,
+      'pi_paypal' => NULL,
+      'pi_sofortueberweisung' => NULL,
+      'pi_amazonpay' => NULL,
+      'pi_paydirekt' => NULL,
+      'pi_applepay' => NULL,
+      'pi_googlepay' => NULL,
+      'sepa_creditor_id' => NULL,
+      'gender_male' => 2,
+      'gender_female' => 1,
+      'gender_other' => 3,
+      'newsletter_groups' => NULL,
+      'postinfo_groups' => NULL,
+      'donation_receipt_groups' => NULL,
     ));
   }
 

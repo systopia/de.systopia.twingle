@@ -251,7 +251,10 @@ function civicrm_api3_twingle_donation_Submit($params) {
     $existing_contribution = civicrm_api3('Contribution', 'get', array(
       'trxn_id' => $params['trx_id']
     ));
-    if ($existing_contribution['count'] > 0) {
+    $existing_contribution_recur = civicrm_api3('ContributionRecur', 'get', array(
+      'trxn_id' => $params['trx_id']
+    ));
+    if ($existing_contribution['count'] > 0 || $existing_contribution_recur['count'] > 0) {
       throw new CiviCRM_API3_Exception(
         E::ts('Contribution with the given transaction ID already exists.'),
         'api_error'
@@ -298,19 +301,17 @@ function civicrm_api3_twingle_donation_Submit($params) {
       // Exclude address for now when retrieving/creating the individual contact
       // and an organisation is given, as we are checking organisation address
       // first and share it with the individual.
-      if (!empty($params['organization_name'])) {
-        $submitted_address = array();
-        foreach (array(
-                   'street_address',
-                   'postal_code',
-                   'city',
-                   'country',
-                   'location_type_id',
-                 ) as $address_component) {
-          if (!empty($params[$address_component])) {
-            $submitted_address[$address_component] = $params[$address_component];
-            unset($params[$address_component]);
-          }
+      $submitted_address = array();
+      foreach (array(
+                 'street_address',
+                 'postal_code',
+                 'city',
+                 'country',
+                 'location_type_id',
+               ) as $address_component) {
+        if (!empty($params[$address_component])) {
+          $submitted_address[$address_component] = $params[$address_component];
+          unset($params[$address_component]);
         }
       }
 
@@ -324,6 +325,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
                  'user_birthdate' => 'birth_date',
                  'user_email' => 'email',
                  'user_telephone' => 'phone',
+                 'user_title' => 'formal_title',
                ) as $contact_param => $contact_component) {
         if (!empty($params[$contact_param])) {
           $contact_data[$contact_component] = $params[$contact_param];
@@ -354,7 +356,9 @@ function civicrm_api3_twingle_donation_Submit($params) {
           'organization_name' => $params['organization_name'],
         );
         if (!empty($submitted_address)) {
-          $params += $submitted_address;
+          $organisation_data += $submitted_address;
+          // Always use WORK address for organisation address.
+          $organisation_data['location_type_id'] = CRM_Twingle_Submission::LOCATION_TYPE_ID_WORK;
         }
         if (!$organisation_id = CRM_Twingle_Submission::getContact(
           'Organization',
@@ -366,16 +370,18 @@ function civicrm_api3_twingle_donation_Submit($params) {
           );
         }
       }
+      // Share organisation address as WORK address with individual contact.
       $address_shared = (
         isset($organisation_id)
         && CRM_Twingle_Submission::shareWorkAddress(
           $contact_id,
           $organisation_id,
-          $params['location_type_id']
+          CRM_Twingle_Submission::LOCATION_TYPE_ID_WORK
         )
       );
 
-      // Address is not shared, use submitted address.
+      // Address is not shared, use submitted address with configured location
+      // type.
       if (!$address_shared && !empty($submitted_address)) {
         $submitted_address['contact_id'] = $contact_id;
         civicrm_api3('Address', 'create', $submitted_address);
@@ -387,45 +393,88 @@ function civicrm_api3_twingle_donation_Submit($params) {
       }
     }
 
-    // TODO: contact into newsletter, postinfo and donation_receipt groups.
+    // If requested, add contact to newsletter groups defined in the profile.
+    if (!empty($params['newsletter']) && !empty($groups = $profile->getAttribute('newsletter_groups'))) {
+      foreach ($groups as $group_id) {
+        civicrm_api3('GroupContact', 'create', array(
+          'group_id' => $group_id,
+          'contact_id' => $contact_id,
+        ));
+      }
+    }
 
-    // Create contribution or SEPA mandate.
+    // If requested, add contact to postinfo groups defined in the profile.
+    if (!empty($params['postinfo']) && !empty($groups = $profile->getAttribute('postinfo_groups'))) {
+      foreach ($groups as $group_id) {
+        civicrm_api3('GroupContact', 'create', array(
+          'group_id' => $group_id,
+          'contact_id' => $contact_id,
+        ));
+      }
+    }
+
+    // If requested, add contact to donation_receipt groups defined in the
+    // profile.
+    if (!empty($params['donation_receipt']) && !empty($groups = $profile->getAttribute('donation_receipt_groups'))) {
+      foreach ($groups as $group_id) {
+        civicrm_api3('GroupContact', 'create', array(
+          'group_id' => $group_id,
+          'contact_id' => $contact_id,
+        ));
+      }
+    }
+
+    // Create contribution or SEPA mandate. Those attributes are valid for both,
+    // single and recurring contributions.
     $contribution_data = array(
       'contact_id' => (isset($organisation_id) ? $organisation_id : $contact_id),
       'currency' => $params['currency'],
       'trxn_id' => $params['trx_id'],
       'financial_type_id' => $profile->getAttribute('financial_type_id'),
       'payment_instrument_id' => $params['payment_instrument_id'],
-      'amount' => $params['amount'],
-      'total_amount' => $params['amount'],
+      'amount' => $params['amount'] / 100,
+      'total_amount' => $params['amount'] / 100,
     );
     if (!empty($params['purpose'])) {
       $contribution_data['note'] = $params['purpose'];
     }
 
-    $sepa_extension = civicrm_api3('Extension', 'get', array(
-      'full_name' => 'org.project60.sepa',
-      'is_active' => 1,
-    ));
     if (
-      CRM_Core_BAO_Setting::getItem(
-        'de.systopia.twingle',
-        'twingle_use_sepa'
-      )
-      && $sepa_extension['count']
-      && CRM_Sepa_Logic_Settings::isSDD($contribution_data)
+      CRM_Twingle_Submission::civiSepaEnabled()
+      && $contribution_data['payment_instrument_id'] == 'sepa'
     ) {
       // If CiviSEPA is installed and the financial type is a CiviSEPA-one,
       // create SEPA mandate (and recurring contribution, using "createfull" API
       // action).
-      $mandate_data = $contribution_data + array(
+      foreach (array(
+        'debit_iban',
+        'debit_bic',
+               ) as $sepa_attribute) {
+        if (empty($params[$sepa_attribute])) {
+          throw new CiviCRM_API3_Exception(
+            E::ts('Missing attribute %1 for SEPA mandate', array(
+              1 => $sepa_attribute,
+            )),
+            'invalid_format'
+          );
+        }
+      }
+
+      $mandate_data =
+        $contribution_data
+        // Add CiviSEPA mandate attributes.
+        + array(
           'type' => ($params['donation_rhythm'] == 'one_time' ? 'OOFF' : 'RCUR'),
           'iban' => $params['debit_iban'],
           'bic' => $params['debit_bic'],
           'reference' => $params['debit_mandate_reference'],
           'date' => $params['confirmed_at'],
           'creditor_id' => $profile->getAttribute('sepa_creditor_id'),
-        );
+        )
+      // Add frequency unit and interval from static mapping.
+      + CRM_Twingle_Submission::getFrequencyMapping($params['donation_rhythm']);
+      // Let CiviSEPA set the correct payment instrument.
+      unset($mandate_data['payment_instrument_id']);
       $mandate = civicrm_api3('SepaMandate', 'createfull', $mandate_data);
       if ($mandate['is_error']) {
         throw new CiviCRM_API3_Exception(
@@ -434,17 +483,19 @@ function civicrm_api3_twingle_donation_Submit($params) {
         );
       }
 
-      $result_values = $mandate;
+      $result_values = $mandate['values'];
     }
     else {
       // Create (recurring) contribution.
       if ($params['donation_rhythm'] != 'one_time') {
         // Create recurring contribution first.
-        $contribution_recur_data = $contribution_data + array(
-            'frequency_interval' => '', // TODO
+        $contribution_recur_data =
+          $contribution_data
+          + array(
             'contribution_status_id' => 'Pending', // TODO: Or "In Progress"?
             'start_date' => $params['confirmed_at'],
-          );
+          )
+          + CRM_Twingle_Submission::getFrequencyMapping($params['donation_rhythm']);
         $contribution_recur = civicrm_api3('contributionRecur', 'create', $contribution_recur_data);
         if ($contribution_recur['is_error']) {
           throw new CiviCRM_API3_Exception(
@@ -468,7 +519,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
         );
       }
 
-      $result_values = $contribution;
+      $result_values = $contribution['values'];
     }
 
     $result = civicrm_api3_create_success($result_values);

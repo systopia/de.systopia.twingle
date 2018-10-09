@@ -28,16 +28,6 @@ class CRM_Twingle_Submission {
   const GROUP_TYPE_NEWSLETTER = 'Mailing List';
 
   /**
-   * The option value name of the group type for postal mailing subscribers.
-   */
-  const GROUP_TYPE_POSTINFO = ''; // TODO.
-
-  /**
-   * The option value name of the group type for donation receipt requesters.
-   */
-  const GROUP_TYPE_DONATION_RECEIPT = ''; // TODO.
-
-  /**
    * The default ID of the "Employer of" relationship type.
    */
   const EMPLOYER_RELATIONSHIP_TYPE_ID = 5;
@@ -100,7 +90,7 @@ class CRM_Twingle_Submission {
 
     // Get the gender ID defined within the profile, or return an error if none
     // matches (i.e. an unknown gender was submitted).
-    if (!$gender_id = $profile->getAttribute('gender_' . $params['user_gender'])) {
+    if (!empty($params['user_gender']) && !$gender_id = $profile->getAttribute('gender_' . $params['user_gender'])) {
       throw new CiviCRM_API3_Exception(
         E::ts('Gender could not be matched to existing gender.'),
         'invalid_format'
@@ -247,6 +237,62 @@ class CRM_Twingle_Submission {
 
       civicrm_api3('Relationship', 'create', $new_relationship_data);
     }
+  }
+
+  /**
+   * Check whether the CiviSEPA extension is installed and CiviSEPA
+   * functionality is activated within the Twingle extension settings.
+   *
+   * @return bool
+   * @throws \CiviCRM_API3_Exception
+   */
+  public static function civiSepaEnabled() {
+    $sepa_extension = civicrm_api3('Extension', 'get', array(
+      'full_name' => 'org.project60.sepa',
+      'is_active' => 1,
+    ));
+    return
+      CRM_Core_BAO_Setting::getItem(
+        'de.systopia.twingle',
+        'twingle_use_sepa'
+      )
+      && $sepa_extension['count'];
+  }
+
+  /**
+   * Retrieves recurring contribution frequency attributes for a given donation
+   * rhythm parameter value, according to a static mapping.
+   *
+   * @param string $donation_rhythm
+   *   The submitted "donation_rhythm" paramter according to the API action
+   *   specification.
+   *
+   * @return array
+   *   An array with "frequency_unit" and "frequency_interval" keys, to be added
+   *   to contribution parameter arrays.
+   */
+  public static function getFrequencyMapping($donation_rhythm) {
+    $mapping = array(
+      'halfyearly' => array(
+        'frequency_unit' => 'month',
+        'frequency_interval' => 6,
+      ),
+      'quarterly' => array(
+        'frequency_unit' => 'month',
+        'frequency_interval' => 3,
+      ),
+      'yearly' => array(
+        'frequency_unit' => 'year',
+        'frequency_interval' => 1,
+      ),
+      'monthly' => array(
+        'frequency_unit' => 'month',
+        'frequency_interval' => 1,
+      ),
+      'one_time' => array(),
+    );
+
+    return $mapping[$donation_rhythm];
   }
 
 }

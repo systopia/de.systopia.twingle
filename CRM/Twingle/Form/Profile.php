@@ -129,6 +129,28 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       TRUE // is required
     );
 
+    $this->add(
+      'select',
+      'gender_male',
+      E::ts('Gender option for submitted value "male"'),
+      $this->getGenderOptions(),
+      TRUE
+    );
+    $this->add(
+      'select',
+      'gender_female',
+      E::ts('Gender option for submitted value "female"'),
+      $this->getGenderOptions(),
+      TRUE
+    );
+    $this->add(
+      'select',
+      'gender_other',
+      E::ts('Gender option for submitted value "other"'),
+      $this->getGenderOptions(),
+      TRUE
+    );
+
     $payment_instruments = CRM_Twingle_Profile::paymentInstruments();
     $this->assign('payment_instruments', $payment_instruments);
     foreach ($payment_instruments as $pi_name => $pi_label) {
@@ -138,6 +160,16 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         E::ts('Record %1 as', array(1 => $pi_label)), // field label
         $this->getPaymentInstruments(), // list of options
         TRUE // is required
+      );
+    }
+
+    if (CRM_Twingle_Submission::civiSepaEnabled()) {
+      $this->add(
+        'select',
+        'sepa_creditor_id',
+        E::ts('CiviSEPA creditor'),
+        $this->getSepaCreditors(),
+        TRUE
       );
     }
 
@@ -282,17 +314,42 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    * Retrieves campaigns present within the system as options for select form
    * elements.
    */
-  public function getCampaigns() {
-    $campaigns = array('' => E::ts("no campaign"));
-    $query = civicrm_api3('Campaign', 'get', array(
+  public function getGenderOptions() {
+    $genders = array();
+    $query = civicrm_api3('OptionValue', 'get', array(
+      'option_group_id' => 'gender',
       'is_active'    => 1,
       'option.limit' => 0,
-      'return'       => 'id,title'
+      'return' => array(
+        'value',
+        'label',
+      ),
     ));
-    foreach ($query['values'] as $campaign) {
-      $campaigns[$campaign['id']] = $campaign['title'];
+    foreach ($query['values'] as $gender) {
+      $genders[$gender['value']] = $gender['label'];
     }
-    return $campaigns;
+    return $genders;
+  }
+
+  /**
+   * Retrieves CiviSEPA creditors as options for select form elements.
+   *
+   * @return array
+   * @throws \CiviCRM_API3_Exception
+   */
+  public function getSepaCreditors() {
+    $creditors = array();
+
+    if (CRM_Twingle_Submission::civiSepaEnabled()) {
+      $result = civicrm_api3('SepaCreditor', 'get', array(
+        'option.limit' => 0,
+      ));
+      foreach ($result['values'] as $sepa_creditor) {
+        $creditors[$sepa_creditor['id']] = $sepa_creditor['name'];
+      }
+    }
+
+    return $creditors;
   }
 
   /**
@@ -309,7 +366,21 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         'return'          => 'value,label'
       ));
       foreach ($query['values'] as $payment_instrument) {
-        self::$_paymentInstruments[$payment_instrument['value']] = $payment_instrument['label'];
+        // Do not include CiviSEPA payment instruments, but add a SEPA option if
+        // enabled.
+        if (
+          CRM_Twingle_Submission::civiSepaEnabled()
+          && CRM_Sepa_Logic_Settings::isSDD(array(
+            'payment_instrument_id' => $payment_instrument['value'],
+          ))
+        ) {
+          if (!isset(self::$_paymentInstruments['sepa'])) {
+            self::$_paymentInstruments['sepa'] = E::ts('CiviSEPA');
+          }
+        }
+        else {
+          self::$_paymentInstruments[$payment_instrument['value']] = $payment_instrument['label'];
+        }
       }
     }
     return self::$_paymentInstruments;
@@ -338,7 +409,23 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       }
     }
     else {
-      $groups[''] = E::ts('No newsletter groups available');
+      $groups[''] = E::ts('No mailing lists available');
+    }
+    return $groups;
+  }
+
+  /**
+   * Retrieves active groups as options for select form elements.
+   */
+  public function getGroups() {
+    $groups = array();
+    $query = civicrm_api3('Group', 'get', array(
+      'is_active' => 1,
+      'option.limit'   => 0,
+      'return'         => 'id,name'
+    ));
+    foreach ($query['values'] as $group) {
+      $groups[$group['id']] = $group['name'];
     }
     return $groups;
   }
@@ -348,27 +435,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    * options for select form elements.
    */
   public function getPostinfoGroups() {
-    $groups = array();
-    $group_types = civicrm_api3('OptionValue', 'get', array(
-      'option_group_id' => 'group_type',
-      'name' => CRM_Twingle_Submission::GROUP_TYPE_POSTINFO,
-    ));
-    if ($group_types['count'] > 0) {
-      $group_type = reset($group_types['values']);
-      $query = civicrm_api3('Group', 'get', array(
-        'is_active' => 1,
-        'group_type' => array('LIKE' => '%' . CRM_Utils_Array::implodePadded($group_type['value']) . '%'),
-        'option.limit'   => 0,
-        'return'         => 'id,name'
-      ));
-      foreach ($query['values'] as $group) {
-        $groups[$group['id']] = $group['name'];
-      }
-    }
-    else {
-      $groups[''] = E::ts('No postal mailing groups available');
-    }
-    return $groups;
+    return $this->getGroups();
   }
 
   /**
@@ -376,27 +443,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    * system as options for select form elements.
    */
   public function getDonationReceiptGroups() {
-    $groups = array();
-    $group_types = civicrm_api3('OptionValue', 'get', array(
-      'option_group_id' => 'group_type',
-      'name' => CRM_Twingle_Submission::GROUP_TYPE_DONATION_RECEIPT,
-    ));
-    if ($group_types['count'] > 0) {
-      $group_type = reset($group_types['values']);
-      $query = civicrm_api3('Group', 'get', array(
-        'is_active' => 1,
-        'group_type' => array('LIKE' => '%' . CRM_Utils_Array::implodePadded($group_type['value']) . '%'),
-        'option.limit'   => 0,
-        'return'         => 'id,name'
-      ));
-      foreach ($query['values'] as $group) {
-        $groups[$group['id']] = $group['name'];
-      }
-    }
-    else {
-      $groups[''] = E::ts('No donation receipt groups available');
-    }
-    return $groups;
+    return $this->getGroups();
   }
 
 }
