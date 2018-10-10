@@ -70,12 +70,30 @@ function civicrm_api3_twingle_donation_EndRecurring($params) {
     $contribution = civicrm_api3('ContributionRecur', 'getsingle', array(
       'trxn_id' => $params['trx_id'],
     ));
-    // TODO: End SEPA mandates?
-    $contribution = civicrm_api3('ContributionRecur', 'create', array(
-      'id' => $contribution['id'],
-      'end_date' => $params['ended_at'],
-      'contribution_status_id' => 'Completed', // TODO: Correct?
-    ));
+    // End SEPA mandate (which ends the associated recurring contribution) or
+    // recurring contributions.
+    if (
+      CRM_Twingle_Submission::civiSepaEnabled()
+      && CRM_Sepa_Logic_Settings::isSDD($contribution)
+    ) {
+      $mandate_id = CRM_Sepa_Logic_Settings::getMandateFor($contribution['id']);
+      if (!CRM_Sepa_BAO_SEPAMandate::terminateMandate($mandate_id, $params['ended_at'])) {
+        throw new CiviCRM_API3_Exception(
+          E::ts('Could not terminate SEPA mandate'),
+          'api_error'
+        );
+      }
+      $contribution = civicrm_api3('ContributionRecur', 'getsingle', array(
+        'id' => $contribution['id'],
+      ));
+    }
+    else {
+      $contribution = civicrm_api3('ContributionRecur', 'create', array(
+        'id' => $contribution['id'],
+        'end_date' => $params['ended_at'],
+        'contribution_status_id' => 'Completed',
+      ));
+    }
 
     $result = civicrm_api3_create_success($contribution);
   }

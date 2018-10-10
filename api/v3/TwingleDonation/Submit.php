@@ -492,7 +492,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
         $contribution_recur_data =
           $contribution_data
           + array(
-            'contribution_status_id' => 'Pending', // TODO: Or "In Progress"?
+            'contribution_status_id' => 'Pending',
             'start_date' => $params['confirmed_at'],
           )
           + CRM_Twingle_Submission::getFrequencyMapping($params['donation_rhythm']);
