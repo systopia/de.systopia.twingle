@@ -90,13 +90,15 @@ class CRM_Twingle_Submission {
 
     // Get the gender ID defined within the profile, or return an error if none
     // matches (i.e. an unknown gender was submitted).
-    if (!empty($params['user_gender']) && !$gender_id = $profile->getAttribute('gender_' . $params['user_gender'])) {
-      throw new CiviCRM_API3_Exception(
-        E::ts('Gender could not be matched to existing gender.'),
-        'invalid_format'
-      );
+    if (!empty($params['user_gender'])) {
+      if (!$gender_id = $profile->getAttribute('gender_' . $params['user_gender'])) {
+        throw new CiviCRM_API3_Exception(
+          E::ts('Gender could not be matched to existing gender.'),
+          'invalid_format'
+        );
+      }
+      $params['gender_id'] = $gender_id;
     }
-    $params['gender_id'] = $gender_id;
   }
 
   /**

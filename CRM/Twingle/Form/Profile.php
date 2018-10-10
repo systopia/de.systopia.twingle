@@ -280,6 +280,10 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   /**
    * Retrieves location types present within the system as options for select
    * form elements.
+   *
+   * @return array
+   *
+   * @throws \CiviCRM_API3_Exception
    */
   public function getLocationTypes() {
     $location_types = array();
@@ -296,6 +300,10 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   /**
    * Retrieves financial types present within the system as options for select
    * form elements.
+   *
+   * @return array
+   *
+   * @throws \CiviCRM_API3_Exception
    */
   public function getFinancialTypes() {
     $financial_types = array();
@@ -313,6 +321,10 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   /**
    * Retrieves campaigns present within the system as options for select form
    * elements.
+   *
+   * @return array
+   *
+   * @throws \CiviCRM_API3_Exception
    */
   public function getGenderOptions() {
     $genders = array();
@@ -335,6 +347,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    * Retrieves CiviSEPA creditors as options for select form elements.
    *
    * @return array
+   *
    * @throws \CiviCRM_API3_Exception
    */
   public function getSepaCreditors() {

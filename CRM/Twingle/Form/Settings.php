@@ -132,6 +132,8 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
    * Get the settings we are going to allow to be set on this form.
    *
    * @return array
+   *
+   * @throws \CiviCRM_API3_Exception
    */
   function getFormSettings() {
     if (empty($this->_settings)) {
