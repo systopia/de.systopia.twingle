@@ -235,6 +235,11 @@ function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
  * @see civicrm_api3_create_error
  */
 function civicrm_api3_twingle_donation_Submit($params) {
+  // Log call if debugging is enabled within civicrm.settings.php.
+  if (defined('TWINGLE_API_LOGGING') && TWINGLE_API_LOGGING) {
+    CRM_Core_Error::debug_log_message('TwingleDonation.Submit: ' . json_encode($params, JSON_PRETTY_PRINT));
+  }
+
   try {
     // Copy submitted parameters.
     $original_params = $params;

@@ -58,6 +58,11 @@ function _civicrm_api3_twingle_donation_EndRecurring_spec(&$params) {
  * @see civicrm_api3_create_error
  */
 function civicrm_api3_twingle_donation_EndRecurring($params) {
+  // Log call if debugging is enabled within civicrm.settings.php.
+  if (defined('TWINGLE_API_LOGGING') && TWINGLE_API_LOGGING) {
+    CRM_Core_Error::debug_log_message('TwingleDonation.EndRecurring: ' . json_encode($params, JSON_PRETTY_PRINT));
+  }
+
   try {
     // Validate date for parameter "ended_at".
     if (!DateTime::createFromFormat('Ymd', $params['ended_at'])) {
