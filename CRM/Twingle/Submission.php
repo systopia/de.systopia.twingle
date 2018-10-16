@@ -284,8 +284,8 @@ class CRM_Twingle_Submission {
         'frequency_interval' => 3,
       ),
       'yearly' => array(
-        'frequency_unit' => 'year',
-        'frequency_interval' => 1,
+        'frequency_unit' => 'month',
+        'frequency_interval' => 12,
       ),
       'monthly' => array(
         'frequency_unit' => 'month',
@@ -295,6 +295,34 @@ class CRM_Twingle_Submission {
     );
 
     return $mapping[$donation_rhythm];
+  }
+
+  /**
+   * Retrieves the next possible cycle day for a SEPA mandate from a given start
+   * date of the mandate, depending on CiviSEPA creditor configuration.
+   *
+   * @param string $start_date
+   *   A string representing a date in the format "Ymd".
+   *
+   * @param int $creditor_id
+   *   The ID of the CiviSEPA creditor to use for determining the cycle day.
+   *
+   * @return int
+   *   The next possible day of this or the next month to start collecting.
+   */
+  public static function getSEPACycleDay($start_date, $creditor_id) {
+    $buffer_days = (int) CRM_Sepa_Logic_Settings::getSetting("pp_buffer_days");
+    $frst_notice_days = (int) CRM_Sepa_Logic_Settings::getSetting("batching.FRST.notice", $creditor_id);
+    $earliest_rcur_date = strtotime("$start_date + $frst_notice_days days + $buffer_days days");
+
+    // Find the next cycle day
+    $cycle_days = CRM_Sepa_Logic_Settings::getListSetting("cycledays", range(1, 28), $creditor_id);
+    $earliest_cycle_day = $earliest_rcur_date;
+    while (!in_array(date('j', $earliest_cycle_day), $cycle_days)) {
+      $earliest_cycle_day = strtotime("+ 1 day", $earliest_cycle_day);
+    }
+
+    return date('j', $earliest_cycle_day);
   }
 
 }

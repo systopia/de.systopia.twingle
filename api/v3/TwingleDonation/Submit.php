@@ -465,28 +465,35 @@ function civicrm_api3_twingle_donation_Submit($params) {
         }
       }
 
+      $creditor_id = $profile->getAttribute('sepa_creditor_id');
+
+      // Compose mandate data from contribution data, ...
       $mandate_data =
         $contribution_data
-        // Add CiviSEPA mandate attributes.
+        // ... CiviSEPA mandate attributes, ...
         + array(
           'type' => ($params['donation_rhythm'] == 'one_time' ? 'OOFF' : 'RCUR'),
           'iban' => $params['debit_iban'],
           'bic' => $params['debit_bic'],
           'reference' => $params['debit_mandate_reference'],
-          'date' => $params['confirmed_at'],
-          'creditor_id' => $profile->getAttribute('sepa_creditor_id'),
+          'date' => $params['confirmed_at'], // Signature date
+          'start_date' => $params['confirmed_at'], // Earliest collection date.
+          'creditor_id' => $creditor_id,
         )
-      // Add frequency unit and interval from static mapping.
+      // ... and frequency unit and interval from a static mapping.
       + CRM_Twingle_Submission::getFrequencyMapping($params['donation_rhythm']);
-      // Let CiviSEPA set the correct payment instrument.
-      unset($mandate_data['payment_instrument_id']);
-      $mandate = civicrm_api3('SepaMandate', 'createfull', $mandate_data);
-      if ($mandate['is_error']) {
-        throw new CiviCRM_API3_Exception(
-          E::ts('Could not create SEPA mandate'),
-          'api_error'
-        );
+
+      // Add cycle day for recurring contributions.
+      if ($params['donation_rhythm'] != 'one_time') {
+        $mandate_data['cycle_day'] = CRM_Twingle_Submission::getSEPACycleDay($params['confirmed_at'], $creditor_id);
       }
+
+      // Let CiviSEPA set the correct payment instrument depending on the
+      // mandate type.
+      unset($mandate_data['payment_instrument_id']);
+
+      // Create the mandate.
+      $mandate = civicrm_api3('SepaMandate', 'createfull', $mandate_data);
 
       $result_values = $mandate['values'];
     }
