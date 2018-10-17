@@ -79,16 +79,55 @@ function civicrm_api3_twingle_donation_Cancel($params) {
       );
     }
 
-    $contribution = civicrm_api3('Contribution', 'getsingle', array(
-      'trxn_id' => $params['trx_id'],
-    ));
-    // TODO: Can recurring contributions be cancelled? End SEPA mandates?
-    $contribution = civicrm_api3('Contribution', 'create', array(
-      'id' => $contribution['id'],
-      'cancel_date' => $params['cancelled_at'],
-      'contribution_status_id' => 'Cancelled',
-      'cancel_reason' => $params['cancel_reason'],
-    ));
+    // Retrieve (recurring) contribution.
+    try {
+      $contribution = civicrm_api3('Contribution', 'getsingle', array(
+        'trxn_id' => $params['trx_id'],
+      ));
+      $contribution_type = 'Contribution';
+    }
+    catch (CiviCRM_API3_Exception $exception) {
+      $contribution = civicrm_api3('ContributionRecur', 'getsingle', array(
+        'trxn_id' => $params['trx_id'],
+      ));
+      $contribution_type = 'ContributionRecur';
+    }
+
+    // End SEPA mandate if applicable.
+    if (
+      CRM_Twingle_Submission::civiSepaEnabled()
+      && CRM_Sepa_Logic_Settings::isSDD($contribution)
+    ) {
+      $mandate_id = CRM_Sepa_Logic_Settings::getMandateFor($contribution['id']);
+      // Mandates can not be terminated in the past.
+      $end_date = date('Ymd', max(
+        time(),
+        date_create_from_format('Ymd', $params['cancelled_at'])->getTimestamp()
+      ));
+      if (!CRM_Sepa_BAO_SEPAMandate::terminateMandate(
+        $mandate_id,
+        $end_date,
+        $params['cancel_reason']
+      )) {
+        throw new CiviCRM_API3_Exception(
+          E::ts('Could not terminate SEPA mandate'),
+          'api_error'
+        );
+      }
+
+      // Retrieve updated contribution for return value.
+      $contribution = civicrm_api3($contribution_type, 'getsingle', array(
+        'id' => $contribution['id'],
+      ));
+    }
+    else {
+      $contribution = civicrm_api3($contribution_type, 'create', array(
+        'id' => $contribution['id'],
+        'cancel_date' => $params['cancelled_at'],
+        'contribution_status_id' => 'Cancelled',
+        'cancel_reason' => $params['cancel_reason'],
+      ));
+    }
 
     $result = civicrm_api3_create_success($contribution);
   }

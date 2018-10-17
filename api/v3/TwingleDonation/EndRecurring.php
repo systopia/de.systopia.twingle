@@ -82,7 +82,16 @@ function civicrm_api3_twingle_donation_EndRecurring($params) {
       && CRM_Sepa_Logic_Settings::isSDD($contribution)
     ) {
       $mandate_id = CRM_Sepa_Logic_Settings::getMandateFor($contribution['id']);
-      if (!CRM_Sepa_BAO_SEPAMandate::terminateMandate($mandate_id, $params['ended_at'])) {
+      // Mandates can not be terminated in the past.
+      $end_date = date('Ymd', max(
+        time(),
+        date_create_from_format('Ymd', $params['cancelled_at'])->getTimestamp()
+      ));
+      if (!CRM_Sepa_BAO_SEPAMandate::terminateMandate(
+        $mandate_id,
+        $end_date,
+        E::ts('Mandate closed by TwingleDonation.EndRecurring API call')
+      )) {
         throw new CiviCRM_API3_Exception(
           E::ts('Could not terminate SEPA mandate'),
           'api_error'
