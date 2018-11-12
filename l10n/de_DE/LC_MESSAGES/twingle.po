@@ -1,0 +1,308 @@
+# Copyright CiviCRM LLC (c) 2004-2015
+# This file is distributed under the same license as the CiviCRM package.
+# If you contribute heavily to a translation and deem your work copyrightable,
+# make sure you license it to CiviCRM LLC under Academic Free License 3.0.
+msgid ""
+msgstr ""
+"Project-Id-Version: twingle\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: CiviCRM Translators <civicrm-translators@lists.civicrm.org>\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.7.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Delete Twingle API profile <em>%1</em>"
+msgstr "Twingle-API-Profil <em>%1</em> löschen"
+
+#: CRM/Twingle/Form/Profile.php templates/CRM/Twingle/Page/Profiles.tpl
+msgid "Reset"
+msgstr "Zurücksetzen"
+
+#: CRM/Twingle/Form/Profile.php templates/CRM/Twingle/Page/Profiles.tpl
+msgid "Delete"
+msgstr "Löschen"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Edit Twingle API profile <em>%1</em>"
+msgstr "Twingle-API-Profil <em>%1</em> bearbeiten"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "New Twingle API profile"
+msgstr "Neues Twingle-API-Profil"
+
+#: CRM/Twingle/Form/Profile.php templates/CRM/Twingle/Page/Profiles.tpl
+msgid "Profile name"
+msgstr "Profil-Name"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Project IDs"
+msgstr "Projekt-IDs"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Location type"
+msgstr "Adresskategorie"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Financial Type"
+msgstr "Zuwendungsart"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Gender option for submitted value \"male\""
+msgstr "Geschlechtsoption für übermittelten Wert \"male\""
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Gender option for submitted value \"female\""
+msgstr "Geschlechtsoption für übermittelten Wert \"female\""
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Gender option for submitted value \"other\""
+msgstr "Geschlechtsoption für übermittelten Wert \"other\""
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Record %1 as"
+msgstr "%1 erfassen als"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "CiviSEPA creditor"
+msgstr "CiviSEPA-Kreditor"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Sign up for newsletter groups"
+msgstr "Newsletter-Gruppen beitreten"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Sign up for postal mail groups"
+msgstr "Postversand-Gruppen beitreten"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Sign up for Donation receipt groups"
+msgstr "Zuwendungsbescheinigungs-Gruppen beitreten"
+
+#: CRM/Twingle/Form/Profile.php CRM/Twingle/Form/Settings.php
+msgid "Save"
+msgstr "Speichern"
+
+#: CRM/Twingle/Form/Profile.php
+msgid ""
+"Only alphanumeric characters and the underscore (_) are allowed for profile "
+"names."
+msgstr ""
+"Nur alphanumerische Zeichen und der Unterstrich (_) sind für Profilnamen "
+"erlaubt."
+
+#: CRM/Twingle/Form/Profile.php
+msgid "CiviSEPA"
+msgstr "CiviSEPA"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "No mailing lists available"
+msgstr "Keine Versandlisten verfügbar"
+
+#: CRM/Twingle/Profile.php
+msgid "Unknown attribute %1."
+msgstr "Unbekanntes Attribut %1."
+
+#: CRM/Twingle/Profile.php
+msgid "Bank transfer"
+msgstr "Banküberweisung"
+
+#: CRM/Twingle/Profile.php
+msgid "Debit manual"
+msgstr "manuelle Abbuchung"
+
+#: CRM/Twingle/Profile.php
+msgid "Debit automatic"
+msgstr "Automatische Abbuchung"
+
+#: CRM/Twingle/Profile.php
+msgid "Credit card"
+msgstr "Kreditkarte"
+
+#: CRM/Twingle/Profile.php
+msgid "Mobile phone Germany"
+msgstr "Mobiltelefon Deutschland"
+
+#: CRM/Twingle/Profile.php
+msgid "PayPal"
+msgstr "PayPal"
+
+#: CRM/Twingle/Profile.php
+msgid "SOFORT Überweisung"
+msgstr "SOFORT-Überweisung"
+
+#: CRM/Twingle/Profile.php
+msgid "Amazon Pay"
+msgstr "Amazon Pay"
+
+#: CRM/Twingle/Profile.php
+msgid "paydirekt"
+msgstr "paydirekt"
+
+#: CRM/Twingle/Profile.php
+msgid "Apple Pay"
+msgstr "Apple Pay"
+
+#: CRM/Twingle/Profile.php
+msgid "Google Pay"
+msgstr "Google Pay"
+
+#: CRM/Twingle/Submission.php
+msgid "Invalid donation rhythm."
+msgstr "Ungültiger Zuwendungsrhythmus"
+
+#: CRM/Twingle/Submission.php
+msgid "Payment method could not be matched to existing payment instrument."
+msgstr ""
+"Zahlungsmethode konnte keiner existierenden Zahlungsmethode zugeordnet "
+"werden."
+
+#: CRM/Twingle/Submission.php
+msgid "Invalid date for parameter \"confirmed_at\"."
+msgstr "Ungültiges Datum für Parameter \"confirmed_at\"."
+
+#: CRM/Twingle/Submission.php
+msgid "Invalid date for parameter \"user_birthdate\"."
+msgstr "Ungültiges Datum für Parameter \"user_birthdate\"."
+
+#: CRM/Twingle/Submission.php
+msgid "Gender could not be matched to existing gender."
+msgstr ""
+"Geschlecht konnte keiner existierenden Geschlechtsoption zugeordnet werden."
+
+#: CRM/Twingle/Submission.php
+msgid "Unknown country %1."
+msgstr "Unbekanntes Land %1."
+
+#: api/v3/TwingleDonation/Cancel.php
+msgid "Invalid date for parameter \"cancelled_at\"."
+msgstr "Ungültiges Datum für Parameter \"cancelled_at\"."
+
+#: api/v3/TwingleDonation/Cancel.php api/v3/TwingleDonation/EndRecurring.php
+msgid "Could not terminate SEPA mandate"
+msgstr "Konnte SEPA-Mandat nicht beenden"
+
+#: api/v3/TwingleDonation/EndRecurring.php
+msgid "Invalid date for parameter \"ended_at\"."
+msgstr "Ungültiges Datum für Parameter \"ended_at\"."
+
+#: api/v3/TwingleDonation/EndRecurring.php
+msgid "Mandate closed by TwingleDonation.EndRecurring API call"
+msgstr "Mandat geschlossen durch TwingleDonation.EndRecurring API-Aufruf"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Contribution with the given transaction ID already exists."
+msgstr "Zuwendung mit der gegebenen Transkations-ID existiert bereits."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Individual contact could not be found or created."
+msgstr "Kontakt für Person konnte nicht gefunden oder erstellt werden."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Organisation contact could not be found or created."
+msgstr "Kontakt für Organisation konnte nicht gefunden oder erstellt werden."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Missing attribute %1 for SEPA mandate"
+msgstr "Fehlendes Attribute %1 für SEPA-Mandat"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Could not create recurring contribution."
+msgstr "Wiederkehrende Zuwendung konnte nicht erstellen."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Could not create contribution"
+msgstr "Zuwendung konnte nicht erstellt werden"
+
+#: templates/CRM/Twingle/Form/Profile.tpl
+msgid "General settings"
+msgstr "Allgemeine Einstellungen"
+
+#: templates/CRM/Twingle/Form/Profile.tpl
+msgid "Payment methods"
+msgstr "Zahlungsmethoden"
+
+#: templates/CRM/Twingle/Form/Profile.tpl
+msgid "Groups"
+msgstr "Gruppen"
+
+#: templates/CRM/Twingle/Form/Profile.tpl
+msgid "Are you sure you want to reset the default profile?"
+msgstr "Möchten Sie wirklich das Standard-Profil zurücksetzen?"
+
+#: templates/CRM/Twingle/Form/Profile.tpl
+msgid "Are you sure you want to delete the profile <em>%1</em>?"
+msgstr "Möchten Sie wirklich das Profil <em>%1</em> löschen?"
+
+#: templates/CRM/Twingle/Form/Profile.tpl
+msgid "Profile name not given or invalid."
+msgstr "Profilname nicht gegeben oder ungültig."
+
+#: templates/CRM/Twingle/Form/Settings.hlp
+msgid ""
+"When the %1 is enabled and one of its payment instruments is assigned to a "
+"Twingle payment method (practically the <em>debit_manual</em> payment "
+"method), submitting a Twingle donation through the API will create a SEPA "
+"mandate with the given data."
+msgstr ""
+"Wenn die %1 aktiviert ist und eine ihrer Zahlungsmethoden einer Twingle-"
+"Zahlungsmethode zugewiesen ist (praktischerweise die Zahlungsmethode "
+"<em>debit_manual</em>), wird bei Einsendung einer Twingle-Zuwendung durch "
+"die API ein SEPA-Mandat mit den gegebenen Daten erzeugt."
+
+#: templates/CRM/Twingle/Form/Settings.tpl
+msgid "Help"
+msgstr "Hilfe"
+
+#: templates/CRM/Twingle/Page/Configuration.tpl
+msgid "Profiles"
+msgstr "Profile"
+
+#: templates/CRM/Twingle/Page/Configuration.tpl
+msgid "Configure profiles"
+msgstr "Profile konfigurieren"
+
+#: templates/CRM/Twingle/Page/Configuration.tpl
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: templates/CRM/Twingle/Page/Configuration.tpl
+msgid "Configure extension settings"
+msgstr "Erweiterungs-Einstellungen konfigurieren"
+
+#: templates/CRM/Twingle/Page/Profiles.tpl
+msgid "New profile"
+msgstr "Neues Profil"
+
+#: templates/CRM/Twingle/Page/Profiles.tpl
+msgid "Properties"
+msgstr "Eigenschaften"
+
+#: templates/CRM/Twingle/Page/Profiles.tpl
+msgid "Operations"
+msgstr "Operationen"
+
+#: templates/CRM/Twingle/Page/Profiles.tpl
+msgid "Selector"
+msgstr "Selektor"
+
+#: templates/CRM/Twingle/Page/Profiles.tpl
+msgid "Edit profile %1"
+msgstr "Profil %1 bearbeiten"
+
+#: templates/CRM/Twingle/Page/Profiles.tpl
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: templates/CRM/Twingle/Page/Profiles.tpl
+msgid "Reset profile %1"
+msgstr "Profil %1 zurücksetzen"
+
+#: templates/CRM/Twingle/Page/Profiles.tpl
+msgid "Delete profile %1"
+msgstr "Profil % 1 löschen"
