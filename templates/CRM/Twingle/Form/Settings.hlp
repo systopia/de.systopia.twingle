@@ -13,5 +13,5 @@
 +-------------------------------------------------------------*}
 
 {htxt id='id-twingle_use_sepa'}
-    {ts domain="de.systopia.twingle"}When the <a href="https://github.com/project60/org.project60.sepa" target="_blank" title="Extension page">CiviSEPA (<kbd>org.project60.sepa</kbd>) extension</a> is enabled and one of its payment instruments is assigned to a Twingle payment method (practically the <em>debit_manual</em> payment method), submitting a Twingle donation through the API will create a SEPA mandate with the given data.{/ts}
+    {ts domain="de.systopia.twingle" 1="<a href=\"https://github.com/project60/org.project60.sepa\" target=\"_blank\">CiviSEPA (<kbd>org.project60.sepa</kbd>) extension</a>"}When the %1 is enabled and one of its payment instruments is assigned to a Twingle payment method (practically the <em>debit_manual</em> payment method), submitting a Twingle donation through the API will create a SEPA mandate with the given data.{/ts}
 {/htxt}
