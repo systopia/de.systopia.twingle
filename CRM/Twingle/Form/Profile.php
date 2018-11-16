@@ -124,7 +124,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     $this->add(
       'select', // field type
       'financial_type_id', // field name
-      E::ts('Financial Type'), // field label
+      E::ts('Financial type'), // field label
       $this->getFinancialTypes(), // list of options
       TRUE // is required
     );
