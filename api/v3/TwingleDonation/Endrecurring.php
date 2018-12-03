@@ -16,7 +16,7 @@
 use CRM_Twingle_ExtensionUtil as E;
 
 /**
- * TwingleDonation.EndRecurring API specification (optional)
+ * TwingleDonation.Endrecurring API specification (optional)
  * This is used for documentation and validation.
  *
  * @param array $params description of fields supported by this API call
@@ -25,7 +25,7 @@ use CRM_Twingle_ExtensionUtil as E;
  *
  * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
  */
-function _civicrm_api3_twingle_donation_EndRecurring_spec(&$params) {
+function _civicrm_api3_twingle_donation_endrecurring_spec(&$params) {
   $params['project_id'] = array(
     'name' => 'project_id',
     'title' => 'Project ID',
@@ -50,17 +50,17 @@ function _civicrm_api3_twingle_donation_EndRecurring_spec(&$params) {
 }
 
 /**
- * TwingleDonation.EndRecurring API
+ * TwingleDonation.Endrecurring API
  *
  * @param array $params
  * @return array API result descriptor
  * @see civicrm_api3_create_success
  * @see civicrm_api3_create_error
  */
-function civicrm_api3_twingle_donation_EndRecurring($params) {
+function civicrm_api3_twingle_donation_endrecurring($params) {
   // Log call if debugging is enabled within civicrm.settings.php.
   if (defined('TWINGLE_API_LOGGING') && TWINGLE_API_LOGGING) {
-    CRM_Core_Error::debug_log_message('TwingleDonation.EndRecurring: ' . json_encode($params, JSON_PRETTY_PRINT));
+    CRM_Core_Error::debug_log_message('TwingleDonation.Endrecurring: ' . json_encode($params, JSON_PRETTY_PRINT));
   }
 
   try {
@@ -90,7 +90,7 @@ function civicrm_api3_twingle_donation_EndRecurring($params) {
       if (!CRM_Sepa_BAO_SEPAMandate::terminateMandate(
         $mandate_id,
         $end_date,
-        E::ts('Mandate closed by TwingleDonation.EndRecurring API call')
+        E::ts('Mandate closed by TwingleDonation.Endrecurring API call')
       )) {
         throw new CiviCRM_API3_Exception(
           E::ts('Could not terminate SEPA mandate'),

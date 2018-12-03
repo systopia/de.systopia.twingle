@@ -183,17 +183,17 @@ msgstr "Unbekanntes Land %1."
 msgid "Invalid date for parameter \"cancelled_at\"."
 msgstr "Ungültiges Datum für Parameter \"cancelled_at\"."
 
-#: api/v3/TwingleDonation/Cancel.php api/v3/TwingleDonation/EndRecurring.php
+#: api/v3/TwingleDonation/Cancel.php api/v3/TwingleDonation/Endrecurring.php
 msgid "Could not terminate SEPA mandate"
 msgstr "Konnte SEPA-Mandat nicht beenden"
 
-#: api/v3/TwingleDonation/EndRecurring.php
+#: api/v3/TwingleDonation/Endrecurring.php
 msgid "Invalid date for parameter \"ended_at\"."
 msgstr "Ungültiges Datum für Parameter \"ended_at\"."
 
-#: api/v3/TwingleDonation/EndRecurring.php
-msgid "Mandate closed by TwingleDonation.EndRecurring API call"
-msgstr "Mandat geschlossen durch TwingleDonation.EndRecurring API-Aufruf"
+#: api/v3/TwingleDonation/Endrecurring.php
+msgid "Mandate closed by TwingleDonation.Endrecurring API call"
+msgstr "Mandat geschlossen durch TwingleDonation.Endrecurring API-Aufruf"
 
 #: api/v3/TwingleDonation/Submit.php
 msgid "Contribution with the given transaction ID already exists."

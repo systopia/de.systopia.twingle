@@ -66,11 +66,11 @@ the action does. In the meantime, refer to
 ### End recurring donation
 
 - Entity: `TwingleDonation`
-- Action: `EndRecurring`
+- Action: `Endrecurring`
 
 *This section is to be completed: Add parameters documentation and describe what
 the action does. In the meantime, refer to
-[the code](https://github.com/systopia/de.systopia.twingle/blob/master/api/v3/TwingleDonation/EndRecurring.php)*
+[the code](https://github.com/systopia/de.systopia.twingle/blob/master/api/v3/TwingleDonation/Endrecurring.php)*
 
 ### Cancel donation
 
