@@ -123,6 +123,27 @@ function twingle_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
   _twingle_civix_civicrm_alterSettingsFolders($metaDataFolders);
 }
 
+/**
+ * Implements hook_civicrm_permission().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_permission
+ */
+function twingle_civicrm_permission(&$permissions) {
+  $permissions['access Twingle API'] = 'Twingle API: Access Twingle API';
+}
+
+/**
+ * Implements hook_civicrm_alterAPIPermissions().
+ *
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_alterAPIPermissions
+ */
+function twingle_civicrm_alterAPIPermissions($entity, $action, &$params, &$permissions) {
+  // Restrict API calls to the permission.
+  $permissions['twingle_donation']['submit'] = array('access Twingle API');
+  $permissions['twingle_donation']['cancel']  = array('access Twingle API');
+  $permissions['twingle_donation']['endrecurring']  = array('access Twingle API');
+}
+
 // --- Functions below this ship commented out. Uncomment as required. ---
 
 /**
