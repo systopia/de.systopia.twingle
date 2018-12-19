@@ -44,7 +44,7 @@ function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
   $params['confirmed_at'] = array(
     'name'         => 'confirmed_at',
     'title'        => 'Confirmed at',
-    'type'         => CRM_Utils_Type::T_INT,
+    'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
     'description'  => 'The date when the donation was issued, format: YYYYMMDD.',
   );
@@ -123,14 +123,14 @@ function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
     'title'        => 'SEPA Direct Debit Mandate reference',
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => 'The mandate for SEPA Direct Debit payments.',
+    'description'  => 'The mandate reference for SEPA Direct Debit payments.',
   );
   $params['debit_account_holder'] = array(
     'name'         => 'debit_account_holder',
     'title'        => 'SEPA Direct Debit Account holder',
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => 'The mandate for SEPA Direct Debit payments.',
+    'description'  => 'The account holder for SEPA Direct Debit payments.',
   );
   $params['is_anonymous'] = array(
     'name'         => 'is_anonymous',
