@@ -45,7 +45,7 @@ function _civicrm_api3_twingle_donation_Cancel_spec(&$params) {
     'title'        => 'Cancelled at',
     'type'         => CRM_Utils_Type::T_INT,
     'api.required' => 1,
-    'description'  => 'The date when the donation was cancelled, format: YYYYMMDD.',
+    'description'  => 'The date when the donation was cancelled, format: YmdHis.',
   );
   $params['cancel_reason'] = array(
     'name'         => 'cancel_reason',

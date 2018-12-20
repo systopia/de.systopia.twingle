@@ -46,7 +46,7 @@ function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
     'title'        => 'Confirmed at',
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
-    'description'  => 'The date when the donation was issued, format: YYYYMMDD.',
+    'description'  => 'The date when the donation was issued, format: YmdHis.',
   );
   $params['purpose'] = array(
     'name'         => 'purpose',
@@ -152,7 +152,7 @@ function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
     'title'        => 'Date of birth',
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => 'The date of birth of the contact, format: YYYYMMDD.',
+    'description'  => 'The date of birth of the contact, format: Ymd.',
   );
   $params['user_title'] = array(
     'name'         => 'user_title',

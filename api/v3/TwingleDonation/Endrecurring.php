@@ -45,7 +45,7 @@ function _civicrm_api3_twingle_donation_endrecurring_spec(&$params) {
     'title'        => 'Ended at',
     'type'         => CRM_Utils_Type::T_INT,
     'api.required' => 1,
-    'description'  => 'The date when the recurring donation was ended, format: YYYYMMDD.',
+    'description'  => 'The date when the recurring donation was ended, format: YmdHis.',
   );
 }
 
