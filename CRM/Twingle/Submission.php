@@ -73,7 +73,7 @@ class CRM_Twingle_Submission {
     $params['payment_instrument_id'] = $payment_instrument_id;
 
     // Validate date for parameter "confirmed_at".
-    if (!DateTime::createFromFormat('Ymd', $params['confirmed_at'])) {
+    if (!DateTime::createFromFormat('YmdHis', $params['confirmed_at'])) {
       throw new CiviCRM_API3_Exception(
         E::ts('Invalid date for parameter "confirmed_at".'),
         'invalid_format'
