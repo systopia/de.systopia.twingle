@@ -306,17 +306,19 @@ function civicrm_api3_twingle_donation_Submit($params) {
       // Exclude address for now when retrieving/creating the individual contact
       // and an organisation is given, as we are checking organisation address
       // first and share it with the individual.
-      $submitted_address = array();
-      foreach (array(
-                 'street_address',
-                 'postal_code',
-                 'city',
-                 'country',
-                 'location_type_id',
-               ) as $address_component) {
-        if (!empty($params[$address_component])) {
-          $submitted_address[$address_component] = $params[$address_component];
-          unset($params[$address_component]);
+      if (!empty($params['organization_name'])) {
+        $submitted_address = array();
+        foreach (array(
+                   'street_address',
+                   'postal_code',
+                   'city',
+                   'country',
+                   'location_type_id',
+                 ) as $address_component) {
+          if (!empty($params[$address_component])) {
+            $submitted_address[$address_component] = $params[$address_component];
+            unset($params[$address_component]);
+          }
         }
       }
 
@@ -388,8 +390,11 @@ function civicrm_api3_twingle_donation_Submit($params) {
       // Address is not shared, use submitted address with configured location
       // type.
       if (!$address_shared && !empty($submitted_address)) {
-        $submitted_address['contact_id'] = $contact_id;
-        civicrm_api3('Address', 'create', $submitted_address);
+        // Do not use `Address.create` API action in order for XCM to decide
+        // whether to create an address.
+        civicrm_api3('Contact', 'getorcreate', array(
+            'id' => $contact_id,
+          ) + $submitted_address);
       }
 
       // Create employer relationship between organization and individual.
