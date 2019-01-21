@@ -451,6 +451,9 @@ function civicrm_api3_twingle_donation_Submit($params) {
     if (!empty($campaign = $profile->getAttribute('campaign'))) {
       $contribution_data['campaign_id'] = $campaign;
     }
+    if (!empty($contribution_source = $profile->getAttribute('contribution_source'))) {
+      $contribution_data['source'] = $contribution_source;
+    }
 
     if (
       CRM_Twingle_Submission::civiSepaEnabled()

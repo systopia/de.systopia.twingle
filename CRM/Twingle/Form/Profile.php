@@ -209,6 +209,13 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       array('class' => 'crm-select2 huge')
     );
 
+    $this->add(
+      'text', // field type
+      'contribution_source', // field name
+      E::ts('Contribution source'), // field label
+      array()
+    );
+
     $this->addButtons(array(
       array(
         'type' => 'submit',

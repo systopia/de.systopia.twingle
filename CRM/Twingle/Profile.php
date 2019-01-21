@@ -188,6 +188,7 @@ class CRM_Twingle_Profile {
       'postinfo_groups',
       'donation_receipt_groups',
       'campaign',
+      'contribution_source',
     );
   }
 
@@ -244,6 +245,7 @@ class CRM_Twingle_Profile {
       'postinfo_groups' => NULL,
       'donation_receipt_groups' => NULL,
       'campaign' => NULL,
+      'contribution_source' => NULL,
     ));
   }
 

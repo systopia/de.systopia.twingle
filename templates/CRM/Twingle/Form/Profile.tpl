@@ -107,6 +107,11 @@
           <td class="content">{$form.campaign.html}</td>
         </tr>
 
+        <tr class="crm-section">
+          <td class="label">{$form.contribution_source.label}</td>
+          <td class="content">{$form.contribution_source.html}</td>
+        </tr>
+
       </table>
 
     </fieldset>
