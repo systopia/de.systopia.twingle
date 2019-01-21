@@ -186,7 +186,8 @@ class CRM_Twingle_Profile {
       'gender_other',
       'newsletter_groups',
       'postinfo_groups',
-      'donation_receipt_groups'
+      'donation_receipt_groups',
+      'campaign',
     );
   }
 
@@ -242,6 +243,7 @@ class CRM_Twingle_Profile {
       'newsletter_groups' => NULL,
       'postinfo_groups' => NULL,
       'donation_receipt_groups' => NULL,
+      'campaign' => NULL,
     ));
   }
 

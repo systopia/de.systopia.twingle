@@ -102,6 +102,11 @@
           <td class="content">{$form.donation_receipt_groups.html}</td>
         </tr>
 
+        <tr class="crm-section">
+          <td class="label">{$form.campaign.label}</td>
+          <td class="content">{$form.campaign.html}</td>
+        </tr>
+
       </table>
 
     </fieldset>

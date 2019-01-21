@@ -200,6 +200,15 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       array('class' => 'crm-select2 huge', 'multiple' => 'multiple')
     );
 
+    $this->add(
+      'select', // field type
+      'campaign', // field name
+      E::ts('Assign donation to campaign'), // field label
+      $this->getCampaigns(), // list of options
+      FALSE, // is not required
+      array('class' => 'crm-select2 huge')
+    );
+
     $this->addButtons(array(
       array(
         'type' => 'submit',
@@ -468,6 +477,24 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    */
   public function getDonationReceiptGroups() {
     return $this->getGroups();
+  }
+
+  /**
+   * Retrieves campaigns as options for select elements.
+   */
+  public function getCampaigns() {
+    $campaigns = array();
+    $query = civicrm_api3('Campaign', 'get', array(
+      'option.limit' => 0,
+      'return' => array(
+        'id',
+        'title',
+      )
+    ));
+    foreach ($query['values'] as $campaign) {
+      $campaigns[$campaign['id']] = $campaign['title'];
+    }
+    return $campaigns;
   }
 
 }
