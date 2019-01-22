@@ -300,7 +300,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
         unset($params['id']);
       }
 
-      // Add location type to parameters.
+      // Add configured location type to parameters.
       $params['location_type_id'] = (int) $profile->getAttribute('location_type_id');
 
       // Exclude address for now when retrieving/creating the individual contact
@@ -364,8 +364,8 @@ function civicrm_api3_twingle_donation_Submit($params) {
         );
         if (!empty($submitted_address)) {
           $organisation_data += $submitted_address;
-          // Always use WORK address for organisation address.
-          $organisation_data['location_type_id'] = CRM_Twingle_Submission::LOCATION_TYPE_ID_WORK;
+          // Use configured location type for organisation address.
+          $organisation_data['location_type_id'] = (int) $profile->getAttribute('location_type_id_organisation');
         }
         if (!$organisation_id = CRM_Twingle_Submission::getContact(
           'Organization',
@@ -377,13 +377,14 @@ function civicrm_api3_twingle_donation_Submit($params) {
           );
         }
       }
-      // Share organisation address as WORK address with individual contact.
+      // Share organisation address with individual contact, using configured
+      // location type for organisation address.
       $address_shared = (
         isset($organisation_id)
         && CRM_Twingle_Submission::shareWorkAddress(
           $contact_id,
           $organisation_id,
-          CRM_Twingle_Submission::LOCATION_TYPE_ID_WORK
+          (int) $profile->getAttribute('location_type_id_organisation')
         )
       );
 

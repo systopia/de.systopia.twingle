@@ -1,0 +1,21 @@
+{*------------------------------------------------------------+
+| SYSTOPIA Twingle Integration                                |
+| Copyright (C) 2018 SYSTOPIA                                 |
+| Author: J. Schuppe (schuppe@systopia.de)                    |
++-------------------------------------------------------------+
+| This program is released as free software under the         |
+| Affero GPL license. You can redistribute it and/or          |
+| modify it under the terms of this license which you         |
+| can read by viewing the included agpl.txt or online         |
+| at www.gnu.org/licenses/agpl.html. Removal of this          |
+| copyright header is strictly prohibited without             |
+| written permission from the original author(s).             |
++-------------------------------------------------------------*}
+
+{htxt id='id-location_type_id'}
+    {ts domain="de.systopia.twingle"}Select which location type to use for addresses for individuals, either when no organisation name is specified, or an organisation address can not be shared with the individual contact.{/ts}
+{/htxt}
+
+{htxt id='id-location_type_id_organisation'}
+    {ts domain="de.systopia.twingle"}Select which location type to use for addresses for organisations and shared organisation addresses for individual contacts{/ts}
+{/htxt}

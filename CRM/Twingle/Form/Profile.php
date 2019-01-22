@@ -122,6 +122,14 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     );
 
     $this->add(
+      'select',
+      'location_type_id_organisation',
+      E::ts('Location type for organisations'),
+      $this->getLocationTypes(),
+      TRUE
+    );
+
+    $this->add(
       'select', // field type
       'financial_type_id', // field name
       E::ts('Financial type'), // field label

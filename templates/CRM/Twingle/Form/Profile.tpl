@@ -33,8 +33,47 @@
         </tr>
 
         <tr class="crm-section">
-          <td class="label">{$form.location_type_id.label}</td>
+          <td class="label">
+            {$form.location_type_id.label}
+            <a
+                    onclick='
+                            CRM.help(
+                            "{ts domain="de.systopia.twingle"}Location type{/ts}",
+                    {literal}{
+                      "id": "id-location_type_id",
+                      "file": "CRM\/Twingle\/Form\/Profile"
+                    }{/literal}
+                            );
+                            return false;
+                            '
+                    href="#"
+                    title="{ts domain="de.systopia.twingle"}Help{/ts}"
+                    class="helpicon"
+            ></a>
+          </td>
           <td class="content">{$form.location_type_id.html}</td>
+        </tr>
+
+        <tr class="crm-section">
+          <td class="label">
+            {$form.location_type_id_organisation.label}
+            <a
+              onclick='
+                CRM.help(
+                  "{ts domain="de.systopia.twingle"}Location type for organisations{/ts}",
+                  {literal}{
+                    "id": "id-location_type_id_organisation",
+                    "file": "CRM\/Twingle\/Form\/Profile"
+                  }{/literal}
+                );
+                return false;
+              '
+              href="#"
+              title="{ts domain="de.systopia.twingle"}Help{/ts}"
+              class="helpicon"
+            ></a>
+          </td>
+          <td class="content">{$form.location_type_id_organisation.html}</td>
         </tr>
 
         <tr class="crm-section">

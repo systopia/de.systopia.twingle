@@ -168,6 +168,7 @@ class CRM_Twingle_Profile {
     return array(
       'selector',
       'location_type_id',
+      'location_type_id_organisation',
       'financial_type_id',
       'pi_banktransfer',
       'pi_debit_manual',
@@ -225,6 +226,7 @@ class CRM_Twingle_Profile {
     return new CRM_Twingle_Profile($name, array(
       'selector'          => '',
       'location_type_id'  => CRM_Twingle_Submission::LOCATION_TYPE_ID_WORK,
+      'location_type_id_organisation' => CRM_Twingle_Submission::LOCATION_TYPE_ID_WORK,
       'financial_type_id' => 1, // "Donation"
       'pi_banktransfer' => 5, // "EFT"
       'pi_debit_manual' => NULL,
