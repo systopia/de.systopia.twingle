@@ -224,6 +224,13 @@ function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
     'api.required' => 0,
     'description'  => E::ts('Additional information of the contact.'),
   );
+  $params['campaign_id'] = array(
+    'name' => 'campaign_id',
+    'title' => E::ts('Campaign ID'),
+    'type' => CRM_Utils_Type::T_INT,
+    'api.required' => 0,
+    'description' => E::ts('The CiviCRM ID of a campaign to assign the contribution.'),
+  );
 }
 
 /**
@@ -446,12 +453,18 @@ function civicrm_api3_twingle_donation_Submit($params) {
       'amount' => $params['amount'] / 100,
       'total_amount' => $params['amount'] / 100,
     );
+
     if (!empty($params['purpose'])) {
       $contribution_data['note'] = $params['purpose'];
     }
-    if (!empty($campaign = $profile->getAttribute('campaign'))) {
+
+    if (!empty($params['campaign_id'])) {
+      $contribution_data['campaign_id'] = $params['campaign_id'];
+    }
+    elseif (!empty($campaign = $profile->getAttribute('campaign'))) {
       $contribution_data['campaign_id'] = $campaign;
     }
+
     if (!empty($contribution_source = $profile->getAttribute('contribution_source'))) {
       $contribution_data['source'] = $contribution_source;
     }
