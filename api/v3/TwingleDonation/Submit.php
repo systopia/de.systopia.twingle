@@ -29,200 +29,200 @@ use CRM_Twingle_ExtensionUtil as E;
 function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
   $params['project_id'] = array(
     'name' => 'project_id',
-    'title' => 'Project ID',
+    'title' => E::ts('Project ID'),
     'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
-    'description' => 'The Twingle project ID.',
+    'description' => E::ts('The Twingle project ID.'),
   );
   $params['trx_id'] = array(
     'name' => 'trx_id',
-    'title' => 'Transaction ID',
+    'title' => E::ts('Transaction ID'),
     'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
-    'description' => 'The unique transaction ID of the donation',
+    'description' => E::ts('The unique transaction ID of the donation'),
   );
   $params['confirmed_at'] = array(
     'name'         => 'confirmed_at',
-    'title'        => 'Confirmed at',
+    'title'        => E::ts('Confirmed at'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
-    'description'  => 'The date when the donation was issued, format: YmdHis.',
+    'description'  => E::ts('The date when the donation was issued, format: YmdHis.'),
   );
   $params['purpose'] = array(
     'name'         => 'purpose',
-    'title'        => 'Purpose',
+    'title'        => E::ts('Purpose'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => 'The purpose of the donation.',
+    'description'  => E::ts('The purpose of the donation.'),
   );
   $params['amount'] = array(
     'name'         => 'amount',
-    'title'        => 'Amount',
+    'title'        => E::ts('Amount'),
     'type'         => CRM_Utils_Type::T_INT,
     'api.required' => 1,
-    'description'  => 'The donation amount in minor currency unit.',
+    'description'  => E::ts('The donation amount in minor currency unit.'),
   );
   $params['currency'] = array(
     'name'         => 'currency',
-    'title'        => 'Currency',
+    'title'        => E::ts('Currency'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
-    'description'  => 'The ISO-4217 currency code of the donation.',
+    'description'  => E::ts('The ISO-4217 currency code of the donation.'),
   );
   $params['newsletter'] = array(
     'name'         => 'newsletter',
-    'title'        => 'Newsletter',
+    'title'        => E::ts('Newsletter'),
     'type'         => CRM_Utils_Type::T_BOOLEAN,
     'api.required' => 0,
-    'description'  => 'Whether to subscribe the contact to the newsletter group defined in the profile.',
+    'description'  => E::ts('Whether to subscribe the contact to the newsletter group defined in the profile.'),
   );
   $params['postinfo'] = array(
     'name'         => 'postinfo',
-    'title'        => 'Postal mailing',
+    'title'        => E::ts('Postal mailing'),
     'type'         => CRM_Utils_Type::T_BOOLEAN,
     'api.required' => 0,
-    'description'  => 'Whether to subscribe the contact to the postal mailing group defined in the profile.',
+    'description'  => E::ts('Whether to subscribe the contact to the postal mailing group defined in the profile.'),
   );
   $params['donation_receipt'] = array(
     'name'         => 'donation_receipt',
-    'title'        => 'Donation receipt',
+    'title'        => E::ts('Donation receipt'),
     'type'         => CRM_Utils_Type::T_BOOLEAN,
     'api.required' => 0,
-    'description'  => 'Whether the contact requested a donation receipt.',
+    'description'  => E::ts('Whether the contact requested a donation receipt.'),
   );
   $params['payment_method'] = array(
     'name'         => 'payment_method',
-    'title'        => 'Payment method',
+    'title'        => E::ts('Payment method'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
-    'description'  => 'The Twingle payment method used for the donation.',
+    'description'  => E::ts('The Twingle payment method used for the donation.'),
   );
   $params['donation_rhythm'] = array(
     'name'         => 'donation_rhythm',
-    'title'        => 'Donation rhythm',
+    'title'        => E::ts('Donation rhythm'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
-    'description'  => 'The interval which the donation is recurring in.',
+    'description'  => E::ts('The interval which the donation is recurring in.'),
   );
   $params['debit_iban'] = array(
     'name'         => 'debit_iban',
-    'title'        => 'SEPA IBAN',
+    'title'        => E::ts('SEPA IBAN'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => 'The IBAN for SEPA Direct Debit payments, conforming with ISO 13616-1:2007.',
+    'description'  => E::ts('The IBAN for SEPA Direct Debit payments, conforming with ISO 13616-1:2007.'),
   );
   $params['debit_bic'] = array(
     'name'         => 'debit_bic',
-    'title'        => 'SEPA BIC',
+    'title'        => E::ts('SEPA BIC'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => 'The BIC for SEPA Direct Debit payments, conforming with ISO 9362.',
+    'description'  => E::ts('The BIC for SEPA Direct Debit payments, conforming with ISO 9362.'),
   );
   $params['debit_mandate_reference'] = array(
     'name'         => 'debit_mandate_reference',
-    'title'        => 'SEPA Direct Debit Mandate reference',
+    'title'        => E::ts('SEPA Direct Debit Mandate reference'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => 'The mandate reference for SEPA Direct Debit payments.',
+    'description'  => E::ts('The mandate reference for SEPA Direct Debit payments.'),
   );
   $params['debit_account_holder'] = array(
     'name'         => 'debit_account_holder',
-    'title'        => 'SEPA Direct Debit Account holder',
+    'title'        => E::ts('SEPA Direct Debit Account holder'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => 'The account holder for SEPA Direct Debit payments.',
+    'description'  => E::ts('The account holder for SEPA Direct Debit payments.'),
   );
   $params['is_anonymous'] = array(
     'name'         => 'is_anonymous',
-    'title'        => 'Anonymous donation',
+    'title'        => E::ts('Anonymous donation'),
     'type'         => CRM_Utils_Type::T_BOOLEAN,
     'api.required' => 0,
     'api.default'  => 0,
-    'description'  => 'Whether the donation is submitted anonymously.',
+    'description'  => E::ts('Whether the donation is submitted anonymously.'),
   );
   $params['user_gender'] = array(
     'name'         => 'user_gender',
-    'title'        => 'Gender',
+    'title'        => E::ts('Gender'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => 'The gender of the contact.',
+    'description'  => E::ts('The gender of the contact.'),
   );
   $params['user_birthdate'] = array(
     'name'         => 'user_birthdate',
-    'title'        => 'Date of birth',
+    'title'        => E::ts('Date of birth'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => 'The date of birth of the contact, format: Ymd.',
+    'description'  => E::ts('The date of birth of the contact, format: Ymd.'),
   );
   $params['user_title'] = array(
     'name'         => 'user_title',
-    'title'        => 'Formal title',
+    'title'        => E::ts('Formal title'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => 'The formal title of the contact.',
+    'description'  => E::ts('The formal title of the contact.'),
   );
   $params['user_email'] = array(
     'name'         => 'user_email',
-    'title'        => 'E-mail address',
+    'title'        => E::ts('E-mail address'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => 'The e-mail address of the contact.',
+    'description'  => E::ts('The e-mail address of the contact.'),
   );
   $params['user_firstname'] = array(
     'name'         => 'user_firstname',
-    'title'        => 'First name',
+    'title'        => E::ts('First name'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => 'The first name of the contact.',
+    'description'  => E::ts('The first name of the contact.'),
   );
   $params['user_lastname'] = array(
     'name'         => 'user_lastname',
-    'title'        => 'Last name',
+    'title'        => E::ts('Last name'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => 'The last name of the contact.',
+    'description'  => E::ts('The last name of the contact.'),
   );
   $params['user_street'] = array(
     'name'         => 'user_street',
-    'title'        => 'Street address',
+    'title'        => E::ts('Street address'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => 'The street address of the contact.',
+    'description'  => E::ts('The street address of the contact.'),
   );
   $params['user_postal_code'] = array(
     'name'         => 'user_postal_code',
-    'title'        => 'Postal code',
+    'title'        => E::ts('Postal code'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => 'The postal code of the contact.',
+    'description'  => E::ts('The postal code of the contact.'),
   );
   $params['user_city'] = array(
     'name'         => 'user_city',
-    'title'        => 'City',
+    'title'        => E::ts('City'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => 'The city of the contact.',
+    'description'  => E::ts('The city of the contact.'),
   );
   $params['user_telephone'] = array(
     'name'         => 'user_telephone',
-    'title'        => 'Telephone',
+    'title'        => E::ts('Telephone'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => 'The telephone number of the contact.',
+    'description'  => E::ts('The telephone number of the contact.'),
   );
   $params['user_company'] = array(
     'name'         => 'user_company',
-    'title'        => 'Company',
+    'title'        => E::ts('Company'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => 'The company of the contact.',
+    'description'  => E::ts('The company of the contact.'),
   );
   $params['user_extrafield'] = array(
     'name'         => 'user_extrafield',
-    'title'        => 'User extra field',
+    'title'        => E::ts('User extra field'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => 'Additional information of the contact.',
+    'description'  => E::ts('Additional information of the contact.'),
   );
 }
 

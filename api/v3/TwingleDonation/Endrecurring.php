@@ -28,24 +28,24 @@ use CRM_Twingle_ExtensionUtil as E;
 function _civicrm_api3_twingle_donation_endrecurring_spec(&$params) {
   $params['project_id'] = array(
     'name' => 'project_id',
-    'title' => 'Project ID',
+    'title' => E::ts('Project ID'),
     'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
-    'description' => 'The Twingle project ID.',
+    'description' => E::ts('The Twingle project ID.'),
   );
   $params['trx_id'] = array(
     'name' => 'trx_id',
-    'title' => 'Transaction ID',
+    'title' => E::ts('Transaction ID'),
     'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
-    'description' => 'The unique transaction ID of the donation',
+    'description' => E::ts('The unique transaction ID of the donation'),
   );
   $params['ended_at'] = array(
     'name'         => 'ended_at',
-    'title'        => 'Ended at',
+    'title'        => E::ts('Ended at'),
     'type'         => CRM_Utils_Type::T_INT,
     'api.required' => 1,
-    'description'  => 'The date when the recurring donation was ended, format: YmdHis.',
+    'description'  => E::ts('The date when the recurring donation was ended, format: YmdHis.'),
   );
 }
 

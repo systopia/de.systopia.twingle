@@ -28,31 +28,31 @@ use CRM_Twingle_ExtensionUtil as E;
 function _civicrm_api3_twingle_donation_Cancel_spec(&$params) {
   $params['project_id'] = array(
     'name' => 'project_id',
-    'title' => 'Project ID',
+    'title' => E::ts('Project ID'),
     'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
-    'description' => 'The Twingle project ID.',
+    'description' => E::ts('The Twingle project ID.'),
   );
   $params['trx_id'] = array(
     'name' => 'trx_id',
-    'title' => 'Transaction ID',
+    'title' => E::ts('Transaction ID'),
     'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
-    'description' => 'The unique transaction ID of the donation',
+    'description' => E::ts('The unique transaction ID of the donation'),
   );
   $params['cancelled_at'] = array(
     'name'         => 'cancelled_at',
-    'title'        => 'Cancelled at',
+    'title'        => E::ts('Cancelled at'),
     'type'         => CRM_Utils_Type::T_INT,
     'api.required' => 1,
-    'description'  => 'The date when the donation was cancelled, format: YmdHis.',
+    'description'  => E::ts('The date when the donation was cancelled, format: YmdHis.'),
   );
   $params['cancel_reason'] = array(
     'name'         => 'cancel_reason',
-    'title'        => 'Cancel reason',
+    'title'        => E::ts('Cancel reason'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
-    'description'  => 'The reason for the donation being cancelled.',
+    'description'  => E::ts('The reason for the donation being cancelled.'),
   );
 }
 
