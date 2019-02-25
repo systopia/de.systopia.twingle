@@ -212,7 +212,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       'select', // field type
       'campaign', // field name
       E::ts('Assign donation to campaign'), // field label
-      $this->getCampaigns(), // list of options
+      array('' => E::ts('- none -')) + $this->getCampaigns(), // list of options
       FALSE, // is not required
       array('class' => 'crm-select2 huge')
     );
