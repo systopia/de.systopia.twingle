@@ -72,7 +72,7 @@ function civicrm_api3_twingle_donation_Cancel($params) {
 
   try {
     // Validate date for parameter "cancelled_at".
-    if (!DateTime::createFromFormat('Ymd', $params['cancelled_at'])) {
+    if (!DateTime::createFromFormat('YmdHis', $params['cancelled_at'])) {
       throw new CiviCRM_API3_Exception(
         E::ts('Invalid date for parameter "cancelled_at".'),
         'invalid_format'

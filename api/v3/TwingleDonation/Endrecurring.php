@@ -65,7 +65,7 @@ function civicrm_api3_twingle_donation_endrecurring($params) {
 
   try {
     // Validate date for parameter "ended_at".
-    if (!DateTime::createFromFormat('Ymd', $params['ended_at'])) {
+    if (!DateTime::createFromFormat('YmdHis', $params['ended_at'])) {
       throw new CiviCRM_API3_Exception(
         E::ts('Invalid date for parameter "ended_at".'),
         'invalid_format'
