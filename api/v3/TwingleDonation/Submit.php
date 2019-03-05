@@ -311,21 +311,19 @@ function civicrm_api3_twingle_donation_Submit($params) {
       $params['location_type_id'] = (int) $profile->getAttribute('location_type_id');
 
       // Exclude address for now when retrieving/creating the individual contact
-      // and an organisation is given, as we are checking organisation address
-      // first and share it with the individual.
-      if (!empty($params['organization_name'])) {
-        $submitted_address = array();
-        foreach (array(
-                   'street_address',
-                   'postal_code',
-                   'city',
-                   'country',
-                   'location_type_id',
-                 ) as $address_component) {
-          if (!empty($params[$address_component])) {
-            $submitted_address[$address_component] = $params[$address_component];
-            unset($params[$address_component]);
-          }
+      // as we are checking organisation address first and share it with the
+      // individual.
+      $submitted_address = array();
+      foreach (array(
+                 'street_address',
+                 'postal_code',
+                 'city',
+                 'country',
+                 'location_type_id',
+               ) as $address_component) {
+        if (!empty($params[$address_component])) {
+          $submitted_address[$address_component] = $params[$address_component];
+          unset($params[$address_component]);
         }
       }
 
