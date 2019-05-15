@@ -136,6 +136,13 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       $this->getFinancialTypes(), // list of options
       TRUE // is required
     );
+    $this->add(
+      'select', // field type
+      'financial_type_id_recur', // field name
+      E::ts('Financial type (recurring)'), // field label
+      $this->getFinancialTypes(), // list of options
+      TRUE // is required
+    );
 
     $this->add(
       'select',
