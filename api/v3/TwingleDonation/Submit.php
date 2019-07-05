@@ -203,6 +203,13 @@ function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
     'api.required' => 0,
     'description'  => E::ts('The city of the contact.'),
   );
+  $params['user_country'] = array(
+    'name'         => 'user_country',
+    'title'        => E::ts('Country'),
+    'type'         => CRM_Utils_Type::T_STRING,
+    'api.required' => 0,
+    'description'  => E::ts('The country of the contact.'),
+  );
   $params['user_telephone'] = array(
     'name'         => 'user_telephone',
     'title'        => E::ts('Telephone'),
@@ -287,6 +294,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
                  'user_street' => 'street_address',
                  'user_postal_code' => 'postal_code',
                  'user_city' => 'city',
+                 'user_country' => 'country',
                ) as $address_param => $address_component) {
         if (!empty($params[$address_param])) {
           $params[$address_component] = $params[$address_param];
