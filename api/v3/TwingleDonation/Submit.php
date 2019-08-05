@@ -543,6 +543,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
           );
         }
         $contribution_data['contribution_recur_id'] = $contribution_recur['id'];
+        $contribution_data['financial_type_id'] = $contribution_recur_data['financial_type_id'];
       }
       else {
         $contribution_data['financial_type_id'] = $profile->getAttribute('financial_type_id');
