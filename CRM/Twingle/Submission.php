@@ -99,6 +99,16 @@ class CRM_Twingle_Submission {
       }
       $params['gender_id'] = $gender_id;
     }
+
+    // Validate custom fields parameter, if given.
+    if (!empty($params['custom_fields'])) {
+      if (!is_array($custom_fields = json_decode($params['custom_fields'], TRUE))) {
+        throw new CiviCRM_API3_Exception(
+          E::ts('Invalid format for custom fields.'),
+          'invalid_format'
+        );
+      }
+    }
   }
 
   /**

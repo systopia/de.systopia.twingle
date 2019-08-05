@@ -238,6 +238,13 @@ function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
     'api.required' => 0,
     'description' => E::ts('The CiviCRM ID of a campaign to assign the contribution.'),
   );
+  $params['custom_fields'] = array(
+    'name'         => 'custom_fields',
+    'title'        => E::ts('Custom fields'),
+    'type'         => CRM_Utils_Type::T_STRING,
+    'api.required' => 0,
+    'description'  => E::ts('Additional information for either the contact or the (recurring) contribution.'),
+  );
 }
 
 /**
@@ -278,6 +285,27 @@ function civicrm_api3_twingle_donation_Submit($params) {
         E::ts('Contribution with the given transaction ID already exists.'),
         'api_error'
       );
+    }
+
+    // Extract custom field values using the profile's mapping of Twingle fields
+    // to CiviCRM custom fields.
+    $custom_fields = array();
+    if (!empty($params['custom_fields'])) {
+      $custom_field_mapping = $profile->getCustomFieldMapping();
+
+      foreach (json_decode($params['custom_fields']) as $twingle_field => $value) {
+        if (isset($custom_field_mapping[$twingle_field])) {
+          // Get custom field definition to store values by entity the field
+          // extends.
+          $custom_field_id = substr($custom_field_mapping[$twingle_field], strlen('custom_'));
+          $custom_field = civicrm_api3('CustomField', 'getsingle', array(
+            'id' => $custom_field_id,
+            // Chain a CustomGroup.getsingle API call.
+            'api.CustomGroup.getsingle' => array(),
+          ));
+          $custom_fields[$custom_field['api.CustomGroup.getsingle']['extends']][$custom_field_mapping[$twingle_field]] = $value;
+        }
+      }
     }
 
     // Create contact(s).
@@ -351,6 +379,15 @@ function civicrm_api3_twingle_donation_Submit($params) {
           $contact_data[$contact_component] = $params[$contact_param];
         }
       }
+
+      // Add custom field values.
+      if (!empty($custom_fields['Contact'])) {
+        $contact_data += $custom_fields['Contact'];
+      }
+      if (!empty($custom_fields['Individual'])) {
+        $contact_data += $custom_fields['Individual'];
+      }
+
       if (!$contact_id = CRM_Twingle_Submission::getContact(
         'Individual',
         $contact_data
@@ -375,6 +412,12 @@ function civicrm_api3_twingle_donation_Submit($params) {
         $organisation_data = array(
           'organization_name' => $params['organization_name'],
         );
+
+        // Add custom field values.
+        if (!empty($custom_fields['Organization'])) {
+          $organisation_data += $custom_fields['Organization'];
+        }
+
         if (!empty($submitted_address)) {
           $organisation_data += $submitted_address;
           // Use configured location type for organisation address.
@@ -458,6 +501,15 @@ function civicrm_api3_twingle_donation_Submit($params) {
       'amount' => $params['amount'] / 100,
       'total_amount' => $params['amount'] / 100,
     );
+
+    // Add custom field values.
+    if (!empty($custom_fields['Contribution'])) {
+      $contribution_data += $custom_fields['Contribution'];
+    }
+    // Add custom field values.
+    if (!empty($custom_fields['ContributionRecur'])) {
+      $contribution_data += $custom_fields['ContributionRecur'];
+    }
 
     if (!empty($params['purpose'])) {
       $contribution_data['note'] = $params['purpose'];
