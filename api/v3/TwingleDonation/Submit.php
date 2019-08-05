@@ -454,7 +454,6 @@ function civicrm_api3_twingle_donation_Submit($params) {
       'contact_id' => (isset($organisation_id) ? $organisation_id : $contact_id),
       'currency' => $params['currency'],
       'trxn_id' => $params['trx_id'],
-      'financial_type_id' => $profile->getAttribute('financial_type_id'),
       'payment_instrument_id' => $params['payment_instrument_id'],
       'amount' => $params['amount'] / 100,
       'total_amount' => $params['amount'] / 100,
@@ -517,6 +516,10 @@ function civicrm_api3_twingle_donation_Submit($params) {
       // Add cycle day for recurring contributions.
       if ($params['donation_rhythm'] != 'one_time') {
         $mandate_data['cycle_day'] = CRM_Twingle_Submission::getSEPACycleDay($params['confirmed_at'], $creditor_id);
+        $mandate_data['financial_type_id'] = $profile->getAttribute('financial_type_id_recur');
+      }
+      else {
+        $mandate_data['financial_type_id'] = $profile->getAttribute('financial_type_id');
       }
 
       // Let CiviSEPA set the correct payment instrument depending on the
@@ -537,6 +540,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
           + array(
             'contribution_status_id' => 'Pending',
             'start_date' => $params['confirmed_at'],
+            'financial_type_id' => $profile->getAttribute('financial_type_id_recur'),
           )
           + CRM_Twingle_Submission::getFrequencyMapping($params['donation_rhythm']);
         $contribution_recur = civicrm_api3('contributionRecur', 'create', $contribution_recur_data);
@@ -547,6 +551,10 @@ function civicrm_api3_twingle_donation_Submit($params) {
           );
         }
         $contribution_data['contribution_recur_id'] = $contribution_recur['id'];
+        $contribution_data['financial_type_id'] = $contribution_recur_data['financial_type_id'];
+      }
+      else {
+        $contribution_data['financial_type_id'] = $profile->getAttribute('financial_type_id');
       }
 
       // Create contribution.

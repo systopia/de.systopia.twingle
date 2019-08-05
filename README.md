@@ -36,16 +36,18 @@ The *default* profile is used whenever the plugin cannot match the Twingle
 project ID from any other profile. Therefore the default profile will be used
 for all newly created Twingle projects.
 
-| Label                      | Description                                                                                                                                                  |
-|----------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Profile name               | Internal name, used inside the extension.                                                                                                                    |
-| Project IDs                | Twingle project IDs. Separate multiple IDs with commas.                                                                                                      |
-| Location type              | Specify how the address data sent by the form should be categorised in CiviCRM. The list is based on your CiviCRM configuration.                             |
-| Financial type             | Specify which financial type incoming donations should be recorded with in CiviCRM. The list is based on your CiviCRM configuration.                         |
-| Gender options             | Specify which CiviCRM gender option the incoming Twingle gender value should be mapped to. The list is based on your CiviCRM configuration.                  |
-| Record *Payment method* as | Specifiy the payment methods mapping for incoming donations for each Twingle payment method.                                                                 |
-| CiviSEPA creditor          | When enabled to integrate with CiviSEPA, specify the CiviSEPA creditor to use.                                                                               |
-| Sign up for groups         | Whenever the donor checked the newsletter/postal mailing/donation receipt checkbox on the Twingle form, the contact will be added to the groups listed here. |
+| Label                           | Description                                                                                                                                                   |
+|---------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Profile name                    | Internal name, used inside the extension.                                                                                                                     |
+| Project IDs                     | Twingle project IDs. Separate multiple IDs with commas.                                                                                                       |
+| Location type                   | Specify how the address data sent by the form should be categorised in CiviCRM. The list is based on your CiviCRM configuration.                              |
+| Location type for organisations | Specify how the address data sent by the form should be categorised in CiviCRM for organisational donations. The list is based on your CiviCRM configuration. |
+| Financial type                  | Specify which financial type incoming one-time donations should be recorded with in CiviCRM. The list is based on your CiviCRM configuration.                 |
+| Financial type (recurring)      | Specify which financial type incoming recurring donations should be recorded with in CiviCRM. The list is based on your CiviCRM configuration.                |
+| Gender options                  | Specify which CiviCRM gender option the incoming Twingle gender value should be mapped to. The list is based on your CiviCRM configuration.                   |
+| Record *Payment method* as      | Specifiy the payment methods mapping for incoming donations for each Twingle payment method.                                                                  |
+| CiviSEPA creditor               | When enabled to integrate with CiviSEPA, specify the CiviSEPA creditor to use.                                                                                |
+| Sign up for groups              | Whenever the donor checked the newsletter/postal mailing/donation receipt checkbox on the Twingle form, the contact will be added to the groups listed here.  |
 
 
 ## API documentation

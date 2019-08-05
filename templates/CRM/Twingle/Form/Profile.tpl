@@ -77,8 +77,47 @@
         </tr>
 
         <tr class="crm-section">
-          <td class="label">{$form.financial_type_id.label}</td>
+          <td class="label">
+            {$form.financial_type_id.label}
+            <a
+                    onclick='
+                            CRM.help(
+                            "{ts domain="de.systopia.twingle"}Financial type{/ts}",
+                    {literal}{
+                      "id": "id-financial_type_id",
+                      "file": "CRM\/Twingle\/Form\/Profile"
+                    }{/literal}
+                            );
+                            return false;
+                            '
+                    href="#"
+                    title="{ts domain="de.systopia.twingle"}Help{/ts}"
+                    class="helpicon"
+            ></a>
+          </td>
           <td class="content">{$form.financial_type_id.html}</td>
+        </tr>
+
+        <tr class="crm-section">
+          <td class="label">
+            {$form.financial_type_id_recur.label}
+            <a
+                    onclick='
+                            CRM.help(
+                            "{ts domain="de.systopia.twingle"}Financial type (recurring){/ts}",
+                    {literal}{
+                      "id": "id-financial_type_id_recur",
+                      "file": "CRM\/Twingle\/Form\/Profile"
+                    }{/literal}
+                            );
+                            return false;
+                            '
+                    href="#"
+                    title="{ts domain="de.systopia.twingle"}Help{/ts}"
+                    class="helpicon"
+            ></a>
+          </td>
+          <td class="content">{$form.financial_type_id_recur.html}</td>
         </tr>
 
         {if isset($form.sepa_creditor_id)}

@@ -17,5 +17,13 @@
 {/htxt}
 
 {htxt id='id-location_type_id_organisation'}
-    {ts domain="de.systopia.twingle"}Select which location type to use for addresses for organisations and shared organisation addresses for individual contacts{/ts}
+    {ts domain="de.systopia.twingle"}Select which location type to use for addresses for organisations and shared organisation addresses for individual contacts.{/ts}
+{/htxt}
+
+{htxt id='id-financial_type_id'}
+    {ts domain="de.systopia.twingle"}Select which financial type to use for one-time contributions.{/ts}
+{/htxt}
+
+{htxt id='id-financial_type_id_recur'}
+    {ts domain="de.systopia.twingle"}Select which financial type to use for recurring contributions.{/ts}
 {/htxt}
