@@ -161,7 +161,7 @@
 
     <fieldset>
 
-      <legend>{ts domain="de.systopia.twingle"}Groups{/ts}</legend>
+      <legend>{ts domain="de.systopia.twingle"}Groups and Correlations{/ts}</legend>
 
       <table class="form-layout-compressed">
 
@@ -188,6 +188,28 @@
         <tr class="crm-section">
           <td class="label">{$form.contribution_source.label}</td>
           <td class="content">{$form.contribution_source.html}</td>
+        </tr>
+
+        <tr class="crm-section">
+          <td class="label">
+            {$form.custom_field_mapping.label}
+            <a
+                    onclick='
+                            CRM.help(
+                            "{ts domain="de.systopia.twingle"}Custom field mapping{/ts}",
+                    {literal}{
+                      "id": "id-custom_field_mapping",
+                      "file": "CRM\/Twingle\/Form\/Profile"
+                    }{/literal}
+                            );
+                            return false;
+                            '
+                    href="#"
+                    title="{ts domain="de.systopia.twingle"}Help{/ts}"
+                    class="helpicon"
+            ></a>
+          </td>
+          <td class="content">{$form.custom_field_mapping.html}</td>
         </tr>
 
       </table>

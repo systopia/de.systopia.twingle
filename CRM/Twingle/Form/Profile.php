@@ -231,6 +231,13 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       array()
     );
 
+    $this->add(
+      'textarea', // field type
+      'custom_field_mapping', // field name
+      E::ts('Custom field mapping'), // field label
+      array()
+    );
+
     $this->addButtons(array(
       array(
         'type' => 'submit',
@@ -266,6 +273,67 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     // Restrict profile names to alphanumeric characters and the underscore.
     if (isset($values['name']) && preg_match("/[^A-Za-z0-9\_]/", $values['name'])) {
       $errors['name'] = E::ts('Only alphanumeric characters and the underscore (_) are allowed for profile names.');
+    }
+
+    // Validate custom field mapping.
+    try {
+      $custom_field_mapping = preg_split('/\r\n|\r|\n/', $values['custom_field_mapping'], -1, PREG_SPLIT_NO_EMPTY);
+      if (!is_array($custom_field_mapping)) {
+        throw new Exception(
+          E::ts('Could not parse custom field mapping.')
+        );
+      }
+      foreach ($custom_field_mapping as $custom_field_map) {
+        $custom_field_map = explode("=", $custom_field_map);
+        if (count($custom_field_map) !== 2) {
+          throw new Exception(
+            E::ts('Could not parse custom field mapping.')
+          );
+        }
+        list($twingle_field_name, $custom_field_name) = $custom_field_map;
+        $custom_field_id = substr($custom_field_name, strlen('custom_'));
+
+        // Check for custom field existence
+        try {
+          $custom_field = civicrm_api3('CustomField', 'getsingle', array(
+            'id' => $custom_field_id,
+          ));
+        }
+        catch (CiviCRM_API3_Exception $exception) {
+          throw new Exception(
+            E::ts(
+              'Custom field custom_%1 does not exist.',
+              array(1 => $custom_field_id)
+            )
+          );
+        }
+
+        // Only allow custom fields on relevant entities.
+        try {
+          $custom_group = civicrm_api3('CustomGroup', 'getsingle', array(
+            'id' => $custom_field['custom_group_id'],
+            'extends' => array(
+              'IN' => array(
+                'Contact',
+                'Individual',
+                'Organization',
+                'Contribution',
+                'ContributionRecur',
+              ),
+            ),
+          ));
+        } catch (CiviCRM_API3_Exception $exception) {
+          throw new Exception(
+            E::ts(
+              'Custom field custom_%1 is not in a CustomGroup that extends one of the supported CiviCRM entities.',
+              array(1 => $custom_field['id'])
+            )
+          );
+        }
+      }
+    }
+    catch (Exception $exception) {
+      $errors['custom_field_mapping'] = $exception->getMessage();
     }
 
     return empty($errors) ? TRUE : $errors;

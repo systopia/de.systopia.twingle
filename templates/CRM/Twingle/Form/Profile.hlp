@@ -27,3 +27,17 @@
 {htxt id='id-financial_type_id_recur'}
     {ts domain="de.systopia.twingle"}Select which financial type to use for recurring contributions.{/ts}
 {/htxt}
+
+{htxt id='id-custom_field_mapping'}
+    {ts domain="de.systopia.twingle"}<p>Map Twingle custom fields to CiviCRM custom fields using the following format (each assignment in a separate line):</p>
+    <pre>twingle_field_1=custom_123<br />twingle_field_2=custom_789</pre>
+    <p>Always use the <code>custom_[id]</code> notation for CiviCRM custom fields.</p>
+    <p>Only custom fields extending one of the following CiviCRM entities are allowed:</p>
+    <ul>
+      <li><strong>Contact</strong> &ndash; Will be set on the Individual contact</li>
+      <li><strong>Individual</strong> &ndash; Will be set on the Individual contact</li>
+      <li><strong>Organization</strong> &ndash; Will be set on the Organization contact, if an organisation name was submitted</li>
+      <li><strong>Contribution</strong> &ndash; Will be set on the contribution</li>
+      <li><strong>ContributionRecur</strong> &ndash; Will be set on the recurring contribution and deriving single contributions</li>
+    </ul>{/ts}
+{/htxt}

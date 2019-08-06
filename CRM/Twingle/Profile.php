@@ -76,7 +76,8 @@ class CRM_Twingle_Profile {
   public function getCustomFieldMapping() {
     $custom_field_mapping = array();
     if (!empty($custom_field_definition = $this->getAttribute('custom_field_mapping'))) {
-      foreach (preg_split('/\r\n|\r|\n/', $custom_field_definition, -1, PREG_SPLIT_NO_EMPTY) as $twingle_field_name => $custom_field_name) {
+      foreach (preg_split('/\r\n|\r|\n/', $custom_field_definition, -1, PREG_SPLIT_NO_EMPTY) as $custom_field_map) {
+        list($twingle_field_name, $custom_field_name) = explode("=", $custom_field_map);
         $custom_field_mapping[$twingle_field_name] = $custom_field_name;
       }
     }

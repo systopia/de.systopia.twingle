@@ -506,10 +506,6 @@ function civicrm_api3_twingle_donation_Submit($params) {
     if (!empty($custom_fields['Contribution'])) {
       $contribution_data += $custom_fields['Contribution'];
     }
-    // Add custom field values.
-    if (!empty($custom_fields['ContributionRecur'])) {
-      $contribution_data += $custom_fields['ContributionRecur'];
-    }
 
     if (!empty($params['purpose'])) {
       $contribution_data['note'] = $params['purpose'];
@@ -564,6 +560,10 @@ function civicrm_api3_twingle_donation_Submit($params) {
         )
       // ... and frequency unit and interval from a static mapping.
       + CRM_Twingle_Submission::getFrequencyMapping($params['donation_rhythm']);
+      // Add custom field values.
+      if (!empty($custom_fields['ContributionRecur'])) {
+        $mandate_data += $custom_fields['ContributionRecur'];
+      }
 
       // Add cycle day for recurring contributions.
       if ($params['donation_rhythm'] != 'one_time') {
@@ -595,6 +595,13 @@ function civicrm_api3_twingle_donation_Submit($params) {
             'financial_type_id' => $profile->getAttribute('financial_type_id_recur'),
           )
           + CRM_Twingle_Submission::getFrequencyMapping($params['donation_rhythm']);
+
+        // Add custom field values.
+        if (!empty($custom_fields['ContributionRecur'])) {
+          $contribution_recur_data += $custom_fields['ContributionRecur'];
+          $contribution_data += $custom_fields['ContributionRecur'];
+        }
+
         $contribution_recur = civicrm_api3('contributionRecur', 'create', $contribution_recur_data);
         if ($contribution_recur['is_error']) {
           throw new CiviCRM_API3_Exception(
