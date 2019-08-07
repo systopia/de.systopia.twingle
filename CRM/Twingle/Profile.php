@@ -251,7 +251,7 @@ class CRM_Twingle_Profile {
       'donation_receipt_groups' => NULL,
       'campaign' => NULL,
       'contribution_source' => NULL,
-      'membreship_type_id' => NULL,
+      'membership_type_id' => NULL,
     ));
   }
 
