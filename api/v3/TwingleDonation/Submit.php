@@ -571,6 +571,13 @@ function civicrm_api3_twingle_donation_Submit($params) {
       }
 
       $result_values = $contribution['values'];
+
+    // Create membership if a membership type is configured within the profile.
+    if (!empty($membership_type_id = $profile->getAttribute('membership_type_id'))) {
+      $membership = civicrm_api3('Membership', 'create', array(
+        'contact_id' => $contact_id,
+        'membership_type_id' => $membership_type_id,
+      ));
     }
 
     $result = civicrm_api3_create_success($result_values);
