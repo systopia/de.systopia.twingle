@@ -186,6 +186,11 @@
         </tr>
 
         <tr class="crm-section">
+          <td class="label">{$form.membership_type_id.label}</td>
+          <td class="content">{$form.membership_type_id.html}</td>
+        </tr>
+
+        <tr class="crm-section">
           <td class="label">{$form.contribution_source.label}</td>
           <td class="content">{$form.contribution_source.html}</td>
         </tr>

@@ -265,6 +265,9 @@ function civicrm_api3_twingle_donation_Submit($params) {
     // Copy submitted parameters.
     $original_params = $params;
 
+    // Prepare results array.
+    $result_values = array();
+
     // Get the profile defined for the given form ID, or the default profile
     // if none matches.
     $profile = CRM_Twingle_Profile::getProfileForProject($params['project_id']);
@@ -460,6 +463,11 @@ function civicrm_api3_twingle_donation_Submit($params) {
       }
     }
 
+    $result_values['contact'] = $contact_id;
+    if (isset($organisation_id)) {
+      $result_values['organization'] = $organisation_id;
+    }
+
     // If requested, add contact to newsletter groups defined in the profile.
     if (!empty($params['newsletter']) && !empty($groups = $profile->getAttribute('newsletter_groups'))) {
       foreach ($groups as $group_id) {
@@ -467,6 +475,8 @@ function civicrm_api3_twingle_donation_Submit($params) {
           'group_id' => $group_id,
           'contact_id' => $contact_id,
         ));
+
+        $result_values['newsletter'][] = $group_id;
       }
     }
 
@@ -477,6 +487,8 @@ function civicrm_api3_twingle_donation_Submit($params) {
           'group_id' => $group_id,
           'contact_id' => $contact_id,
         ));
+
+        $result_values['postinfo'][] = $group_id;
       }
     }
 
@@ -488,6 +500,8 @@ function civicrm_api3_twingle_donation_Submit($params) {
           'group_id' => $group_id,
           'contact_id' => $contact_id,
         ));
+
+        $result_values['donation_receipt'][] = $group_id;
       }
     }
 
@@ -581,7 +595,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       // Create the mandate.
       $mandate = civicrm_api3('SepaMandate', 'createfull', $mandate_data);
 
-      $result_values = $mandate['values'];
+      $result_values['sepa_mandate'] = $mandate['values'];
     }
     else {
       // Create (recurring) contribution.
@@ -629,7 +643,17 @@ function civicrm_api3_twingle_donation_Submit($params) {
         );
       }
 
-      $result_values = $contribution['values'];
+      $result_values['contribution'] = $contribution['values'];
+    }
+
+    // Create membership if a membership type is configured within the profile.
+    if (!empty($membership_type_id = $profile->getAttribute('membership_type_id'))) {
+      $membership = civicrm_api3('Membership', 'create', array(
+        'contact_id' => $contact_id,
+        'membership_type_id' => $membership_type_id,
+      ));
+
+      $result_values['membership'] = $membership;
     }
 
     $result = civicrm_api3_create_success($result_values);

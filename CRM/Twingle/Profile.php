@@ -207,6 +207,7 @@ class CRM_Twingle_Profile {
       'campaign',
       'contribution_source',
       'custom_field_mapping',
+      'membership_type_id',
     );
   }
 
@@ -267,6 +268,7 @@ class CRM_Twingle_Profile {
       'campaign' => NULL,
       'contribution_source' => NULL,
       'custom_field_mapping' => NULL,
+      'membership_type_id' => NULL,
     ));
   }
 
