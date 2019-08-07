@@ -70,6 +70,21 @@ class CRM_Twingle_Profile {
   }
 
   /**
+   * @return array
+   *   The profile's configured custom field mapping
+   */
+  public function getCustomFieldMapping() {
+    $custom_field_mapping = array();
+    if (!empty($custom_field_definition = $this->getAttribute('custom_field_mapping'))) {
+      foreach (preg_split('/\r\n|\r|\n/', $custom_field_definition, -1, PREG_SPLIT_NO_EMPTY) as $custom_field_map) {
+        list($twingle_field_name, $custom_field_name) = explode("=", $custom_field_map);
+        $custom_field_mapping[$twingle_field_name] = $custom_field_name;
+      }
+    }
+    return $custom_field_mapping;
+  }
+
+  /**
    * Retrieves all data attributes of the profile.
    *
    * @return array
@@ -191,6 +206,7 @@ class CRM_Twingle_Profile {
       'donation_receipt_groups',
       'campaign',
       'contribution_source',
+      'custom_field_mapping',
     );
   }
 
@@ -250,6 +266,7 @@ class CRM_Twingle_Profile {
       'donation_receipt_groups' => NULL,
       'campaign' => NULL,
       'contribution_source' => NULL,
+      'custom_field_mapping' => NULL,
     ));
   }
 
