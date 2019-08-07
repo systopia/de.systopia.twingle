@@ -225,6 +225,15 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     );
 
     $this->add(
+      'select', // field type
+      'membership_type_id', // field name
+      E::ts('Create membership of type'), // field label
+      array('' => E::ts('- none -')) + $this->getMembershipTypes(), // list of options
+      FALSE, // is not required
+      array('class' => 'crm-select2 huge')
+    );
+
+    $this->add(
       'text', // field type
       'contribution_source', // field name
       E::ts('Contribution source'), // field label
@@ -347,6 +356,27 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       $financial_types[$type['id']] = $type['name'];
     }
     return $financial_types;
+  }
+
+  /**
+   * Retrieves membership types present within the system as options for select
+   * form elements.
+   *
+   * @return array
+   *
+   * @throws \CiviCRM_API3_Exception
+   */
+  public function getMembershipTypes() {
+    $membership_types = array();
+    $query = civicrm_api3('MembershipType', 'get', array(
+      'is_active'    => 1,
+      'option.limit' => 0,
+      'return'       => 'id,name'
+    ));
+    foreach ($query['values'] as $type) {
+      $membership_types[$type['id']] = $type['name'];
+    }
+    return $membership_types;
   }
 
   /**
