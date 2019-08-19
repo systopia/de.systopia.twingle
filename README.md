@@ -13,6 +13,11 @@ The extension is licensed under
 
 *This section is yet to be completed.*
 
+### Configure Extended Contact Matcher (XCM)
+
+Make sure you use an XCM profile with the option *Match contacts by contact ID*
+enabled.
+
 ### Configure CiviCRM
 
 - Go to the Administration console `/civicrm/admin`
