@@ -201,7 +201,12 @@ class CRM_Twingle_Profile {
         'membership_type_id',
       ),
       // Add payment methods.
-      array_keys(static::paymentInstruments())
+      array_keys(static::paymentInstruments()),
+
+      // Add contribution status for all payment methods.
+      array_map(function ($attribute) {
+        return $attribute . '_status';
+      }, array_keys(static::paymentInstruments()))
     );
   }
 
@@ -263,7 +268,11 @@ class CRM_Twingle_Profile {
       'contribution_source' => NULL,
       'custom_field_mapping' => NULL,
       'membership_type_id' => NULL,
-    ));
+    )
+      // Add contribution status for all payment methods.
+      + array_fill_keys(array_map(function($attribute) {
+        return $attribute . '_status';
+      }, array_keys(static::paymentInstruments())), CRM_Twingle_Submission::CONTRIBUTION_STATUS_COMPLETED));
   }
 
   /**
