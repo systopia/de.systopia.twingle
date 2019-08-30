@@ -28,6 +28,11 @@ class CRM_Twingle_Submission {
   const GROUP_TYPE_NEWSLETTER = 'Mailing List';
 
   /**
+   * The option value for the contribution type for completed contributions.
+   */
+  const CONTRIBUTION_STATUS_COMPLETED = 'Completed';
+
+  /**
    * The default ID of the "Employer of" relationship type.
    */
   const EMPLOYER_RELATIONSHIP_TYPE_ID = 5;

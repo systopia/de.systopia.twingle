@@ -115,15 +115,16 @@ class CRM_Twingle_Profile {
    * Retrieves an attribute of the profile.
    *
    * @param string $attribute_name
+   * @param mixed $default
    *
    * @return mixed | NULL
    */
-  public function getAttribute($attribute_name) {
+  public function getAttribute($attribute_name, $default = NULL) {
     if (isset($this->data[$attribute_name])) {
       return $this->data[$attribute_name];
     }
     else {
-      return NULL;
+      return $default;
     }
   }
 
@@ -180,34 +181,27 @@ class CRM_Twingle_Profile {
    * @return array
    */
   public static function allowedAttributes() {
-    return array(
-      'selector',
-      'location_type_id',
-      'location_type_id_organisation',
-      'financial_type_id',
-      'financial_type_id_recur',
-      'pi_banktransfer',
-      'pi_debit_manual',
-      'pi_debit_automatic',
-      'pi_creditcard',
-      'pi_mobilephone_germany',
-      'pi_paypal',
-      'pi_sofortueberweisung',
-      'pi_amazonpay',
-      'pi_paydirekt',
-      'pi_applepay',
-      'pi_googlepay',
-      'sepa_creditor_id',
-      'gender_male',
-      'gender_female',
-      'gender_other',
-      'newsletter_groups',
-      'postinfo_groups',
-      'donation_receipt_groups',
-      'campaign',
-      'contribution_source',
-      'custom_field_mapping',
-      'membership_type_id',
+    return array_merge(
+      array(
+        'selector',
+        'location_type_id',
+        'location_type_id_organisation',
+        'financial_type_id',
+        'financial_type_id_recur',
+        'sepa_creditor_id',
+        'gender_male',
+        'gender_female',
+        'gender_other',
+        'newsletter_groups',
+        'postinfo_groups',
+        'donation_receipt_groups',
+        'campaign',
+        'contribution_source',
+        'custom_field_mapping',
+        'membership_type_id',
+      ),
+      // Add payment methods.
+      array_keys(static::paymentInstruments())
     );
   }
 

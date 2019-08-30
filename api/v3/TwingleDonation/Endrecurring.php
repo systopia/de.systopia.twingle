@@ -105,7 +105,7 @@ function civicrm_api3_twingle_donation_endrecurring($params) {
       $contribution = civicrm_api3('ContributionRecur', 'create', array(
         'id' => $contribution['id'],
         'end_date' => $params['ended_at'],
-        'contribution_status_id' => 'Completed',
+        'contribution_status_id' => CRM_Twingle_Submission::CONTRIBUTION_STATUS_COMPLETED,
       ));
     }
 
