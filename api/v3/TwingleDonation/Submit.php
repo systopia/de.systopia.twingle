@@ -632,7 +632,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
       // Create contribution.
       $contribution_data += array(
-        'contribution_status_id' => CRM_Twingle_Submission::CONTRIBUTION_STATUS_COMPLETED,
+        'contribution_status_id' => $profile->getAttribute($params['payment_instrument_id'] . '_status', CRM_Twingle_Submission::CONTRIBUTION_STATUS_COMPLETED),
         'receive_date' => $params['confirmed_at'],
       );
       $contribution = civicrm_api3('Contribution', 'create', $contribution_data);

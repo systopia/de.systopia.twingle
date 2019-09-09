@@ -47,6 +47,14 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   /**
    * @var array
    *
+   * A static cache of retrieved contribution statuses found within
+   * static::getContributionStatusOptions().
+   */
+  protected static $_contributionStatusOptions = NULL;
+
+  /**
+   * @var array
+   *
    * A static cache of retrieved groups found within static::getGroups().
    */
   protected static $_groups = NULL;
@@ -237,6 +245,14 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         E::ts('Record %1 as', array(1 => $pi_label)), // field label
         static::getPaymentInstruments(), // list of options
         TRUE // is required
+      );
+
+      $this->add(
+        'select',
+        $pi_name . '_status',
+        E::ts('Record %1 donations with contribution status', array(1 => $pi_label)),
+        static::getContributionStatusOptions(),
+        TRUE
       );
     }
 
@@ -611,6 +627,36 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       }
     }
     return self::$_paymentInstruments;
+  }
+
+  /**
+   * Retrieves contribution statuses as options for select form elements.
+   *
+   * @return array
+   *
+   * @throws \CiviCRM_API3_Exception
+   */
+  public static function getContributionStatusOptions() {
+    if (!isset(self::$_contributionStatusOptions)) {
+      $query = civicrm_api3(
+        'OptionValue',
+        'get',
+        array(
+          'option.limit' => 0,
+          'option_group_id' => 'contribution_status',
+          'return' => array(
+            'value',
+            'label',
+          )
+        )
+      );
+
+      foreach ($query['values'] as $contribution_status) {
+        self::$_contributionStatusOptions[$contribution_status['value']] = $contribution_status['label'];
+      }
+    }
+
+    return self::$_contributionStatusOptions;
   }
 
   /**

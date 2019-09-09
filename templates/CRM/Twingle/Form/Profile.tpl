@@ -151,8 +151,14 @@
       <table class="form-layout-compressed">
         {foreach key=pi_name item=pi_label from=$payment_instruments}
           <tr class="crm-section {cycle values="odd,even"}">
+
             <td class="label">{$form.$pi_name.label}</td>
             <td class="content">{$form.$pi_name.html}</td>
+
+            {capture assign="pi_contribution_status"}{$pi_name}_status{/capture}
+            <td class="label">{$form.$pi_contribution_status.label}</td>
+            <td class="content">{$form.$pi_contribution_status.html}</td>
+
           </tr>
         {/foreach}
       </table>
