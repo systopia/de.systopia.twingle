@@ -377,6 +377,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
                  'user_email' => 'email',
                  'user_telephone' => 'phone',
                  'user_title' => 'formal_title',
+                 'debit_iban' => 'iban',
                ) as $contact_param => $contact_component) {
         if (!empty($params[$contact_param])) {
           $contact_data[$contact_component] = $params[$contact_param];
