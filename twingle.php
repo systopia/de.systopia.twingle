@@ -4,6 +4,15 @@ require_once 'twingle.civix.php';
 use CRM_Twingle_ExtensionUtil as E;
 
 /**
+ * Implements hook_civicrm_pre().
+ */
+function twingle_civicrm_pre($op, $objectName, $id, &$params) {
+  if ($objectName == 'ContributionRecur' && $op == 'edit') {
+    CRM_Twingle_Tools::checkRecurringContributionChange($id, $params);
+  }
+}
+
+/**
  * Implements hook_civicrm_config().
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_config

@@ -122,12 +122,14 @@ function civicrm_api3_twingle_donation_Cancel($params) {
       ));
     }
     else {
+      CRM_Twingle_Tools::$protection_suspended = TRUE;
       $contribution = civicrm_api3($contribution_type, 'create', array(
         'id' => $contribution['id'],
         'cancel_date' => $params['cancelled_at'],
         'contribution_status_id' => 'Cancelled',
         'cancel_reason' => $params['cancel_reason'],
       ));
+      CRM_Twingle_Tools::$protection_suspended = FALSE;
     }
 
     $result = civicrm_api3_create_success($contribution);

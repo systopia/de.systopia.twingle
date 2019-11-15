@@ -103,11 +103,13 @@ function civicrm_api3_twingle_donation_endrecurring($params) {
       ));
     }
     else {
+      CRM_Twingle_Tools::$protection_suspended = TRUE;
       $contribution = civicrm_api3('ContributionRecur', 'create', array(
         'id' => $contribution['id'],
         'end_date' => $params['ended_at'],
         'contribution_status_id' => CRM_Twingle_Submission::CONTRIBUTION_STATUS_COMPLETED,
       ));
+      CRM_Twingle_Tools::$protection_suspended = FALSE;
     }
 
     $result = civicrm_api3_create_success($contribution);

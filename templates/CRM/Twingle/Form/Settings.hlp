@@ -16,6 +16,10 @@
     {ts domain="de.systopia.twingle" 1="<a href=\"https://github.com/project60/org.project60.sepa\" target=\"_blank\">CiviSEPA (<kbd>org.project60.sepa</kbd>) extension</a>"}When the %1 is enabled and one of its payment instruments is assigned to a Twingle payment method (practically the <em>debit_manual</em> payment method), submitting a Twingle donation through the API will create a SEPA mandate with the given data.{/ts}
 {/htxt}
 
+{htxt id='id-twingle_protect_recurring'}
+    {ts domain="de.systopia.twingle"}Will protect all recurring contributions created by Twingle from termination, since this does NOT terminate the Twingle collection process{/ts}
+{/htxt}
+
 {htxt id='id-twingle_prefix'}
     {ts domain="de.systopia.twingle"}You can use this setting to add a prefix to the Twingle transaction ID, in order to avoid collisions with other transaction ids.{/ts}
 {/htxt}
