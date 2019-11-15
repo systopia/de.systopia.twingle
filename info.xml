@@ -14,11 +14,12 @@
     <url desc="Support">https://github.com/systopia/de.systopia.twingle/issues</url>
     <url desc="Licensing">http://www.gnu.org/licenses/agpl-3.0.html</url>
   </urls>
-  <releaseDate>2019-11-14</releaseDate>
-  <version>1.1-alpha3</version>
+  <releaseDate></releaseDate>
+  <version>1.1-dev</version>
   <develStage>dev</develStage>
   <compatibility>
     <ver>4.7</ver>
+    <ver>5.0</ver>
   </compatibility>
   <comments></comments>
   <requires>
