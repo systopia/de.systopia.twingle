@@ -22,7 +22,7 @@
   <table class="form-layout-compressed">
   {foreach from=$elementNames item=elementName}
     <tr class="crm-twingle-form-block-{$form.$elementName.name}">
-      <td class="label">{$form.$elementName.label} &nbsp;<a onclick='CRM.help("{$form.$elementName.label}", {literal}{"id":"id-{/literal}{$fo/rm.$elementName.name}{literal}","file":"CRM\/Twingle\/Form\/Settings"}{/literal}); return false;' href="#" title="{ts domain="de.systopia.twingle"}Help{/ts}" class="helpicon"></a></td>
+      <td class="label">{$form.$elementName.label} &nbsp;<a onclick='CRM.help("{$form.$elementName.label}", {literal}{"id":"id-{/literal}{$form.$elementName.name}{literal}","file":"CRM\/Twingle\/Form\/Settings"}{/literal}); return false;' href="#" title="{ts domain="de.systopia.twingle"}Help{/ts}" class="helpicon"></a></td>
       <td>
         {$form.$elementName.html}
         <br />
