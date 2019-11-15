@@ -287,16 +287,14 @@ class CRM_Twingle_Profile {
   public static function getProfileForProject($project_id) {
     $profiles = self::getProfiles();
 
-    // If none matches, use the default profile.
-    $profile = $profiles['default'];
-
     foreach ($profiles as $profile) {
       if ($profile->matches($project_id)) {
-        break;
+        return $profile;
       }
     }
 
-    return $profile;
+    // If none matches, use the default profile.
+    return $profiles['default'];
   }
 
   /**
