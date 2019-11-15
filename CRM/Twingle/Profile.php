@@ -146,6 +146,21 @@ class CRM_Twingle_Profile {
   }
 
   /**
+   * Get the CiviCRM transaction ID (to be used in contributions and recurring contributions)
+   *
+   * @param $twingle_id string Twingle ID
+   * @return string CiviCRM transaction ID
+   */
+  public function getTransactionID($twingle_id) {
+    $prefix = CRM_Core_BAO_Setting::getItem('de.systopia.twingle', 'twingle_prefix');
+    if (empty($prefix)) {
+      return $twingle_id;
+    } else {
+      return $prefix . $twingle_id;
+    }
+  }
+
+  /**
    * Verifies whether the profile is valid (i.e. consistent and not colliding
    * with other profiles).
    *

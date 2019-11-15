@@ -31,4 +31,18 @@ return array(
     'is_contact' => 0,
     'description' => 'Whether to provide CiviSEPA functionality for manual debit payment method. This requires the CiviSEPA (org.project60.sepa) extension be installed.',
   ),
+  'twingle_prefix' => array(
+      'group_name' => 'de.systopia.twingle',
+      'group' => 'de.systopia.twingle',
+      'name' => 'twingle_prefix',
+      'type' => CRM_Utils_Type::T_STRING,
+      'quick_form_type' => 'Element',
+      'html_type' => 'text',
+      'title' => 'Twingle ID Prefix',
+      'default' => '',
+      'add' => '4.6',
+      'is_domain' => 1,
+      'is_contact' => 0,
+      'description' => 'You can use this setting to add a prefix to the Twingle transaction ID, in order to avoid collisions with other transaction ids.',
+  ),
 );

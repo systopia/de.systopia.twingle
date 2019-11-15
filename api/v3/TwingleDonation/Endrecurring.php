@@ -72,8 +72,9 @@ function civicrm_api3_twingle_donation_endrecurring($params) {
       );
     }
 
+    $default_profile = CRM_Twingle_Profile::getProfile('default');
     $contribution = civicrm_api3('ContributionRecur', 'getsingle', array(
-      'trxn_id' => $params['trx_id'],
+      'trxn_id' => $default_profile->getTransactionID($params['trx_id']),
     ));
     // End SEPA mandate (which ends the associated recurring contribution) or
     // recurring contributions.

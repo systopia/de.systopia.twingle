@@ -278,10 +278,10 @@ function civicrm_api3_twingle_donation_Submit($params) {
     // Do not process an already existing contribution with the given
     // transaction ID.
     $existing_contribution = civicrm_api3('Contribution', 'get', array(
-      'trxn_id' => $params['trx_id']
+      'trxn_id' => $profile->getTransactionID($params['trx_id'])
     ));
     $existing_contribution_recur = civicrm_api3('ContributionRecur', 'get', array(
-      'trxn_id' => $params['trx_id']
+      'trxn_id' => $profile->getTransactionID($params['trx_id'])
     ));
     if ($existing_contribution['count'] > 0 || $existing_contribution_recur['count'] > 0) {
       throw new CiviCRM_API3_Exception(
@@ -511,7 +511,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
     $contribution_data = array(
       'contact_id' => (isset($organisation_id) ? $organisation_id : $contact_id),
       'currency' => $params['currency'],
-      'trxn_id' => $params['trx_id'],
+      'trxn_id' => $profile->getTransactionID($params['trx_id']),
       'payment_instrument_id' => $params['payment_instrument_id'],
       'amount' => $params['amount'] / 100,
       'total_amount' => $params['amount'] / 100,
