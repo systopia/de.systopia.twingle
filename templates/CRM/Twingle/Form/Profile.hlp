@@ -16,6 +16,11 @@
     {ts domain="de.systopia.twingle"}Select which location type to use for addresses for individuals, either when no organisation name is specified, or an organisation address can not be shared with the individual contact.{/ts}
 {/htxt}
 
+{htxt id='id-project_ids'}
+    {ts domain="de.systopia.twingle"}Put your project's Twingle ID in here, to activate this profile for that project.{/ts}
+    {ts domain="de.systopia.twingle"}You can also provide multiple project IDs separated by a comma.{/ts}
+{/htxt}
+
 {htxt id='id-location_type_id_organisation'}
     {ts domain="de.systopia.twingle"}Select which location type to use for addresses for organisations and shared organisation addresses for individual contacts.{/ts}
 {/htxt}

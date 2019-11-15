@@ -179,7 +179,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       'text', // field type
       'selector', // field name
       E::ts('Project IDs'), // field label
-      array(),
+      ['class' => 'huge'],
       TRUE // is required
     );
 

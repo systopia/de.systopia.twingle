@@ -28,7 +28,23 @@
         </tr>
 
         <tr class="crm-section">
-          <td class="label">{$form.selector.label}</td>
+          <td class="label">{$form.selector.label}
+            <a
+                    onclick='
+                            CRM.help(
+                            "{ts domain="de.systopia.twingle"}Project IDs{/ts}",
+                    {literal}{
+                      "id": "id-project_ids",
+                      "file": "CRM\/Twingle\/Form\/Profile"
+                    }{/literal}
+                            );
+                            return false;
+                            '
+                    href="#"
+                    title="{ts domain="de.systopia.twingle"}Help{/ts}"
+                    class="helpicon"
+            ></a>
+          </td>
           <td class="content">{$form.selector.html}</td>
         </tr>
 
