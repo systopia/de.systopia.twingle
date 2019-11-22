@@ -55,7 +55,7 @@ class CRM_Twingle_Tools {
         'id'     => $recurring_contribution_id]);
 
     // check if this is a SEPA transaction
-    //if (self::isSDD($recurring_contribution['payment_instrument_id'])) return;
+    if (self::isSDD($recurring_contribution['payment_instrument_id'])) return;
 
     // check if it's really a termination (i.e. current status is 2 or 5)
     if (!in_array($recurring_contribution['contribution_status_id'], [2,5])) return;

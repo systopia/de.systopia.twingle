@@ -602,20 +602,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         // enabled.
         if (
           CRM_Twingle_Submission::civiSepaEnabled()
-          && (
-            (
-              method_exists('CRM_Sepa_Logic_PaymentInstruments', 'isSDD')
-              && CRM_Sepa_Logic_PaymentInstruments::isSDD(array(
-                'payment_instrument_id' => $payment_instrument['value'],
-              ))
-            )
-            || (
-              method_exists('CRM_Sepa_Logic_Settings', 'isSDD')
-              && CRM_Sepa_Logic_Settings::isSDD(array(
-                'payment_instrument_id' => $payment_instrument['value'],
-              ))
-            )
-          )
+              && CRM_Twingle_Tools::isSDD($payment_instrument['value'])
         ) {
           if (!isset(self::$_paymentInstruments['sepa'])) {
             self::$_paymentInstruments['sepa'] = E::ts('CiviSEPA');

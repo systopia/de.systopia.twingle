@@ -97,7 +97,7 @@ function civicrm_api3_twingle_donation_Cancel($params) {
     // End SEPA mandate if applicable.
     if (
       CRM_Twingle_Submission::civiSepaEnabled()
-      && CRM_Sepa_Logic_Settings::isSDD($contribution)
+        && CRM_Twingle_Tools::isSDD($contribution['payment_instrument_id'])
     ) {
       $mandate_id = CRM_Sepa_Logic_Settings::getMandateFor($contribution['id']);
       // Mandates can not be terminated in the past.
