@@ -83,11 +83,16 @@ function civicrm_api3_twingle_donation_endrecurring($params) {
         && CRM_Twingle_Tools::isSDD($contribution['payment_instrument_id'])
     ) {
       $mandate_id = CRM_Sepa_Logic_Settings::getMandateFor($contribution['id']);
-      // Mandates can not be terminated in the past.
-      $end_date = date('Ymd', max(
-        time(),
-        date_create_from_format('Ymd', $params['cancelled_at'])->getTimestamp()
-      ));
+      $end_date = date_create_from_format('Ymd', $params['ended_at']);
+      if ($end_date) {
+        // Mandates can not be terminated in the past:
+        $end_date = date('Ymd', max(
+            time(),
+            $end_date->getTimestamp()));
+      } else {
+        // end date couldn't be parsed, use 'now'
+        $end_date = date('Ymd');
+      }
 
       // verify that the mandate has not been terminated in the past
       $mandate_status = civicrm_api3('SepaMandate', 'getvalue', ['return' => 'status', 'id' => $mandate_id]);
@@ -115,9 +120,9 @@ function civicrm_api3_twingle_donation_endrecurring($params) {
     else {
       CRM_Twingle_Tools::$protection_suspended = TRUE;
       $contribution = civicrm_api3('ContributionRecur', 'create', array(
-        'id' => $contribution['id'],
-        'end_date' => $params['ended_at'],
-        'contribution_status_id' => CRM_Twingle_Submission::CONTRIBUTION_STATUS_COMPLETED,
+          'id'                     => $contribution['id'],
+          'end_date'               => $params['ended_at'],
+          'contribution_status_id' => CRM_Twingle_Submission::CONTRIBUTION_STATUS_COMPLETED,
       ));
       CRM_Twingle_Tools::$protection_suspended = FALSE;
     }
