@@ -91,4 +91,41 @@ class CRM_Twingle_Tools {
     }
     return in_array($payment_instrument_id, $sepa_payment_instruments);
   }
+
+  /**
+   * Get a CiviSEPA mandate for the given contribution ID
+   *
+   * @param $contribution_id integer contribution ID *or* recurring contribution ID
+   * @return integer mandate ID or null
+   */
+  public static function getMandateFor($contribution_id) {
+    $contribution_id = (int) $contribution_id;
+    if ($contribution_id) {
+      try {
+        // try recurring mandate
+        $rcur_mandate = civicrm_api3('SepaMandate', 'get', [
+            'entity_id'    => $contribution_id,
+            'entity_table' => 'civicrm_contribution_recur',
+            'type'         => 'RCUR',
+        ]);
+        if ($rcur_mandate['count'] == 1) {
+          return reset($rcur_mandate['values']);
+        }
+
+        // try OOFF mandate
+        // try recurring mandate
+        $ooff_mandate = civicrm_api3('SepaMandate', 'get', [
+            'entity_id'    => $contribution_id,
+            'entity_table' => 'civicrm_contribution',
+            'type'         => 'OOFF',
+        ]);
+        if ($ooff_mandate['count'] == 1) {
+          return reset($ooff_mandate['values']);
+        }
+      } catch (Exception $ex) {
+        Civi::log()->error("CRM_Twingle_Tools::getMandate failde for [{$contribution_id}]: " . $ex->getMessage());
+      }
+    }
+    return NULL;
+  }
 }

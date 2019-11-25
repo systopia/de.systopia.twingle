@@ -76,14 +76,24 @@ function civicrm_api3_twingle_donation_endrecurring($params) {
     $contribution = civicrm_api3('ContributionRecur', 'getsingle', array(
       'trxn_id' => $default_profile->getTransactionID($params['trx_id']),
     ));
+
     // End SEPA mandate (which ends the associated recurring contribution) or
     // recurring contributions.
     if (
       CRM_Twingle_Submission::civiSepaEnabled()
         && CRM_Twingle_Tools::isSDD($contribution['payment_instrument_id'])
     ) {
-      $mandate_id = CRM_Sepa_Logic_Settings::getMandateFor($contribution['id']);
-      $end_date = date_create_from_format('Ymd', $params['ended_at']);
+      // END SEPA MANDATE
+      $mandate = CRM_Twingle_Tools::getMandateFor($contribution['id']);
+      if (!$mandate) {
+        throw new CiviCRM_API3_Exception(
+            E::ts("SEPA Mandate for recurring contribution [%1 not found.", [1 => $contribution['id']]),
+            'api_error'
+        );
+      }
+
+      $mandate_id = $mandate['id'];
+      $end_date = date_create_from_format('YmdHis', $params['ended_at']);
       if ($end_date) {
         // Mandates can not be terminated in the past:
         $end_date = date('Ymd', max(
@@ -95,8 +105,7 @@ function civicrm_api3_twingle_donation_endrecurring($params) {
       }
 
       // verify that the mandate has not been terminated in the past
-      $mandate_status = civicrm_api3('SepaMandate', 'getvalue', ['return' => 'status', 'id' => $mandate_id]);
-      if ($mandate_status != 'FRST' && $mandate_status != 'RCUR') {
+      if ($mandate['status'] != 'FRST' && $mandate['status'] != 'RCUR') {
         throw new CiviCRM_API3_Exception(
             E::ts("SEPA Mandate [%1] already terminated.", [1 => $mandate_id]),
             'api_error'
@@ -118,6 +127,7 @@ function civicrm_api3_twingle_donation_endrecurring($params) {
       ));
     }
     else {
+      // END RECURRING CONTRIBUTION
       CRM_Twingle_Tools::$protection_suspended = TRUE;
       $contribution = civicrm_api3('ContributionRecur', 'create', array(
           'id'                     => $contribution['id'],
