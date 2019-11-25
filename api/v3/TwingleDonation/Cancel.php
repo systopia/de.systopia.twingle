@@ -72,7 +72,7 @@ function civicrm_api3_twingle_donation_Cancel($params) {
 
   try {
     // Validate date for parameter "cancelled_at".
-    if (!DateTime::createFromFormat('Ymd', $params['cancelled_at'])) {
+    if (!DateTime::createFromFormat('YmdHis', $params['cancelled_at'])) {
       throw new CiviCRM_API3_Exception(
         E::ts('Invalid date for parameter "cancelled_at".'),
         'invalid_format'
@@ -109,7 +109,7 @@ function civicrm_api3_twingle_donation_Cancel($params) {
       $mandate_id = (int) $mandate['id'];
 
       // Mandates can not be terminated in the past.
-      $end_date = date_create_from_format('Ymd', $params['cancelled_at']);
+      $end_date = date_create_from_format('YmdHis', $params['cancelled_at']);
       if ($end_date) {
         // Mandates can not be terminated in the past:
         $end_date = date('Ymd', max(
