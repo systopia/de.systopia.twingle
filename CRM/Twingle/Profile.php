@@ -363,6 +363,6 @@ class CRM_Twingle_Profile {
     foreach (self::$_profiles as $profile_name => $profile) {
       $profile_data[$profile_name] = $profile->data;
     }
-    CRM_Core_BAO_Setting::setItem((object) $profile_data, 'de.systopia.twingle', 'twingle_profiles');
+    CRM_Core_BAO_Setting::setItem($profile_data, 'de.systopia.twingle', 'twingle_profiles');
   }
 }
