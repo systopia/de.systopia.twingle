@@ -269,10 +269,7 @@ class CRM_Twingle_Submission {
       'is_active' => 1,
     ));
     return
-      CRM_Core_BAO_Setting::getItem(
-        'de.systopia.twingle',
-        'twingle_use_sepa'
-      )
+      Civi::settings()->get('twingle_use_sepa')
       && $sepa_extension['count'];
   }
 

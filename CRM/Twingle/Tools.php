@@ -42,11 +42,11 @@ class CRM_Twingle_Tools {
     if (self::$protection_suspended) return;
 
     // currently only works with prefixes
-    $prefix = CRM_Core_BAO_Setting::getItem('de.systopia.twingle', 'twingle_prefix');
+    $prefix = Civi::settings()->get('twingle_prefix');
     if (empty($prefix)) return;
 
     // check if protection is turned on
-    $protection_on = CRM_Core_BAO_Setting::getItem('de.systopia.twingle', 'twingle_protect_recurring');
+    $protection_on = Civi::settings()->get('twingle_protect_recurring');
     if (empty($protection_on)) return;
 
     // load the recurring contribution
