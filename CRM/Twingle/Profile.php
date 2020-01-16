@@ -152,7 +152,7 @@ class CRM_Twingle_Profile {
    * @return string CiviCRM transaction ID
    */
   public function getTransactionID($twingle_id) {
-    $prefix = CRM_Core_BAO_Setting::getItem('de.systopia.twingle', 'twingle_prefix');
+    $prefix = Civi::settings()->get('twingle_prefix');
     if (empty($prefix)) {
       return $twingle_id;
     } else {
@@ -338,7 +338,7 @@ class CRM_Twingle_Profile {
   public static function getProfiles() {
     if (self::$_profiles === NULL) {
       self::$_profiles = array();
-      if ($profiles_data = CRM_Core_BAO_Setting::getItem('de.systopia.twingle', 'twingle_profiles')) {
+      if ($profiles_data = Civi::settings()->get('twingle_profiles')) {
         foreach ($profiles_data as $profile_name => $profile_data) {
           self::$_profiles[$profile_name] = new CRM_Twingle_Profile($profile_name, $profile_data);
         }
@@ -363,6 +363,6 @@ class CRM_Twingle_Profile {
     foreach (self::$_profiles as $profile_name => $profile) {
       $profile_data[$profile_name] = $profile->data;
     }
-    CRM_Core_BAO_Setting::setItem((object) $profile_data, 'de.systopia.twingle', 'twingle_profiles');
+    Civi::settings()->set('twingle_profiles', $profile_data);
   }
 }

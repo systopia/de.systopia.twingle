@@ -143,4 +143,24 @@ class CRM_Twingle_Upgrader extends CRM_Twingle_Upgrader_Base {
     return TRUE;
   }
 
+  /**
+   * Convert serialized settings from objects to arrays.
+   *
+   * @link https://civicrm.org/advisory/civi-sa-2019-21-poi-saved-search-and-report-instance-apis
+   */
+  public function upgrade_5011() {
+    // Do not use CRM_Core_BAO::getItem() or Civi::settings()->get().
+    // Extract and unserialize directly from the database.
+    $twingle_profiles_query = CRM_Core_DAO::executeQuery("
+        SELECT `value`
+          FROM `civicrm_setting`
+        WHERE `name` = 'twingle_profiles';");
+    if ($twingle_profiles_query->fetch()) {
+      $profiles = unserialize($twingle_profiles_query->value);
+      Civi::settings()->set('twingle_profiles', (array) $profiles);
+    }
+
+    return TRUE;
+  }
+
 }
