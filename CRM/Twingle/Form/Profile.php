@@ -129,10 +129,6 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       $profile_name = NULL;
     }
 
-    // Assign template variables.
-    $this->assign('op', $this->_op);
-    $this->assign('profile_name', $profile_name);
-
     // Set redirect destination.
     $this->controller->_destination = CRM_Utils_System::url('civicrm/admin/settings/twingle/profiles', 'reset=1');
 
@@ -158,12 +154,31 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         }
         CRM_Utils_System::setTitle(E::ts('Edit Twingle API profile <em>%1</em>', array(1 => $this->profile->getName())));
         break;
+      case 'copy':
+        // This will be a 'create' actually.
+        $this->_op = 'create';
+
+        // When copying without a valid profile name, copy the default profile.
+        if (!$profile_name) {
+          $profile_name = 'default';
+          $this->profile = CRM_Twingle_Profile::getProfile($profile_name);
+        }
+
+        // Set a new name for this profile.
+        $profile_name = $profile_name . '_copy';
+        $this->profile->setName($profile_name);
+        CRM_Utils_System::setTitle(E::ts('New Twingle API profile'));
+        break;
       case 'create':
         // Load factory default profile values.
         $this->profile = CRM_twingle_Profile::createDefaultProfile($profile_name);
         CRM_Utils_System::setTitle(E::ts('New Twingle API profile'));
         break;
     }
+
+    // Assign template variables.
+    $this->assign('op', $this->_op);
+    $this->assign('profile_name', $profile_name);
 
     // Add form elements.
     $is_default = $profile_name == 'default';
