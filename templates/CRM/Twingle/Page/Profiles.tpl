@@ -39,6 +39,7 @@
           </td>
           <td>
             <a href="{crmURL p="civicrm/admin/settings/twingle/profile" q="op=edit&name=$profile_name"}" title="{ts domain="de.systopia.twingle" 1=$profile.name}Edit profile %1{/ts}" class="action-item crm-hover-button">{ts domain="de.systopia.twingle"}Edit{/ts}</a>
+            <a href="{crmURL p="civicrm/admin/settings/twingle/profile" q="op=copy&name=$profile_name"}" title="{ts domain="de.systopia.twingle" 1=$profile.name}Copy profile %1{/ts}" class="action-item crm-hover-button">{ts domain="de.systopia.twingle"}Copy{/ts}</a>
             {if $profile_name == 'default'}
               <a href="{crmURL p="civicrm/admin/settings/twingle/profile" q="op=delete&name=$profile_name"}" title="{ts domain="de.systopia.twingle" 1=$profile.name}Reset profile %1{/ts}" class="action-item crm-hover-button">{ts domain="de.systopia.twingle"}Reset{/ts}</a>
             {else}
