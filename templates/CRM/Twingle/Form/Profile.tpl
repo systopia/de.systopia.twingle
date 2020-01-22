@@ -211,6 +211,10 @@
           <td class="label">{$form.membership_type_id.label}</td>
           <td class="content">{$form.membership_type_id.html}</td>
         </tr>
+        <tr class="crm-section">
+          <td class="label">{$form.membership_type_id_recur.label}</td>
+          <td class="content">{$form.membership_type_id_recur.html}</td>
+        </tr>
 
         <tr class="crm-section">
           <td class="label">{$form.contribution_source.label}</td>

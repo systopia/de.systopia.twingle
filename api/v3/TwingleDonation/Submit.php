@@ -648,7 +648,13 @@ function civicrm_api3_twingle_donation_Submit($params) {
     }
 
     // Create membership if a membership type is configured within the profile.
-    if (!empty($membership_type_id = $profile->getAttribute('membership_type_id'))) {
+    if ($params['donation_rhythm'] != 'one_time') {
+      $membership_type_id = $profile->getAttribute('membership_type_id_recur');
+    }
+    else {
+      $membership_type_id = $profile->getAttribute('membership_type_id');
+    }
+    if (!empty($membership_type_id)) {
       $membership = civicrm_api3('Membership', 'create', array(
         'contact_id' => $contact_id,
         'membership_type_id' => $membership_type_id,
