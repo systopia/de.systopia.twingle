@@ -325,6 +325,14 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       FALSE, // is not required
       array('class' => 'crm-select2 huge')
     );
+    $this->add(
+      'select', // field type
+      'membership_type_id_recur', // field name
+      E::ts('Create membership of type (recurring)'), // field label
+      array('' => E::ts('- none -')) + static::getMembershipTypes(), // list of options
+      FALSE, // is not required
+      array('class' => 'crm-select2 huge')
+    );
 
     $this->add(
       'text', // field type
