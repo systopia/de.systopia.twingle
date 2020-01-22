@@ -80,15 +80,16 @@ function civicrm_api3_twingle_donation_Cancel($params) {
     }
 
     // Retrieve (recurring) contribution.
+    $default_profile = CRM_Twingle_Profile::getProfile('default');
     try {
       $contribution = civicrm_api3('Contribution', 'getsingle', array(
-        'trxn_id' => $params['trx_id'],
+        'trxn_id' => $default_profile->getTransactionID($params['trx_id']),
       ));
       $contribution_type = 'Contribution';
     }
     catch (CiviCRM_API3_Exception $exception) {
       $contribution = civicrm_api3('ContributionRecur', 'getsingle', array(
-        'trxn_id' => $params['trx_id'],
+          'trxn_id' => $default_profile->getTransactionID($params['trx_id']),
       ));
       $contribution_type = 'ContributionRecur';
     }
@@ -121,12 +122,14 @@ function civicrm_api3_twingle_donation_Cancel($params) {
       ));
     }
     else {
+      CRM_Twingle_Tools::$protection_suspended = TRUE;
       $contribution = civicrm_api3($contribution_type, 'create', array(
         'id' => $contribution['id'],
         'cancel_date' => $params['cancelled_at'],
         'contribution_status_id' => 'Cancelled',
         'cancel_reason' => $params['cancel_reason'],
       ));
+      CRM_Twingle_Tools::$protection_suspended = FALSE;
     }
 
     $result = civicrm_api3_create_success($contribution);

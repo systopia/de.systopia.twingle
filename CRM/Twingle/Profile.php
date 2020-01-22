@@ -70,6 +70,21 @@ class CRM_Twingle_Profile {
   }
 
   /**
+   * @return array
+   *   The profile's configured custom field mapping
+   */
+  public function getCustomFieldMapping() {
+    $custom_field_mapping = array();
+    if (!empty($custom_field_definition = $this->getAttribute('custom_field_mapping'))) {
+      foreach (preg_split('/\r\n|\r|\n/', $custom_field_definition, -1, PREG_SPLIT_NO_EMPTY) as $custom_field_map) {
+        list($twingle_field_name, $custom_field_name) = explode("=", $custom_field_map);
+        $custom_field_mapping[$twingle_field_name] = $custom_field_name;
+      }
+    }
+    return $custom_field_mapping;
+  }
+
+  /**
    * Retrieves all data attributes of the profile.
    *
    * @return array
@@ -100,15 +115,16 @@ class CRM_Twingle_Profile {
    * Retrieves an attribute of the profile.
    *
    * @param string $attribute_name
+   * @param mixed $default
    *
    * @return mixed | NULL
    */
-  public function getAttribute($attribute_name) {
+  public function getAttribute($attribute_name, $default = NULL) {
     if (isset($this->data[$attribute_name])) {
       return $this->data[$attribute_name];
     }
     else {
-      return NULL;
+      return $default;
     }
   }
 
@@ -127,6 +143,21 @@ class CRM_Twingle_Profile {
     }
     // TODO: Check if value is acceptable.
     $this->data[$attribute_name] = $value;
+  }
+
+  /**
+   * Get the CiviCRM transaction ID (to be used in contributions and recurring contributions)
+   *
+   * @param $twingle_id string Twingle ID
+   * @return string CiviCRM transaction ID
+   */
+  public function getTransactionID($twingle_id) {
+    $prefix = Civi::settings()->get('twingle_prefix');
+    if (empty($prefix)) {
+      return $twingle_id;
+    } else {
+      return $prefix . $twingle_id;
+    }
   }
 
   /**
@@ -165,33 +196,32 @@ class CRM_Twingle_Profile {
    * @return array
    */
   public static function allowedAttributes() {
-    return array(
-      'selector',
-      'location_type_id',
-      'location_type_id_organisation',
-      'financial_type_id',
-      'financial_type_id_recur',
-      'pi_banktransfer',
-      'pi_debit_manual',
-      'pi_debit_automatic',
-      'pi_creditcard',
-      'pi_mobilephone_germany',
-      'pi_paypal',
-      'pi_sofortueberweisung',
-      'pi_amazonpay',
-      'pi_paydirekt',
-      'pi_applepay',
-      'pi_googlepay',
-      'sepa_creditor_id',
-      'gender_male',
-      'gender_female',
-      'gender_other',
-      'newsletter_groups',
-      'postinfo_groups',
-      'donation_receipt_groups',
-      'campaign',
-      'contribution_source',
-      'membership_type_id',
+    return array_merge(
+      array(
+        'selector',
+        'location_type_id',
+        'location_type_id_organisation',
+        'financial_type_id',
+        'financial_type_id_recur',
+        'sepa_creditor_id',
+        'gender_male',
+        'gender_female',
+        'gender_other',
+        'newsletter_groups',
+        'postinfo_groups',
+        'donation_receipt_groups',
+        'campaign',
+        'contribution_source',
+        'custom_field_mapping',
+        'membership_type_id',
+      ),
+      // Add payment methods.
+      array_keys(static::paymentInstruments()),
+
+      // Add contribution status for all payment methods.
+      array_map(function ($attribute) {
+        return $attribute . '_status';
+      }, array_keys(static::paymentInstruments()))
     );
   }
 
@@ -251,8 +281,13 @@ class CRM_Twingle_Profile {
       'donation_receipt_groups' => NULL,
       'campaign' => NULL,
       'contribution_source' => NULL,
+      'custom_field_mapping' => NULL,
       'membership_type_id' => NULL,
-    ));
+    )
+      // Add contribution status for all payment methods.
+      + array_fill_keys(array_map(function($attribute) {
+        return $attribute . '_status';
+      }, array_keys(static::paymentInstruments())), CRM_Twingle_Submission::CONTRIBUTION_STATUS_COMPLETED));
   }
 
   /**
@@ -267,16 +302,14 @@ class CRM_Twingle_Profile {
   public static function getProfileForProject($project_id) {
     $profiles = self::getProfiles();
 
-    // If none matches, use the default profile.
-    $profile = $profiles['default'];
-
     foreach ($profiles as $profile) {
       if ($profile->matches($project_id)) {
-        break;
+        return $profile;
       }
     }
 
-    return $profile;
+    // If none matches, use the default profile.
+    return $profiles['default'];
   }
 
   /**
@@ -305,7 +338,7 @@ class CRM_Twingle_Profile {
   public static function getProfiles() {
     if (self::$_profiles === NULL) {
       self::$_profiles = array();
-      if ($profiles_data = CRM_Core_BAO_Setting::getItem('de.systopia.twingle', 'twingle_profiles')) {
+      if ($profiles_data = Civi::settings()->get('twingle_profiles')) {
         foreach ($profiles_data as $profile_name => $profile_data) {
           self::$_profiles[$profile_name] = new CRM_Twingle_Profile($profile_name, $profile_data);
         }
@@ -330,6 +363,6 @@ class CRM_Twingle_Profile {
     foreach (self::$_profiles as $profile_name => $profile) {
       $profile_data[$profile_name] = $profile->data;
     }
-    CRM_Core_BAO_Setting::setItem((object) $profile_data, 'de.systopia.twingle', 'twingle_profiles');
+    Civi::settings()->set('twingle_profiles', $profile_data);
   }
 }

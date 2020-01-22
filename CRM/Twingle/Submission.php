@@ -28,6 +28,11 @@ class CRM_Twingle_Submission {
   const GROUP_TYPE_NEWSLETTER = 'Mailing List';
 
   /**
+   * The option value for the contribution type for completed contributions.
+   */
+  const CONTRIBUTION_STATUS_COMPLETED = 'Completed';
+
+  /**
    * The default ID of the "Employer of" relationship type.
    */
   const EMPLOYER_RELATIONSHIP_TYPE_ID = 5;
@@ -98,6 +103,16 @@ class CRM_Twingle_Submission {
         );
       }
       $params['gender_id'] = $gender_id;
+    }
+
+    // Validate custom fields parameter, if given.
+    if (!empty($params['custom_fields'])) {
+      if (!is_array($custom_fields = json_decode($params['custom_fields'], TRUE))) {
+        throw new CiviCRM_API3_Exception(
+          E::ts('Invalid format for custom fields.'),
+          'invalid_format'
+        );
+      }
     }
   }
 
@@ -254,10 +269,7 @@ class CRM_Twingle_Submission {
       'is_active' => 1,
     ));
     return
-      CRM_Core_BAO_Setting::getItem(
-        'de.systopia.twingle',
-        'twingle_use_sepa'
-      )
+      Civi::settings()->get('twingle_use_sepa')
       && $sepa_extension['count'];
   }
 

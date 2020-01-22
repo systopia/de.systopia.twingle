@@ -28,7 +28,23 @@
         </tr>
 
         <tr class="crm-section">
-          <td class="label">{$form.selector.label}</td>
+          <td class="label">{$form.selector.label}
+            <a
+                    onclick='
+                            CRM.help(
+                            "{ts domain="de.systopia.twingle"}Project IDs{/ts}",
+                    {literal}{
+                      "id": "id-project_ids",
+                      "file": "CRM\/Twingle\/Form\/Profile"
+                    }{/literal}
+                            );
+                            return false;
+                            '
+                    href="#"
+                    title="{ts domain="de.systopia.twingle"}Help{/ts}"
+                    class="helpicon"
+            ></a>
+          </td>
           <td class="content">{$form.selector.html}</td>
         </tr>
 
@@ -151,8 +167,14 @@
       <table class="form-layout-compressed">
         {foreach key=pi_name item=pi_label from=$payment_instruments}
           <tr class="crm-section {cycle values="odd,even"}">
+
             <td class="label">{$form.$pi_name.label}</td>
             <td class="content">{$form.$pi_name.html}</td>
+
+            {capture assign="pi_contribution_status"}{$pi_name}_status{/capture}
+            <td class="label">{$form.$pi_contribution_status.label}</td>
+            <td class="content">{$form.$pi_contribution_status.html}</td>
+
           </tr>
         {/foreach}
       </table>
@@ -161,7 +183,7 @@
 
     <fieldset>
 
-      <legend>{ts domain="de.systopia.twingle"}Groups{/ts}</legend>
+      <legend>{ts domain="de.systopia.twingle"}Groups and Correlations{/ts}</legend>
 
       <table class="form-layout-compressed">
 
@@ -193,6 +215,28 @@
         <tr class="crm-section">
           <td class="label">{$form.contribution_source.label}</td>
           <td class="content">{$form.contribution_source.html}</td>
+        </tr>
+
+        <tr class="crm-section">
+          <td class="label">
+            {$form.custom_field_mapping.label}
+            <a
+                    onclick='
+                            CRM.help(
+                            "{ts domain="de.systopia.twingle"}Custom field mapping{/ts}",
+                    {literal}{
+                      "id": "id-custom_field_mapping",
+                      "file": "CRM\/Twingle\/Form\/Profile"
+                    }{/literal}
+                            );
+                            return false;
+                            '
+                    href="#"
+                    title="{ts domain="de.systopia.twingle"}Help{/ts}"
+                    class="helpicon"
+            ></a>
+          </td>
+          <td class="content">{$form.custom_field_mapping.html}</td>
         </tr>
 
       </table>

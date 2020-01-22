@@ -72,8 +72,9 @@ function civicrm_api3_twingle_donation_endrecurring($params) {
       );
     }
 
+    $default_profile = CRM_Twingle_Profile::getProfile('default');
     $contribution = civicrm_api3('ContributionRecur', 'getsingle', array(
-      'trxn_id' => $params['trx_id'],
+      'trxn_id' => $default_profile->getTransactionID($params['trx_id']),
     ));
     // End SEPA mandate (which ends the associated recurring contribution) or
     // recurring contributions.
@@ -87,6 +88,16 @@ function civicrm_api3_twingle_donation_endrecurring($params) {
         time(),
         date_create_from_format('Ymd', $params['cancelled_at'])->getTimestamp()
       ));
+
+      // verify that the mandate has not been terminated in the past
+      $mandate_status = civicrm_api3('SepaMandate', 'getvalue', ['return' => 'status', 'id' => $mandate_id]);
+      if ($mandate_status != 'FRST' && $mandate_status != 'RCUR') {
+        throw new CiviCRM_API3_Exception(
+            E::ts("SEPA Mandate [%1] already terminated.", [1 => $mandate_id]),
+            'api_error'
+        );
+      }
+
       if (!CRM_Sepa_BAO_SEPAMandate::terminateMandate(
         $mandate_id,
         $end_date,
@@ -102,11 +113,13 @@ function civicrm_api3_twingle_donation_endrecurring($params) {
       ));
     }
     else {
+      CRM_Twingle_Tools::$protection_suspended = TRUE;
       $contribution = civicrm_api3('ContributionRecur', 'create', array(
         'id' => $contribution['id'],
         'end_date' => $params['ended_at'],
-        'contribution_status_id' => 'Completed',
+        'contribution_status_id' => CRM_Twingle_Submission::CONTRIBUTION_STATUS_COMPLETED,
       ));
+      CRM_Twingle_Tools::$protection_suspended = FALSE;
     }
 
     $result = civicrm_api3_create_success($contribution);
