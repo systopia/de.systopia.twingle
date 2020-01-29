@@ -163,7 +163,7 @@ function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
   );
   $params['user_email'] = array(
     'name'         => 'user_email',
-    'title'        => E::ts('E-mail address'),
+    'title'        => E::ts('Email address'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
     'description'  => E::ts('The e-mail address of the contact.'),

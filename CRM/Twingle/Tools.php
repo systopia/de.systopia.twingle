@@ -123,7 +123,7 @@ class CRM_Twingle_Tools {
           return reset($ooff_mandate['values']);
         }
       } catch (Exception $ex) {
-        Civi::log()->error("CRM_Twingle_Tools::getMandate failde for [{$contribution_id}]: " . $ex->getMessage());
+        Civi::log()->debug("CRM_Twingle_Tools::getMandate failed for [{$contribution_id}]: " . $ex->getMessage());
       }
     }
     return NULL;
