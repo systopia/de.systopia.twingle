@@ -94,17 +94,32 @@ function civicrm_api3_twingle_donation_Cancel($params) {
       $contribution_type = 'ContributionRecur';
     }
 
-    // End SEPA mandate if applicable.
     if (
       CRM_Twingle_Submission::civiSepaEnabled()
-      && CRM_Sepa_Logic_Settings::isSDD($contribution)
+        && CRM_Twingle_Tools::isSDD($contribution['payment_instrument_id'])
     ) {
-      $mandate_id = CRM_Sepa_Logic_Settings::getMandateFor($contribution['id']);
+      // End SEPA mandate if applicable.
+      $mandate = CRM_Twingle_Tools::getMandateFor($contribution['id']);
+      if (!$mandate) {
+        throw new CiviCRM_API3_Exception(
+            E::ts("SEPA Mandate for contribution [%1 not found.", [1 => $contribution['id']]),
+            'api_error'
+        );
+      }
+      $mandate_id = (int) $mandate['id'];
+
       // Mandates can not be terminated in the past.
-      $end_date = date('Ymd', max(
-        time(),
-        date_create_from_format('Ymd', $params['cancelled_at'])->getTimestamp()
-      ));
+      $end_date = date_create_from_format('YmdHis', $params['cancelled_at']);
+      if ($end_date) {
+        // Mandates can not be terminated in the past:
+        $end_date = date('Ymd', max(
+            time(),
+            $end_date->getTimestamp()));
+      } else {
+        // end date couldn't be parsed, use 'now'
+        $end_date = date('Ymd');
+      }
+
       if (!CRM_Sepa_BAO_SEPAMandate::terminateMandate(
         $mandate_id,
         $end_date,
@@ -122,6 +137,7 @@ function civicrm_api3_twingle_donation_Cancel($params) {
       ));
     }
     else {
+      // regular contribution
       CRM_Twingle_Tools::$protection_suspended = TRUE;
       $contribution = civicrm_api3($contribution_type, 'create', array(
         'id' => $contribution['id'],
