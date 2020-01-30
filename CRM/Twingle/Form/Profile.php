@@ -101,6 +101,14 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   /**
    * @var array
    *
+   * A static cache of retrieved location types found within
+   * static::getXCMProfiles().
+   */
+  protected static $_xcm_profiles = NULL;
+
+  /**
+   * @var array
+   *
    * A static cache of retrieved membership types found within
    * static::getMembershipTypes().
    */
@@ -196,6 +204,14 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       E::ts('Project IDs'), // field label
       ['class' => 'huge'],
       TRUE // is required
+    );
+
+    $this->add(
+        'select',
+        'xcm_profile',
+        E::ts('Contact Matcher (XCM) Profile'),
+        static::getXCMProfiles(),
+        TRUE
     );
 
     $this->add(
@@ -508,6 +524,26 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       }
     }
     return static::$_locationTypes;
+  }
+
+  /**
+   * Retrieves XCM profiles (if supported). 'default' profile is always available
+   *
+   * @return array
+   */
+  public static function getXCMProfiles() {
+    if (!isset(static::$_xcm_profiles)) {
+      static::$_xcm_profiles = array(
+          '' => E::ts("&lt;default profile&gt;"),
+      );
+      if (method_exists('CRM_Xcm_Configuration', 'getProfileList')) {
+        $profiles = CRM_Xcm_Configuration::getProfileList();
+        foreach ($profiles as $profile_key => $profile_name) {
+          static::$_xcm_profiles[$profile_key] = $profile_name;
+        }
+      }
+    }
+    return static::$_xcm_profiles;
   }
 
   /**

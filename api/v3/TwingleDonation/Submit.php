@@ -450,14 +450,15 @@ function civicrm_api3_twingle_donation_Submit($params) {
         )
       );
 
-      // Address is not shared, use submitted address with configured location
-      // type.
+      // Address is not shared, use submitted address with
+      // configured location type.
       if (!$address_shared && !empty($submitted_address)) {
-        // Do not use `Address.create` API action in order for XCM to decide
+        // Do not use `Address.create` API action, let XCM decide
         // whether to create an address.
-        civicrm_api3('Contact', 'getorcreate', array(
-            'id' => $contact_id,
-          ) + $submitted_address);
+        CRM_Twingle_Submission::getContact(
+            'Individual',
+            array('id' => $contact_id) + $submitted_address,
+            $profile);
       }
 
       // Create employer relationship between organization and individual.

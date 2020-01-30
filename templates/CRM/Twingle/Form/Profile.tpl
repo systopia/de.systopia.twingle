@@ -49,6 +49,27 @@
         </tr>
 
         <tr class="crm-section">
+          <td class="label">{$form.xcm_profile.label}
+            <a
+                    onclick='
+                            CRM.help(
+                            "{ts domain="de.systopia.twingle"}XCM Profile{/ts}",
+                    {literal}{
+                      "id": "id-xcm_profile",
+                      "file": "CRM\/Twingle\/Form\/Profile"
+                    }{/literal}
+                            );
+                            return false;
+                            '
+                    href="#"
+                    title="{ts domain="de.systopia.twingle"}Help{/ts}"
+                    class="helpicon"
+            ></a>
+          </td>
+          <td class="content">{$form.xcm_profile.html}</td>
+        </tr>
+
+        <tr class="crm-section">
           <td class="label">
             {$form.location_type_id.label}
             <a

@@ -21,6 +21,11 @@
     {ts domain="de.systopia.twingle"}You can also provide multiple project IDs separated by a comma.{/ts}
 {/htxt}
 
+{htxt id='id-xcm_profile'}
+    {ts domain="de.systopia.twingle"}The Contact Matcher (XCM) manages the identification or creation of the related contact.{/ts}
+    {ts domain="de.systopia.twingle"}We recommend creating a new XCM profile only to be used with the Twingle API.{/ts}
+{/htxt}
+
 {htxt id='id-location_type_id_organisation'}
     {ts domain="de.systopia.twingle"}Select which location type to use for addresses for organisations and shared organisation addresses for individual contacts.{/ts}
 {/htxt}

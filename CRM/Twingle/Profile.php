@@ -199,6 +199,7 @@ class CRM_Twingle_Profile {
     return array_merge(
       array(
         'selector',
+        'xcm_profile',
         'location_type_id',
         'location_type_id_organisation',
         'financial_type_id',
@@ -258,6 +259,7 @@ class CRM_Twingle_Profile {
   public static function createDefaultProfile($name = 'default') {
     return new CRM_Twingle_Profile($name, array(
       'selector'          => '',
+      'xcm_profile'       => '',
       'location_type_id'  => CRM_Twingle_Submission::LOCATION_TYPE_ID_WORK,
       'location_type_id_organisation' => CRM_Twingle_Submission::LOCATION_TYPE_ID_WORK,
       'financial_type_id' => 1, // "Donation"
