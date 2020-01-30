@@ -139,6 +139,12 @@ class CRM_Twingle_Submission {
       return NULL;
     }
 
+    // add xcm profile
+    $xcm_profile = $profile->getAttribute('xcm_profile');
+    if (!empty($xcm_profile)) {
+      $contact_data['xcm_profile'] = $xcm_profile;
+    }
+
     // add campaign
     $campaign_id = (int) $profile->getAttribute('campaign');
     if ($campaign_id) {
