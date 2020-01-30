@@ -124,6 +124,8 @@ class CRM_Twingle_Submission {
    *   The contact type to look for/to create.
    * @param array $contact_data
    *   Data to use for contact lookup/to create a contact with.
+   * @param CRM_Twingle_Profile $profile
+   *   Profile used for this process
    *
    * @return int | NULL
    *   The ID of the matching/created contact, or NULL if no matching contact
@@ -131,10 +133,16 @@ class CRM_Twingle_Submission {
    * @throws \CiviCRM_API3_Exception
    *   When invalid data was given.
    */
-  public static function getContact($contact_type, $contact_data) {
+  public static function getContact($contact_type, $contact_data, $profile) {
     // If no parameters are given, do nothing.
     if (empty($contact_data)) {
       return NULL;
+    }
+
+    // add campaign
+    $campaign_id = (int) $profile->getAttribute('campaign');
+    if ($campaign_id) {
+      $contact_data['campaign_id'] = $campaign_id;
     }
 
     // Prepare values: country.

@@ -394,7 +394,8 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
       if (!$contact_id = CRM_Twingle_Submission::getContact(
         'Individual',
-        $contact_data
+        $contact_data,
+        $profile
       )) {
         throw new CiviCRM_API3_Exception(
           E::ts('Individual contact could not be found or created.'),
@@ -429,7 +430,8 @@ function civicrm_api3_twingle_donation_Submit($params) {
         }
         if (!$organisation_id = CRM_Twingle_Submission::getContact(
           'Organization',
-          $organisation_data
+          $organisation_data,
+          $profile
         )) {
           throw new CiviCRM_API3_Exception(
             E::ts('Organisation contact could not be found or created.'),
