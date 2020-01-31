@@ -93,6 +93,14 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   /**
    * @var array
    *
+   * A static cache of retrieved prefixes found within
+   * static::getGenderOptions().
+   */
+  protected static $_prefixOptions = NULL;
+
+  /**
+   * @var array
+   *
    * A static cache of retrieved location types found within
    * static::getLocationTypes().
    */
@@ -265,6 +273,28 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       E::ts('Gender option for submitted value "other"'),
       static::getGenderOptions(),
       TRUE
+    );
+
+    $this->add(
+        'select',
+        'prefix_male',
+        E::ts('Prefix option for submitted value "male"'),
+        static::getPrefixOptions(),
+        FALSE
+    );
+    $this->add(
+        'select',
+        'prefix_female',
+        E::ts('Prefix option for submitted value "female"'),
+        static::getPrefixOptions(),
+        FALSE
+    );
+    $this->add(
+        'select',
+        'prefix_other',
+        E::ts('Prefix option for submitted value "other"'),
+        static::getPrefixOptions(),
+        FALSE
     );
 
     $payment_instruments = CRM_Twingle_Profile::paymentInstruments();
@@ -593,7 +623,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   }
 
   /**
-   * Retrieves campaigns present within the system as options for select form
+   * Retrieves genders present within the system as options for select form
    * elements.
    *
    * @return array
@@ -617,6 +647,33 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       }
     }
     return static::$_genderOptions;
+  }
+
+  /**
+   * Retrieves prefixes present within the system as options for select form
+   * elements.
+   *
+   * @return array
+   *
+   * @throws \CiviCRM_API3_Exception
+   */
+  public static function getPrefixOptions() {
+    if (!isset(static::$_prefixOptions)) {
+      static::$_prefixOptions = array('' => E::ts('none'));
+      $query = civicrm_api3('OptionValue', 'get', array(
+          'option.limit' => 0,
+          'option_group_id' => 'individual_prefix',
+          'is_active' => 1,
+          'return' => array(
+              'value',
+              'label',
+          ),
+      ));
+      foreach ($query['values'] as $prefix) {
+        static::$_prefixOptions[$prefix['value']] = $prefix['label'];
+      }
+    }
+    return static::$_prefixOptions;
   }
 
   /**

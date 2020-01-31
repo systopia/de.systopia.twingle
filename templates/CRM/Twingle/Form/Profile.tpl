@@ -165,16 +165,16 @@
         {/if}
 
         <tr class="crm-section">
-          <td class="label">{$form.gender_male.label}</td>
-          <td class="content">{$form.gender_male.html}</td>
+          <td class="label">{ts domain="de.systopia.twingle"}Gender/Prefix for value 'male'{/ts}</td>
+          <td class="content">{$form.gender_male.html} / {$form.prefix_male.html}</td>
         </tr>
         <tr class="crm-section">
-          <td class="label">{$form.gender_female.label}</td>
-          <td class="content">{$form.gender_female.html}</td>
+          <td class="label">{ts domain="de.systopia.twingle"}Gender/Prefix for value 'female'{/ts}</td>
+          <td class="content">{$form.gender_female.html} / {$form.prefix_female.html}</td>
         </tr>
         <tr class="crm-section">
-          <td class="label">{$form.gender_other.label}</td>
-          <td class="content">{$form.gender_other.html}</td>
+          <td class="label">{ts domain="de.systopia.twingle"}Gender/Prefix for value 'other'{/ts}</td>
+          <td class="content">{$form.gender_other.html} / {$form.prefix_other.html}</td>
         </tr>
 
       </table>
