@@ -384,6 +384,14 @@ function civicrm_api3_twingle_donation_Submit($params) {
         }
       }
 
+      // Get the prefix ID defined within the profile
+      if (!empty($params['user_gender'])) {
+        $prefix_id = (int) $profile->getAttribute('prefix_' . $params['user_gender']);
+        if ($prefix_id) {
+          $contact_data['prefix_id'] = $prefix_id;
+        }
+      }
+
       // Add custom field values.
       if (!empty($custom_fields['Contact'])) {
         $contact_data += $custom_fields['Contact'];
