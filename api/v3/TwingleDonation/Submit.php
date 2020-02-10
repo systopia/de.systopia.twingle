@@ -667,11 +667,51 @@ function civicrm_api3_twingle_donation_Submit($params) {
     }
     if (!empty($membership_type_id)) {
       $membership = civicrm_api3('Membership', 'create', array(
-        'contact_id' => $contact_id,
-        'membership_type_id' => $membership_type_id,
+          'contact_id'         => $contact_id,
+          'membership_type_id' => $membership_type_id,
       ));
-
       $result_values['membership'] = $membership;
+
+      // call the postprocess API
+      $postprocess_call = $profile->getAttribute('membership_postprocess_call');
+      if (!empty($postprocess_call)) {
+        list($pp_entity, $pp_action) = explode('.', $postprocess_call, 1);
+        try {
+          // gather the contribution IDs
+          $recurring_contribution_id = $contribution_id = '';
+          if (isset($mandate)) {
+            if ($mandate['type'] == 'RCUR') {
+              $recurring_contribution_id = $mandate['entity_id'];
+            } elseif ($mandate['type'] == 'OOFF') {
+              $contribution_id = $mandate['entity_id'];
+            }
+          } else {
+            if (isset($contribution_recur['id'])) {
+              $recurring_contribution_id = $contribution_recur['id'];
+            }
+            if (isset($contribution['id'])) {
+              $contribution_id = $contribution['id'];
+            }
+          }
+
+          // run the call
+          civicrm_api3($pp_entity, $pp_action, [
+              'membership_id'             => $membership['id'],
+              'contact_id'                => $contact_id,
+              'organization_id'           => isset($organisation_id) ? $organisation_id : '',
+              'contribution_id'           => $contribution_id,
+              'recurring_contribution_id' => $recurring_contribution_id,
+          ]);
+
+          // refresh membership data
+          $result_values['membership'] = civicrm_api3('Membership', 'getsingle', $membership['id']);
+
+        } catch (Exception $ex) {
+          // TODO: more error handling?
+          Civi::log()->debug("Twingle membership postprocessing call {$pp_entity}.{$pp_action} has failed: " . $ex->getMessage());
+        }
+      }
+
     }
 
     $result = civicrm_api3_create_success($result_values);

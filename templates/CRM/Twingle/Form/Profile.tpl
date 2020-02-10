@@ -236,6 +236,27 @@
           <td class="label">{$form.membership_type_id_recur.label}</td>
           <td class="content">{$form.membership_type_id_recur.html}</td>
         </tr>
+        <tr class="crm-section twingle-postprocess-call">
+          <td class="label">
+            {$form.membership_postprocess_call.label}
+            <a
+                    onclick='
+                            CRM.help(
+                            "{ts domain="de.systopia.twingle"}Membership Postprocessing{/ts}",
+                    {literal}{
+                      "id": "id-membership-postprocessing-call",
+                      "file": "CRM\/Twingle\/Form\/Profile"
+                    }{/literal}
+                            );
+                            return false;
+                            '
+                    href="#"
+                    title="{ts domain="de.systopia.twingle"}Help{/ts}"
+                    class="helpicon"
+            ></a>
+          </td>
+          <td class="content">{$form.membership_postprocess_call.html}</td>
+        </tr>
 
         <tr class="crm-section">
           <td class="label">{$form.contribution_source.label}</td>
@@ -286,3 +307,27 @@
   </div>
 
 </div>
+
+{literal}
+<script>
+  /**
+   * Update the form fields based on whether membership creation is currently active
+   */
+  function twingle_membership_active_changed() {
+    let active = cj('#membership_type_id').val() || cj('#membership_type_id_recur').val();
+    if (active) {
+      cj('#membership_postprocess_call').parent().parent().show();
+    } else {
+      cj('#membership_postprocess_call').val(''); // empty to avoid hidden validation fail
+      cj('#membership_postprocess_call').parent().parent().hide();
+    }
+  }
+
+  // register events and run once
+  cj(document).ready(function (){
+    cj('#membership_type_id').change(twingle_membership_active_changed);
+    cj('#membership_type_id_recur').change(twingle_membership_active_changed);
+  });
+  twingle_membership_active_changed();
+</script>
+{/literal}

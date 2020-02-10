@@ -379,6 +379,13 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       FALSE, // is not required
       array('class' => 'crm-select2 huge')
     );
+    $this->add(
+        'text',
+        'membership_postprocess_call',
+        E::ts('API Call for Membership Postprocessing'),
+        FALSE
+    );
+    $this->addRule('membership_postprocess_call', E::ts("The API call must have the form 'Entity.Action'."), 'regex', '/^[A-Za-z_]+[.][A-Za-z_]+$/');
 
     $this->add(
       'text', // field type

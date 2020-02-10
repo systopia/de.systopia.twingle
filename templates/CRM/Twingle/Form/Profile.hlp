@@ -38,6 +38,17 @@
     {ts domain="de.systopia.twingle"}Select which financial type to use for recurring contributions.{/ts}
 {/htxt}
 
+{htxt id='id-membership-postprocessing-call'}
+    {ts domain="de.systopia.twingle"}Some organisations have specific conventions on how a membership should be created. Since the Twingle-API can only create a "bare bone" membership object, you can enter a API Call (as 'Entity.Action') to adjust any newly created membership to your organisation's needs.{/ts}
+    {ts domain="de.systopia.twingle"}The API call would receive the following parameters:<ul>
+        <li><code>membership_id</code>: The ID of the newly created membership</li>
+        <li><code>contact_id</code>: The ID of the contact involved</li>
+        <li><code>organization_id</code>: The ID of the contact's organisation, potentially empty</li>
+        <li><code>contribution_id</code>: The ID contribution received, potentially empty</li>
+        <li><code>recurring_contribution_id</code>: The ID of the recurring contribution. If empty, this was only a one-off donation.</li>
+    </ul>{/ts}
+{/htxt}
+
 {htxt id='id-custom_field_mapping'}
     {ts domain="de.systopia.twingle"}<p>Map Twingle custom fields to CiviCRM custom fields using the following format (each assignment in a separate line):</p>
     <pre>twingle_field_1=custom_123<br />twingle_field_2=custom_789</pre>
