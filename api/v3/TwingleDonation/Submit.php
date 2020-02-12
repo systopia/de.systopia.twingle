@@ -675,23 +675,15 @@ function civicrm_api3_twingle_donation_Submit($params) {
       // call the postprocess API
       $postprocess_call = $profile->getAttribute('membership_postprocess_call');
       if (!empty($postprocess_call)) {
-        list($pp_entity, $pp_action) = explode('.', $postprocess_call, 1);
+        list($pp_entity, $pp_action) = explode('.', $postprocess_call, 2);
         try {
           // gather the contribution IDs
           $recurring_contribution_id = $contribution_id = '';
-          if (isset($mandate)) {
-            if ($mandate['type'] == 'RCUR') {
-              $recurring_contribution_id = $mandate['entity_id'];
-            } elseif ($mandate['type'] == 'OOFF') {
-              $contribution_id = $mandate['entity_id'];
-            }
-          } else {
-            if (isset($contribution_recur['id'])) {
-              $recurring_contribution_id = $contribution_recur['id'];
-            }
-            if (isset($contribution['id'])) {
-              $contribution_id = $contribution['id'];
-            }
+          if (isset($contribution_recur['id'])) {
+            $recurring_contribution_id = $contribution_recur['id'];
+          }
+          if (isset($contribution['id'])) {
+            $contribution_id = $contribution['id'];
           }
 
           // run the call
