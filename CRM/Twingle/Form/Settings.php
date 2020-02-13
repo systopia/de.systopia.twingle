@@ -22,12 +22,18 @@ use CRM_Twingle_ExtensionUtil as E;
  */
 class CRM_Twingle_Form_Settings extends CRM_Core_Form {
 
-  private $_settingFilter = array('group' => 'de.systopia.twingle');
-
-  //everything from this line down is generic & can be re-used for a setting form in another extension
-  //actually - I lied - I added a specific call in getFormSettings
-  private $_submittedValues = array();
-  private $_settings = array();
+  /**
+   * @var array list of all settings options
+   */
+  public static $SETTINGS_LIST = [
+      'twingle_prefix',
+      'twingle_use_sepa',
+      'twingle_protect_recurring',
+      'twingle_protect_recurring_activity_type',
+      'twingle_protect_recurring_activity_subject',
+      'twingle_protect_recurring_activity_status',
+      'twingle_protect_recurring_activity_assignee',
+  ];
 
   /**
    * @inheritdoc
@@ -36,157 +42,132 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
     // Set redirect destination.
     $this->controller->_destination = CRM_Utils_System::url('civicrm/admin/settings/twingle', 'reset=1');
 
-    $settings = $this->getFormSettings();
-    $form_elements = array();
+    $this->add(
+        'text',
+        'twingle_prefix',
+        E::ts("Twingle ID Prefix")
+    );
 
-    foreach ($settings as $name => $setting) {
-      if (isset($setting['quick_form_type'])) {
-        $add = 'add' . $setting['quick_form_type'];
-        if ($add == 'addElement') {
-          $this->$add(
-            $setting['html_type'],
-            $name,
-            ts($setting['title']),
-            CRM_Utils_Array::value('html_attributes', $setting, array())
-          );
-        }
-        elseif ($setting['html_type'] == 'Select') {
-          $optionValues = array();
-          if (!empty($setting['pseudoconstant']) && !empty($setting['pseudoconstant']['optionGroupName'])) {
-            $optionValues = CRM_Core_OptionGroup::values($setting['pseudoconstant']['optionGroupName'], FALSE, FALSE, FALSE, NULL, 'name');
-          }
-          $this->add(
-            'select',
-            $setting['name'],
-            $setting['title'],
-            $optionValues,
-            FALSE,
-            CRM_Utils_Array::value('html_attributes', $setting, array())
-          );
-        }
-        else {
-          $this->$add($name, ts($setting['title']));
-        }
-        $form_elements[$setting['name']] = array('description' => ts($setting['description']));
+    $this->add(
+        'checkbox',
+        'twingle_use_sepa',
+        E::ts("Use CiviSEPA")
+    );
 
-        // Disable CiviSEPA setting if the extension is not installed.
-        if ($name == 'twingle_use_sepa') {
-          $sepa_extension = civicrm_api3('Extension', 'get', array(
-            'full_name' => 'org.project60.sepa',
-            'is_active' => 1,
-          ));
-          if ($sepa_extension['count'] == 0) {
-            $element = $this->getElement('twingle_use_sepa');
-            $element->freeze();
-            $form_elements['twingle_use_sepa']['description'] .= ' <span class="error">The <a href="https://github.com/project60/org.project60.sepa" target="_blank" title="Extension page">CiviSEPA (<kbd>org.project60.sepa</kbd>) extension</a> is not installed.</span>';
-          }
+    $this->add(
+        'select',
+        'twingle_protect_recurring',
+        E::ts("Protect Recurring Contributions"),
+        CRM_Twingle_Config::getRecurringProtectionOptions()
+    );
+
+    $this->add(
+        'select',
+        'twingle_protect_recurring_activity_type',
+        E::ts("Activity Type"),
+        $this->getOptionValueList('activity_type', [0])
+    );
+
+    $this->add(
+        'text',
+        'twingle_protect_recurring_activity_subject',
+        E::ts("Subject"),
+        ['class' => 'huge']
+    );
+
+    $this->add(
+        'select',
+        'twingle_protect_recurring_activity_status',
+        E::ts("Status"),
+        $this->getOptionValueList('activity_status')
+    );
+
+    $this->addEntityRef(
+        'twingle_protect_recurring_activity_assignee',
+        E::ts('Assigned To'),
+        [
+            'contact_type'      => ['IN' => ['Individual', 'Organization']],
+            'check_permissions' => 0,
+        ]
+    );
+
+    $this->addButtons(array(
+      array (
+          'type'      => 'submit',
+          'name'      => E::ts('Save'),
+          'isDefault' => TRUE,
+      )
+    ));
+
+    // set defaults
+    foreach (self::$SETTINGS_LIST as $setting) {
+      $this->setDefaults([
+          $setting => Civi::settings()->get($setting)
+      ]);
+    }
+
+    parent::buildQuickForm();
+  }
+
+  /**
+   * Custom form validation, because the activity creation fields
+   *  are only mandatory if activity creation is active
+   * @return bool
+   */
+  public function validate() {
+    parent::validate();
+
+    // if activity creation is active, make sure the fields are set
+    $protection_mode = CRM_Utils_Array::value('twingle_protect_recurring', $this->_submitValues);
+    if ($protection_mode == CRM_Twingle_Config::RCUR_PROTECTION_ACTIVITY) {
+      foreach (['twingle_protect_recurring_activity_type',
+                'twingle_protect_recurring_activity_subject',
+                'twingle_protect_recurring_activity_status',
+                'twingle_protect_recurring_activity_assignee',] as $activity_field) {
+        $current_value = CRM_Utils_Array::value($activity_field, $this->_submitValues);
+        if (empty($current_value)) {
+          $this->_errors[$activity_field] = E::ts("This is required for activity creation");
         }
       }
     }
 
-    $this->assign('formElements', $form_elements);
-
-    $this->addButtons(array(
-      array (
-        'type' => 'submit',
-        'name' => ts('Save'),
-        'isDefault' => TRUE,
-      )
-    ));
-
-    // Export form elements.
-    $this->assign('elementNames', $this->getRenderableElementNames());
-    parent::buildQuickForm();
+    return (0 == count($this->_errors));
   }
+
 
   /**
    * @inheritdoc
    */
   function postProcess() {
-    $this->_submittedValues = $this->exportValues();
-    $this->saveSettings();
+    $values = $this->exportValues();
+
+    // store settings
+    foreach (self::$SETTINGS_LIST as $setting) {
+      Civi::settings()->set($setting, CRM_Utils_Array::value($setting, $values));
+    }
+
     parent::postProcess();
   }
 
-  /**
-   * Get the fields/elements defined in this form.
-   *
-   * @return array (string)
-   */
-  function getRenderableElementNames() {
-    // The _elements list includes some items which should not be
-    // auto-rendered in the loop -- such as "qfKey" and "buttons". These
-    // items don't have labels. We'll identify renderable by filtering on
-    // the 'label'.
-    $elementNames = array();
-    foreach ($this->_elements as $element) {
-      /* @var \HTML_QuickForm_element $element */
-      $label = $element->getLabel();
-      if (!empty($label)) {
-        $elementNames[] = $element->getName();
-      }
-    }
-    return $elementNames;
-  }
-  /**
-   * Get the settings we are going to allow to be set on this form.
-   *
-   * @return array
-   *
-   * @throws \CiviCRM_API3_Exception
-   */
-  function getFormSettings() {
-    if (empty($this->_settings)) {
-      $settings = civicrm_api3('setting', 'getfields', array('filters' => $this->_settingFilter));
-      $settings = $settings['values'];
-    }
-    else {
-      $settings = $this->_settings;
-    }
-    return $settings;
-  }
-  /**
-   * Save the settings set on this form.
-   */
-  function saveSettings() {
-    $settings = $this->getFormSettings();
-    $values = array_intersect_key($this->_submittedValues, $settings);
-    civicrm_api3('setting', 'create', $values);
-  }
-  /**
-   * @inheritdoc
-   */
-  function setDefaultValues() {
-    $existing = civicrm_api3('setting', 'get', array('return' => array_keys($this->getFormSettings())));
-    $defaults = array();
-    $domainID = CRM_Core_Config::domainID();
-    foreach ($existing['values'][$domainID] as $name => $value) {
-      $defaults[$name] = $value;
-    }
-    return $defaults;
-  }
 
   /**
-   * @inheritdoc
+   * Get a list of option group items
+   * @param $group_id  string group ID or name
+   * @return array list of ID(value) => label
+   * @throws CiviCRM_API3_Exception
    */
-  public function addRules() {
-    $this->addFormRule(array('CRM_Twingle_Form_Settings', 'validateSettingsForm'));
+  protected function getOptionValueList($group_id, $reserved = [0,1]) {
+    $list = ['' => E::ts("-select-")];
+    $query = civicrm_api3('OptionValue', 'get', [
+        'option_group_id' => $group_id,
+        'option.limit'    => 0,
+        'is_active'       => 1,
+        'is_reserved'     => ['IN' => $reserved],
+        'return'          => 'value,label',
+    ]);
+    foreach ($query['values'] as $value) {
+      $list[$value['value']] = $value['label'];
+    }
+    return $list;
   }
-
-  /**
-   * Validates the profile form.
-   *
-   * @param array $values
-   *   The submitted form values, keyed by form element name.
-   *
-   * @return bool | array
-   *   TRUE when the form was successfully validated, or an array of error
-   *   messages, keyed by form element name.
-   */
-  public static function validateSettingsForm($values) {
-    $errors = array();
-
-    return empty($errors) ? TRUE : $errors;
-  }
-
 }

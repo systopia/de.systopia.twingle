@@ -41,29 +41,109 @@ class CRM_Twingle_Tools {
     // check if we're suspended
     if (self::$protection_suspended) return;
 
-    // currently only works with prefixes
-    $prefix = Civi::settings()->get('twingle_prefix');
-    if (empty($prefix)) return;
-
     // check if protection is turned on
     $protection_on = Civi::settings()->get('twingle_protect_recurring');
     if (empty($protection_on)) return;
 
     // load the recurring contribution
     $recurring_contribution = civicrm_api3('ContributionRecur', 'getsingle', [
-        'return' => 'trxn_id,contribution_status_id,payment_instrument_id',
+        'return' => 'trxn_id,contribution_status_id,payment_instrument_id,contact_id',
         'id'     => $recurring_contribution_id]);
 
-    // check if this is a SEPA transaction
+    // check if this is a SEPA transaction (doesn't concern us)
     if (self::isSDD($recurring_contribution['payment_instrument_id'])) return;
+
+    // see if this recurring contribution is from Twingle
+    if (!self::isTwingleRecurringContribution($recurring_contribution_id, $recurring_contribution)) {
+      return;
+    }
 
     // check if it's really a termination (i.e. current status is 2 or 5)
     if (!in_array($recurring_contribution['contribution_status_id'], [2,5])) return;
 
-    // check if it's a Twingle contribution
-    if (substr($recurring_contribution['trxn_id'], 0, strlen($prefix)) == $prefix) {
-      // this is a Twingle contribution that is about to be terminated
-      throw new Exception(E::ts("This is a Twingle recurring contribution. It should be terminated through the Twingle interface, otherwise it will still be collected."));
+    // this _IS_ on of the cases where we should step in:
+    CRM_Twingle_Tools::processRecurringContributionTermination($recurring_contribution_id, $recurring_contribution);
+  }
+
+  /**
+   * @param $recurring_contribution_id    int recurring contribution ID to check
+   * @param $recurring_contribution       array recurring contribution data, optional
+   * @return bool|null  true, false or null if can't be determined
+   * @throws CiviCRM_API3_Exception
+   */
+  public static function isTwingleRecurringContribution($recurring_contribution_id, $recurring_contribution = NULL) {
+    // this currently only works with prefixes
+    $prefix = Civi::settings()->get('twingle_prefix');
+    if (empty($prefix)) return null;
+
+    // load recurring contribution if necessary
+    if (empty($recurring_contribution['trxn_id'])) {
+      $recurring_contribution = civicrm_api3('ContributionRecur', 'getsingle', ['id' => $recurring_contribution_id]);
+    }
+
+    // check if it's a Twingle contribution by checking the prefix
+    // fixme: better ways (e.g. tags) should be used to mark twingle contributions
+    return (substr($recurring_contribution['trxn_id'], 0, strlen($prefix)) == $prefix);
+  }
+
+  /**
+   * Execute the recurring contribution protection
+   *
+   * @param $recurring_contribution_id int    recurring contribution ID
+   * @param $recurring_contribution    array  recurring contribution fields
+   * @throws Exception could be one of the measures
+   */
+  public static function processRecurringContributionTermination($recurring_contribution_id, $recurring_contribution) {
+    // check if we're suspended
+    if (self::$protection_suspended) return;
+
+    $protection_mode = Civi::settings()->get('twingle_protect_recurring');
+    switch ($protection_mode) {
+      case CRM_Twingle_Config::RCUR_PROTECTION_OFF:
+        // do nothing
+        break;
+
+      case CRM_Twingle_Config::RCUR_PROTECTION_EXCEPTION:
+        throw new Exception(E::ts("This is a Twingle recurring contribution. It should be terminated through the Twingle interface, otherwise it will still be collected."));
+
+      case CRM_Twingle_Config::RCUR_PROTECTION_ACTIVITY:
+        // create contact source activity
+        // first: get the contact ID
+        if (!empty($recurring_contribution['contact_id'])) {
+          $target_id = (int) $recurring_contribution['contact_id'];
+        } else {
+          $target_id = (int) civicrm_api3('ContributionRecur', 'getvalue', [
+              'id'     => $recurring_contribution_id,
+              'return' => 'contact_id']);
+        }
+        if (!empty($recurring_contribution['trxn_id'])) {
+          $trxn_id = $recurring_contribution['trxn_id'];
+        } else {
+          $trxn_id = civicrm_api3('ContributionRecur', 'getvalue', [
+              'id'     => $recurring_contribution_id,
+              'return' => 'trxn_id']);
+        }
+
+        try {
+          civicrm_api3('Activity', 'create', [
+              'activity_type_id'   => Civi::settings()->get('twingle_protect_recurring_activity_type'),
+              'subject'            => Civi::settings()->get('twingle_protect_recurring_activity_subject'),
+              'activity_date_time' => date('YmdHis'),
+              'target_id'          => $target_id,
+              'assignee_id'        => Civi::settings()->get('twingle_protect_recurring_activity_assignee'),
+              'status_id'          => Civi::settings()->get('twingle_protect_recurring_activity_status'),
+              'details'            => E::ts("Recurring contribution [%1] (Transaction ID '%2') was terminated by a user. You need to end the corresponding record in Twingle as well, or it will still be collected.",
+                                                  [1 => $recurring_contribution_id, 2 => $trxn_id]),
+              'source_contact_id'  => CRM_Core_Session::getLoggedInContactID(),
+          ]);
+        } catch (Exception $ex) {
+          Civi::log()->debug("TwingleAPI: Couldn't create recurring protection activity: " . $ex->getMessage());
+        }
+        break;
+
+      default:
+        Civi::log()->debug("TwingleAPI: Unknown recurring contribution protection mode: '{$protection_mode}'");
+        break;
     }
   }
 
