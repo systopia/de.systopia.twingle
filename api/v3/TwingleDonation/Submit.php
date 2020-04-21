@@ -610,15 +610,28 @@ function civicrm_api3_twingle_donation_Submit($params) {
       $result_values['sepa_mandate'] = $mandate['values'];
     }
     else {
-      // Create (recurring) contribution.
+      // Set financial type depending on donation rhythm. This applies for
+      // initial recurring contributions and subsequent single contributions.
       if ($params['donation_rhythm'] != 'one_time') {
+        $contribution_data['financial_type_id'] = $profile->getAttribute('financial_type_id_recur');
+      }
+      else {
+        $contribution_data['financial_type_id'] = $profile->getAttribute('financial_type_id');
+      }
+
+      // Create (recurring) contribution.
+      // Those will have a donation_rhythm different from "one_time" and no
+      // parent_trx_id set.
+      if (
+        $params['donation_rhythm'] != 'one_time'
+        && empty($params['parent_trx_id'])
+      ) {
         // Create recurring contribution first.
         $contribution_recur_data =
           $contribution_data
           + array(
             'contribution_status_id' => 'Pending',
             'start_date' => $params['confirmed_at'],
-            'financial_type_id' => $profile->getAttribute('financial_type_id_recur'),
           )
           + CRM_Twingle_Submission::getFrequencyMapping($params['donation_rhythm']);
 
@@ -638,15 +651,28 @@ function civicrm_api3_twingle_donation_Submit($params) {
         $contribution_data['contribution_recur_id'] = $contribution_recur['id'];
         $contribution_data['financial_type_id'] = $contribution_recur_data['financial_type_id'];
       }
-      else {
-        $contribution_data['financial_type_id'] = $profile->getAttribute('financial_type_id');
-      }
 
       // Create contribution.
       $contribution_data += array(
         'contribution_status_id' => $profile->getAttribute("pi_{$params['payment_method']}_status", CRM_Twingle_Submission::CONTRIBUTION_STATUS_COMPLETED),
         'receive_date' => $params['confirmed_at'],
       );
+
+      // Assign to recurring contribution.
+      if (!empty($params['parent_trx_id'])) {
+        try {
+          $parent_contribution = civicrm_api3('ContributionRecur', 'getsingle', array(
+            'trxn_id' => $profile->getTransactionID($params['parent_trx_id']),
+          ));
+          $contribution_data['contribution_recur_id'] = $parent_contribution['id'];
+        }
+        catch (Exception $exception) {
+          $result_values['parent_contribution'] = E::ts(
+            'Could not find recurring contribution with given parent transaction ID.'
+          );
+        }
+      }
+
       $contribution = civicrm_api3('Contribution', 'create', $contribution_data);
       if ($contribution['is_error']) {
         throw new CiviCRM_API3_Exception(
