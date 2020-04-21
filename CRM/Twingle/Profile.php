@@ -219,6 +219,7 @@ class CRM_Twingle_Profile {
         'custom_field_mapping',
         'membership_type_id',
         'membership_type_id_recur',
+        'membership_postprocess_call',
       ),
       // Add payment methods.
       array_keys(static::paymentInstruments()),

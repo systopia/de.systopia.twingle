@@ -14,29 +14,112 @@
 
 <div class="crm-block crm-form-block crm-twingle-form-block">
 
-  {* HEADER *}
-  <div class="crm-submit-buttons">
-    {include file="CRM/common/formButtons.tpl" location="top"}
-  </div>
+  <h3>Twingle API - Generic Settings</h3>
 
   <table class="form-layout-compressed">
-  {foreach from=$elementNames item=elementName}
-    <tr class="crm-twingle-form-block-{$form.$elementName.name}">
-      <td class="label">{$form.$elementName.label} &nbsp;<a onclick='CRM.help("{$form.$elementName.label}", {literal}{"id":"id-{/literal}{$form.$elementName.name}{literal}","file":"CRM\/Twingle\/Form\/Settings"}{/literal}); return false;' href="#" title="{ts domain="de.systopia.twingle"}Help{/ts}" class="helpicon"></a></td>
+    <tr class="crm-twingle-form-block-use-sepa">
+      <td class="label">{$form.twingle_use_sepa.label} &nbsp;<a onclick='CRM.help("{$form.twingle_use_sepa.label}", {literal}{"id":"id-{/literal}{$form.twingle_use_sepa.name}{literal}","file":"CRM\/Twingle\/Form\/Settings"}{/literal}); return false;' href="#" title="{ts domain="de.systopia.twingle"}Help{/ts}" class="helpicon"></a></td>
       <td>
-        {$form.$elementName.html}
+        {$form.twingle_use_sepa.html}
         <br />
         <span class="description">
-          {$formElements.$elementName.description}
+          {$formElements.twingle_use_sepa.description}
         </span>
       </td>
     </tr>
-  {/foreach}
+
+    <tr class="crm-twingle-form-block-prefix">
+      <td class="label">{$form.twingle_prefix.label} &nbsp;<a onclick='CRM.help("{$form.twingle_prefix.label}", {literal}{"id":"id-{/literal}{$form.twingle_prefix.name}{literal}","file":"CRM\/Twingle\/Form\/Settings"}{/literal}); return false;' href="#" title="{ts domain="de.systopia.twingle"}Help{/ts}" class="helpicon"></a></td>
+      <td>
+        {$form.twingle_prefix.html}
+        <br />
+        <span class="description">
+          {$formElements.twingle_prefix.description}
+        </span>
+      </td>
+    </tr>
+
+    <tr class="crm-twingle-form-block-recurring-protection">
+      <td class="label">{$form.twingle_protect_recurring.label} &nbsp;<a onclick='CRM.help("{$form.twingle_protect_recurring.label}", {literal}{"id":"id-{/literal}{$form.twingle_protect_recurring.name}{literal}","file":"CRM\/Twingle\/Form\/Settings"}{/literal}); return false;' href="#" title="{ts domain="de.systopia.twingle"}Help{/ts}" class="helpicon"></a></td>
+      <td>
+        {$form.twingle_protect_recurring.html}
+        <br />
+        <span class="description">
+          {$formElements.protect_recurring.description}
+        </span>
+      </td>
+    </tr>
+
+    <tr class="crm-twingle-form-block-recurring-protection-activity">
+      <td class="label">{$form.twingle_protect_recurring_activity_type.label}</td>
+      <td>
+        {$form.twingle_protect_recurring_activity_type.html}
+        <br />
+        <span class="description">
+          {$formElements.twingle_protect_recurring_activity_type.description}
+        </span>
+      </td>
+    </tr>
+
+    <tr class="crm-twingle-form-block-recurring-protection-activity">
+      <td class="label">{$form.twingle_protect_recurring_activity_subject.label}</td>
+      <td>
+        {$form.twingle_protect_recurring_activity_subject.html}
+        <br />
+        <span class="description">
+          {$formElements.twingle_protect_recurring_activity_subject.description}
+        </span>
+      </td>
+    </tr>
+
+    <tr class="crm-twingle-form-block-recurring-protection-activity">
+      <td class="label">{$form.twingle_protect_recurring_activity_status.label}</td>
+      <td>
+        {$form.twingle_protect_recurring_activity_status.html}
+        <br />
+        <span class="description">
+          {$formElements.twingle_protect_recurring_activity_status.description}
+        </span>
+      </td>
+    </tr>
+
+    <tr class="crm-twingle-form-block-recurring-protection-activity">
+      <td class="label">{$form.twingle_protect_recurring_activity_assignee.label}</td>
+      <td>
+        {$form.twingle_protect_recurring_activity_assignee.html}
+        <br />
+        <span class="description">
+          {$formElements.twingle_protect_recurring_activity_assignee.description}
+        </span>
+      </td>
+    </tr>
+
   </table>
 
-  {* FOOTER *}
+
   <div class="crm-submit-buttons">
     {include file="CRM/common/formButtons.tpl" location="bottom"}
   </div>
 
 </div>
+
+{literal}
+<script>
+  /**
+   * Will show/hide the twingle_protect_recurring_activity_* fields based on
+   *  whether activity creation is selected
+   */
+  function twingle_protect_recurring_change() {
+    if (cj("#twingle_protect_recurring").val() == '2') {
+      cj("tr.crm-twingle-form-block-recurring-protection-activity").show();
+    } else {
+      cj("tr.crm-twingle-form-block-recurring-protection-activity").hide();
+    }
+  }
+
+  cj(document).ready(function () {
+    cj("#twingle_protect_recurring").change(twingle_protect_recurring_change);
+    twingle_protect_recurring_change();
+  });
+</script>
+{/literal}
