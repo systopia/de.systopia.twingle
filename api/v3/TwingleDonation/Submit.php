@@ -681,13 +681,15 @@ function civicrm_api3_twingle_donation_Submit($params) {
           $recurring_contribution_id = $contribution_id = '';
           if (isset($contribution_recur['id'])) {
             $recurring_contribution_id = $contribution_recur['id'];
+          } elseif (!empty($mandate['entity_id']) && $mandate['type'] == 'RCUR') {
+            $recurring_contribution_id = $mandate['entity_id'];
           }
           if (isset($contribution['id'])) {
             $contribution_id = $contribution['id'];
           }
 
           // run the call
-          civicrm_api3($pp_entity, $pp_action, [
+          civicrm_api3(trim($pp_entity), trim($pp_action), [
               'membership_id'             => $membership['id'],
               'contact_id'                => $contact_id,
               'organization_id'           => isset($organisation_id) ? $organisation_id : '',
