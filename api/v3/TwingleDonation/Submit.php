@@ -707,8 +707,16 @@ function civicrm_api3_twingle_donation_Submit($params) {
           $recurring_contribution_id = $contribution_id = '';
           if (isset($contribution_recur['id'])) {
             $recurring_contribution_id = $contribution_recur['id'];
-          } elseif (!empty($mandate['entity_id']) && $mandate['type'] == 'RCUR') {
-            $recurring_contribution_id = $mandate['entity_id'];
+          } elseif (!empty($mandate['id'])) {
+            // load mandate and see...
+            try {
+              $mandate_created = civicrm_api3('SepaMandate', 'getsingle', ['id' => $mandate['id']]);
+              if ($mandate_created['entity_table'] == 'civicrm_contribution_recur') {
+                $recurring_contribution_id = $mandate['entity_id'];
+              }
+            } catch(CiviCRM_API3_Exception $ex) {
+              Civi::log()->warning("Couldn't load SepaMandate with id '{$mandate['id']}'.");
+            }
           }
           if (isset($contribution['id'])) {
             $contribution_id = $contribution['id'];
@@ -724,7 +732,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
           ]);
 
           // refresh membership data
-          $result_values['membership'] = civicrm_api3('Membership', 'getsingle', $membership['id']);
+          $result_values['membership'] = civicrm_api3('Membership', 'getsingle', ['id' => $membership['id']]);
 
         } catch (Exception $ex) {
           // TODO: more error handling?
