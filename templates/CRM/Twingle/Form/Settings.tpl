@@ -28,6 +28,18 @@
       </td>
     </tr>
 
+    <tr class="crm-twingle-form-block-use-sepa-reference">
+      <td class="label">{$form.twingle_dont_use_reference.label} &nbsp; <a onclick='CRM.help("{$form.twingle_dont_use_reference.label}", {literal}{"id":"id-{/literal}{$form.twingle_dont_use_reference.name}{literal}","file":"CRM\/Twingle\/Form\/Settings"}{/literal}); return false;' href="#" title="{ts domain="de.systopia.twingle"}Help{/ts}" class="helpicon"></a></td>
+      <td>
+        {$form.twingle_dont_use_reference.html}
+        <br />
+        <span class="description">
+          {$formElements.twingle_dont_use_reference.description}
+        </span>
+      </td>
+    </tr>
+
+
     <tr class="crm-twingle-form-block-prefix">
       <td class="label">{$form.twingle_prefix.label} &nbsp;<a onclick='CRM.help("{$form.twingle_prefix.label}", {literal}{"id":"id-{/literal}{$form.twingle_prefix.name}{literal}","file":"CRM\/Twingle\/Form\/Settings"}{/literal}); return false;' href="#" title="{ts domain="de.systopia.twingle"}Help{/ts}" class="helpicon"></a></td>
       <td>

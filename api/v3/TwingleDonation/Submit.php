@@ -604,6 +604,12 @@ function civicrm_api3_twingle_donation_Submit($params) {
       // mandate type.
       unset($mandate_data['payment_instrument_id']);
 
+      // If requested, let CiviSEPA generate the mandate reference
+      $use_own_mandate_reference = Civi::settings()->get('twingle_dont_use_reference');
+      if (!empty($use_own_mandate_reference)) {
+        unset($mandate_data['reference']);
+      }
+
       // Create the mandate.
       $mandate = civicrm_api3('SepaMandate', 'createfull', $mandate_data);
 
