@@ -707,8 +707,11 @@ function civicrm_api3_twingle_donation_Submit($params) {
           $recurring_contribution_id = $contribution_id = '';
           if (isset($contribution_recur['id'])) {
             $recurring_contribution_id = $contribution_recur['id'];
-          } elseif (!empty($result_values['sepa_mandate']['entity_id'])) {
-            $recurring_contribution_id = (int) $result_values['sepa_mandate']['entity_id'];
+          } elseif (!empty($result_values['sepa_mandate'])) {
+            $mandate = reset($result_values['sepa_mandate']);
+            if ($mandate['entity_table'] == 'civicrm_contribution_recur') {
+              $recurring_contribution_id = (int) $mandate['entity_id'];
+            }
           }
           if (isset($contribution['id'])) {
             $contribution_id = $contribution['id'];
