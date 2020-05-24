@@ -150,7 +150,7 @@ function civicrm_api3_twingle_donation_Cancel($params) {
 
     $result = civicrm_api3_create_success($contribution);
   }
-  catch (CiviCRM_API3_Exception $exception) {
+  catch (Exception $exception) {
     $result = civicrm_api3_create_error($exception->getMessage());
   }
 
