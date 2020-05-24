@@ -701,14 +701,16 @@ function civicrm_api3_twingle_donation_Submit($params) {
         } catch (Exception $ex) {
           // TODO: more error handling?
           Civi::log()->debug("Twingle membership postprocessing call {$pp_entity}.{$pp_action} has failed: " . $ex->getMessage());
+            throw new Exception(
+                E::ts("Twingle membership postprocessing call has failed, see log for more information")
+            );
         }
       }
-
     }
 
     $result = civicrm_api3_create_success($result_values);
   }
-  catch (CiviCRM_API3_Exception $exception) {
+  catch (Exception $exception) {
     $result = civicrm_api3_create_error($exception->getMessage());
   }
 
