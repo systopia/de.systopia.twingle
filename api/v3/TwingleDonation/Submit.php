@@ -692,10 +692,15 @@ function civicrm_api3_twingle_donation_Submit($params) {
       $membership_type_id = $profile->getAttribute('membership_type_id');
     }
     if (!empty($membership_type_id)) {
-      $membership = civicrm_api3('Membership', 'create', array(
-          'contact_id'         => $contact_id,
-          'membership_type_id' => $membership_type_id,
-      ));
+      // create the membership
+      $membership_data = [
+        'contact_id'         => $contact_id,
+        'membership_type_id' => $membership_type_id,
+      ];
+      if (!empty($params['campaign_id'])) {
+        $membership_data['campaign_id'] = $params['campaign_id'];
+      }
+      $membership = civicrm_api3('Membership', 'create', $membership_data);
       $result_values['membership'] = $membership;
 
       // call the postprocess API
