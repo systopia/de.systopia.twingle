@@ -703,8 +703,11 @@ function civicrm_api3_twingle_donation_Submit($params) {
         'contact_id'         => $contact_id,
         'membership_type_id' => $membership_type_id,
       ];
+      // set campaign
       if (!empty($params['campaign_id'])) {
         $membership_data['campaign_id'] = $params['campaign_id'];
+      } elseif (!empty($campaign = $profile->getAttribute('campaign'))) {
+        $membership_data['campaign_id'] = $campaign;
       }
       $membership = civicrm_api3('Membership', 'create', $membership_data);
       $result_values['membership'] = $membership;
