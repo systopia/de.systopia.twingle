@@ -403,7 +403,8 @@ function civicrm_api3_twingle_donation_Submit($params) {
       if (!$contact_id = CRM_Twingle_Submission::getContact(
         'Individual',
         $contact_data,
-        $profile
+        $profile,
+        $params
       )) {
         throw new CiviCRM_API3_Exception(
           E::ts('Individual contact could not be found or created.'),
@@ -439,7 +440,8 @@ function civicrm_api3_twingle_donation_Submit($params) {
         if (!$organisation_id = CRM_Twingle_Submission::getContact(
           'Organization',
           $organisation_data,
-          $profile
+          $profile,
+          $params
         )) {
           throw new CiviCRM_API3_Exception(
             E::ts('Organisation contact could not be found or created.'),
@@ -466,7 +468,9 @@ function civicrm_api3_twingle_donation_Submit($params) {
         CRM_Twingle_Submission::getContact(
             'Individual',
             array('id' => $contact_id) + $submitted_address,
-            $profile);
+            $profile,
+            $params
+        );
       }
 
       // Create employer relationship between organization and individual.
@@ -537,12 +541,8 @@ function civicrm_api3_twingle_donation_Submit($params) {
       $contribution_data['note'] = $params['purpose'];
     }
 
-    if (!empty($params['campaign_id'])) {
-      $contribution_data['campaign_id'] = $params['campaign_id'];
-    }
-    elseif (!empty($campaign = $profile->getAttribute('campaign'))) {
-      $contribution_data['campaign_id'] = $campaign;
-    }
+    // set campaign, subject to configuration
+    CRM_Twingle_Submission::setCampaign($contribution_data, 'contribution', $params, $profile);
 
     if (!empty($contribution_source = $profile->getAttribute('contribution_source'))) {
       $contribution_data['source'] = $contribution_source;
@@ -590,6 +590,9 @@ function civicrm_api3_twingle_donation_Submit($params) {
       if (!empty($custom_fields['ContributionRecur'])) {
         $mandate_data += $custom_fields['ContributionRecur'];
       }
+      if (!empty($mandate_source = $profile->getAttribute('contribution_source'))) {
+          $mandate_data['source'] = $mandate_source;
+      }
 
       // Add cycle day for recurring contributions.
       if ($params['donation_rhythm'] != 'one_time') {
@@ -603,6 +606,9 @@ function civicrm_api3_twingle_donation_Submit($params) {
       // Let CiviSEPA set the correct payment instrument depending on the
       // mandate type.
       unset($mandate_data['payment_instrument_id']);
+
+      // set campaign, subject to configuration
+      CRM_Twingle_Submission::setCampaign($mandate_data, 'mandate', $params, $profile);
 
       // Create the mandate.
       $mandate = civicrm_api3('SepaMandate', 'createfull', $mandate_data);
@@ -641,7 +647,10 @@ function civicrm_api3_twingle_donation_Submit($params) {
           $contribution_data += $custom_fields['ContributionRecur'];
         }
 
-        $contribution_recur = civicrm_api3('contributionRecur', 'create', $contribution_recur_data);
+        // set campaign, subject to configuration
+        CRM_Twingle_Submission::setCampaign($contribution_data, 'recurring', $params, $profile);
+
+        $contribution_recur = civicrm_api3('ContributionRecur', 'create', $contribution_recur_data);
         if ($contribution_recur['is_error']) {
           throw new CiviCRM_API3_Exception(
             E::ts('Could not create recurring contribution.'),
@@ -697,12 +706,13 @@ function civicrm_api3_twingle_donation_Submit($params) {
         'contact_id'         => $contact_id,
         'membership_type_id' => $membership_type_id,
       ];
-      // set campaign
-      if (!empty($params['campaign_id'])) {
-        $membership_data['campaign_id'] = $params['campaign_id'];
-      } elseif (!empty($campaign = $profile->getAttribute('campaign'))) {
-        $membership_data['campaign_id'] = $campaign;
+      // set campaign, subject to configuration
+      CRM_Twingle_Submission::setCampaign($membership_data, 'membership', $params, $profile);
+      // set source
+      if (!empty($membership_source = $profile->getAttribute('contribution_source'))) {
+          $membership_data['source'] = $membership_source;
       }
+
       $membership = civicrm_api3('Membership', 'create', $membership_data);
       $result_values['membership'] = $membership;
 
@@ -734,7 +744,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
         } catch (Exception $ex) {
           // TODO: more error handling?
-          Civi::log()->debug("Twingle membership postprocessing call {$pp_entity}.{$pp_action} has failed: " . $ex->getMessage());
+          Civi::log()->warning("Twingle membership postprocessing call {$pp_entity}.{$pp_action} has failed: " . $ex->getMessage());
         }
       }
 

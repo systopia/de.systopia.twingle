@@ -229,6 +229,11 @@
         </tr>
 
         <tr class="crm-section">
+          <td class="label">{$form.campaign_targets.label}</td>
+          <td class="content">{$form.campaign_targets.html}</td>
+        </tr>
+
+        <tr class="crm-section">
           <td class="label">{$form.membership_type_id.label}</td>
           <td class="content">{$form.membership_type_id.html}</td>
         </tr>
