@@ -372,6 +372,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         'recurring'    => E::ts("Recurring Contribution"),
         'membership'   => E::ts("Membership"),
         'mandate'      => E::ts("SEPA Mandate"),
+        'contact'      => E::ts("Contacts (XCM)"),
       ],
       FALSE, // is not required
       ['class' => 'crm-select2 huge', 'multiple' => 'multiple']
