@@ -137,12 +137,12 @@ class CRM_Twingle_Tools {
               'source_contact_id'  => CRM_Core_Session::getLoggedInContactID(),
           ]);
         } catch (Exception $ex) {
-          Civi::log()->debug("TwingleAPI: Couldn't create recurring protection activity: " . $ex->getMessage());
+          Civi::log()->warning("TwingleAPI: Couldn't create recurring protection activity: " . $ex->getMessage());
         }
         break;
 
       default:
-        Civi::log()->debug("TwingleAPI: Unknown recurring contribution protection mode: '{$protection_mode}'");
+        Civi::log()->warning("TwingleAPI: Unknown recurring contribution protection mode: '{$protection_mode}'");
         break;
     }
   }
@@ -203,7 +203,7 @@ class CRM_Twingle_Tools {
           return reset($ooff_mandate['values']);
         }
       } catch (Exception $ex) {
-        Civi::log()->debug("CRM_Twingle_Tools::getMandate failed for [{$contribution_id}]: " . $ex->getMessage());
+        Civi::log()->warning("CRM_Twingle_Tools::getMandate failed for [{$contribution_id}]: " . $ex->getMessage());
       }
     }
     return NULL;
