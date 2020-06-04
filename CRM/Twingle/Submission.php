@@ -369,13 +369,15 @@ class CRM_Twingle_Submission {
    *   the twingle profile used
    */
   public static function setCampaign(&$entity_data, $context, $submission, $profile) {
+    // first: make sure it's not set from other workflows
+    unset($entity_data['campaign_id']);
+
+    // then: check if campaign should be set it this context
     $enabled_contexts = $profile->getAttribute('campaign_targets');
     if ($enabled_contexts === null || !is_array($enabled_contexts)) {
       // backward compatibility:
       $enabled_contexts = ['contribution', 'contact'];
     }
-
-    // check if campaign should be set it this context
     if (in_array($context, $enabled_contexts)) {
       // use the submitted campaign if set
       if (!empty($submission['campaign_id'])) {
