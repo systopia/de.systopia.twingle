@@ -177,6 +177,14 @@ class CRM_Twingle_Submission {
       }
     }
 
+    // Prepare values: language.
+    if (!empty($contact_data['preferred_language'])) {
+      $mapping = CRM_Core_I18n_PseudoConstant::longForShortMapping();
+      // Override the default mapping for German.
+      $mapping['de'] = 'de_DE';
+      $contact_data['preferred_language'] = $mapping[$contact_data['preferred_language']];
+    }
+
     // Pass to XCM.
     $contact_data['contact_type'] = $contact_type;
     $contact = civicrm_api3('Contact', 'getorcreate', $contact_data);
