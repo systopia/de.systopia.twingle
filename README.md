@@ -11,7 +11,9 @@ The extension is licensed under
 
 ### Configure Twingle
 
-*This section is yet to be completed.*
+Please refer to the
+[Twingle FAQ on using Twingle with CiviCRM](https://support.twingle.de/faq/de-de/9/46)
+(currently only available in German).
 
 ### Configure Extended Contact Matcher (XCM)
 
