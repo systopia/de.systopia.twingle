@@ -129,6 +129,8 @@ class CRM_Twingle_Submission {
    *   Data to use for contact lookup/to create a contact with.
    * @param CRM_Twingle_Profile $profile
    *   Profile used for this process
+   * @param array $submission
+   *   Submission data
    *
    * @return int | NULL
    *   The ID of the matching/created contact, or NULL if no matching contact
@@ -136,7 +138,7 @@ class CRM_Twingle_Submission {
    * @throws \CiviCRM_API3_Exception
    *   When invalid data was given.
    */
-  public static function getContact($contact_type, $contact_data, $profile) {
+  public static function getContact($contact_type, $contact_data, $profile, $submission = []) {
     // If no parameters are given, do nothing.
     if (empty($contact_data)) {
       return NULL;
@@ -148,11 +150,8 @@ class CRM_Twingle_Submission {
       $contact_data['xcm_profile'] = $xcm_profile;
     }
 
-    // add campaign
-    $campaign_id = (int) $profile->getAttribute('campaign');
-    if ($campaign_id) {
-      $contact_data['campaign_id'] = $campaign_id;
-    }
+    // add campaign, see issue #17
+    CRM_Twingle_Submission::setCampaign($contact_data, 'contact', $submission, $profile);
 
     // Prepare values: country.
     if (!empty($contact_data['country'])) {
@@ -354,4 +353,39 @@ class CRM_Twingle_Submission {
     return date('j', $earliest_cycle_day);
   }
 
+  /**
+   * Will set the campaign_id to the entity_data set, if the
+   * profile is configured to do so. In that case the campaign is taken
+   * from the submission data. Should that be empty, the profile's default
+   * campaign is used.
+   *
+   * @param array $entity_data
+   *   the data set where the campaign_id should be set
+   * @param string $context
+   *   defines the type of the entity_data: one of 'contribution', 'membership','mandate', 'recurring', 'contact'
+   * @param array $submission
+   *   the submitted data
+   * @param CRM_Twingle_Profile $profile
+   *   the twingle profile used
+   */
+  public static function setCampaign(&$entity_data, $context, $submission, $profile) {
+    // first: make sure it's not set from other workflows
+    unset($entity_data['campaign_id']);
+
+    // then: check if campaign should be set it this context
+    $enabled_contexts = $profile->getAttribute('campaign_targets');
+    if ($enabled_contexts === null || !is_array($enabled_contexts)) {
+      // backward compatibility:
+      $enabled_contexts = ['contribution', 'contact'];
+    }
+    if (in_array($context, $enabled_contexts)) {
+      // use the submitted campaign if set
+      if (!empty($submission['campaign_id'])) {
+        $entity_data['campaign_id'] = $submission['campaign_id'];
+      } // otherwise use the profile's
+      elseif (!empty($campaign = $profile->getAttribute('campaign'))) {
+        $entity_data['campaign_id'] = $campaign;
+      }
+    }
+  }
 }

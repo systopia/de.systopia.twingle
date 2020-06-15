@@ -357,10 +357,25 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     $this->add(
       'select', // field type
       'campaign', // field name
-      E::ts('Campaign (e.g. for donation)'), // field label
+      E::ts('Default Campaign'), // field label
       array('' => E::ts('- none -')) + static::getCampaigns(), // list of options
       FALSE, // is not required
       array('class' => 'crm-select2 huge')
+    );
+
+    $this->add(
+      'select',
+      'campaign_targets',
+      E::ts('Set Campaign for'),
+      [
+        'contribution' => E::ts("Contribution"),
+        'recurring'    => E::ts("Recurring Contribution"),
+        'membership'   => E::ts("Membership"),
+        'mandate'      => E::ts("SEPA Mandate"),
+        'contact'      => E::ts("Contacts (XCM)"),
+      ],
+      FALSE, // is not required
+      ['class' => 'crm-select2 huge', 'multiple' => 'multiple']
     );
 
     $this->add(
@@ -511,8 +526,13 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     $defaults = parent::setDefaultValues();
     if (in_array($this->_op, array('create', 'edit'))) {
       $defaults['name'] = $this->profile->getName();
-      foreach ($this->profile->getData() as $element_name => $value) {
+      $profile_data = $this->profile->getData();
+      foreach ($profile_data as $element_name => $value) {
         $defaults[$element_name] = $value;
+      }
+      // backwards compatibility, see issue #27
+      if (!isset($profile_data['campaign_targets'])) {
+        $defaults['campaign_targets'] = ['contribution', 'contact'];
       }
     }
     return $defaults;
