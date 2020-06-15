@@ -713,8 +713,11 @@ function civicrm_api3_twingle_donation_Submit($params) {
           $recurring_contribution_id = $contribution_id = '';
           if (isset($contribution_recur['id'])) {
             $recurring_contribution_id = $contribution_recur['id'];
-          } elseif (!empty($mandate['entity_id']) && $mandate['type'] == 'RCUR') {
-            $recurring_contribution_id = $mandate['entity_id'];
+          } elseif (!empty($result_values['sepa_mandate'])) {
+            $mandate = reset($result_values['sepa_mandate']);
+            if ($mandate['entity_table'] == 'civicrm_contribution_recur') {
+              $recurring_contribution_id = (int) $mandate['entity_id'];
+            }
           }
           if (isset($contribution['id'])) {
             $contribution_id = $contribution['id'];
@@ -730,9 +733,9 @@ function civicrm_api3_twingle_donation_Submit($params) {
           ]);
 
           // refresh membership data
-          $result_values['membership'] = civicrm_api3('Membership', 'getsingle', $membership['id']);
+          $result_values['membership'] = civicrm_api3('Membership', 'getsingle', ['id' => $membership['id']]);
 
-        } catch (Exception $ex) {
+        } catch (CiviCRM_API3_Exception $ex) {
           // TODO: more error handling?
           Civi::log()->debug("Twingle membership postprocessing call {$pp_entity}.{$pp_action} has failed: " . $ex->getMessage());
             throw new Exception(
