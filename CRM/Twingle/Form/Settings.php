@@ -28,6 +28,7 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
   public static $SETTINGS_LIST = [
       'twingle_prefix',
       'twingle_use_sepa',
+      'twingle_dont_use_reference',
       'twingle_protect_recurring',
       'twingle_protect_recurring_activity_type',
       'twingle_protect_recurring_activity_subject',
@@ -52,6 +53,12 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
         'checkbox',
         'twingle_use_sepa',
         E::ts("Use CiviSEPA")
+    );
+
+    $this->add(
+      'checkbox',
+      'twingle_dont_use_reference',
+      E::ts("Use CiviSEPA generated reference")
     );
 
     $this->add(

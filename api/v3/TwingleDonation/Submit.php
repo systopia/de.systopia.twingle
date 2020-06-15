@@ -604,6 +604,12 @@ function civicrm_api3_twingle_donation_Submit($params) {
       // mandate type.
       unset($mandate_data['payment_instrument_id']);
 
+      // If requested, let CiviSEPA generate the mandate reference
+      $use_own_mandate_reference = Civi::settings()->get('twingle_dont_use_reference');
+      if (!empty($use_own_mandate_reference)) {
+        unset($mandate_data['reference']);
+      }
+
       // Create the mandate.
       $mandate = civicrm_api3('SepaMandate', 'createfull', $mandate_data);
 
@@ -707,13 +713,15 @@ function civicrm_api3_twingle_donation_Submit($params) {
           $recurring_contribution_id = $contribution_id = '';
           if (isset($contribution_recur['id'])) {
             $recurring_contribution_id = $contribution_recur['id'];
+          } elseif (!empty($mandate['entity_id']) && $mandate['type'] == 'RCUR') {
+            $recurring_contribution_id = $mandate['entity_id'];
           }
           if (isset($contribution['id'])) {
             $contribution_id = $contribution['id'];
           }
 
           // run the call
-          civicrm_api3($pp_entity, $pp_action, [
+          civicrm_api3(trim($pp_entity), trim($pp_action), [
               'membership_id'             => $membership['id'],
               'contact_id'                => $contact_id,
               'organization_id'           => isset($organisation_id) ? $organisation_id : '',
@@ -727,14 +735,16 @@ function civicrm_api3_twingle_donation_Submit($params) {
         } catch (Exception $ex) {
           // TODO: more error handling?
           Civi::log()->debug("Twingle membership postprocessing call {$pp_entity}.{$pp_action} has failed: " . $ex->getMessage());
+            throw new Exception(
+                E::ts("Twingle membership postprocessing call has failed, see log for more information")
+            );
         }
       }
-
     }
 
     $result = civicrm_api3_create_success($result_values);
   }
-  catch (CiviCRM_API3_Exception $exception) {
+  catch (Exception $exception) {
     $result = civicrm_api3_create_error($exception->getMessage());
   }
 
