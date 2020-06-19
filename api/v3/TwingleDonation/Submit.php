@@ -704,7 +704,10 @@ function civicrm_api3_twingle_donation_Submit($params) {
       $membership_type_id = $profile->getAttribute('membership_type_id_recur');
     }
     else {
-      $membership_type_id = $profile->getAttribute('membership_type_id');
+      // only create memberships, if this isn't an installment
+      if (empty($params['parent_trx_id'])) {
+        $membership_type_id = $profile->getAttribute('membership_type_id');
+      }
     }
     if (!empty($membership_type_id)) {
       // create the membership
