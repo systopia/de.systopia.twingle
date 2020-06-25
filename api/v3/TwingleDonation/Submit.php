@@ -296,7 +296,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
     if (!empty($params['custom_fields'])) {
       $custom_field_mapping = $profile->getCustomFieldMapping();
 
-      foreach (json_decode($params['custom_fields']) as $twingle_field => $value) {
+      foreach ($params['custom_fields'] as $twingle_field => $value) {
         if (isset($custom_field_mapping[$twingle_field])) {
           // Get custom field definition to store values by entity the field
           // extends.
