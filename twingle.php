@@ -151,6 +151,7 @@ function twingle_civicrm_alterAPIPermissions($entity, $action, &$params, &$permi
   $permissions['twingle_donation']['submit'] = array('access Twingle API');
   $permissions['twingle_donation']['cancel']  = array('access Twingle API');
   $permissions['twingle_donation']['endrecurring']  = array('access Twingle API');
+  $permissions['twingle_donation']['doubleoptinconfirm']  = array('access Twingle API');
 }
 
 // --- Functions below this ship commented out. Uncomment as required. ---

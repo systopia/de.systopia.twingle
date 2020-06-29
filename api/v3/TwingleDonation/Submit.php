@@ -484,8 +484,28 @@ function civicrm_api3_twingle_donation_Submit($params) {
       $result_values['organization'] = $organisation_id;
     }
 
+    // If Twingle's Double-Opt-In procedure is used, add contact with status "pending" to the newsletter groups
+    // defined in the profile
+    if (!empty($profile->getAttribute('double_opt_in')) &&
+        !empty($params['newsletter']) &&
+        !empty($groups = $profile->getAttribute('newsletter_groups'))) {
+        foreach ($groups as $group_id) {
+            if (empty(civicrm_api3('GroupContact', 'get', array(
+                'group_id' => $group_id,
+                'contact_id' => $contact_id,
+                ))['values'])) {
+                  civicrm_api3('GroupContact', 'create', array(
+                    'group_id' => $group_id,
+                    'contact_id' => $contact_id,
+                    'status' => "Pending",
+                ));
+                $result_values['double_opt_in'][] = "Pending";
+            }
+        $result_values['newsletter'][] = $group_id;
+        }
+
     // If requested, add contact to newsletter groups defined in the profile.
-    if (!empty($params['newsletter']) && !empty($groups = $profile->getAttribute('newsletter_groups'))) {
+    } elseif (!empty($params['newsletter']) && !empty($groups = $profile->getAttribute('newsletter_groups'))) {
       foreach ($groups as $group_id) {
         civicrm_api3('GroupContact', 'create', array(
           'group_id' => $group_id,

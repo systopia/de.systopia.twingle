@@ -54,6 +54,7 @@ for all newly created Twingle projects.
 | CiviSEPA creditor                     | When enabled to integrate with CiviSEPA, specify the CiviSEPA creditor to use.                                                                                                           |
 | Gender options                        | Specify which CiviCRM gender option the incoming Twingle gender value should be mapped to. The list is based on your CiviCRM configuration.                                              |
 | Record *Payment method* as            | Specifiy the payment methods mapping for incoming donations for each Twingle payment method.                                                                                             |
+| Double-Opt-In                         | Group membership for newsletter mailing lists will be pending until receivement of confirming API call. Usage in combination with activated Double-Opt-In in Twingle manager.            |
 | Sign up for groups                    | Whenever the donor checked the newsletter/postal mailing/donation receipt checkbox on the Twingle form, the contact will be added to the groups listed here.                             |
 | Assign donation to campaign           | The donation will be assigned to the selected campaign. If a campaign ID is being submitted using the `campaign_id` parameter, this setting will be overridden with the submitted value. |
 | Create membership of type             | A membership of the selected type will be created for the Individual contact for incoming one-time donations. If no membership type is selected, no membership will be created.          |
@@ -147,4 +148,20 @@ The action accepts the following parameters:
 
 You may also refer to
 [the code](https://github.com/systopia/de.systopia.twingle/blob/master/api/v3/TwingleDonation/Cancel.php)
+for more insight into this API action.
+
+### Double-Opt-In confirmation
+
+- Entity: `TwingleDonation`
+- Action: `doubleoptinconfirm`
+
+The action accepts the following parameters:
+
+| Parameter                    | Type   | Description                                        | Values/Format                                         | Required |
+|------------------------------|--------|----------------------------------------------------|-------------------------------------------------------|----------|
+| <nobr>`project_id`</nobr>    | String | The Twingle project ID                             |                                                       | Yes      |
+| <nobr>`user_email`</nobr>    | String | The e-mail address of the contact                  | A valid e-mail address                                | Yes      |
+
+You may also refer to
+[the code](https://github.com/systopia/de.systopia.twingle/blob/master/api/v3/TwingleDonation/Doubleoptinconfirm.php)
 for more insight into this API action.
