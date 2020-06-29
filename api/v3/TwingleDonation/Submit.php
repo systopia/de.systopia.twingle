@@ -703,9 +703,11 @@ function civicrm_api3_twingle_donation_Submit($params) {
     if ($params['donation_rhythm'] != 'one_time') {
       $membership_type_id = $profile->getAttribute('membership_type_id_recur');
     }
-    else {
+    elseif (empty($params['parent_trx_id'])) {
+      // only create memberships, if this isn't an installment (e.g. parent_trx_id is set)
       $membership_type_id = $profile->getAttribute('membership_type_id');
     }
+
     if (!empty($membership_type_id)) {
       // create the membership
       $membership_data = [
