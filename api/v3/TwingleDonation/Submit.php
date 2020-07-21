@@ -699,17 +699,26 @@ function civicrm_api3_twingle_donation_Submit($params) {
       $result_values['contribution'] = $contribution['values'];
     }
 
-    // Create membership if a membership type is configured within the profile.
-    if ($params['donation_rhythm'] != 'one_time') {
-      $membership_type_id = $profile->getAttribute('membership_type_id_recur');
-    }
-    elseif (empty($params['parent_trx_id'])) {
-      // only create memberships, if this isn't an installment (e.g. parent_trx_id is set)
+    // MEMBERSHIP CREATION
+
+    // CHECK whether a membership should be created (based on profile settings and data provided)
+    if ($params['donation_rhythm'] == 'one_time') {
+      // membership creation based on one-off contributions
       $membership_type_id = $profile->getAttribute('membership_type_id');
+
+    } else {
+      // membership creation based on recurring contributions
+      if (empty($params['parent_trx_id'])) {
+        // this is the initial payment
+        $membership_type_id = $profile->getAttribute('membership_type_id_recur');
+      } else {
+        // this is a follow-up recurring payment
+        $membership_type_id = false;
+      }
     }
 
+    // CREATE the membership if required
     if (!empty($membership_type_id)) {
-      // create the membership
       $membership_data = [
         'contact_id'         => $contact_id,
         'membership_type_id' => $membership_type_id,
