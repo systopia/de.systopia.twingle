@@ -306,3 +306,7 @@ msgstr "Profil %1 zurücksetzen"
 #: templates/CRM/Twingle/Page/Profiles.tpl
 msgid "Delete profile %1"
 msgstr "Profil % 1 löschen"
+
+#: templates/CRM/Twingle/Page/Profiles.tpl
+msgid "Use Double-Opt-In for newsletter"
+msgstr "Nutze Double-Opt-In für Newsletter"

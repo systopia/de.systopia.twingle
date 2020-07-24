@@ -328,10 +328,18 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     }
 
     $this->add(
+      'checkbox', // field type
+      'double_opt_in', // field name
+      E::ts('Use Double-Opt-In for newsletter'), // field label
+      FALSE, // is not required
+      array()
+      );
+
+    $this->add(
       'select', // field type
       'newsletter_groups', // field name
       E::ts('Sign up for newsletter groups'), // field label
-      static::getNewsletterGroups(), // list of options
+      static::getNewsletterGroups($this->profile->getAttribute('double_opt_in')), // list of options
       FALSE, // is not required
       array('class' => 'crm-select2 huge', 'multiple' => 'multiple')
     );
@@ -548,6 +556,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         $values['name'] = 'default';
       }
       $this->profile->setName($values['name']);
+      $this->profile->setAttribute('double_opt_in', isset($values['double_opt_in']));
       foreach ($this->profile->getData() as $element_name => $value) {
         if (isset($values[$element_name])) {
           $this->profile->setAttribute($element_name, $values[$element_name]);
@@ -791,15 +800,16 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     return self::$_contributionStatusOptions;
   }
 
-  /**
-   * Retrieves active groups used as mailing lists within the system as options
-   * for select form elements.
-   *
-   * @return array
-   *
-   * @throws \CiviCRM_API3_Exception
-   */
-  public static function getNewsletterGroups() {
+    /**
+     * Retrieves active groups used as mailing lists within the system as options
+     * for select form elements.
+     *
+     * @param $double_opt_in
+     *
+     * @return array
+     *
+     */
+  public static function getNewsletterGroups($double_opt_in) {
     if (!isset(static::$_newsletterGroups)) {
       static::$_newsletterGroups = array();
       $group_types = civicrm_api3('OptionValue', 'get', array(
@@ -807,7 +817,18 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         'option_group_id' => 'group_type',
         'name' => CRM_Twingle_Submission::GROUP_TYPE_NEWSLETTER,
       ));
-      if ($group_types['count'] > 0) {
+        if ($group_types['count'] > 0 && $double_opt_in) {
+            $query = civicrm_api3('Group', 'get', array(
+                'is_active' => 1,
+                'group_type' => "Mailing List",
+                'option.limit'   => 0,
+                'visibility' => 'Public Pages',
+                'return'     => 'id,name'
+            ));
+            foreach ($query['values'] as $group) {
+                static::$_newsletterGroups[$group['id']] = $group['name'];
+            }
+        } elseif ($group_types['count'] > 0) {
         $group_type = reset($group_types['values']);
         $query = civicrm_api3('Group', 'get', array(
           'is_active' => 1,
