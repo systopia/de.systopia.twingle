@@ -337,6 +337,13 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     );
 
     $this->add(
+       'checkbox', // field type
+       'double_opt_in', // field name
+       E::ts('Use Twingle\'s Double-Opt-In procedure'), // field label
+       FALSE // is not required
+     );
+
+    $this->add(
       'select', // field type
       'postinfo_groups', // field name
       E::ts('Sign up for postal mail groups'), // field label
