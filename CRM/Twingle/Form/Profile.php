@@ -556,8 +556,10 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         $values['name'] = 'default';
       }
       $this->profile->setName($values['name']);
-      $this->profile->setAttribute('newsletter_double_opt_in', isset($values['newsletter_double_opt_in']));
       foreach ($this->profile->getData() as $element_name => $value) {
+        if ($element_name == 'newsletter_double_opt_in') {
+          $values[$element_name] = (int) isset($values[$element_name]);
+        }
         if (isset($values[$element_name])) {
           $this->profile->setAttribute($element_name, $values[$element_name]);
         }
