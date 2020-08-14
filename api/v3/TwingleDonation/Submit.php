@@ -484,34 +484,57 @@ function civicrm_api3_twingle_donation_Submit($params) {
       $result_values['organization'] = $organisation_id;
     }
 
-      // If usage of double opt-in is selected, use MailingEventSubscribe.create to add contact to newsletter groups
-      // defined in the profile
-      $result_values['newsletter']['newsletter_double_opt_in'] = ($profile->getAttribute('newsletter_double_opt_in')) ? 'true' : 'false';
-      if ($profile->getAttribute('newsletter_double_opt_in') &&
-          !empty($params['newsletter']) &&
-          !empty($groups = $profile->getAttribute('newsletter_groups'))) {
-          $group_memberships = array_column(civicrm_api3('GroupContact', 'get', array (
-              'sequential' => 1,
-              'contact_id' => $contact_id
-          ))['values'], 'group_id');
-          foreach ($groups as $group_id) {
-              if (!in_array($group_id, $group_memberships)) {
-                  $result_values['newsletter'][][$group_id] = civicrm_api3('MailingEventSubscribe', 'create', array(
-                      'email' => $params['user_email'],
-                      'group_id' => (int) $group_id,
-                      'contact_id' => $contact_id,
-                  ));
-              } else {
-                  $result_values['newsletter'][] = $group_id;
-              }
-          }
-    // If requested, add contact to newsletter groups defined in the profile.
-    } elseif (!empty($params['newsletter']) && !empty($groups = $profile->getAttribute('newsletter_groups'))) {
+    // If usage of double opt-in is selected, use MailingEventSubscribe.create
+    // to add contact to newsletter groups defined in the profile
+    $result_values['newsletter']['newsletter_double_opt_in'] = ($profile->getAttribute('newsletter_double_opt_in')) ? 'true' : 'false';
+    if (
+      $profile->getAttribute('newsletter_double_opt_in') &&
+      !empty($params['newsletter']) &&
+      !empty($groups = $profile->getAttribute('newsletter_groups'))
+    ) {
+      $group_memberships = array_column(
+        civicrm_api3(
+          'GroupContact',
+          'get',
+          array(
+            'sequential' => 1,
+            'contact_id' => $contact_id,
+          )
+        )['values'],
+        'group_id'
+      );
+      // TODO: Filter for public mailing list groups?
       foreach ($groups as $group_id) {
-        civicrm_api3('GroupContact', 'create', array(
-          'group_id' => $group_id,
-          'contact_id' => $contact_id,
-        ));
+        if (!in_array($group_id, $group_memberships)) {
+          $result_values['newsletter'][][$group_id] = civicrm_api3(
+            'MailingEventSubscribe',
+            'create',
+            array(
+              'email' => $params['user_email'],
+              'group_id' => (int) $group_id,
+              'contact_id' => $contact_id,
+            )
+          );
+        }
+        else {
+          $result_values['newsletter'][] = $group_id;
+        }
+      }
+      // If requested, add contact to newsletter groups defined in the profile.
+    }
+    elseif (
+      !empty($params['newsletter'])
+      && !empty($groups = $profile->getAttribute('newsletter_groups'))
+    ) {
+      foreach ($groups as $group_id) {
+        civicrm_api3(
+          'GroupContact',
+          'create',
+          array(
+            'group_id' => $group_id,
+            'contact_id' => $contact_id,
+          )
+        );
 
         $result_values['newsletter'][] = $group_id;
       }
