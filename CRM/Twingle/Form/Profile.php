@@ -329,7 +329,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
 
     $this->add(
       'checkbox', // field type
-      'double_opt_in', // field name
+      'newsletter_double_opt_in', // field name
       E::ts('Use Double-Opt-In for newsletter'), // field label
       FALSE, // is not required
       array()
@@ -339,7 +339,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       'select', // field type
       'newsletter_groups', // field name
       E::ts('Sign up for newsletter groups'), // field label
-      static::getNewsletterGroups($this->profile->getAttribute('double_opt_in')), // list of options
+      static::getNewsletterGroups($this->profile->getAttribute('newsletter_double_opt_in')), // list of options
       FALSE, // is not required
       array('class' => 'crm-select2 huge', 'multiple' => 'multiple')
     );
@@ -556,7 +556,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         $values['name'] = 'default';
       }
       $this->profile->setName($values['name']);
-      $this->profile->setAttribute('double_opt_in', isset($values['double_opt_in']));
+      $this->profile->setAttribute('newsletter_double_opt_in', isset($values['newsletter_double_opt_in']));
       foreach ($this->profile->getData() as $element_name => $value) {
         if (isset($values[$element_name])) {
           $this->profile->setAttribute($element_name, $values[$element_name]);

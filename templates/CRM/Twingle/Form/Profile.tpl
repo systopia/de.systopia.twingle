@@ -209,13 +209,13 @@
       <table class="form-layout-compressed">
 
         <tr class="crm-section">
-          <td class="label">{$form.double_opt_in.label}</td>
-          <td class="content">{$form.double_opt_in.html}</td>
+          <td class="label">{$form.newsletter_groups.label}</td>
+          <td class="content">{$form.newsletter_groups.html}</td>
         </tr>
 
         <tr class="crm-section">
-          <td class="label">{$form.newsletter_groups.label}</td>
-          <td class="content">{$form.newsletter_groups.html}</td>
+          <td class="label">{$form.newsletter_double_opt_in.label}</td>
+          <td class="content">{$form.newsletter_double_opt_in.html}</td>
         </tr>
 
         <tr class="crm-section">

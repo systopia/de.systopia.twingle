@@ -486,8 +486,8 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
       // If usage of double opt-in is selected, use MailingEventSubscribe.create to add contact to newsletter groups
       // defined in the profile
-      $result_values['newsletter']['double_opt_in'] = ($profile->getAttribute('double_opt_in')) ? 'true' : 'false';
-      if ($profile->getAttribute('double_opt_in') &&
+      $result_values['newsletter']['newsletter_double_opt_in'] = ($profile->getAttribute('newsletter_double_opt_in')) ? 'true' : 'false';
+      if ($profile->getAttribute('newsletter_double_opt_in') &&
           !empty($params['newsletter']) &&
           !empty($groups = $profile->getAttribute('newsletter_groups'))) {
           $group_memberships = array_column(civicrm_api3('GroupContact', 'get', array (
