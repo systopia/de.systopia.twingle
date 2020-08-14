@@ -802,15 +802,15 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     return self::$_contributionStatusOptions;
   }
 
-    /**
-     * Retrieves active groups used as mailing lists within the system as options
-     * for select form elements.
-     *
-     * @param $double_opt_in
-     *
-     * @return array
-     *
-     */
+  /**
+   * Retrieves active groups used as mailing lists within the system as options
+   * for select form elements.
+   *
+   * @param $double_opt_in
+   *
+   * @return array
+   *
+   */
   public static function getNewsletterGroups() {
     if (!isset(static::$_newsletterGroups)) {
       static::$_newsletterGroups = array();
@@ -819,7 +819,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         'option_group_id' => 'group_type',
         'name' => CRM_Twingle_Submission::GROUP_TYPE_NEWSLETTER,
       ));
-        if ($group_types['count'] > 0) {
+      if ($group_types['count'] > 0) {
         $group_type = reset($group_types['values']);
         $query = civicrm_api3('Group', 'get', array(
           'is_active' => 1,
