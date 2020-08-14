@@ -806,9 +806,9 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    * Retrieves active groups used as mailing lists within the system as options
    * for select form elements.
    *
-   * @param $double_opt_in
-   *
    * @return array
+   *
+   * @throws \CiviCRM_API3_Exception
    *
    */
   public static function getNewsletterGroups() {
