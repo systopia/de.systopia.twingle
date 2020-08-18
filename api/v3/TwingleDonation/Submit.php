@@ -503,9 +503,15 @@ function civicrm_api3_twingle_donation_Submit($params) {
         )['values'],
         'group_id'
       );
-      // TODO: Filter for public mailing list groups?
       foreach ($groups as $group_id) {
-        if (!in_array($group_id, $group_memberships)) {
+        $is_public_group = civicrm_api3(
+          'Group',
+            'getsingle',
+            array(
+              'id' => (int) $group_id,
+            )
+          )['visibility'] == 'Public Pages';
+        if (!in_array($group_id, $group_memberships) && $is_public_group) {
           $result_values['newsletter'][][$group_id] = civicrm_api3(
             'MailingEventSubscribe',
             'create',
@@ -516,7 +522,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
             )
           );
         }
-        else {
+        elseif ($is_public_group) {
           $result_values['newsletter'][] = $group_id;
         }
       }
