@@ -39,7 +39,8 @@
 {/htxt}
 
 {htxt id='id-newsletter-double-opt-in'}
-    {ts domain="de.systopia.twingle"}Select whether to use CiviCRM's Double-Opt-In feature for subscribing to mailing lists. Note that this only works for public mailing lists. Any non-public mailing list selected above will be ignored when this setting is enabled.{/ts}
+    <p>{ts domain="de.systopia.twingle"}Select whether to use CiviCRM's Double-Opt-In feature for subscribing to mailing lists. Note that this only works for public mailing lists. Any non-public mailing list selected above will be ignored when this setting is enabled.{/ts}</p>
+    <p>{ts domain="de.systopia.twingle"}Also, do not forget to disable Twingle's own Double Opt-In option in the Twingle Manager to avoid subscribers receiving multiple confirmation e-mails. Only one or the other option should be enabled.{/ts}</p>
 {/htxt}
 
 {htxt id='id-membership-postprocessing-call'}
