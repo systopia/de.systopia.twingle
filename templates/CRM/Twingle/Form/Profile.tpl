@@ -214,6 +214,28 @@
         </tr>
 
         <tr class="crm-section">
+          <td class="label">
+            {$form.newsletter_double_opt_in.label}
+            <a
+                    onclick='
+                            CRM.help(
+                            "{ts domain="de.systopia.twingle"}Newsletter Double Opt-In{/ts}",
+                    {literal}{
+                      "id": "id-newsletter-double-opt-in",
+                      "file": "CRM\/Twingle\/Form\/Profile"
+                    }{/literal}
+                            );
+                            return false;
+                            '
+                    href="#"
+                    title="{ts domain="de.systopia.twingle"}Help{/ts}"
+                    class="helpicon"
+            ></a>
+          </td>
+          <td class="content">{$form.newsletter_double_opt_in.html}</td>
+        </tr>
+
+        <tr class="crm-section">
           <td class="label">{$form.postinfo_groups.label}</td>
           <td class="content">{$form.postinfo_groups.html}</td>
         </tr>

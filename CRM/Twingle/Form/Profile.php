@@ -328,6 +328,14 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     }
 
     $this->add(
+      'checkbox', // field type
+      'newsletter_double_opt_in', // field name
+      E::ts('Use Double-Opt-In for newsletter'), // field label
+      FALSE, // is not required
+      array()
+      );
+
+    $this->add(
       'select', // field type
       'newsletter_groups', // field name
       E::ts('Sign up for newsletter groups'), // field label
@@ -549,6 +557,9 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       }
       $this->profile->setName($values['name']);
       foreach ($this->profile->getData() as $element_name => $value) {
+        if ($element_name == 'newsletter_double_opt_in') {
+          $values[$element_name] = (int) isset($values[$element_name]);
+        }
         if (isset($values[$element_name])) {
           $this->profile->setAttribute($element_name, $values[$element_name]);
         }
@@ -798,6 +809,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    * @return array
    *
    * @throws \CiviCRM_API3_Exception
+   *
    */
   public static function getNewsletterGroups() {
     if (!isset(static::$_newsletterGroups)) {
