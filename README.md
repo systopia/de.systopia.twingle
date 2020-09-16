@@ -22,7 +22,7 @@ enabled.
 
 ### Configure CiviCRM
 
-- Go to the Administration console `/civicrm/admin`
+- Go to the Administration console at `/civicrm/admin`
 - Open "Twingle API Configuration" at `/civicrm/admin/settings/twingle`
 
 #### Configure CiviSEPA integration
