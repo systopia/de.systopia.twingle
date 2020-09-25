@@ -65,7 +65,12 @@ class CRM_Twingle_Profile {
    */
   public function matches($project_id) {
     $selector = $this->getAttribute('selector');
-    $project_ids = explode(',', $selector);
+    $project_ids = array_map(
+      function($project_id) {
+        return trim($project_id);
+      },
+      explode(',', $selector)
+    );
     return in_array($project_id, $project_ids);
   }
 
