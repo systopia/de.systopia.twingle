@@ -14,7 +14,7 @@
 
 <div class="crm-block crm-form-block">
 
-  {if $op == 'create' or $op == 'edit'}
+  {if $op == 'create' or $op == 'edit' or $op == 'copy'}
 
     <fieldset>
 
