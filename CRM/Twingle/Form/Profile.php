@@ -171,16 +171,13 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         CRM_Utils_System::setTitle(E::ts('Edit Twingle API profile <em>%1</em>', array(1 => $this->profile->getName())));
         break;
       case 'copy':
-        // This will be a 'create' actually.
-        $this->_op = 'create';
-
         // Retrieve the source profile name.
         $profile_name = CRM_Utils_Request::retrieve('source_name', 'String', $this);
         // When copying without a valid profile name, copy the default profile.
         if (!$profile_name) {
           $profile_name = 'default';
         }
-        $this->profile = CRM_Twingle_Profile::getProfile($profile_name);
+        $this->profile = clone CRM_Twingle_Profile::getProfile($profile_name);
 
         // Propose a new name for this profile.
         $profile_name = $profile_name . '_copy';
@@ -536,7 +533,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    */
   public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
-    if (in_array($this->_op, array('create', 'edit'))) {
+    if (in_array($this->_op, array('create', 'edit', 'copy'))) {
       $defaults['name'] = $this->profile->getName();
       $profile_data = $this->profile->getData();
       foreach ($profile_data as $element_name => $value) {
