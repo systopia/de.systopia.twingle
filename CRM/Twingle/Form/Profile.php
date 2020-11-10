@@ -139,7 +139,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       $this->_op = 'create';
     }
 
-    // Verify that profile with the given name exists.
+    // Verify that a profile with the given name exists.
     $profile_name = CRM_Utils_Request::retrieve('name', 'String', $this);
     if (!$this->profile = CRM_Twingle_Profile::getProfile($profile_name)) {
       $profile_name = NULL;
@@ -174,20 +174,22 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         // This will be a 'create' actually.
         $this->_op = 'create';
 
+        // Retrieve the source profile name.
+        $profile_name = CRM_Utils_Request::retrieve('source_name', 'String', $this);
         // When copying without a valid profile name, copy the default profile.
         if (!$profile_name) {
           $profile_name = 'default';
-          $this->profile = CRM_Twingle_Profile::getProfile($profile_name);
         }
+        $this->profile = CRM_Twingle_Profile::getProfile($profile_name);
 
-        // Set a new name for this profile.
+        // Propose a new name for this profile.
         $profile_name = $profile_name . '_copy';
         $this->profile->setName($profile_name);
         CRM_Utils_System::setTitle(E::ts('New Twingle API profile'));
         break;
       case 'create':
         // Load factory default profile values.
-        $this->profile = CRM_twingle_Profile::createDefaultProfile($profile_name);
+        $this->profile = CRM_Twingle_Profile::createDefaultProfile($profile_name);
         CRM_Utils_System::setTitle(E::ts('New Twingle API profile'));
         break;
     }
@@ -429,13 +431,6 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   }
 
   /**
-   * @inheritdoc
-   */
-  public function addRules() {
-    $this->addFormRule(array('CRM_Twingle_Form_Profile', 'validateProfileForm'));
-  }
-
-  /**
    * Validates the profile form.
    *
    * @param array $values
@@ -445,12 +440,21 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    *   TRUE when the form was successfully validated, or an array of error
    *   messages, keyed by form element name.
    */
-  public static function validateProfileForm($values) {
-    $errors = array();
+  public function validate() {
+    $values = $this->exportValues();
+
+    // Validate new profile names.
+    if (
+      isset($values['name'])
+      && ($values['name'] != $this->profile->getName() || $this->_op != 'edit')
+      && !empty(CRM_Twingle_Profile::getProfile($values['name']))
+    ) {
+      $this->_errors['name'] = E::ts('A profile with this name already exists.');
+    }
 
     // Restrict profile names to alphanumeric characters and the underscore.
     if (isset($values['name']) && preg_match("/[^A-Za-z0-9\_]/", $values['name'])) {
-      $errors['name'] = E::ts('Only alphanumeric characters and the underscore (_) are allowed for profile names.');
+      $this->_errors['name'] = E::ts('Only alphanumeric characters and the underscore (_) are allowed for profile names.');
     }
 
     // Validate custom field mapping.
@@ -513,10 +517,10 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       }
     }
     catch (Exception $exception) {
-      $errors['custom_field_mapping'] = $exception->getMessage();
+      $this->_errors['custom_field_mapping'] = $exception->getMessage();
     }
 
-    return empty($errors) ? TRUE : $errors;
+    return parent::validate();
   }
 
   /**
@@ -543,7 +547,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    */
   public function postProcess() {
     $values = $this->exportValues();
-    if (in_array($this->_op, array('create', 'edit'))) {
+    if (in_array($this->_op, array('create', 'edit', 'copy'))) {
       if (empty($values['name'])) {
         $values['name'] = 'default';
       }
