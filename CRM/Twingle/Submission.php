@@ -117,6 +117,30 @@ class CRM_Twingle_Submission {
         );
       }
     }
+
+    // Validate campaign_id, if given.
+    if (!empty($params['campaign_id'])) {
+      // Check whether campaign_id is a numeric string and cast it to an integer.
+      if (is_numeric($params['campaign_id'])) {
+        $params['campaign_id'] = intval($params['campaign_id']);
+      }
+      else {
+        throw new CiviCRM_API3_Exception(
+          E::ts('campaign_id must be a numeric string. '),
+          'invalid_format'
+        );
+      }
+      // Check whether given campaign_id exists and if not, unset the parameter.
+      try {
+        civicrm_api3(
+          'Campaign',
+          'getsingle',
+          ['id' => $params['campaign_id']]
+        );
+      } catch (CiviCRM_API3_Exception $e) {
+        unset($params['campaign_id']);
+      }
+    }
   }
 
   /**
