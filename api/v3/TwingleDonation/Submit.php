@@ -234,7 +234,7 @@ function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
   $params['campaign_id'] = array(
     'name' => 'campaign_id',
     'title' => E::ts('Campaign ID'),
-    'type' => CRM_Utils_Type::T_INT,
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
     'description' => E::ts('The CiviCRM ID of a campaign to assign the contribution.'),
   );
