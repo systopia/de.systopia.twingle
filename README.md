@@ -20,6 +20,14 @@ Please refer to the
 Make sure you use an XCM profile with the option *Match contacts by contact ID*
 enabled.
 
+Be careful when enabling the *"Change Primary Detail?"* option. While it might
+appear useful to update even primary contact details, this might lead to a
+loss of contact information due to the fact that along with a submission that
+contains e.g. a PayPal donation the `user_country` is transmitted as the only
+address detail. The `user_country` then will be treated by the XCM as a whole
+new address. So the contact may end up with a new address that contains only
+the country.
+
 ### Configure CiviCRM
 
 - Go to the Administration console at `/civicrm/admin`
