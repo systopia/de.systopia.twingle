@@ -400,27 +400,6 @@ function civicrm_api3_twingle_donation_Submit($params) {
         $contact_data += $custom_fields['Individual'];
       }
 
-      if (!$contact_id = CRM_Twingle_Submission::getContact(
-        'Individual',
-        $contact_data,
-        $profile,
-        $params
-      )) {
-        throw new CiviCRM_API3_Exception(
-          E::ts('Individual contact could not be found or created.'),
-          'api_error'
-        );
-      }
-
-      // Save user_extrafield as contact note.
-      if (!empty($params['user_extrafield'])) {
-        civicrm_api3('Note', 'create', array(
-          'entity_table' => 'civicrm_contact',
-          'entity_id' => $contact_id,
-          'note' => $params['user_extrafield'],
-        ));
-      }
-
       // Organisation lookup.
       if (!empty($params['organization_name'])) {
         $organisation_data = array(
@@ -449,6 +428,31 @@ function civicrm_api3_twingle_donation_Submit($params) {
           );
         }
       }
+      elseif (!empty($submitted_address)) {
+        $contact_data += $submitted_address;
+      }
+
+      if (!$contact_id = CRM_Twingle_Submission::getContact(
+        'Individual',
+        $contact_data,
+        $profile,
+        $params
+      )) {
+        throw new CiviCRM_API3_Exception(
+          E::ts('Individual contact could not be found or created.'),
+          'api_error'
+        );
+      }
+
+      // Save user_extrafield as contact note.
+      if (!empty($params['user_extrafield'])) {
+        civicrm_api3('Note', 'create', array(
+          'entity_table' => 'civicrm_contact',
+          'entity_id' => $contact_id,
+          'note' => $params['user_extrafield'],
+        ));
+      }
+
       // Share organisation address with individual contact, using configured
       // location type for organisation address.
       $address_shared = (
@@ -459,19 +463,6 @@ function civicrm_api3_twingle_donation_Submit($params) {
           (int) $profile->getAttribute('location_type_id_organisation')
         )
       );
-
-      // Address is not shared, use submitted address with
-      // configured location type.
-      if (!$address_shared && !empty($submitted_address)) {
-        // Do not use `Address.create` API action, let XCM decide
-        // whether to create an address.
-        CRM_Twingle_Submission::getContact(
-            'Individual',
-            array('id' => $contact_id) + $submitted_address,
-            $profile,
-            $params
-        );
-      }
 
       // Create employer relationship between organization and individual.
       if (isset($organisation_id)) {
