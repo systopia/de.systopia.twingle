@@ -335,8 +335,9 @@ function civicrm_api3_twingle_donation_Submit($params) {
         }
       }
 
-      // Do not creat a new address if 'country' is the only address
-      // component. See issue #47
+      // Make required address components configurable to prevent existing
+      // contact addresses from being overwritten with incomplete address
+      // information. See issue #47
       $required_address_components =
         $profile->getAttribute('required_address_components');
       $unset_address_params = False;
