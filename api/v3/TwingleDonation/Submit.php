@@ -347,7 +347,12 @@ function civicrm_api3_twingle_donation_Submit($params) {
         }
       }
       if ($unset_address_params) {
-        foreach($required_address_components as $req) {
+        foreach([
+                  'street_address',
+                  'postal_code',
+                  'city',
+                  'country',
+                ] as $req) {
           unset($params[$req]);
         }
       }
