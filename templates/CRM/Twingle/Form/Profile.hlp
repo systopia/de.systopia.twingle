@@ -54,6 +54,12 @@
     </ul>{/ts}
 {/htxt}
 
+{htxt id='id-required_address_components'}
+    <p>{ts domain="de.systopia.twingle"}Select the address components that must be present to create a new address for the contact.{/ts}</p>
+    <p>{ts domain="de.systopia.twingle"}Depending on your XCM settings, the newly transferred address will replace the old one. This behavior may be intentional, as you always want to have the most current address.{/ts}</p>
+    <p>{ts domain="de.systopia.twingle"}<strong>ATTENTION:</strong> In some cases Twingle sends only the country of the user. If no other address components are selected in the required address components, the current user address will be overwritten with an address containing only the country, depending on the XCM settings.{/ts}</p>
+{/htxt}
+
 {htxt id='id-custom_field_mapping'}
     {ts domain="de.systopia.twingle"}<p>Map Twingle custom fields to CiviCRM custom fields using the following format (each assignment in a separate line):</p>
     <pre>twingle_field_1=custom_123<br />twingle_field_2=custom_789</pre>

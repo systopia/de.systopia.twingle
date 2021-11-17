@@ -335,14 +335,20 @@ function civicrm_api3_twingle_donation_Submit($params) {
         }
       }
 
-      // Do not creat a new address if user_country is the only address
-      // parameter. See issue #47
-      if (
-        !array_key_exists('street_address', $params) &&
-        !array_key_exists('postal_code', $params) &&
-        !array_key_exists('city', $params)
-      ) {
-        unset($params['country']);
+      // Do not creat a new address if 'country' is the only address
+      // component. See issue #47
+      $required_address_components =
+        $profile->getAttribute('required_address_components');
+      $unset_address_params = False;
+      foreach ($required_address_components as $req) {
+        if (empty($params[$req])) {
+          $unset_address_params = True;
+        }
+      }
+      if ($unset_address_params) {
+        foreach($required_address_components as $req) {
+          unset($params[$req]);
+        }
       }
 
       // Prepare parameter mapping for organisation.

@@ -226,7 +226,8 @@ class CRM_Twingle_Profile {
         'membership_type_id',
         'membership_type_id_recur',
         'membership_postprocess_call',
-        'newsletter_double_opt_in'
+        'newsletter_double_opt_in',
+        'required_address_components',
       ),
       // Add payment methods.
       array_keys(static::paymentInstruments()),
@@ -300,6 +301,12 @@ class CRM_Twingle_Profile {
       'membership_type_id' => NULL,
       'membership_type_id_recur' => NULL,
       'newsletter_double_opt_in' => NULL,
+      'required_address_components' => [
+        'street_address',
+        'postal_code',
+        'city',
+        'country',
+      ],
     )
       // Add contribution status for all payment methods.
       + array_fill_keys(array_map(function($attribute) {

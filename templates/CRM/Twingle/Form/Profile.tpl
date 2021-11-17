@@ -291,6 +291,27 @@
         </tr>
 
         <tr class="crm-section">
+          <td class="label">{$form.required_address_components.label}
+            <a
+                    onclick='
+                            CRM.help(
+                            "{ts domain="de.systopia.twingle"}Required address components{/ts}",
+                    {literal}{
+                      "id": "id-required_address_components",
+                      "file": "CRM\/Twingle\/Form\/Profile"
+                    }{/literal}
+                            );
+                            return false;
+                            '
+                    href="#"
+                    title="{ts domain="de.systopia.twingle"}Help{/ts}"
+                    class="helpicon"
+            ></a>
+          </td>
+          <td class="content">{$form.required_address_components.html}</td>
+        </tr>
+
+        <tr class="crm-section">
           <td class="label">
             {$form.custom_field_mapping.label}
             <a
