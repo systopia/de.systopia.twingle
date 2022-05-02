@@ -335,25 +335,20 @@ function civicrm_api3_twingle_donation_Submit($params) {
         }
       }
 
-      // Make required address components configurable to prevent existing
-      // contact addresses from being overwritten with incomplete address
-      // information. See issue #47
-      $required_address_components =
-        $profile->getAttribute('required_address_components');
-      $unset_address_params = False;
-      foreach ($required_address_components as $req) {
-        if (empty($params[$req])) {
-          $unset_address_params = True;
-        }
-      }
-      if ($unset_address_params) {
-        foreach([
-                  'street_address',
-                  'postal_code',
-                  'city',
-                  'country',
-                ] as $req) {
-          unset($params[$req]);
+      // Remove address data when any address component that is configured as
+      // required is missing.
+      // See https://github.com/systopia/de.systopia.twingle/issues/47
+      foreach ($profile->getAttribute('required_address_components', []) as $required_address_component) {
+        if (empty($params[$required_address_component])) {
+          foreach ([
+                     'street_address',
+                     'postal_code',
+                     'city',
+                     'country',
+                   ] as $address_param) {
+            unset($params[$address_param]);
+          }
+          break;
         }
       }
 

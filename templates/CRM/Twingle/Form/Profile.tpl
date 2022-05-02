@@ -114,6 +114,27 @@
         </tr>
 
         <tr class="crm-section">
+          <td class="label">{$form.required_address_components.label}
+            <a
+                    onclick='
+                            CRM.help(
+                            "{ts domain="de.systopia.twingle"}Required address components{/ts}",
+                    {literal}{
+                      "id": "id-required_address_components",
+                      "file": "CRM\/Twingle\/Form\/Profile"
+                    }{/literal}
+                            );
+                            return false;
+                            '
+                    href="#"
+                    title="{ts domain="de.systopia.twingle"}Help{/ts}"
+                    class="helpicon"
+            ></a>
+          </td>
+          <td class="content">{$form.required_address_components.html}</td>
+        </tr>
+
+        <tr class="crm-section">
           <td class="label">
             {$form.financial_type_id.label}
             <a
@@ -288,27 +309,6 @@
         <tr class="crm-section">
           <td class="label">{$form.contribution_source.label}</td>
           <td class="content">{$form.contribution_source.html}</td>
-        </tr>
-
-        <tr class="crm-section">
-          <td class="label">{$form.required_address_components.label}
-            <a
-                    onclick='
-                            CRM.help(
-                            "{ts domain="de.systopia.twingle"}Required address components{/ts}",
-                    {literal}{
-                      "id": "id-required_address_components",
-                      "file": "CRM\/Twingle\/Form\/Profile"
-                    }{/literal}
-                            );
-                            return false;
-                            '
-                    href="#"
-                    title="{ts domain="de.systopia.twingle"}Help{/ts}"
-                    class="helpicon"
-            ></a>
-          </td>
-          <td class="content">{$form.required_address_components.html}</td>
         </tr>
 
         <tr class="crm-section">
