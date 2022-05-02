@@ -12,6 +12,7 @@
 | written permission from the original author(s).             |
 +-------------------------------------------------------------*}
 
+{crmScope extensionKey='de.systopia.twingle'}
 {htxt id='id-location_type_id'}
     {ts domain="de.systopia.twingle"}Select which location type to use for addresses for individuals, either when no organisation name is specified, or an organisation address can not be shared with the individual contact.{/ts}
 {/htxt}
@@ -54,6 +55,12 @@
     </ul>{/ts}
 {/htxt}
 
+{htxt id='id-required_address_components'}
+    <p>{ts}Select the address components that must be present to create or update an address for the contact.{/ts}</p>
+    <p>{ts}Depending on your XCM settings, the transferred address might replace an existing one.{/ts}</p>
+    <p>{ts}Since in some cases Twingle send the country of the user as the only address parameter, depending on your XCM configuration, not declaring other address components as required might lead to the current user address being overwritten with an address containing the country only.{/ts}</p>
+{/htxt}
+
 {htxt id='id-custom_field_mapping'}
     {ts domain="de.systopia.twingle"}<p>Map Twingle custom fields to CiviCRM custom fields using the following format (each assignment in a separate line):</p>
     <pre>twingle_field_1=custom_123<br />twingle_field_2=custom_789</pre>
@@ -68,3 +75,4 @@
       <li><strong>ContributionRecur</strong> &ndash; Will be set on the recurring contribution and deriving single contributions</li>
     </ul>{/ts}
 {/htxt}
+{/crmScope}

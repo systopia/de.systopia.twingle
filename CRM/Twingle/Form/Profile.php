@@ -417,6 +417,20 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     );
 
     $this->add(
+      'select',
+      'required_address_components',
+      E::ts('Required address components'),
+      [
+        'street_address' => E::ts("Street"),
+        'postal_code'    => E::ts("Postal Code"),
+        'city'           => E::ts("City"),
+        'country'        => E::ts("Country"),
+      ],
+      FALSE, // is not required
+      ['class' => 'crm-select2 huge', 'multiple' => 'multiple']
+    );
+
+    $this->add(
       'textarea', // field type
       'custom_field_mapping', // field name
       E::ts('Custom field mapping'), // field label
