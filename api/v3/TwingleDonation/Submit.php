@@ -224,7 +224,7 @@ function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
     'api.required' => 0,
     'description'  => E::ts('The company of the contact.'),
   );
-  $params['user_extrafield'] = array(
+  $params['user_language'] = array(
     'name'         => 'user_language',
     'title'        => E::ts('Language'),
     'type'         => CRM_Utils_Type::T_STRING,
