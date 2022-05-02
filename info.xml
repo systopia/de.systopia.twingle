@@ -10,7 +10,7 @@
   </maintainer>
   <urls>
     <url desc="Main Extension Page">https://github.com/systopia/de.systopia.twingle</url>
-    <url desc="Documentation">https://github.com/systopia/de.systopia.twingle/blob/master/README.md</url>
+    <url desc="Documentation">https://docs.civicrm.org/twingle/en/latest</url>
     <url desc="Support">https://github.com/systopia/de.systopia.twingle/issues</url>
     <url desc="Licensing">http://www.gnu.org/licenses/agpl-3.0.html</url>
   </urls>
