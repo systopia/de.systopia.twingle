@@ -224,6 +224,13 @@ function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
     'api.required' => 0,
     'description'  => E::ts('The company of the contact.'),
   );
+  $params['user_language'] = array(
+    'name'         => 'user_language',
+    'title'        => E::ts('Language'),
+    'type'         => CRM_Utils_Type::T_STRING,
+    'api.required' => 0,
+    'description'  => E::ts('The preferred language of the contact. A 2-digit ISO-639-1 language code.'),
+  );
   $params['user_extrafield'] = array(
     'name'         => 'user_extrafield',
     'title'        => E::ts('User extra field'),
@@ -393,6 +400,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
                  'user_birthdate' => 'birth_date',
                  'user_email' => 'email',
                  'user_telephone' => 'phone',
+                 'user_language' => 'preferred_language',
                  'user_title' => 'formal_title',
                  'debit_iban' => 'iban',
                ) as $contact_param => $contact_component) {
