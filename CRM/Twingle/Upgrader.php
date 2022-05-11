@@ -12,6 +12,9 @@ class CRM_Twingle_Upgrader extends CRM_Twingle_Upgrader_Base {
   public function install() {
     // create a DB table for the twingle profiles
     $this->executeSqlFile('sql/civicrm_twingle_profile.sql');
+
+    // add a default profile
+    CRM_Twingle_Profile::createDefaultProfile()->saveProfile();
   }
 
   /**
