@@ -278,6 +278,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
     // Get the profile defined for the given form ID, or the default profile
     // if none matches.
     $profile = CRM_Twingle_Profile::getProfileForProject($params['project_id']);
+    $profile->logAccess();
 
     // Validate submitted parameters
     CRM_Twingle_Submission::validateSubmission($params, $profile);

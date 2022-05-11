@@ -388,6 +388,7 @@ class CRM_Twingle_Profile {
    * @return CRM_Twingle_Profile[]
    */
   public static function getProfiles() {
+    // todo: cache?
     $profiles = [];
     $profile_data = CRM_Core_DAO::executeQuery("SELECT name, config FROM civicrm_twingle_profile");
     while ($profile_data->fetch()) {
