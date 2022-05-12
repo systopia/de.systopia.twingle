@@ -385,7 +385,8 @@ class CRM_Twingle_Profile {
    * Retrieves the list of all profiles persisted within the current CiviCRM
    * settings, including the default profile.
    *
-   * @return CRM_Twingle_Profile[]
+   * @return array
+   *   profile_name => CRM_Twingle_Profile
    */
   public static function getProfiles() {
     // todo: cache?
@@ -396,4 +397,25 @@ class CRM_Twingle_Profile {
     }
     return $profiles;
   }
+
+  /**
+   * Get the stats (access_count, last_access) for all twingle profiles
+   *
+   * @return CRM_Twingle_Profile[]
+   */
+  public static function getProfileStats() {
+    $stats = [];
+    $profile_data = CRM_Core_DAO::executeQuery("SELECT name, last_access, access_counter FROM civicrm_twingle_profile");
+    while ($profile_data->fetch()) {
+      $stats[$profile_data->name] = [
+        'name' => $profile_data->name,
+        'last_access' => $profile_data->last_access,
+        'last_access_txt' => $profile_data->last_access ? date('Y-m-d H:i:s', strtotime($profile_data->last_access)) : E::ts("never"),
+        'access_counter' => $profile_data->access_counter,
+        'access_counter_txt' => $profile_data->access_counter ? ((int) $profile_data->access_counter) . 'x' : E::ts("never"),
+      ];
+    }
+    return $stats;
+  }
+
 }
