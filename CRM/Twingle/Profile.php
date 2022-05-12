@@ -366,19 +366,19 @@ class CRM_Twingle_Profile {
   /**
    * Retrieves the profile with the given name.
    *
-   * @param $name
+   * @param string $name
    *
    * @return CRM_Twingle_Profile | NULL
    */
   public static function getProfile($name) {
-    $profile_data = CRM_Core_DAO::singleValueQuery("SELECT config FROM civicrm_twingle_profile WHERE name = %1", [
-      1 => [$name, 'String']]);
-    if ($profile_data) {
-      return new CRM_Twingle_Profile($name, json_decode($profile_data, 1));
+    if (!empty($name)) {
+      $profile_data = CRM_Core_DAO::singleValueQuery("SELECT config FROM civicrm_twingle_profile WHERE name = %1", [
+        1 => [$name, 'String']]);
+      if ($profile_data) {
+        return new CRM_Twingle_Profile($name, json_decode($profile_data, 1));
+      }
     }
-    else {
-      return NULL;
-    }
+    return NULL;
   }
 
   /**
