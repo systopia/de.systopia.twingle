@@ -153,6 +153,19 @@ function twingle_civicrm_alterAPIPermissions($entity, $action, &$params, &$permi
   $permissions['twingle_donation']['endrecurring']  = array('access Twingle API');
 }
 
+/**
+ * Make sure, that the last_access and access_counter column is not logged
+ *
+ * @param array $logTableSpec
+ */
+function twingle_civicrm_alterLogTables(&$logTableSpec)
+{
+  if (isset($logTableSpec['civicrm_twingle_profile'])) {
+    $logTableSpec['civicrm_twingle_profile']['exceptions'] = ['last_access', 'access_counter'];
+  }
+}
+
+
 // --- Functions below this ship commented out. Uncomment as required. ---
 
 /**
