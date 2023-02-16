@@ -284,6 +284,11 @@ class CRM_Twingle_Profile {
       'pi_paydirekt' => E::ts('paydirekt'),
       'pi_applepay' => E::ts('Apple Pay'),
       'pi_googlepay' =>  E::ts('Google Pay'),
+      'paydirekt' => E::ts('Paydirekt'),
+      'twint' => E::ts('Twint'),
+      'ideal' => E::ts('iDEAL'),
+      'post_finance' => E::ts('Postfinance'),
+      'bancontact' => E::ts('Bancontact'),
     ];
   }
 
@@ -314,6 +319,11 @@ class CRM_Twingle_Profile {
       'pi_paydirekt' => NULL,
       'pi_applepay' => NULL,
       'pi_googlepay' => NULL,
+      'pi_paydirekt' => NULL,
+      'pi_twint' => NULL,
+      'pi_ideal' => NULL,
+      'pi_post_finance' => NULL,
+      'pi_bancontact' => NULL,
       'sepa_creditor_id' => NULL,
       'gender_male' => 2,
       'gender_female' => 1,
