@@ -1,10 +1,18 @@
 site_name: Twingle API
-repo_url: https://github.com/systopia/de.systopia.twingle
 theme: 
   name: material
 
 nav:
-- 'Home': index.md
+- Home: index.md
+- Installation: install_tw.md
+- Configuration: 
+  - Creating a Twingle user in the CMS system: con_drup.md
+  - Configuring the Extended Contact Manager extension: con_xcm.md
+  - Creating a Twingle user in CiviCRM: con_civi.md
+  - Activating SEPA for the Twingle API extension in CiviCRM: con_twse.md
+  - Configuring the Twingle Profile in CiviCRM: con_tw.md
+  - Configuring the Twingle Account on the Twingle website: con_man.md
+  - API documentation: api_tw.md
 
 markdown_extensions:
 - attr_list
