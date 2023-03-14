@@ -284,11 +284,11 @@ class CRM_Twingle_Profile {
       'pi_paydirekt' => E::ts('paydirekt'),
       'pi_applepay' => E::ts('Apple Pay'),
       'pi_googlepay' =>  E::ts('Google Pay'),
-      'paydirekt' => E::ts('Paydirekt'),
-      'twint' => E::ts('Twint'),
-      'ideal' => E::ts('iDEAL'),
-      'post_finance' => E::ts('Postfinance'),
-      'bancontact' => E::ts('Bancontact'),
+      'pi_paydirekt' => E::ts('Paydirekt'),
+      'pi_twint' => E::ts('Twint'),
+      'pi_ideal' => E::ts('iDEAL'),
+      'pi_post_finance' => E::ts('Postfinance'),
+      'pi_bancontact' => E::ts('Bancontact'),
     ];
   }
 
