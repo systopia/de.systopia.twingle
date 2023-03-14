@@ -1,28 +1,32 @@
 site_name: Twingle API
-theme: 
+theme:
   name: material
 
 nav:
-- Home: index.md
-- Installation: install_tw.md
-- Configuration: 
-  - Creating a Twingle user in the CMS system: con_drup.md
-  - Configuring the Extended Contact Manager extension: con_xcm.md
-  - Creating a Twingle user in CiviCRM: con_civi.md
-  - Activating SEPA for the Twingle API extension in CiviCRM: con_twse.md
-  - Configuring the Twingle Profile in CiviCRM: con_tw.md
-  - Configuring the Twingle Account on the Twingle website: con_man.md
-  - API documentation: api_tw.md
+  - Introduction: index.md
+  - Installation: installation.md
+  - Configuration:
+      - User, permissions and API authentication: configuration/user_permissions.md
+      - Extended Contact Manager (XCM) extension: configuration/xcm.md
+      - CiviSEPA integration: configuration/civisepa.md
+      - Twingle Profiles: configuration/profiles.md
+      - Configuring the Twingle Account on the Twingle website: configuration/account.md
+  - API documentation: api.md
 
 markdown_extensions:
-- attr_list
-- admonition
-- def_list
-- codehilite
-- toc:
-    permalink: true
-- pymdownx.superfences
-- pymdownx.inlinehilite
-- pymdownx.tilde
-- pymdownx.betterem
-- pymdownx.mark
+  - attr_list
+  - admonition
+  - def_list
+  - pymdownx.highlight:
+      guess_lang: false
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.tilde
+  - pymdownx.betterem
+  - pymdownx.mark
+
+plugins:
+  - search:
+      lang: en

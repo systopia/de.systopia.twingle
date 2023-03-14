@@ -1,6 +1,6 @@
 # API documentation
 
-The extension provides a new CiviCRM API entity `TwingleDonation` with API
+The extension provides a new CiviCRM API 3 entity `TwingleDonation` with API
 actions to record a new donation, end a previously submitted recurring donation
 and cancel previously submitted donation.
 
