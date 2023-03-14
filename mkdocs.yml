@@ -1,4 +1,5 @@
 site_name: Twingle API
+repo_url: https://github.com/systopia/de.systopia.twingle
 theme:
   name: material
 
