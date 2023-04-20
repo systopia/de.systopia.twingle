@@ -90,12 +90,16 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
     );
 
     $this->addEntityRef(
-        'twingle_protect_recurring_activity_assignee',
-        E::ts('Assigned To'),
-        [
-            'contact_type'      => ['IN' => ['Individual', 'Organization']],
+      'twingle_protect_recurring_activity_assignee',
+      E::ts('Assigned To'),
+      [
+        'api' => [
+          'params' => [
+            'contact_type' => ['IN' => ['Individual', 'Organization']],
             'check_permissions' => 0,
-        ]
+          ],
+        ],
+      ]
     );
 
     $this->addButtons(array(
