@@ -5,7 +5,7 @@ For further information about Twingle fundraising see the [Twingle](https://www.
 
 Twingle as fundraising service can be connected to CiviCRM via its API with the extension Twingle API.
 
-## Features¶
+## Features
 * Donations from Twingle can be automatically created as contributions in CiviCRM and assigned to existing or new contacts and administered in CiviCRM.
 * Supporters and contacts of donations can be managed in CiviCRM.
 * Donations can be submitted with different payment statuses depending on the payment type
