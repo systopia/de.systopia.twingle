@@ -11,5 +11,5 @@ Twingle as fundraising service can be connected to CiviCRM via its API with the 
 * Donations can be submitted with different payment statuses depending on the payment type
 * SEPA mandates can be created for one-off and recurring payments.
 * Donors can be added to groups for receiving newsletters, mailings and donation receipts.
-* A memberships can be set up for a donor.
+* A membership can be set up for a donor.
 * Data can be entered in user-defined fields
