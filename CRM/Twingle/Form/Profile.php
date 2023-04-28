@@ -139,6 +139,30 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   protected static $_sepaCreditors = NULL;
 
   /**
+   * @var array
+   *
+   * A static cache of retrieved case types found within
+   * static::getCaseTypes().
+   */
+  protected static $_caseTypes = NULL;
+
+  /**
+   * @var array
+   *
+   * A static cache of retrieved case status found within
+   * static::getCaseStatus().
+   */
+  protected static $_caseStatus = NULL;
+
+  /**
+   * @var array
+   *
+   * A static cache of retrieved price fields found within
+   * static::getPriceFields().
+   */
+  protected static $_priceFields = NULL;
+
+  /**
    * Builds the form structure.
    */
   public function buildQuickForm() {
@@ -468,8 +492,60 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       []
     );
 
-    $this->addButtons([
-      [
+    $this->add(
+      'checkbox', // field type
+      'enable_shop_integration', // field name
+      E::ts('Enable Shop Integration'), // field label
+      FALSE, // is not required
+      array()
+    );
+
+
+    $this->add(
+      'select', // field type
+      'shop_price_field', // field name
+      E::ts('Default Price Field'), // field label
+      static::getPriceFields(), // list of options
+      TRUE, // is not required
+      array('class' => 'crm-select2 huge')
+    );
+
+    $this->add(
+      'select', // field type
+      'shop_financial_type', // field name
+      E::ts('Default Financial Type'), // field label
+      static::getFinancialTypes(), // list of options
+      TRUE, // is not required
+      array('class' => 'crm-select2 huge')
+    );
+
+    $this->add(
+      'select', // field type
+      'shop_open_case', // field name
+      E::ts('Open Case for each order'), // field label
+      ['' => E::ts('- none -')] + static::getCaseTypes(), // list of options
+      FALSE, // is not required
+      array('class' => 'crm-select2 huge')
+    );
+
+    $this->add(
+      'text', // field type
+      'shop_case_subject', // field name
+      E::ts('Case Subject'), // field label
+      array()
+    );
+
+    $this->add(
+      'select', // field type
+      'shop_case_status', // field name
+      E::ts('Case Status'), // field label
+      ['' => E::ts('- none -')] + static::getCaseStatus(), // list of options
+      FALSE, // is not required
+      array('class' => 'crm-select2 huge')
+    );
+
+    $this->addButtons(array(
+      array(
         'type' => 'submit',
         'name' => E::ts('Save'),
         'isDefault' => TRUE,
@@ -909,6 +985,76 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       }
     }
     return static::$_campaigns;
+  }
+
+  /**
+   * Retrieves case types present within the system as options for select
+   * form elements.
+   *
+   * @return array
+   *
+   * @throws \CiviCRM_API3_Exception
+   */
+  public static function getCaseTypes() {
+    if (!isset(static::$_caseTypes)) {
+      static::$_caseTypes = array();
+      $query = civicrm_api3('CaseType', 'get', array(
+        'option.limit' => 0,
+        'is_active' => 1,
+        'return' => 'id,title'
+      ));
+      foreach ($query['values'] as $type) {
+        static::$_caseTypes[$type['id']] = $type['title'];
+      }
+    }
+    return static::$_caseTypes;
+  }
+
+  /**
+   * Retrieves case types present within the system as options for select
+   * form elements.
+   *
+   * @return array
+   *
+   * @throws \CiviCRM_API3_Exception
+   */
+  public static function getCaseStatus() {
+    if (!isset(static::$_caseStatus)) {
+      static::$_caseStatus = array();
+      $query = civicrm_api3('OptionValue', 'get', array(
+        'option.limit' => 0,
+        'is_active' => 1,
+        'option_group_id' => 'case_status',
+        'return' => 'value,label'
+      ));
+      foreach ($query['values'] as $type) {
+        static::$_caseStatus[$type['value']] = $type['label'];
+      }
+    }
+    return static::$_caseStatus;
+  }
+
+  /**
+   * Retrieves price fields present within the system as options for select
+   * form elements.
+   *
+   * @return array
+   *
+   * @throws \CiviCRM_API3_Exception
+   */
+  public static function getPriceFields() {
+    if (!isset(static::$_priceFields)) {
+      static::$_priceFields = array();
+      $query = civicrm_api3('PriceField', 'get', array(
+        'option.limit' => 0,
+        'is_active' => 1,
+        'return' => 'id,label'
+      ));
+      foreach ($query['values'] as $type) {
+        static::$_priceFields[$type['id']] = $type['label'];
+      }
+    }
+    return static::$_priceFields;
   }
 
 }

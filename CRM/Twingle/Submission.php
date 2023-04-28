@@ -38,6 +38,16 @@ class CRM_Twingle_Submission {
   const EMPLOYER_RELATIONSHIP_TYPE_ID = 5;
 
   /**
+   * List of allowed product attributes.
+   */
+  const ALLOWED_PRODUCT_ATTRIBUTES = [
+    'name',
+    'internal_id',
+    'count',
+    'total_value',
+  ];
+
+  /**
    * @param array &$params
    *   A reference to the parameters array of the submission.
    *
@@ -113,6 +123,22 @@ class CRM_Twingle_Submission {
       if (!is_array($params['custom_fields'])) {
         throw new CiviCRM_API3_Exception(
           E::ts('Invalid format for custom fields.'),
+          'invalid_format'
+        );
+      }
+    }
+
+    // Validate products
+    if (!empty($params['products'])) {
+      if (is_string($params['products'])) {
+        $products = json_decode($params['products'], TRUE);
+        $params['products'] = array_map(function ($product) {
+            return array_intersect_key($product, array_flip(self::ALLOWED_PRODUCT_ATTRIBUTES));
+          }, $products);
+      }
+      if (!is_array($params['products'])) {
+        throw new CiviCRM_API3_Exception(
+          E::ts('Invalid format for products.'),
           'invalid_format'
         );
       }
@@ -420,4 +446,116 @@ class CRM_Twingle_Submission {
       }
     }
   }
+
+  /**
+   * @param $params
+   *   Processed data
+   * @param $submission
+   *   Submission data
+   * @param $profile
+   *   The twingle profile used
+   *
+   * @throws \CiviCRM_API3_Exception
+   * @throws \CRM_Core_Exception
+   */
+  public static function createLineItems($values, $submission, $profile): array {
+    $line_items = [];
+    foreach ($submission['products'] as $index => $product) {
+      $unit_price = $product['total_value'] / $product['count'];
+      $price_field_id = $profile->getAttribute('shop_price_field', 1);
+      $financial_type_id = $profile->getAttribute('shop_financial_type', 1);
+
+      $line_item_data = [
+        'entity_table' => "civicrm_contribution",
+        'contribution_id' => $values['contribution']['id'],
+        'entity_id' => $index,
+        'label' => $product['name'],
+        'qty' => $product['count'],
+        'unit_price' => $unit_price,
+        'line_total' => $product['total_value'],
+        'price_field_id' => $price_field_id,
+        'financial_type_id' => $financial_type_id,
+        'sequential' => 1,
+        // TODO: Implementation of 'internal_id' as FK to a possible product entity
+      ];
+
+      $product_financial_type_id = $profile->getAttribute('shop_financial_type_id', FALSE);
+      if ($product_financial_type_id) {
+        $line_item_data['financial_type_id'] = $product_financial_type_id;
+      }
+
+      $line_item = civicrm_api3('LineItem', 'create', $line_item_data);
+
+      if (!empty($line_item['is_error'])) {
+        $line_item_name = $line_item_data['name'];
+        throw new CiviCRM_API3_Exception(
+          E::ts("Could not create line item for product '$line_item_name'"),
+          'api_error'
+        );
+      }
+      $line_items[] = array_pop($line_item['values']);
+    }
+    return $line_items;
+  }
+
+  /**
+   * Will open a Case for the contact who submitted the contribution.
+   *
+   * @param $contribution
+   *   contribution data
+   * @param $profile
+   *   the twingle profile used
+   *
+   * @return array
+   *   case information
+   * @throws \CRM_Core_Exception
+   */
+  public static function openCase($contribution, $profile): array {
+    $case_type_id = $profile->getAttribute('shop_open_case');
+    $case_status_id = $profile->getAttribute('shop_case_status');
+    $case_subject = $profile->getAttribute('shop_case_subject');
+
+    $contact_id = $contribution['contact_id'];
+
+    $case_data = [
+      'contact_id' => $contact_id,
+      'case_type_id' => $case_type_id,
+      'status_id' => $case_status_id,
+      'subject' => $case_subject,
+      'sequential' => 1,
+    ];
+
+    $case = civicrm_api3('Case', 'create', $case_data);
+    return $case['values'];
+  }
+
+  /**
+   * Will add a contribution activity to the Case.
+   *
+   * @param $contribution
+   *   contribution data
+   *
+   * @return array
+   *   activity information
+   * @throws \CRM_Core_Exception
+   */
+  public static function addActivityToCase($contribution, $case): array {
+    $contribution_id = $contribution['id'];
+    $contact_id = $contribution['contact_id'];
+    $contribution_link = "<a href='/civicrm/contact/view/contribution?reset=1&id=$contribution_id&cid=$contact_id&action=view'>"
+      . ts('Contribution [%1]', [1 => $contribution_id]) . '</a>';
+
+    $activity_data = [
+      'source_contact_id' => 'user_contact_id',
+      'case_id' => $case['id'],
+      'activity_type_id' => 'Contribution',
+      'subject' => ts('Order'),
+      'details' => $contribution_link,
+      'assignee_id' => $contact_id,
+    ];
+
+    $activity = civicrm_api3('Activity', 'create', $activity_data);
+    return $activity['values'];
+  }
+
 }

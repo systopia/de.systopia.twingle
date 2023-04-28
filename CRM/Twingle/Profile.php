@@ -42,6 +42,15 @@ class CRM_Twingle_Profile {
   protected $data = NULL;
 
   /**
+   * @var array $check_box_fields
+   *   List of check box fields
+   */
+  public $check_box_fields = [
+    'newsletter_double_opt_in',
+    'enable_shop_integration',
+  ];
+
+  /**
    * CRM_Twingle_Profile constructor.
    *
    * @param string $name
@@ -473,6 +482,12 @@ class CRM_Twingle_Profile {
         'membership_postprocess_call',
         'newsletter_double_opt_in',
         'required_address_components',
+        'enable_shop_integration',
+        'shop_open_case',
+        'shop_case_subject',
+        'shop_case_status',
+        'shop_price_field',
+        'shop_financial_type',
       ],
       // Add payment methods.
       array_keys(static::paymentInstruments()),
@@ -560,6 +575,12 @@ class CRM_Twingle_Profile {
         'city',
         'country',
       ],
+      'enable_shop_integration' => NULL,
+      'shop_open_case' => NULL,
+      'shop_case_subject' => NULL,
+      'shop_case_status' => NULL,
+      'shop_price_field' => 1,
+      'shop_financial_type' => 1,
     ]
       // Add contribution status for all payment methods.
       + array_fill_keys(array_map(function($attribute) {
@@ -662,5 +683,4 @@ class CRM_Twingle_Profile {
     }
     return $stats;
   }
-
 }

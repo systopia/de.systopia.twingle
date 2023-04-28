@@ -337,6 +337,57 @@
 
       </table>
 
+      <legend>{ts domain="de.systopia.twingle"}Shop Integration{/ts}</legend>
+
+      <table class="form-layout-compressed">
+        <tr class="crm-section">
+          <td class="label">
+              {$form.enable_shop_integration.label}
+            <a
+              onclick='
+                CRM.help(
+                "{ts domain="de.systopia.twingle"}Enable Shop Integration{/ts}",
+              {literal}{
+                "id": "id-enable_shop_integration",
+                "file": "CRM\/Twingle\/Form\/Profile"
+              }{/literal}
+                );
+                return false;
+                '
+              href="#"
+              title="{ts domain="de.systopia.twingle"}Help{/ts}"
+              class="helpicon"
+            ></a>
+          </td>
+          <td class="content">{$form.enable_shop_integration.html}</td>
+        </tr>
+
+        <tr class="crm-section">
+          <td class="label">{$form.shop_financial_type.label}</td>
+          <td class="content">{$form.shop_financial_type.html}</td>
+        </tr>
+
+        <tr class="crm-section">
+          <td class="label">{$form.shop_price_field.label}</td>
+          <td class="content">{$form.shop_price_field.html}</td>
+        </tr>
+
+        <tr class="crm-section">
+          <td class="label">{$form.shop_open_case.label}</td>
+          <td class="content">{$form.shop_open_case.html}</td>
+        </tr>
+
+        <tr class="crm-section">
+          <td class="label">{$form.shop_case_subject.label}</td>
+          <td class="content">{$form.shop_case_subject.html}</td>
+        </tr>
+
+        <tr class="crm-section">
+          <td class="label">{$form.shop_case_status.label}</td>
+          <td class="content">{$form.shop_case_status.html}</td>
+        </tr>
+      </table>
+
     </fieldset>
 
   {elseif $op == 'delete'}

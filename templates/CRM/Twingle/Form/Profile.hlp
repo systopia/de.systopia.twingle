@@ -75,4 +75,8 @@
       <li><strong>ContributionRecur</strong> &ndash; Will be set on the recurring contribution and deriving single contributions</li>
     </ul>{/ts}
 {/htxt}
+
+{htxt id='id-enable_shop_integration'}
+    <p>{ts domain="de.systopia.twingle"}Enable the processing of orders via TwingleShop. The ordered products will then appear as line items in the contribution.{/ts}</p>
+{/htxt}
 {/crmScope}
