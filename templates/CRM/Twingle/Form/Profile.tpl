@@ -362,30 +362,30 @@
           <td class="content">{$form.enable_shop_integration.html}</td>
         </tr>
 
-        <tr class="crm-section">
-          <td class="label">{$form.shop_financial_type.label}</td>
-          <td class="content">{$form.shop_financial_type.html}</td>
-        </tr>
+          <tr class="crm-section twingle-shop-element">
+            <td class="label">{$form.shop_financial_type.label}</td>
+            <td class="content">{$form.shop_financial_type.html}</td>
+          </tr>
 
-        <tr class="crm-section">
-          <td class="label">{$form.shop_price_field.label}</td>
-          <td class="content">{$form.shop_price_field.html}</td>
-        </tr>
+          <tr class="crm-section twingle-shop-element">
+            <td class="label">{$form.shop_price_field.label}</td>
+            <td class="content">{$form.shop_price_field.html}</td>
+          </tr>
 
-        <tr class="crm-section">
-          <td class="label">{$form.shop_open_case.label}</td>
-          <td class="content">{$form.shop_open_case.html}</td>
-        </tr>
+          <tr class="crm-section twingle-shop-element">
+            <td class="label">{$form.shop_open_case.label}</td>
+            <td class="content">{$form.shop_open_case.html}</td>
+          </tr>
 
-        <tr class="crm-section">
-          <td class="label">{$form.shop_case_subject.label}</td>
-          <td class="content">{$form.shop_case_subject.html}</td>
-        </tr>
+          <tr class="crm-section twingle-shop-element">
+            <td class="label">{$form.shop_case_subject.label}</td>
+            <td class="content">{$form.shop_case_subject.html}</td>
+          </tr>
 
-        <tr class="crm-section">
-          <td class="label">{$form.shop_case_status.label}</td>
-          <td class="content">{$form.shop_case_status.html}</td>
-        </tr>
+          <tr class="crm-section twingle-shop-element">
+            <td class="label">{$form.shop_case_status.label}</td>
+            <td class="content">{$form.shop_case_status.html}</td>
+          </tr>
       </table>
 
     </fieldset>
@@ -424,11 +424,27 @@
     }
   }
 
+  /**
+   * Update the form fields based on whether shop integration is currently active
+   */
+  function twingle_shop_active_changed() {
+    let active = cj('#enable_shop_integration:checkbox:checked').length;
+    if (active) {
+      console.log('active')
+      cj('.twingle-shop-element').show();
+    } else {
+      console.log('not active')
+      cj('.twingle-shop-element').hide();
+    }
+  }
+
   // register events and run once
   cj(document).ready(function (){
     cj('#membership_type_id').change(twingle_membership_active_changed);
     cj('#membership_type_id_recur').change(twingle_membership_active_changed);
+    cj('#enable_shop_integration:checkbox').change(twingle_shop_active_changed);
   });
   twingle_membership_active_changed();
+  twingle_shop_active_changed();
 </script>
 {/literal}
