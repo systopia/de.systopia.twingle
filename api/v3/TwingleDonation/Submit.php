@@ -769,7 +769,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       }
 
       // If the submission contains products, do not auto-create a line item
-      if (!empty($params['products']) && $profile->getAttribute('enable_shop_integration')) {
+      if (!empty($params['products']) && $profile->isShopEnabled()) {
         $contribution_data['skipLineItem'] = 1;
       }
 
@@ -784,7 +784,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       $result_values['contribution'] = array_pop($contribution['values']);
 
       // Add products as line items to the contribution
-      if (!empty($params['products']) && $profile->getAttribute('enable_shop_integration')) {
+      if (!empty($params['products']) && $profile->isShopEnabled()) {
         $line_items = CRM_Twingle_Submission::createLineItems($result_values, $params, $profile);
         $result_values['contribution']['line_items'] = $line_items;
       }
@@ -868,7 +868,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
     // CASE CREATION
     if (
       !empty($params['products']) &&
-      $profile->getAttribute('enable_shop_integration') &&
+      $profile->isShopEnabled() &&
       !empty($profile->getAttribute('shop_open_case'))
     ) {
       $case = CRM_Twingle_Submission::openCase($result_values['contribution'], $profile);

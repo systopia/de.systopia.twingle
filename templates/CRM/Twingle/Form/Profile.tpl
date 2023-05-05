@@ -337,6 +337,8 @@
 
       </table>
 
+      {if $twingle_use_shop eq 1}
+
       <legend>{ts domain="de.systopia.twingle"}Shop Integration{/ts}</legend>
 
       <table class="form-layout-compressed">
@@ -387,6 +389,8 @@
             <td class="content">{$form.shop_case_status.html}</td>
           </tr>
       </table>
+
+      {/if}
 
     </fieldset>
 

@@ -194,6 +194,16 @@ class CRM_Twingle_Profile {
   }
 
   /**
+   * Determine if Twingle Shop integration is enabled in general and
+   * specifically for this profile.
+   * @return bool
+   */
+  public function isShopEnabled(): bool {
+    return Civi::settings()->get('twingle_use_shop') &&
+      $this->data['enable_shop_integration'];
+  }
+
+  /**
    * Retrieves an attribute of the profile.
    *
    * @param string $attribute_name
@@ -483,11 +493,11 @@ class CRM_Twingle_Profile {
         'newsletter_double_opt_in',
         'required_address_components',
         'enable_shop_integration',
+        'shop_price_field',
+        'shop_financial_type',
         'shop_open_case',
         'shop_case_subject',
         'shop_case_status',
-        'shop_price_field',
-        'shop_financial_type',
       ],
       // Add payment methods.
       array_keys(static::paymentInstruments()),
@@ -575,12 +585,12 @@ class CRM_Twingle_Profile {
         'city',
         'country',
       ],
-      'enable_shop_integration' => NULL,
+      'enable_shop_integration' => FALSE,
+      'shop_price_field' => 1,
+      'shop_financial_type' => 1,
       'shop_open_case' => NULL,
       'shop_case_subject' => NULL,
       'shop_case_status' => NULL,
-      'shop_price_field' => 1,
-      'shop_financial_type' => 1,
     ]
       // Add contribution status for all payment methods.
       + array_fill_keys(array_map(function($attribute) {

@@ -77,6 +77,7 @@
 {/htxt}
 
 {htxt id='id-enable_shop_integration'}
-    <p>{ts domain="de.systopia.twingle"}Enable the processing of orders via TwingleShop. The ordered products will then appear as line items in the contribution.{/ts}</p>
+    <p>{ts domain="de.systopia.twingle"}Enable the processing of orders via Twingle Shop for this profile. The ordered products will then appear as line items in the contribution.{/ts}</p>
+{/htxt}
 {/htxt}
 {/crmScope}

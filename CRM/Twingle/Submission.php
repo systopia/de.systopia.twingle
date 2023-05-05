@@ -129,7 +129,7 @@ class CRM_Twingle_Submission {
     }
 
     // Validate products
-    if (!empty($params['products'])) {
+    if (!empty($params['products']) && $profile->isShopEnabled()) {
       if (is_string($params['products'])) {
         $products = json_decode($params['products'], TRUE);
         $params['products'] = array_map(function ($product) {

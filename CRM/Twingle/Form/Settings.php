@@ -34,6 +34,7 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
       'twingle_protect_recurring_activity_subject',
       'twingle_protect_recurring_activity_status',
       'twingle_protect_recurring_activity_assignee',
+      'twingle_use_shop',
   ];
 
   /**
@@ -100,6 +101,12 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
           ],
         ],
       ]
+    );
+
+    $this->add(
+      'checkbox',
+      'twingle_use_shop',
+      E::ts("Use Twingle Shop Integration")
     );
 
     $this->addButtons(array(

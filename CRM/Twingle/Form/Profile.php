@@ -141,6 +141,14 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   /**
    * @var array
    *
+   * A static cache of retrieved price fields found within
+   * static::getPriceFields().
+   */
+  protected static $_priceFields = NULL;
+
+  /**
+   * @var array
+   *
    * A static cache of retrieved case types found within
    * static::getCaseTypes().
    */
@@ -153,14 +161,6 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    * static::getCaseStatus().
    */
   protected static $_caseStatus = NULL;
-
-  /**
-   * @var array
-   *
-   * A static cache of retrieved price fields found within
-   * static::getPriceFields().
-   */
-  protected static $_priceFields = NULL;
 
   /**
    * Builds the form structure.
@@ -250,6 +250,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     $this->assign('op', $this->_op);
     $this->assign('profile_name', $profile_name);
     $this->assign('is_default', $this->profile->is_default());
+    $this->assign('twingle_use_shop', (int) Civi::settings()->get('twingle_use_shop'));
 
     // Add form elements.
     $this->add(
@@ -492,57 +493,58 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       []
     );
 
-    $this->add(
-      'checkbox', // field type
-      'enable_shop_integration', // field name
-      E::ts('Enable Shop Integration'), // field label
-      FALSE, // is not required
-      array()
-    );
+    if (Civi::settings()->get('twingle_use_shop')) {
+      $this->add(
+        'checkbox', // field type
+        'enable_shop_integration', // field name
+        E::ts('Enable Shop Integration'), // field label
+        FALSE, // is not required
+        []
+      );
 
+      $this->add(
+        'select', // field type
+        'shop_price_field', // field name
+        E::ts('Default Price Field'), // field label
+        static::getPriceFields(), // list of options
+        TRUE, // is not required
+        ['class' => 'crm-select2 huge']
+      );
 
-    $this->add(
-      'select', // field type
-      'shop_price_field', // field name
-      E::ts('Default Price Field'), // field label
-      static::getPriceFields(), // list of options
-      TRUE, // is not required
-      array('class' => 'crm-select2 huge')
-    );
+      $this->add(
+        'select', // field type
+        'shop_financial_type', // field name
+        E::ts('Default Financial Type'), // field label
+        static::getFinancialTypes(), // list of options
+        TRUE, // is not required
+        ['class' => 'crm-select2 huge']
+      );
 
-    $this->add(
-      'select', // field type
-      'shop_financial_type', // field name
-      E::ts('Default Financial Type'), // field label
-      static::getFinancialTypes(), // list of options
-      TRUE, // is not required
-      array('class' => 'crm-select2 huge')
-    );
+      $this->add(
+        'select', // field type
+        'shop_open_case', // field name
+        E::ts('Open Case for each order'), // field label
+        ['' => E::ts('- none -')] + static::getCaseTypes(), // list of options
+        FALSE, // is not required
+        ['class' => 'crm-select2 huge']
+      );
 
-    $this->add(
-      'select', // field type
-      'shop_open_case', // field name
-      E::ts('Open Case for each order'), // field label
-      ['' => E::ts('- none -')] + static::getCaseTypes(), // list of options
-      FALSE, // is not required
-      array('class' => 'crm-select2 huge')
-    );
+      $this->add(
+        'text', // field type
+        'shop_case_subject', // field name
+        E::ts('Case Subject'), // field label
+        []
+      );
 
-    $this->add(
-      'text', // field type
-      'shop_case_subject', // field name
-      E::ts('Case Subject'), // field label
-      array()
-    );
-
-    $this->add(
-      'select', // field type
-      'shop_case_status', // field name
-      E::ts('Case Status'), // field label
-      ['' => E::ts('- none -')] + static::getCaseStatus(), // list of options
-      FALSE, // is not required
-      array('class' => 'crm-select2 huge')
-    );
+      $this->add(
+        'select', // field type
+        'shop_case_status', // field name
+        E::ts('Case Status'), // field label
+        ['' => E::ts('- none -')] + static::getCaseStatus(), // list of options
+        FALSE, // is not required
+        ['class' => 'crm-select2 huge']
+      );
+    }
 
     $this->addButtons(array(
       array(
