@@ -252,7 +252,7 @@ function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
     'api.required' => 0,
     'description'  => E::ts('Additional information for either the contact or the (recurring) contribution.'),
   );
-  $param['products'] = [
+  $params['products'] = [
     'name' => 'products',
     'title' => E::ts('Products'),
     'type' => CRM_Utils_Type::T_STRING,

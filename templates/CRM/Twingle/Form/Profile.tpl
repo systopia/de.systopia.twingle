@@ -375,6 +375,31 @@
           </tr>
 
           <tr class="crm-section twingle-shop-element">
+            <td class="label">{$form.shop_map_products.label}
+              <a
+                onclick='
+                  CRM.help(
+                  "{ts domain="de.systopia.twingle"}Map Products as Price Fields{/ts}",
+                {literal}{
+                  "id": "id-shop_map_products",
+                  "file": "CRM\/Twingle\/Form\/Profile"
+                }{/literal}
+                  );
+                  return false;
+                  '
+                href="#"
+                title="{ts domain="de.systopia.twingle"}Help{/ts}"
+                class="helpicon"
+              ></a></td>
+            <td class="content">{$form.shop_map_products.html}
+              <span>
+                &nbsp;&nbsp;<button onclick='
+                twingle_fetch_products().then(twingle_map_products())
+                '></button></span>
+            </td>
+          </tr>
+
+          <tr class="crm-section twingle-shop-element">
             <td class="label">{$form.shop_open_case.label}</td>
             <td class="content">{$form.shop_open_case.html}</td>
           </tr>
@@ -442,13 +467,33 @@
     }
   }
 
+  /**
+   * Display fetch button and product mapping when the corresponding option is active
+   */
+  function twingle_map_products_changed() {
+    let active = cj('#shop_map_products:checkbox:checked').length;
+    if (active) {
+      console.log('active')
+      cj('.twingle-product-mapping').show();
+    } else {
+      console.log('not active')
+      cj('.twingle-product-mapping').hide();
+    }
+  }
+
+  function twingle_map_products(products) {} // TODO: Implement function
+
+  function twingle_fetch_products() {} // TODO: Implement function
+
   // register events and run once
   cj(document).ready(function (){
     cj('#membership_type_id').change(twingle_membership_active_changed);
     cj('#membership_type_id_recur').change(twingle_membership_active_changed);
     cj('#enable_shop_integration:checkbox').change(twingle_shop_active_changed);
+    cj('#shop_map_products:checkbox').change(twingle_map_products_changed);
   });
   twingle_membership_active_changed();
   twingle_shop_active_changed();
+  twingle_map_products_changed();
 </script>
 {/literal}

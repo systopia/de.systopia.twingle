@@ -48,6 +48,7 @@ class CRM_Twingle_Profile {
   public $check_box_fields = [
     'newsletter_double_opt_in',
     'enable_shop_integration',
+    'shop_map_products',
   ];
 
   /**
@@ -495,6 +496,7 @@ class CRM_Twingle_Profile {
         'enable_shop_integration',
         'shop_price_field',
         'shop_financial_type',
+        'shop_map_products',
         'shop_open_case',
         'shop_case_subject',
         'shop_case_status',
@@ -588,6 +590,7 @@ class CRM_Twingle_Profile {
       'enable_shop_integration' => FALSE,
       'shop_price_field' => 1,
       'shop_financial_type' => 1,
+      'shop_map_products' => FALSE,
       'shop_open_case' => NULL,
       'shop_case_subject' => NULL,
       'shop_case_status' => NULL,

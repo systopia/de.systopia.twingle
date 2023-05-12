@@ -35,6 +35,7 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
       'twingle_protect_recurring_activity_status',
       'twingle_protect_recurring_activity_assignee',
       'twingle_use_shop',
+      'twingle_access_key',
   ];
 
   /**
@@ -109,6 +110,12 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
       E::ts("Use Twingle Shop Integration")
     );
 
+    $this->add(
+      'text',
+      'twingle_access_key',
+      E::ts("Twingle Access Key")
+    );
+
     $this->addButtons(array(
       array (
           'type'      => 'submit',
@@ -128,8 +135,7 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
   }
 
   /**
-   * Custom form validation, because the activity creation fields
-   *  are only mandatory if activity creation is active
+   * Custom form validation, as some fields are mandatory only when others are active.
    * @return bool
    */
   public function validate() {
@@ -147,6 +153,14 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
           $this->_errors[$activity_field] = E::ts("This is required for activity creation");
         }
       }
+    }
+
+    // Twingle Access Key is required if Shop Integration is enabled
+    if (
+      CRM_Utils_Array::value('twingle_use_shop', $this->_submitValues) &&
+      !CRM_Utils_Array::value('twingle_access_key', $this->_submitValues, FALSE)
+    ) {
+      $this->_errors['twingle_access_key'] = E::ts("An Access Key is required to enable Twingle Shop Integration");
     }
 
     return (0 == count($this->_errors));

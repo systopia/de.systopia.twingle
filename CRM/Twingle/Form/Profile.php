@@ -521,6 +521,14 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       );
 
       $this->add(
+        'checkbox', // field type
+        'shop_map_products', // field name
+        E::ts('Map Products as Price Fields'), // field label
+        FALSE, // is not required
+        []
+      );
+
+      $this->add(
         'select', // field type
         'shop_open_case', // field name
         E::ts('Open Case for each order'), // field label
