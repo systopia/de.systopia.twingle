@@ -306,11 +306,10 @@ function civicrm_api3_twingle_donation_Submit($params) {
     if (!empty($params['custom_fields'])) {
       $custom_field_mapping = $profile->getCustomFieldMapping();
 
-      // Include user_extrafield in custom_field_mapping if it is referenced there.
-      // See issue #50.
-      if (!empty($params['user_extrafield']) && isset($custom_field_mapping['user_extrafield'])) {
-        $params['custom_fields']['user_extrafield'] = $params['user_extrafield'];
-      }
+    // Make all params available for custom field mapping
+    $allowed_params = [];
+    _civicrm_api3_twingle_donation_Submit_spec($allowed_params);
+    $params['custom_fields'] += array_intersect_key($params, $custom_field_mapping, $allowed_params);
 
       foreach ($params['custom_fields'] as $twingle_field => $value) {
         if (isset($custom_field_mapping[$twingle_field])) {
