@@ -60,7 +60,7 @@ function _civicrm_api3_twingle_donation_endrecurring_spec(&$params) {
 function civicrm_api3_twingle_donation_endrecurring($params) {
   // Log call if debugging is enabled within civicrm.settings.php.
   if (defined('TWINGLE_API_LOGGING') && TWINGLE_API_LOGGING) {
-    CRM_Core_Error::debug_log_message('TwingleDonation.Endrecurring: ' . json_encode($params, JSON_PRETTY_PRINT));
+    Civi::log()->debug('TwingleDonation.Endrecurring: ' . json_encode($params, JSON_PRETTY_PRINT));
   }
 
   try {

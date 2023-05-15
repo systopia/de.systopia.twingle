@@ -18,7 +18,6 @@
   <version>1.4-dev</version>
   <develStage>dev</develStage>
   <compatibility>
-    <ver>5.0</ver>
     <ver>5.19</ver>
   </compatibility>
   <comments></comments>
