@@ -525,6 +525,7 @@ class CRM_Twingle_Profile {
       'pi_ideal' => E::ts('iDEAL'),
       'pi_post_finance' => E::ts('Postfinance'),
       'pi_bancontact' => E::ts('Bancontact'),
+      'pi_generic' => E::ts('Generic Payment Method'),
     ];
   }
 
@@ -564,6 +565,7 @@ class CRM_Twingle_Profile {
       'pi_ideal' => NULL,
       'pi_post_finance' => NULL,
       'pi_bancontact' => NULL,
+      'pi_generic' => NULL,
       'sepa_creditor_id' => NULL,
       'gender_male' => 2,
       'gender_female' => 1,
