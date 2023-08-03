@@ -25,7 +25,7 @@
       <thead>
       <tr>
         <th>{ts domain="de.systopia.twingle"}Profile name{/ts}</th>
-        <th>{ts domain="de.systopia.twingle"}Properties{/ts}</th>
+        <th>{ts domain="de.systopia.twingle"}Selectors{/ts}</th>
         <th>{ts domain="de.systopia.twingle"}Used{/ts}</th>
         <th>{ts domain="de.systopia.twingle"}Last Used{/ts}</th>
         <th>{ts domain="de.systopia.twingle"}Operations{/ts}</th>
@@ -35,10 +35,16 @@
       {foreach from=$profiles item=profile}
         {assign var="profile_id" value=$profile.id}
         {assign var="profile_name" value=$profile.name}
-        <tr>
+        <tr style="border-bottom: 1px solid #cfcec3;">
           <td>{$profile.name}</td>
           <td>
-            <div><strong>{ts domain="de.systopia.twingle"}Selector{/ts}:</strong> {$profile.selector}</div>
+              {if not $profile.is_default}
+                <ul>
+                    {foreach from=$profile.selectors item=selector}
+                      <li><strong></strong> {$selector}</li>
+                    {/foreach}
+                </ul>
+              {/if}
           </td>
           <td>{ts domain="de.systopia.twingle"}{$profile_stats.$profile_name.access_counter_txt}{/ts}</td>
           <td>{ts domain="de.systopia.twingle"}{$profile_stats.$profile_name.last_access_txt}{/ts}</td>
