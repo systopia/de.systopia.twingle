@@ -278,22 +278,19 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         'select',
         'prefix_male',
         E::ts('Prefix option for submitted value "male"'),
-        static::getPrefixOptions(),
-        FALSE
+        static::getPrefixOptions()
     );
     $this->add(
         'select',
         'prefix_female',
         E::ts('Prefix option for submitted value "female"'),
-        static::getPrefixOptions(),
-        FALSE
+        static::getPrefixOptions()
     );
     $this->add(
         'select',
         'prefix_other',
         E::ts('Prefix option for submitted value "other"'),
-        static::getPrefixOptions(),
-        FALSE
+        static::getPrefixOptions()
     );
 
     $payment_instruments = CRM_Twingle_Profile::paymentInstruments();
