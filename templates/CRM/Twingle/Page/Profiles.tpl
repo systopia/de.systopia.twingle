@@ -50,7 +50,7 @@
               {/if}
           </td>
           {if $twingle_use_shop eq 1}
-          <td>{if $profile.enable_shop_integration}<span style="color:green">{ts domain="de.systopia.twingle"}enabled{/ts}</td></span>{else}<span>{ts domain="de.systopia.twingle"}disabled{/ts}</span>
+          <td>{if $profile.enable_shop_integration}<span style="color:green">{ts domain="de.systopia.twingle"}enabled{/ts}</span>{else}<span>{ts domain="de.systopia.twingle"}disabled{/ts}</span>{/if}</td>
           {/if}
           <td>{ts domain="de.systopia.twingle"}{$profile_stats.$profile_name.access_counter_txt}{/ts}</td>
           <td>{ts domain="de.systopia.twingle"}{$profile_stats.$profile_name.last_access_txt}{/ts}</td>
@@ -62,7 +62,6 @@
             {else}
               <a href="{crmURL p="civicrm/admin/settings/twingle/profile" q="op=delete&id=$profile_id"}" title="{ts domain="de.systopia.twingle" 1=$profile.name}Delete profile %1{/ts}" class="action-item crm-hover-button">{ts domain="de.systopia.twingle"}Delete{/ts}</a>
             {/if}
-
           </td>
         </tr>
       {/foreach}

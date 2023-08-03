@@ -58,7 +58,7 @@ function civicrm_api3_twingle_shop_Fetch($params) {
     catch (TwingleShopException|TwingleApiCallError|TwingleShopProductException $e) {
       // If this project identifier doesn't belong to a project of type
       // 'shop', just skip it
-      if ($e->error_code == TwingleShopException::ERROR_CODE_NOT_A_SHOP) {
+      if ($e->getErrorCode() == TwingleShopException::ERROR_CODE_NOT_A_SHOP) {
         $returnValues[$projectId] = "project is not of type 'shop'";
         continue;
       }
@@ -72,7 +72,7 @@ function civicrm_api3_twingle_shop_Fetch($params) {
           ]
         );
         return civicrm_api3_create_error($e->getMessage(), [
-          "error_code" => $e->error_code,
+          "error_code" => $e->getErrorCode(),
           "project_identifier" => $projectId,
           "params" => $params,
         ]);

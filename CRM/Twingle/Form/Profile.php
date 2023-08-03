@@ -248,7 +248,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
 
     // Assign template variables.
     $this->assign('op', $this->_op);
-    $this->assign('profile_name', $profile_name);
+    $this->assign('profile_name', $this->getName());
     $this->assign('is_default', $this->profile->is_default());
     $this->assign('twingle_use_shop', (int) Civi::settings()->get('twingle_use_shop'));
 
@@ -554,8 +554,8 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       );
     }
 
-    $this->addButtons(array(
-      array(
+    $this->addButtons([
+      [
         'type' => 'submit',
         'name' => E::ts('Save'),
         'isDefault' => TRUE,
