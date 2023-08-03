@@ -165,6 +165,15 @@ class CRM_Twingle_Profile {
   }
 
   /**
+   * Is this the default profile?
+   *
+   * @return bool
+   */
+  public function is_default() {
+    return $this->name == 'default';
+  }
+
+  /**
    * Retrieves an attribute of the profile.
    *
    * @param string $attribute_name
@@ -445,18 +454,29 @@ class CRM_Twingle_Profile {
    * @param $project_id
    *
    * @return CRM_Twingle_Profile
+   * @throws \CRM_Twingle_Exceptions_ProfileException
+   * @throws \Civi\Core\Exception\DBQueryException
    */
   public static function getProfileForProject($project_id) {
     $profiles = self::getProfiles();
+    $default_profile = NULL;
 
     foreach ($profiles as $profile) {
       if ($profile->matches($project_id)) {
         return $profile;
       }
+      if ($profile->is_default()) {
+        $default_profile = $profile;
+      }
     }
 
     // If none matches, use the default profile.
-    return $profiles['default'];
+    if (!empty($default_profile)) {
+      return $default_profile;
+    }
+    else {
+      throw new ProfileException('Could not find default profile', ProfileException::ERROR_CODE_DEFAULT_PROFILE_NOT_FOUND);
+    }
   }
 
   /**

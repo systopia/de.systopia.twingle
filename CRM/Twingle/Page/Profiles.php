@@ -23,6 +23,7 @@ class CRM_Twingle_Page_Profiles extends CRM_Core_Page {
     foreach (CRM_Twingle_Profile::getProfiles() as $profile_id => $profile) {
       $profiles[$profile_id]['id'] = $profile_id;
       $profiles[$profile_id]['name'] = $profile->getName();
+      $profiles[$profile_id]['is_default'] = $profile->is_default();
       foreach (CRM_Twingle_Profile::allowedAttributes() as $attribute) {
         $profiles[$profile_id][$attribute] = $profile->getAttribute($attribute);
       }
