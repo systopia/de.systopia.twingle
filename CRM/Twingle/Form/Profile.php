@@ -224,7 +224,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
 
     // Assign template variables.
     $this->assign('op', $this->_op);
-    $this->assign('profile_name', $this->profile->getName());
+    $this->assign('profile_name', $profile_name);
     $this->assign('is_default', $this->profile->is_default());
 
     // Add form elements.
