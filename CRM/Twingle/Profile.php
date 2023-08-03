@@ -309,7 +309,7 @@ class CRM_Twingle_Profile {
       'financial_type_id_recur' => 1, // "Donation"
       'pi_banktransfer' => 5, // "EFT"
       'pi_debit_manual' => NULL,
-      'pi_debit_automatic' => 3, // Debit
+      'pi_debit_automatic' => 2, // Debit
       'pi_creditcard' => 1, // "Credit Card"
       'pi_mobilephone_germany' => NULL,
       'pi_paypal' => NULL,
