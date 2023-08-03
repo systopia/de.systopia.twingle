@@ -14,6 +14,8 @@
 +-------------------------------------------------------------*/
 
 use CRM_Twingle_ExtensionUtil as E;
+use CRM_Twingle_Exceptions_ProfileException as ProfileException;
+use CRM_Twingle_Exceptions_ProfileValidationError as ProfileValidationError;
 
 /**
  * Form controller class
@@ -566,23 +568,33 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    */
   public function postProcess() {
     $values = $this->exportValues();
-    if (in_array($this->_op, array('create', 'edit', 'copy'))) {
-      if (empty($values['name'])) {
-        $values['name'] = 'default';
-      }
-      $this->profile->setName($values['name']);
-      foreach ($this->profile->getData() as $element_name => $value) {
-        if ($element_name == 'newsletter_double_opt_in') {
-          $values[$element_name] = (int) isset($values[$element_name]);
+    try {
+      if (in_array($this->_op, ['create', 'edit', 'copy'])) {
+        if (empty($values['name'])) {
+          $values['name'] = 'default';
         }
-        if (isset($values[$element_name])) {
-          $this->profile->setAttribute($element_name, $values[$element_name]);
+        $this->profile->setName($values['name']);
+        foreach ($this->profile->getData() as $element_name => $value) {
+          if ($element_name == 'newsletter_double_opt_in') {
+            $values[$element_name] = (int) isset($values[$element_name]);
+          }
+          if (isset($values[$element_name])) {
+            $this->profile->setAttribute($element_name, $values[$element_name]);
+          }
         }
+        $this->profile->saveProfile();
       }
-      $this->profile->saveProfile();
-    }
-    elseif ($this->_op == 'delete') {
-      $this->profile->deleteProfile();
+      elseif ($this->_op == 'delete') {
+        $this->profile->deleteProfile();
+      }
+    } catch (ProfileException $e) {
+      Civi::log()->error($e->getLogMessage());
+      CRM_Core_Session::setStatus(
+        E::ts('Error'),
+        $e->getMessage(),
+        'error',
+        ['unique' => TRUE]
+      );
     }
     parent::postProcess();
   }

@@ -14,6 +14,8 @@
 +-------------------------------------------------------------*/
 
 use CRM_Twingle_ExtensionUtil as E;
+use CRM_Twingle_Exceptions_ProfileException as ProfileException;
+use CRM_Twingle_Exceptions_ProfileValidationError as ProfileValidationError;
 
 /**
  * Profiles define how incoming submissions from the Twingle API are
@@ -147,12 +149,15 @@ class CRM_Twingle_Profile {
    * @param string $attribute_name
    * @param mixed $value
    *
-   * @throws \Exception
+   * @throws \CRM_Twingle_Exceptions_ProfileException
    *   When the attribute name is not known.
    */
   public function setAttribute($attribute_name, $value) {
     if (!in_array($attribute_name, self::allowedAttributes())) {
-      throw new Exception(E::ts('Unknown attribute %1.', [1 => $attribute_name]));
+      throw new ProfileException(
+        E::ts('Unknown attribute %1.', [1 => $attribute_name]),
+      ProfileException::ERROR_CODE_UNKNOWN_PROFILE_ATTRIBUTE
+      );
     }
     // TODO: Check if value is acceptable.
     $this->data[$attribute_name] = $value;
@@ -412,6 +417,7 @@ class CRM_Twingle_Profile {
    * Get the stats (access_count, last_access) for all twingle profiles
    *
    * @return CRM_Twingle_Profile[]
+   * @throws \Civi\Core\Exception\DBQueryException
    */
   public static function getProfileStats() {
     $stats = [];
