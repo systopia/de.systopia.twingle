@@ -32,6 +32,12 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   protected $profile;
 
   /**
+   * The ID of this profile.
+   * @var int|NULL
+   */
+  protected $profile_id = NULL;
+
+  /**
    * @var string
    *
    * The operation to perform within the form.
@@ -141,10 +147,11 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       $this->_op = 'create';
     }
 
-    // Verify that a profile with the given name exists.
-    $profile_name = CRM_Utils_Request::retrieve('name', 'String', $this);
-    if (!$this->profile = CRM_Twingle_Profile::getProfile($profile_name)) {
-      $profile_name = NULL;
+    // Verify that a profile with the given id exists.
+
+    if ($this->_op != 'copy') {
+      $this->profile_id = CRM_Utils_Request::retrieve('id', 'Int', $this);
+      $this->profile = CRM_Twingle_Profile::getProfile($this->profile_id);
     }
 
     // Set redirect destination.
@@ -152,50 +159,50 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
 
     switch ($this->_op) {
       case 'delete':
-        if ($profile_name) {
-          CRM_Utils_System::setTitle(E::ts('Delete Twingle API profile <em>%1</em>', array(1 => $profile_name)));
-          $this->addButtons(array(
-            array(
+        if ($this->profile_id) {
+          CRM_Utils_System::setTitle(E::ts('Delete Twingle API profile <em>%1</em>', [1 => $this->profile->getName()]));
+          $this->addButtons([
+            [
               'type' => 'submit',
-              'name' => ($profile_name == 'default' ? E::ts('Reset') : E::ts('Delete')),
+              'name' => ($this->profile->getName() == 'default' ? E::ts('Reset') : E::ts('Delete')),
               'isDefault' => TRUE,
-            ),
-          ));
+            ],
+          ]);
         }
         parent::buildQuickForm();
         return;
-      case 'edit':
-        // When editing without a valid profile name, edit the default profile.
-        if (!$profile_name) {
-          $profile_name = 'default';
-          $this->profile = CRM_Twingle_Profile::getProfile($profile_name);
-        }
-        CRM_Utils_System::setTitle(E::ts('Edit Twingle API profile <em>%1</em>', array(1 => $this->profile->getName())));
-        break;
+
       case 'copy':
         // Retrieve the source profile name.
-        $profile_name = CRM_Utils_Request::retrieve('source_name', 'String', $this);
-        // When copying without a valid profile name, copy the default profile.
-        if (!$profile_name) {
-          $profile_name = 'default';
+        $source_id = CRM_Utils_Request::retrieve('source_id', 'Int', $this);
+        // When copying without a valid profile id, copy the default profile.
+        if (!$source_id) {
+          $this->profile = CRM_Twingle_Profile::createDefaultProfile();
+        } else {
+          $source_profile = CRM_Twingle_Profile::getProfile($source_id);
+          $this->profile = $source_profile->copy();
         }
-        $this->profile = clone CRM_Twingle_Profile::getProfile($profile_name);
-
         // Propose a new name for this profile.
-        $profile_name = $profile_name . '_copy';
+        $profile_name = $this->profile->getName() . '_copy';
         $this->profile->setName($profile_name);
         CRM_Utils_System::setTitle(E::ts('New Twingle API profile'));
         break;
+
+      case 'edit':
+        CRM_Utils_System::setTitle(E::ts('Edit Twingle API profile <em>%1</em>', [1 => $this->profile->getName()]));
+        break;
+
       case 'create':
         // Load factory default profile values.
-        $this->profile = CRM_Twingle_Profile::createDefaultProfile($profile_name);
+        $this->profile = CRM_Twingle_Profile::createDefaultProfile(E::ts('New Profile'));
         CRM_Utils_System::setTitle(E::ts('New Twingle API profile'));
         break;
     }
 
     // Assign template variables.
     $this->assign('op', $this->_op);
-    $this->assign('profile_name', $profile_name);
+    $this->assign('profile_name', $this->profile->getName());
+    $this->assign('is_default', $this->profile->is_default());
 
     // Add form elements.
     $is_default = $profile_name == 'default';
