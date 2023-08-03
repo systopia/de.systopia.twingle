@@ -462,92 +462,27 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
 
   /**
    * Validates the profile form.
-   *
-   * @param array $values
-   *   The submitted form values, keyed by form element name.
-   *
-   * @return bool | array
-   *   TRUE when the form was successfully validated, or an array of error
-   *   messages, keyed by form element name.
+   * @return bool
+   *   TRUE when the form was successfully validated.
    */
   public function validate() {
-    $values = $this->exportValues();
 
-    // Validate new profile names.
-    if (
-      isset($values['name'])
-      && ($values['name'] != $this->profile->getName() || $this->_op != 'edit')
-      && !empty(CRM_Twingle_Profile::getProfile($values['name']))
-    ) {
-      $this->_errors['name'] = E::ts('A profile with this name already exists.');
-    }
+    if (in_array($this->_op, ['create', 'edit', 'copy'])) {
+      // Create profile with new values
+      $profile_values = $this->exportValues();
+      $profile = new CRM_Twingle_Profile(
+        $profile_values['name'],
+        $profile_values,
+        $this->profile_id
+      );
 
-    // Restrict profile names to alphanumeric characters and the underscore.
-    if (isset($values['name']) && preg_match("/[^A-Za-z0-9\_]/", $values['name'])) {
-      $this->_errors['name'] = E::ts('Only alphanumeric characters and the underscore (_) are allowed for profile names.');
-    }
-
-    // Validate custom field mapping.
-    try {
-      if (isset($values['custom_field_mapping'])) {
-        $custom_field_mapping = preg_split('/\r\n|\r|\n/', $values['custom_field_mapping'], -1, PREG_SPLIT_NO_EMPTY);
-        if (!is_array($custom_field_mapping)) {
-          throw new Exception(
-            E::ts('Could not parse custom field mapping.')
-          );
-        }
-        foreach ($custom_field_mapping as $custom_field_map) {
-          $custom_field_map = explode("=", $custom_field_map);
-          if (count($custom_field_map) !== 2) {
-            throw new Exception(
-              E::ts('Could not parse custom field mapping.')
-            );
-          }
-          list($twingle_field_name, $custom_field_name) = $custom_field_map;
-          $custom_field_id = substr($custom_field_name, strlen('custom_'));
-
-          // Check for custom field existence
-          try {
-            $custom_field = civicrm_api3('CustomField', 'getsingle', array(
-              'id' => $custom_field_id,
-            ));
-          }
-          catch (CiviCRM_API3_Exception $exception) {
-            throw new Exception(
-              E::ts(
-                'Custom field custom_%1 does not exist.',
-                array(1 => $custom_field_id)
-              )
-            );
-          }
-
-          // Only allow custom fields on relevant entities.
-          try {
-            $custom_group = civicrm_api3('CustomGroup', 'getsingle', array(
-              'id' => $custom_field['custom_group_id'],
-              'extends' => array(
-                'IN' => array(
-                  'Contact',
-                  'Individual',
-                  'Organization',
-                  'Contribution',
-                  'ContributionRecur',
-                ),
-              ),
-            ));
-          } catch (CiviCRM_API3_Exception $exception) {
-            throw new Exception(
-              E::ts(
-                'Custom field custom_%1 is not in a CustomGroup that extends one of the supported CiviCRM entities.',
-                array(1 => $custom_field['id'])
-              )
-            );
-          }
-        }
+      // Validate profile data
+      try {
+        $profile->validate();
       }
-    }
-    catch (Exception $exception) {
-      $this->_errors['custom_field_mapping'] = $exception->getMessage();
+      catch (ProfileValidationError $e) {
+        $this->setElementError($e->getAffectedFieldName(), $e->getMessage());
+      }
     }
 
     return parent::validate();
