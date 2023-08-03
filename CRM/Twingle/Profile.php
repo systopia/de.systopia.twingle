@@ -62,14 +62,12 @@ class CRM_Twingle_Profile {
 
   /**
    * Logs (production) access to this profile
-   *
-   * @return bool
    */
   public function logAccess() {
     CRM_Core_DAO::executeQuery("
-        UPDATE civicrm_twingle_profile 
-        SET 
-            last_access = NOW(), 
+        UPDATE civicrm_twingle_profile
+        SET
+            last_access = NOW(),
             access_counter = access_counter + 1
         WHERE name = %1", [1 => [$this->name, 'String']]);
   }
@@ -105,7 +103,7 @@ class CRM_Twingle_Profile {
     $custom_field_mapping = [];
     if (!empty($custom_field_definition = $this->getAttribute('custom_field_mapping'))) {
       foreach (preg_split('/\r\n|\r|\n/', $custom_field_definition, -1, PREG_SPLIT_NO_EMPTY) as $custom_field_map) {
-        list($twingle_field_name, $custom_field_name) = explode("=", $custom_field_map);
+        [$twingle_field_name, $custom_field_name] = explode("=", $custom_field_map);
         $custom_field_mapping[$twingle_field_name] = $custom_field_name;
       }
     }
@@ -189,12 +187,7 @@ class CRM_Twingle_Profile {
    * @return mixed | NULL
    */
   public function getAttribute($attribute_name, $default = NULL) {
-    if (isset($this->data[$attribute_name])) {
-      return $this->data[$attribute_name];
-    }
-    else {
-      return $default;
-    }
+    return $this->data[$attribute_name] ?? $default;
   }
 
   /**
