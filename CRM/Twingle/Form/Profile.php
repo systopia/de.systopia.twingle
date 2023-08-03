@@ -299,7 +299,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       $this->add(
         'select', // field type
         $pi_name, // field name
-        E::ts('Record %1 as', array(1 => $pi_label)), // field label
+        E::ts('Record %1 as', [1 => $pi_label]), // field label
         static::getPaymentInstruments(), // list of options
         TRUE // is required
       );
@@ -307,7 +307,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       $this->add(
         'select',
         $pi_name . '_status',
-        E::ts('Record %1 donations with contribution status', array(1 => $pi_label)),
+        E::ts('Record %1 donations with contribution status', [1 => $pi_label]),
         static::getContributionStatusOptions(),
         TRUE
       );
@@ -328,7 +328,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       'newsletter_double_opt_in', // field name
       E::ts('Use Double-Opt-In for newsletter'), // field label
       FALSE, // is not required
-      array()
+      []
       );
 
     $this->add(
@@ -337,7 +337,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       E::ts('Sign up for newsletter groups'), // field label
       static::getNewsletterGroups(), // list of options
       FALSE, // is not required
-      array('class' => 'crm-select2 huge', 'multiple' => 'multiple')
+      ['class' => 'crm-select2 huge', 'multiple' => 'multiple']
     );
 
     $this->add(
@@ -346,7 +346,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       E::ts('Sign up for postal mail groups'), // field label
       static::getPostinfoGroups(), // list of options
       FALSE, // is not required
-      array('class' => 'crm-select2 huge', 'multiple' => 'multiple')
+      ['class' => 'crm-select2 huge', 'multiple' => 'multiple']
     );
 
     $this->add(
@@ -355,16 +355,16 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       E::ts('Sign up for Donation receipt groups'), // field label
       static::getDonationReceiptGroups(), // list of options
       FALSE, // is not required
-      array('class' => 'crm-select2 huge', 'multiple' => 'multiple')
+      ['class' => 'crm-select2 huge', 'multiple' => 'multiple']
     );
 
     $this->add(
       'select', // field type
       'campaign', // field name
       E::ts('Default Campaign'), // field label
-      array('' => E::ts('- none -')) + static::getCampaigns(), // list of options
+      ['' => E::ts('- none -')] + static::getCampaigns(), // list of options
       FALSE, // is not required
-      array('class' => 'crm-select2 huge')
+      ['class' => 'crm-select2 huge']
     );
 
     $this->add(
@@ -386,17 +386,17 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       'select', // field type
       'membership_type_id', // field name
       E::ts('Create membership of type'), // field label
-      array('' => E::ts('- none -')) + static::getMembershipTypes(), // list of options
+      ['' => E::ts('- none -')] + static::getMembershipTypes(), // list of options
       FALSE, // is not required
-      array('class' => 'crm-select2 huge')
+      ['class' => 'crm-select2 huge']
     );
     $this->add(
       'select', // field type
       'membership_type_id_recur', // field name
       E::ts('Create membership of type (recurring)'), // field label
-      array('' => E::ts('- none -')) + static::getMembershipTypes(), // list of options
+      ['' => E::ts('- none -')] + static::getMembershipTypes(), // list of options
       FALSE, // is not required
-      array('class' => 'crm-select2 huge')
+      ['class' => 'crm-select2 huge']
     );
     $this->add(
         'text',
@@ -410,7 +410,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       'text', // field type
       'contribution_source', // field name
       E::ts('Contribution source'), // field label
-      array()
+      []
     );
 
     $this->add(
@@ -431,16 +431,16 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       'textarea', // field type
       'custom_field_mapping', // field name
       E::ts('Custom field mapping'), // field label
-      array()
+      []
     );
 
-    $this->addButtons(array(
-      array(
+    $this->addButtons([
+      [
         'type' => 'submit',
         'name' => E::ts('Save'),
         'isDefault' => TRUE,
-      ),
-    ));
+      ],
+    ]);
 
     // Export form elements.
     parent::buildQuickForm();
@@ -544,7 +544,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    */
   public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
-    if (in_array($this->_op, array('create', 'edit', 'copy'))) {
+    if (in_array($this->_op, ['create', 'edit', 'copy'])) {
       $defaults['name'] = $this->profile->getName();
       $profile_data = $this->profile->getData();
       foreach ($profile_data as $element_name => $value) {
@@ -594,11 +594,11 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    */
   public static function getLocationTypes() {
     if (!isset(static::$_locationTypes)) {
-      static::$_locationTypes = array();
-      $query = civicrm_api3('LocationType', 'get', array(
+      static::$_locationTypes = [];
+      $query = civicrm_api3('LocationType', 'get', [
         'option.limit' => 0,
         'is_active' => 1,
-      ));
+      ]);
       foreach ($query['values'] as $type) {
         static::$_locationTypes[$type['id']] = $type['name'];
       }
@@ -633,12 +633,12 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    */
   public static function getFinancialTypes() {
     if (!isset(static::$_financialTypes)) {
-      static::$_financialTypes = array();
-      $query = civicrm_api3('FinancialType', 'get', array(
+      static::$_financialTypes = [];
+      $query = civicrm_api3('FinancialType', 'get', [
         'option.limit' => 0,
         'is_active' => 1,
         'return' => 'id,name'
-      ));
+      ]);
       foreach ($query['values'] as $type) {
         static::$_financialTypes[$type['id']] = $type['name'];
       }
@@ -656,12 +656,12 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    */
   public static function getMembershipTypes() {
     if (!isset(static::$_membershipTypes)) {
-      static::$_membershipTypes = array();
-      $query = civicrm_api3('MembershipType', 'get', array(
+      static::$_membershipTypes = [];
+      $query = civicrm_api3('MembershipType', 'get', [
         'option.limit' => 0,
         'is_active' => 1,
         'return' => 'id,name'
-      ));
+      ]);
       foreach ($query['values'] as $type) {
         static::$_membershipTypes[$type['id']] = $type['name'];
       }
@@ -679,16 +679,16 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    */
   public static function getGenderOptions() {
     if (!isset(static::$_genderOptions)) {
-      static::$_genderOptions = array();
-      $query = civicrm_api3('OptionValue', 'get', array(
+      static::$_genderOptions = [];
+      $query = civicrm_api3('OptionValue', 'get', [
         'option.limit' => 0,
         'option_group_id' => 'gender',
         'is_active' => 1,
-        'return' => array(
+        'return' => [
           'value',
           'label',
-        ),
-      ));
+        ],
+      ]);
       foreach ($query['values'] as $gender) {
         static::$_genderOptions[$gender['value']] = $gender['label'];
       }
@@ -706,16 +706,16 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    */
   public static function getPrefixOptions() {
     if (!isset(static::$_prefixOptions)) {
-      static::$_prefixOptions = array('' => E::ts('none'));
-      $query = civicrm_api3('OptionValue', 'get', array(
+      static::$_prefixOptions = ['' => E::ts('none')];
+      $query = civicrm_api3('OptionValue', 'get', [
           'option.limit' => 0,
           'option_group_id' => 'individual_prefix',
           'is_active' => 1,
-          'return' => array(
+          'return' => [
               'value',
               'label',
-          ),
-      ));
+          ],
+      ]);
       foreach ($query['values'] as $prefix) {
         static::$_prefixOptions[$prefix['value']] = $prefix['label'];
       }
@@ -732,11 +732,11 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    */
   public static function getSepaCreditors() {
     if (!isset(static::$_sepaCreditors)) {
-      static::$_sepaCreditors = array();
+      static::$_sepaCreditors = [];
       if (CRM_Twingle_Submission::civiSepaEnabled()) {
-        $result = civicrm_api3('SepaCreditor', 'get', array(
+        $result = civicrm_api3('SepaCreditor', 'get', [
           'option.limit' => 0,
-        ));
+        ]);
         foreach ($result['values'] as $sepa_creditor) {
           static::$_sepaCreditors[$sepa_creditor['id']] = $sepa_creditor['name'];
         }
@@ -755,13 +755,13 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    */
   public static function getPaymentInstruments() {
     if (!isset(self::$_paymentInstruments)) {
-      self::$_paymentInstruments = array();
-      $query = civicrm_api3('OptionValue', 'get', array(
+      self::$_paymentInstruments = [];
+      $query = civicrm_api3('OptionValue', 'get', [
         'option.limit' => 0,
         'option_group_id' => 'payment_instrument',
         'is_active'  => 1,
         'return' => 'value,label'
-      ));
+      ]);
       foreach ($query['values'] as $payment_instrument) {
         // Do not include CiviSEPA payment instruments, but add a SEPA option if
         // enabled.
@@ -793,14 +793,14 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       $query = civicrm_api3(
         'OptionValue',
         'get',
-        array(
+        [
           'option.limit' => 0,
           'option_group_id' => 'contribution_status',
-          'return' => array(
+          'return' => [
             'value',
             'label',
-          )
-        )
+          ]
+        ]
       );
 
       foreach ($query['values'] as $contribution_status) {
@@ -822,20 +822,20 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    */
   public static function getNewsletterGroups() {
     if (!isset(static::$_newsletterGroups)) {
-      static::$_newsletterGroups = array();
-      $group_types = civicrm_api3('OptionValue', 'get', array(
+      static::$_newsletterGroups = [];
+      $group_types = civicrm_api3('OptionValue', 'get', [
         'option.limit' => 0,
         'option_group_id' => 'group_type',
         'name' => CRM_Twingle_Submission::GROUP_TYPE_NEWSLETTER,
-      ));
+      ]);
       if ($group_types['count'] > 0) {
         $group_type = reset($group_types['values']);
-        $query = civicrm_api3('Group', 'get', array(
+        $query = civicrm_api3('Group', 'get', [
           'is_active' => 1,
-          'group_type' => array('LIKE' => '%' . CRM_Utils_Array::implodePadded($group_type['value']) . '%'),
+          'group_type' => ['LIKE' => '%' . CRM_Utils_Array::implodePadded($group_type['value']) . '%'],
           'option.limit'   => 0,
           'return'         => 'id,name'
-        ));
+        ]);
         foreach ($query['values'] as $group) {
           static::$_newsletterGroups[$group['id']] = $group['name'];
         }
@@ -856,12 +856,12 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    */
   public static function getGroups() {
     if (!isset(static::$_groups)) {
-      static::$_groups = array();
-      $query = civicrm_api3('Group', 'get', array(
+      static::$_groups = [];
+      $query = civicrm_api3('Group', 'get', [
         'option.limit' => 0,
         'is_active' => 1,
         'return' => 'id,name'
-      ));
+      ]);
       foreach ($query['values'] as $group) {
         static::$_groups[$group['id']] = $group['name'];
       }
@@ -902,14 +902,14 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    */
   public static function getCampaigns() {
     if (!isset(static::$_campaigns)) {
-      static::$_campaigns = array();
-      $query = civicrm_api3('Campaign', 'get', array(
+      static::$_campaigns = [];
+      $query = civicrm_api3('Campaign', 'get', [
         'option.limit' => 0,
-        'return' => array(
+        'return' => [
           'id',
           'title',
-        )
-      ));
+        ]
+      ]);
       foreach ($query['values'] as $campaign) {
         static::$_campaigns[$campaign['id']] = $campaign['title'];
       }
