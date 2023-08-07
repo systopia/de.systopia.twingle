@@ -99,14 +99,7 @@ class CRM_Twingle_Profile {
    * @return bool
    */
   public function matches($project_id) {
-    $selector = $this->getAttribute('selector');
-    $project_ids = array_map(
-      function($project_id) {
-        return trim($project_id);
-      },
-      explode(',', $selector)
-    );
-    return in_array($project_id, $project_ids, TRUE);
+    return in_array($project_id, $this->getProjectIds());
   }
 
   /**
@@ -180,6 +173,29 @@ class CRM_Twingle_Profile {
   }
 
   /**
+   * Is this the default profile?
+   *
+   * @return bool
+   */
+  public function is_default() {
+    return $this->name == 'default';
+  }
+
+  /**
+   * Retrieves the profile's project IDs.
+   *
+   * @return array
+   */
+  public function getProjectIds(): array {
+    return array_map(
+      function($project_id) {
+        return trim($project_id);
+      },
+      explode(',', $this->getAttribute("selector"))
+    );
+  }
+
+  /**
    * Retrieves an attribute of the profile.
    *
    * @param string $attribute_name
@@ -225,21 +241,138 @@ class CRM_Twingle_Profile {
   /**
    * Verifies whether the profile is valid (i.e. consistent and not colliding
    * with other profiles).
+   *
+   * @throws \CRM_Twingle_Exceptions_ProfileValidationError
+   * @throws \Civi\Core\Exception\DBQueryException
+   *   When the profile could not be successfully validated.
    */
-  public function verifyProfile(): void {
-    // TODO: check
-    //  data of this profile consistent?
-    //  conflicts with other profiles?
+  public function validate() {
+
+    // Name cannot be empty
+    if (empty($this->getName())) {
+      throw new ProfileValidationError(
+        'name',
+        E::ts('Profile name cannot be empty.'),
+        ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_FAILED
+      );
+    }
+
+    // Restrict profile names to alphanumeric characters, space and the underscore.
+    $contains_illegal_characters = preg_match("/[^A-Za-z0-9_\s]/", $this->getName());
+    if ($contains_illegal_characters) {
+      throw new ProfileValidationError(
+        'name',
+        E::ts('Only alphanumeric characters, space and the underscore (_) are allowed for profile names.'),
+        ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_FAILED
+      );
+    }
+
+    // Check if profile name is already used for other profile
+    $profile_name_duplicates = array_filter(
+      CRM_Twingle_Profile::getProfiles(), function($profile) {
+      return $profile->getName() == $this->getName() && $this->getId() != $profile->getId();
+    });
+    if (!empty($profile_name_duplicates)) {
+      throw new ProfileValidationError(
+        'name',
+        E::ts("A profile with the name '%1' already exists.", [1 => $this->getName()]),
+        ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_FAILED
+      );
+    }
+
+    // Check if project_id is already used in other profile
+    $profiles = $this::getProfiles();
+    foreach ($profiles as $profile) {
+      if ($profile->getId() == $this->getId() || $profile->is_default()) continue;
+      $project_ids = $this->getProjectIds();
+      $id_duplicates = array_intersect($profile->getProjectIds(), $project_ids);
+      if (!empty($id_duplicates)) {
+        throw new ProfileValidationError(
+          'selector',
+          E::ts(
+            "Project ID(s) [%1] already used in profile '%2'.",
+            [
+              1 => implode(", ", $id_duplicates),
+              2 => $profile->getName()
+            ]
+          ),
+          ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_FAILED
+        );
+      }
+    }
+
+    // Validate custom field mapping.
+    $custom_field_mapping = $this->getAttribute('custom_field_mapping', FALSE);
+    if ($custom_field_mapping) {
+      $custom_field_mapping = preg_split('/\r\n|\r|\n/', $custom_field_mapping, -1, PREG_SPLIT_NO_EMPTY);
+      $parsing_error = new ProfileValidationError(
+        'custom_field_mapping',
+        E::ts('Could not parse custom field mapping.'),
+        ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_FAILED
+      );
+      if (!is_array($custom_field_mapping)) {
+        throw $parsing_error;
+      }
+      foreach ($custom_field_mapping as $custom_field_map) {
+        $custom_field_map = explode("=", $custom_field_map);
+        if (count($custom_field_map) !== 2) {
+          throw $parsing_error;
+        }
+        [$twingle_field_name, $custom_field_name] = $custom_field_map;
+        $custom_field_id = substr($custom_field_name, strlen('custom_'));
+
+        // Check for custom field existence
+        try {
+          $custom_field = civicrm_api3(
+            'CustomField', 'getsingle', ['id' => $custom_field_id]
+          );
+        }
+        catch (CiviCRM_API3_Exception $exception) {
+          throw new ProfileValidationError(
+            'custom_field_mapping',
+            E::ts(
+              'Custom field custom_%1 does not exist.',
+              [1 => $custom_field_id]
+            ),
+            ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_FAILED
+          );
+        }
+
+        // Only allow custom fields on relevant entities.
+        try {
+          civicrm_api3('CustomGroup', 'getsingle',
+            [
+              'id' => $custom_field['custom_group_id'],
+              'extends' => [
+                'IN' => [
+                  'Contact',
+                  'Individual',
+                  'Organization',
+                  'Contribution',
+                  'ContributionRecur',
+                ],
+              ],
+            ]);
+        } catch (CiviCRM_API3_Exception $exception) {
+          throw new ProfileValidationError(
+            'custom_field_mapping',
+            E::ts(
+              'Custom field custom_%1 is not in a CustomGroup that extends one of the supported CiviCRM entities.',
+              [1 => $custom_field['id']]
+            ),
+            ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_FAILED
+          );
+        }
+      }
+    }
   }
 
   /**
    * Persists the profile within the database.
    *
-   * @throws \Civi\Twingle\Exceptions\ProfileException
+   * @throws \CRM_Twingle_Exceptions_ProfileException
    */
-  public function saveProfile(): void {
-    // make sure it's valid
-    $this->verifyProfile();
+  public function saveProfile() {
 
     try {
       if ($this->id !== NULL) {
