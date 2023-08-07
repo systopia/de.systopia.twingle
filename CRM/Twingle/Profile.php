@@ -268,7 +268,6 @@ class CRM_Twingle_Profile {
     }
 
     // Check if project_id is already used in other profile
-    // FIXME: Check is not working
     $profiles = $this::getProfiles();
     foreach ($profiles as $profile) {
       if ($profile->getId() == $this->getId() || $profile->is_default()) continue;
