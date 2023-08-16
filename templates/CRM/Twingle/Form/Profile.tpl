@@ -28,6 +28,7 @@
         </tr>
 
         <tr class="crm-section">
+          {if not $form.is_default}
           <td class="label">{$form.selector.label}
             <a
                     onclick='
@@ -46,6 +47,7 @@
             ></a>
           </td>
           <td class="content">{$form.selector.html}</td>
+          {/if}
         </tr>
 
         <tr class="crm-section">

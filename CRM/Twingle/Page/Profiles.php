@@ -20,8 +20,10 @@ class CRM_Twingle_Page_Profiles extends CRM_Core_Page {
   public function run() {
     CRM_Utils_System::setTitle(E::ts("Twingle API Profiles"));
     $profiles = [];
-    foreach (CRM_Twingle_Profile::getProfiles() as $profile_name => $profile) {
-      $profiles[$profile_name]['name'] = $profile_name;
+    foreach (CRM_Twingle_Profile::getProfiles() as $profile_id => $profile) {
+      $profiles[$profile_id]['id'] = $profile_id;
+      $profiles[$profile_id]['name'] = $profile->getName();
+      $profiles[$profile_id]['is_default'] = $profile->is_default();
       foreach (CRM_Twingle_Profile::allowedAttributes() as $attribute) {
         $profiles[$profile_name][$attribute] = $profile->getAttribute($attribute);
       }

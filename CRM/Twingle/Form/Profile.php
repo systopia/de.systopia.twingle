@@ -194,24 +194,27 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     // Assign template variables.
     $this->assign('op', $this->_op);
     $this->assign('profile_name', $profile_name);
+    $this->assign('is_default', $this->profile->is_default());
 
     // Add form elements.
-    $is_default = $profile_name == 'default';
-    $this->add(
-      ($is_default ? 'static' : 'text'),
-      'name',
-      E::ts('Profile name'),
-      array(),
-      !$is_default
-    );
-
     $this->add(
       'text', // field type
-      'selector', // field name
-      E::ts('Project IDs'), // field label
-      ['class' => 'huge'],
-      TRUE // is required
+      'name', // field name
+      E::ts('Profile name'),
+      ['class' => 'huge'] + ($this->profile->is_default() && $this->_op == 'edit' ? ['readonly'] : []),
+      !$this->profile->is_default()
     );
+
+    // Do only display selector if this is not the default profile
+    if (!$this->profile->is_default()) {
+      $this->add(
+        'text', // field type
+        'selector', // field name
+        E::ts('Project IDs'), // field label
+        ['class' => 'huge'],
+        TRUE // is required
+      );
+    }
 
     $this->add(
         'select',
