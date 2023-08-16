@@ -160,7 +160,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
 
     switch ($this->_op) {
       case 'delete':
-        if ($this->profile_id) {
+        if ($this->profile) {
           CRM_Utils_System::setTitle(E::ts('Delete Twingle API profile <em>%1</em>', [1 => $this->profile->getName()]));
           $this->addButtons([
             [
