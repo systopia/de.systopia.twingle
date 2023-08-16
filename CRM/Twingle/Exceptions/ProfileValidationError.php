@@ -1,10 +1,12 @@
 <?php
 
+namespace CRM\Twingle\Exceptions;
+
 /**
  * A simple custom error indicating a problem with the validation of the
  * CRM_Twingle_Profile
  */
-class CRM_Twingle_Exceptions_ProfileValidationError extends CRM_Twingle_Exceptions_BaseException {
+class ProfileValidationError extends BaseException {
 
   private string $affected_field_name;
   public const ERROR_CODE_PROFILE_VALIDATION_FAILED = 'profile_validation_failed';

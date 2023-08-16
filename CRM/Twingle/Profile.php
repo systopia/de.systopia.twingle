@@ -16,8 +16,8 @@
 declare(strict_types = 1);
 
 use CRM_Twingle_ExtensionUtil as E;
-use CRM_Twingle_Exceptions_ProfileException as ProfileException;
-use CRM_Twingle_Exceptions_ProfileValidationError as ProfileValidationError;
+use CRM\Twingle\Exceptions\ProfileException as ProfileException;
+use CRM\Twingle\Exceptions\ProfileValidationError as ProfileValidationError;
 
 /**
  * Profiles define how incoming submissions from the Twingle API are
