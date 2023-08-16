@@ -1,12 +1,14 @@
 <?php
 
+namespace CRM\Twingle\Exceptions;
+
 use CRM_Twingle_ExtensionUtil as E;
 
 /**
  * A simple custom exception class that indicates a problem within a class
  * of the Twingle API extension.
  */
-class CRM_Twingle_Exceptions_BaseException extends Exception {
+class BaseException extends \Exception {
 
   private string $error_code;
   private string $log_message;

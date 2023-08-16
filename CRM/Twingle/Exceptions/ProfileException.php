@@ -1,10 +1,12 @@
 <?php
 
+namespace CRM\Twingle\Exceptions;
+
 /**
  * A simple custom exception that indicates a problem within the
  * CRM_Twingle_Profile class
  */
-class CRM_Twingle_Exceptions_ProfileException extends CRM_Twingle_Exceptions_BaseException {
+class ProfileException extends BaseException {
 
   public const ERROR_CODE_PROFILE_NOT_FOUND = 'profile_not_found';
   public const ERROR_CODE_DEFAULT_PROFILE_NOT_FOUND = 'default_profile_not_found';
