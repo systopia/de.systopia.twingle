@@ -235,10 +235,11 @@ class CRM_Twingle_Profile {
       if ($this->id !== NULL) {
         // existing profile -> just update the config
         CRM_Core_DAO::executeQuery(
-          "UPDATE civicrm_twingle_profile SET config = %2 WHERE id = %1",
+          "UPDATE civicrm_twingle_profile SET config = %2, name = %3 WHERE id = %1",
           [
             1 => [$this->id, 'String'],
             2 => [json_encode($this->data), 'String'],
+            3 => [$this->name, 'String'],
           ]);
       }
       else {
