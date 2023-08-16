@@ -298,7 +298,7 @@ class CRM_Twingle_Profile {
       } catch (Exception $e) {
         throw new ProfileException(
           E::ts("Could not delete profile: %1", [1 => $e->getMessage()]),
-          ProfileException::ERROR_CODE_COULD_NOT_RESET_PROFILE
+          ProfileException::ERROR_CODE_COULD_NOT_DELETE_PROFILE
         );
       }
     }
