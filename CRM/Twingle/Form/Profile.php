@@ -568,7 +568,13 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         $profile->validate();
       }
       catch (ProfileValidationError $e) {
-        $this->setElementError($e->getAffectedFieldName(), $e->getMessage());
+        switch ($e->getErrorCode()) {
+          case ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_FAILED:
+            $this->setElementError($e->getAffectedFieldName(), $e->getMessage());
+            break;
+          case ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_WARNING:
+            CRM_Core_Session::setStatus($e->getMessage(), E::ts('Warning'));
+        }
       }
     }
 
