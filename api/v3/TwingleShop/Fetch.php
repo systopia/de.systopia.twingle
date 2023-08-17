@@ -1,6 +1,6 @@
 <?php
 use CRM_Twingle_ExtensionUtil as E;
-use CRM_Twingle_Shop_Shop as TwingleShop;
+use CRM_Twingle_Shop_DAO_TwingleShop as TwingleShop;
 use CRM_Twingle_Exceptions_Shop_ShopException as TwingleShopException;
 use CRM_Twingle_Exceptions_Shop_ApiCallError as TwingleApiCallError;
 use CRM_Twingle_Exceptions_Shop_ProductException as TwingleShopProductException;
@@ -14,13 +14,13 @@ use CRM_Twingle_Exceptions_Shop_ProductException as TwingleShopProductException;
  * @see https://docs.civicrm.org/dev/en/latest/framework/api-architecture/
  */
 function _civicrm_api3_twingle_shop_Fetch_spec(&$spec) {
-  $spec['project_identifiers'] = array(
+  $spec['project_identifiers'] = [
     'name' => 'project_identifiers',
     'title' => E::ts('Project Identifiers'),
     'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
     'description' => E::ts('Comma separated list of Twingle project identifiers.'),
-  );
+  ];
 }
 
 /**
@@ -46,7 +46,7 @@ function civicrm_api3_twingle_shop_Fetch($params) {
   // Explode string with project IDs
   $projectIds = array_map(
     fn($projectId) => trim($projectId),
-    explode(",", $params['project_identifiers'])
+    explode(',', $params['project_identifiers'])
   );
 
   // Get products for all projects of type 'shop'
@@ -67,14 +67,14 @@ function civicrm_api3_twingle_shop_Fetch($params) {
         Civi::log()->error(
           $e->getMessage(),
           [
-            "project_identifier" => $projectId,
-            "params" => $params,
+            'project_identifier' => $projectId,
+            'params' => $params,
           ]
         );
         return civicrm_api3_create_error($e->getMessage(), [
-          "error_code" => $e->getErrorCode(),
-          "project_identifier" => $projectId,
-          "params" => $params,
+          'error_code' => $e->getErrorCode(),
+          'project_identifier' => $projectId,
+          'params' => $params,
         ]);
       }
     }

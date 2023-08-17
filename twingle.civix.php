@@ -304,5 +304,16 @@ function _twingle_civix_fixNavigationMenuItems(&$nodes, &$maxNavID, $parentID) {
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_entityTypes
  */
 function _twingle_civix_civicrm_entityTypes(&$entityTypes) {
-  $entityTypes = array_merge($entityTypes, []);
+  $entityTypes = array_merge($entityTypes, [
+    'CRM_Twingle_Shop_DAO_TwingleProduct' => [
+      'name' => 'TwingleProduct',
+      'class' => 'CRM_Twingle_Shop_DAO_TwingleProduct',
+      'table' => 'civicrm_twingle_product',
+    ],
+    'CRM_Twingle_Shop_DAO_TwingleShop' => [
+      'name' => 'TwingleShop',
+      'class' => 'CRM_Twingle_Shop_DAO_TwingleShop',
+      'table' => 'civicrm_twingle_shop',
+    ],
+  ]);
 }

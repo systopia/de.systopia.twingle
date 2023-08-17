@@ -1,0 +1,16 @@
+.twingle-shop-table-caption {
+  font-weight: bold;
+  font-size: 13px;
+  padding: 6px;
+  text-align: left;
+}
+
+.twingle-shop-table-divider {
+  border-top: 1px solid #ddd;
+  margin-top: 20px;
+  margin-bottom: 4px;
+}
+
+#twingle-shop-spinner {
+  display: none;
+}

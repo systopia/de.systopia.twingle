@@ -46,7 +46,7 @@
                     class="helpicon"
             ></a>
           </td>
-          <td class="content">{$form.selector.html}</td>
+          <td id="selectors" class="content">{$form.selector.html}</td>
           {/if}
         </tr>
 
@@ -392,10 +392,12 @@
                 class="helpicon"
               ></a></td>
             <td class="content">{$form.shop_map_products.html}
-              <span>
-                &nbsp;&nbsp;<button onclick='
-                twingle_fetch_products().then(twingle_map_products())
-                '></button></span>
+              <span>&nbsp;&nbsp;<button id="btn_fetch_products" class="twingle-product-mapping">
+                      {ts domain="de.systopia.twingle"}Fetch Products{/ts}
+                </button>&nbsp;<i id="twingle-shop-spinner" class="crm-i fa-spinner fa-spin"></i></span>
+                <div class="twingle-product-mapping">
+                  <div id="tableContainer"></div>
+                </div>
             </td>
           </tr>
 
@@ -459,10 +461,8 @@
   function twingle_shop_active_changed() {
     let active = cj('#enable_shop_integration:checkbox:checked').length;
     if (active) {
-      console.log('active')
       cj('.twingle-shop-element').show();
     } else {
-      console.log('not active')
       cj('.twingle-shop-element').hide();
     }
   }
@@ -473,27 +473,47 @@
   function twingle_map_products_changed() {
     let active = cj('#shop_map_products:checkbox:checked').length;
     if (active) {
-      console.log('active')
       cj('.twingle-product-mapping').show();
     } else {
-      console.log('not active')
       cj('.twingle-product-mapping').hide();
     }
   }
 
   function twingle_map_products(products) {} // TODO: Implement function
 
-  function twingle_fetch_products() {} // TODO: Implement function
+  function twingle_fetch_products() {
+    let active = cj('#shop_map_products:checkbox:checked').length;
 
-  // register events and run once
+    if (active) {
+      cj('#twingle-shop-spinner').show();
+
+      CRM.api3('TwingleShop', 'fetch', {
+        "project_identifiers": cj('#selectors :input').val()
+      }).then(function (result) {
+        buildProductsTable(result);
+        cj('#twingle-shop-spinner').hide();
+      }, function (error) {
+        cj('#btn_fetch_products').crmError(ts('Could not fetch products. Please check your Twingle API key.'));
+      });
+    }
+  }
+
+  // register events
   cj(document).ready(function (){
     cj('#membership_type_id').change(twingle_membership_active_changed);
     cj('#membership_type_id_recur').change(twingle_membership_active_changed);
     cj('#enable_shop_integration:checkbox').change(twingle_shop_active_changed);
     cj('#shop_map_products:checkbox').change(twingle_map_products_changed);
+    cj('#btn_fetch_products').click(function(event) {
+      event.preventDefault(); // Prevent the default form submission behavior
+      twingle_fetch_products();
+    });
   });
+
+  // run once
   twingle_membership_active_changed();
   twingle_shop_active_changed();
   twingle_map_products_changed();
+  twingle_fetch_products();
 </script>
 {/literal}

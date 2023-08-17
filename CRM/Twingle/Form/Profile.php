@@ -352,6 +352,10 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         static::getPrefixOptions()
     );
 
+    // Add script and css for Twingle Shop integration
+    Civi::resources()->addScriptUrl(E::url('js/twingle_shop.js'));
+    Civi::resources()->addStyleFile(E::LONG_NAME, 'css/twingle_shop.css');
+
     $payment_instruments = CRM_Twingle_Profile::paymentInstruments();
     $this->assign('payment_instruments', $payment_instruments);
     foreach ($payment_instruments as $pi_name => $pi_label) {

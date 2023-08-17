@@ -6,7 +6,7 @@ use CRM_Twingle_Exceptions_Shop_ProductException as TwingleShopProductException;
 /**
  * This class represents a Twingle Shop product.
  */
-class CRM_Twingle_Shop_Product {
+class CRM_Twingle_Shop_TwingleProduct {
 
   /**
    * Allowed product attributes for filtering.

@@ -5,13 +5,13 @@ use CRM_Twingle_Exceptions_Shop_ShopException as TwingleShopException;
 use CRM_Twingle_Exceptions_Shop_ProductException as TwingleShopProductException;
 use CRM_Twingle_ExtensionUtil as E;
 use CRM_Twingle_Shop_ApiCall as TwingleApiCall;
-use CRM_Twingle_Shop_Product as TwingleShopProduct;
+use CRM_Twingle_Shop_TwingleProduct as TwingleShopProduct;
 
-class CRM_Twingle_Shop_Shop {
+class CRM_Twingle_Shop_TwingleShop {
 
   /**
    * @var array $shops
-   *  Cache Twingle Projects of type "shop" retrieved via API
+   *  Cache Twingle Projects of type 'shop' retrieved via API
    */
   public static array $shops;
 
@@ -23,7 +23,7 @@ class CRM_Twingle_Shop_Shop {
 
   /**
    * @var string $identifier
-   *  Alphanumerical project identifier (like "tw620214349ac97")
+   *  Alphanumerical project identifier (like 'tw620214349ac97')
    */
   public string $identifier;
 
@@ -49,7 +49,7 @@ class CRM_Twingle_Shop_Shop {
    * TwingleShop constructor
    *
    * @param string $identifier
-   *  Alphanumerical project identifier (like "tw620214349ac97")
+   *  Alphanumerical project identifier (like 'tw620214349ac97')
    *
    * @throws TwingleApiCallError
    * @throws TwingleShopException
@@ -82,15 +82,15 @@ class CRM_Twingle_Shop_Shop {
 
     // Fetch products from Twingle API
     $products = $this->twingleApi->get(
-      "project",
+      'project',
       $this->numProjectId,
-      "products",
+      'products',
     );
 
     // Instantiate Shop objects from retrieved data
     foreach ($products as $product) {
-      $this->products[$product["id"]] = new TwingleShopProduct($product);
-      $this->products[$product["id"]]->load($product);
+      $this->products[$product['id']] = new TwingleShopProduct($product);
+      $this->products[$product['id']]->load($product);
     }
 
     return $this->products;
@@ -111,7 +111,7 @@ class CRM_Twingle_Shop_Shop {
    * Retrieves the numerical project ID of this shop.
    *
    * @param string $identifier
-   *  Alphanumerical project identifier (like "tw620214349ac97")
+   *  Alphanumerical project identifier (like 'tw620214349ac97')
    *
    * @throws TwingleShopException
    */
@@ -122,22 +122,22 @@ class CRM_Twingle_Shop_Shop {
 
     // Set Shop ID
     foreach (self::$shops as $shop) {
-      if (isset($shop["identifier"]) && $shop["identifier"] == $identifier) {
-        $this->numProjectId = $shop["id"];
+      if (isset($shop['identifier']) && $shop['identifier'] == $identifier) {
+        $this->numProjectId = $shop['id'];
       }
     }
 
-    // Throw an Exception if this Twingle Project is not of type "shop"
+    // Throw an Exception if this Twingle Project is not of type 'shop'
     if (!isset($this->numProjectId)) {
       throw new TwingleShopException(
-        E::ts("This Twingle Project is not a shop."),
+        E::ts('This Twingle Project is not a shop.'),
         TwingleShopException::ERROR_CODE_NOT_A_SHOP,
       );
     }
   }
 
   /**
-   * Retrieves all Twingle projects of the type "shop".
+   * Retrieves all Twingle projects of the type 'shop'.
    *
    * @throws TwingleShopException
    */
@@ -145,20 +145,20 @@ class CRM_Twingle_Shop_Shop {
     $organisationId = $this->twingleApi->organisationId;
     try {
       $projects = $this->twingleApi->get(
-        "project",
+        'project',
         NULL,
-        "by-organisation",
+        'by-organisation',
         $organisationId,
       );
       self::$shops = array_filter(
         $projects,
-        fn($project) => isset($project["type"]) && $project["type"] == "shop"
+        fn($project) => isset($project['type']) && $project['type'] == 'shop'
       );
     }
     catch (Exception $e) {
       throw new TwingleShopException(
-        E::ts("Could not retrieve Twingle projects from API.
-          Please check your API credentials."),
+        E::ts('Could not retrieve Twingle projects from API.
+          Please check your API credentials.'),
         TwingleShopException::ERROR_CODE_COULD_NOT_GET_PROJECTS,
       );
     }
