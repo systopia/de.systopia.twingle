@@ -10,6 +10,7 @@ class ProfileValidationError extends BaseException {
 
   private string $affected_field_name;
   public const ERROR_CODE_PROFILE_VALIDATION_FAILED = 'profile_validation_failed';
+  public const ERROR_CODE_PROFILE_VALIDATION_WARNING = 'profile_validation_warning';
 
   /**
    * ProfileValidationError Constructor
