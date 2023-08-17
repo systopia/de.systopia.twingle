@@ -22,7 +22,7 @@ class ProfileValidationError extends BaseException {
    *  A meaningful error code
    */
   public function __construct(string $affected_field_name, string $message = '', string $error_code = '') {
-    parent::__construct($message, 1);
+    parent::__construct($message, $error_code);
     $this->affected_field_name = $affected_field_name;
   }
 
