@@ -614,6 +614,9 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   public static function getXCMProfiles() {
     if (!isset(static::$_xcm_profiles)) {
       if (method_exists('CRM_Xcm_Configuration', 'getProfileList')) {
+        static::$_xcm_profiles = array(
+          '' => E::ts("&lt;select profile&gt;"),
+        );
         $profiles = CRM_Xcm_Configuration::getProfileList();
         foreach ($profiles as $profile_key => $profile_name) {
           static::$_xcm_profiles[$profile_key] = $profile_name;
