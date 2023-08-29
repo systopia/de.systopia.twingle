@@ -34,7 +34,7 @@
       <tbody>
       {foreach from=$profiles item=profile}
         {assign var="profile_name" value=$profile.name}
-        <tr style="border-bottom: 1px solid #cfcec3;">
+        <tr class="twingle-profile-list">
           <td>{$profile.name}</td>
           <td>
               {if not $profile.is_default}

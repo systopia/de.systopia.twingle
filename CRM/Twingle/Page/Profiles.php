@@ -32,6 +32,9 @@ class CRM_Twingle_Page_Profiles extends CRM_Core_Page {
     $this->assign('profiles', $profiles);
     $this->assign('profile_stats', CRM_Twingle_Profile::getProfileStats());
 
+    // Add custom css
+    Civi::resources()->addStyleFile(E::LONG_NAME, 'css/twingle.css');
+
     parent::run();
   }
 
