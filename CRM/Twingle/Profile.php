@@ -80,8 +80,14 @@ class CRM_Twingle_Profile {
    */
   public function copy() {
     $copy = clone $this;
+
+    // Remove unique data
     $copy->id = NULL;
     $copy->data['selector'] = NULL;
+
+    // Propose a new name for this profile.
+    $profile_name = $this->getName() . '_copy';
+    $copy->setName($profile_name);
     return $copy;
   }
 
@@ -484,7 +490,7 @@ class CRM_Twingle_Profile {
         return new CRM_Twingle_Profile($profile_data->name, json_decode($profile_data->config, 1), (int) $profile_data->id);
       }
     }
-    return NULL;
+    throw new ProfileException('Profile not found.', ProfileException::ERROR_CODE_PROFILE_NOT_FOUND);
   }
 
   /**

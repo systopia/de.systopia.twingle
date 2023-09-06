@@ -180,12 +180,32 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         if (!$source_id) {
           $this->profile = CRM_Twingle_Profile::createDefaultProfile();
         } else {
-          $source_profile = CRM_Twingle_Profile::getProfile($source_id);
-          $this->profile = $source_profile->copy();
+          try {
+            $source_profile = CRM_Twingle_Profile::getProfile($source_id);
+            $this->profile = $source_profile->copy();
+            $this->profile->validate();
+          } catch (ProfileValidationError $e) {
+            if ($e->getErrorCode() == ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_FAILED) {
+              Civi::log()->error($e->getLogMessage());
+              CRM_Core_Session::setStatus(E::ts('The profile is invalid and cannot be copied.'), E::ts('Error'));
+              CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/settings/twingle/profiles', 'reset=1'));
+              return;
+            }
+          } catch (ProfileException $e) {
+            if ($e->getErrorCode() == ProfileException::ERROR_CODE_PROFILE_NOT_FOUND) {
+              Civi::log()->error($e->getLogMessage());
+              CRM_Core_Session::setStatus(E::ts('The profile to be copied could not be found.'), E::ts('Error'));
+              CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/settings/twingle/profiles', 'reset=1'));
+              return;
+            }
+          }
+          catch (Civi\Core\Exception\DBQueryException $e) {
+            Civi::log()->error($e->getMessage());
+            CRM_Core_Session::setStatus(E::ts('A database error has occurred. See the log for details.'), E::ts('Error'));
+            CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/settings/twingle/profiles', 'reset=1'));
+            return;
+          }
         }
-        // Propose a new name for this profile.
-        $profile_name = $this->profile->getName() . '_copy';
-        $this->profile->setName($profile_name);
         CRM_Utils_System::setTitle(E::ts('New Twingle API profile'));
         break;
 
