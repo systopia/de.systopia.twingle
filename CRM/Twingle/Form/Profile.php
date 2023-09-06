@@ -640,6 +640,9 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
     if (in_array($this->_op, ['create', 'edit', 'copy'])) {
+      if (!$this->profile) {
+        $this->profile = CRM_Twingle_Profile::createDefaultProfile()->copy();
+      }
       $defaults['name'] = $this->profile->getName();
       $profile_data = $this->profile->getData();
       foreach ($profile_data as $element_name => $value) {
