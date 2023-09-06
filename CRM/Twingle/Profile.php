@@ -221,7 +221,8 @@ class CRM_Twingle_Profile {
    * Verifies whether the profile is valid (i.e. consistent and not colliding
    * with other profiles).
    *
-   * @throws Exception
+   * @throws \CRM\Twingle\Exceptions\ProfileValidationError
+   * @throws \Civi\Core\Exception\DBQueryException
    *   When the profile could not be successfully validated.
    */
   public function verifyProfile() {
@@ -231,7 +232,9 @@ class CRM_Twingle_Profile {
   }
 
   /**
-   * Persists the profile within the CiviCRM settings.
+   * Persists the profile within the database.
+   *
+   * @throws \CRM\Twingle\Exceptions\ProfileException
    */
   public function saveProfile() {
     // make sure it's valid
@@ -269,7 +272,7 @@ class CRM_Twingle_Profile {
   /**
    * Deletes the profile from the database
    *
-   * @throws \CRM_Twingle_Exceptions_ProfileException
+   * @throws \CRM\Twingle\Exceptions\ProfileException
    */
   public function deleteProfile() {
     // Do only reset default profile
@@ -481,6 +484,7 @@ class CRM_Twingle_Profile {
    *
    * @return CRM_Twingle_Profile | NULL
    * @throws \Civi\Core\Exception\DBQueryException
+   * @throws \CRM\Twingle\Exceptions\ProfileException
    */
   public static function getProfile(int $id = NULL) {
     if (!empty($id)) {
