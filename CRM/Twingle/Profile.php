@@ -350,6 +350,8 @@ class CRM_Twingle_Profile {
    * @param $project_id
    *
    * @return CRM_Twingle_Profile
+   * @throws \CRM\Twingle\Exceptions\ProfileException
+   * @throws \Civi\Core\Exception\DBQueryException
    */
   public static function getProfileForProject($project_id) {
     $profiles = self::getProfiles();
@@ -361,7 +363,16 @@ class CRM_Twingle_Profile {
     }
 
     // If none matches, use the default profile.
-    return $profiles['default'];
+    $default_profile = $profiles['default'];
+    if (!empty($default_profile)) {
+      return $default_profile;
+    }
+    else {
+      throw new ProfileException(
+        'Could not find default profile',
+        ProfileException::ERROR_CODE_DEFAULT_PROFILE_NOT_FOUND
+      );
+    }
   }
 
   /**
