@@ -683,6 +683,7 @@ class CRM_Twingle_Profile {
     }
 
     // If none matches, use the default profile.
+    $default_profile = $profiles['default'];
     if (!empty($default_profile)) {
       return $default_profile;
     }
