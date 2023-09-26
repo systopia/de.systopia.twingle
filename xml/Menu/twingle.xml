@@ -6,7 +6,7 @@
     <title>Twingle API Configuration</title>
     <access_arguments>administer CiviCRM</access_arguments>
     <desc>Configure the Twingle API extension</desc>
-    <adminGroup>System Settings</adminGroup>
+    <adminGroup>CiviContribute</adminGroup>
     <icon>admin/option.png</icon>
   </item>
   <item>
