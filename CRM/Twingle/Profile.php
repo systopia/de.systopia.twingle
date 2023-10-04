@@ -14,12 +14,20 @@
 +-------------------------------------------------------------*/
 
 use CRM_Twingle_ExtensionUtil as E;
+use CRM\Twingle\Exceptions\ProfileException as ProfileException;
+use CRM\Twingle\Exceptions\ProfileValidationError as ProfileValidationError;
 
 /**
  * Profiles define how incoming submissions from the Twingle API are
  * processed in CiviCRM.
  */
 class CRM_Twingle_Profile {
+
+  /**
+   * @var int $id
+   *   The id of the profile.
+   */
+  protected $id = NULL;
 
   /**
    * @var string $name
@@ -34,14 +42,26 @@ class CRM_Twingle_Profile {
   protected $data = NULL;
 
   /**
+   * @var array $check_box_fields
+   *   List of check box fields
+   */
+  public $check_box_fields = [
+    'newsletter_double_opt_in',
+    'enable_shop_integration',
+    'shop_map_products',
+  ];
+
+  /**
    * CRM_Twingle_Profile constructor.
    *
    * @param string $name
    *   The name of the profile.
    * @param array $data
    *   The properties of the profile
+   * @param int|NULL $id
    */
-  public function __construct($name, $data) {
+  public function __construct($name, $data, $id = NULL) {
+    $this->id = $id;
     $this->name = $name;
     $allowed_attributes = self::allowedAttributes();
     $this->data = $data + array_combine(
@@ -52,16 +72,32 @@ class CRM_Twingle_Profile {
 
   /**
    * Logs (production) access to this profile
-   *
-   * @return bool
    */
   public function logAccess() {
     CRM_Core_DAO::executeQuery("
-        UPDATE civicrm_twingle_profile 
-        SET 
-            last_access = NOW(), 
+        UPDATE civicrm_twingle_profile
+        SET
+            last_access = NOW(),
             access_counter = access_counter + 1
         WHERE name = %1", [1 => [$this->name, 'String']]);
+  }
+
+  /**
+   * Copy this profile by returning a clone with all unique information removed.
+   *
+   * @return CRM_Twingle_Profile
+   */
+  public function copy() {
+    $copy = clone $this;
+
+    // Remove unique data
+    $copy->id = NULL;
+    $copy->data['selector'] = NULL;
+
+    // Propose a new name for this profile.
+    $profile_name = $this->getName() . '_copy';
+    $copy->setName($profile_name);
+    return $copy;
   }
 
   /**
@@ -72,14 +108,7 @@ class CRM_Twingle_Profile {
    * @return bool
    */
   public function matches($project_id) {
-    $selector = $this->getAttribute('selector');
-    $project_ids = array_map(
-      function($project_id) {
-        return trim($project_id);
-      },
-      explode(',', $selector)
-    );
-    return in_array($project_id, $project_ids);
+    return in_array($project_id, $this->getProjectIds());
   }
 
   /**
@@ -90,7 +119,7 @@ class CRM_Twingle_Profile {
     $custom_field_mapping = [];
     if (!empty($custom_field_definition = $this->getAttribute('custom_field_mapping'))) {
       foreach (preg_split('/\r\n|\r|\n/', $custom_field_definition, -1, PREG_SPLIT_NO_EMPTY) as $custom_field_map) {
-        list($twingle_field_name, $custom_field_name) = explode("=", $custom_field_map);
+        [$twingle_field_name, $custom_field_name] = explode("=", $custom_field_map);
         $custom_field_mapping[$twingle_field_name] = $custom_field_name;
       }
     }
@@ -107,6 +136,24 @@ class CRM_Twingle_Profile {
   }
 
   /**
+   * Retrieves the profile id.
+   *
+   * @return int
+   */
+  public function getId() {
+    return $this->id;
+  }
+
+  /**
+   * Set the profile id.
+   *
+   * @param int $id
+   */
+  public function setId(int $id) {
+    $this->id = $id;
+  }
+
+  /**
    * Retrieves the profile name.
    *
    * @return string
@@ -118,10 +165,43 @@ class CRM_Twingle_Profile {
   /**
    * Sets the profile name.
    *
-   * @param $name
+   * @param string $name
    */
-  public function setName($name) {
+  public function setName(string $name) {
     $this->name = $name;
+  }
+
+  /**
+   * Is this the default profile?
+   *
+   * @return bool
+   */
+  public function is_default() {
+    return $this->name == 'default';
+  }
+
+  /**
+   * Retrieves the profile's project IDs.
+   *
+   * @return array
+   */
+  public function getProjectIds(): array {
+    return array_map(
+      function($project_id) {
+        return trim($project_id);
+      },
+      explode(',', $this->getAttribute("selector"))
+    );
+  }
+
+  /**
+   * Determine if Twingle Shop integration is enabled in general and
+   * specifically for this profile.
+   * @return bool
+   */
+  public function isShopEnabled(): bool {
+    return Civi::settings()->get('twingle_use_shop') &&
+      $this->data['enable_shop_integration'];
   }
 
   /**
@@ -133,12 +213,7 @@ class CRM_Twingle_Profile {
    * @return mixed | NULL
    */
   public function getAttribute($attribute_name, $default = NULL) {
-    if (isset($this->data[$attribute_name])) {
-      return $this->data[$attribute_name];
-    }
-    else {
-      return $default;
-    }
+    return $this->data[$attribute_name] ?? $default;
   }
 
   /**
@@ -147,12 +222,15 @@ class CRM_Twingle_Profile {
    * @param string $attribute_name
    * @param mixed $value
    *
-   * @throws \Exception
+   * @throws \CRM\Twingle\Exceptions\ProfileException
    *   When the attribute name is not known.
    */
   public function setAttribute($attribute_name, $value) {
     if (!in_array($attribute_name, self::allowedAttributes())) {
-      throw new Exception(E::ts('Unknown attribute %1.', [1 => $attribute_name]));
+      throw new ProfileException(
+        E::ts('Unknown attribute %1.', [1 => $attribute_name]),
+      ProfileException::ERROR_CODE_UNKNOWN_PROFILE_ATTRIBUTE
+      );
     }
     // TODO: Check if value is acceptable.
     $this->data[$attribute_name] = $value;
@@ -177,49 +255,209 @@ class CRM_Twingle_Profile {
    * Verifies whether the profile is valid (i.e. consistent and not colliding
    * with other profiles).
    *
-   * @throws Exception
+   * @throws \CRM\Twingle\Exceptions\ProfileValidationError
+   * @throws \Civi\Core\Exception\DBQueryException
    *   When the profile could not be successfully validated.
    */
-  public function verifyProfile() {
-    // TODO: check
-    //  data of this profile consistent?
-    //  conflicts with other profiles?
+  public function validate() {
+
+    // Name cannot be empty
+    if (empty($this->getName())) {
+      throw new ProfileValidationError(
+        'name',
+        E::ts('Profile name cannot be empty.'),
+        ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_FAILED
+      );
+    }
+
+    // Restrict profile names to alphanumeric characters, space and the underscore.
+    $contains_illegal_characters = preg_match("/[^A-Za-z0-9_\s]/", $this->getName());
+    if ($contains_illegal_characters) {
+      throw new ProfileValidationError(
+        'name',
+        E::ts('Only alphanumeric characters, space and the underscore (_) are allowed for profile names.'),
+        ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_FAILED
+      );
+    }
+
+    // Check if profile name is already used for other profile
+    $profile_name_duplicates = array_filter(
+      CRM_Twingle_Profile::getProfiles(), function($profile) {
+      return $profile->getName() == $this->getName() && $this->getId() != $profile->getId();
+    });
+    if (!empty($profile_name_duplicates)) {
+      throw new ProfileValidationError(
+        'name',
+        E::ts("A profile with the name '%1' already exists.", [1 => $this->getName()]),
+        ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_FAILED
+      );
+    }
+
+    // Check if project_id is already used in other profile
+    $profiles = $this::getProfiles();
+    foreach ($profiles as $profile) {
+      if ($profile->getId() == $this->getId() || $profile->is_default()) continue;
+      $project_ids = $this->getProjectIds();
+      $id_duplicates = array_intersect($profile->getProjectIds(), $project_ids);
+      if (!empty($id_duplicates)) {
+        throw new ProfileValidationError(
+          'selector',
+          E::ts(
+            "Project ID(s) [%1] already used in profile '%2'.",
+            [
+              1 => implode(", ", $id_duplicates),
+              2 => $profile->getName()
+            ]
+          ),
+          ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_WARNING
+        );
+      }
+    }
+
+    // Validate custom field mapping.
+    $custom_field_mapping = $this->getAttribute('custom_field_mapping', FALSE);
+    if ($custom_field_mapping) {
+      $custom_field_mapping = preg_split('/\r\n|\r|\n/', $custom_field_mapping, -1, PREG_SPLIT_NO_EMPTY);
+      $parsing_error = new ProfileValidationError(
+        'custom_field_mapping',
+        E::ts('Could not parse custom field mapping.'),
+        ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_FAILED
+      );
+      if (!is_array($custom_field_mapping)) {
+        throw $parsing_error;
+      }
+      foreach ($custom_field_mapping as $custom_field_map) {
+        $custom_field_map = explode("=", $custom_field_map);
+        if (count($custom_field_map) !== 2) {
+          throw $parsing_error;
+        }
+        [$twingle_field_name, $custom_field_name] = $custom_field_map;
+        $custom_field_id = substr($custom_field_name, strlen('custom_'));
+
+        // Check for custom field existence
+        try {
+          $custom_field = civicrm_api3(
+            'CustomField', 'getsingle', ['id' => $custom_field_id]
+          );
+        }
+        catch (CiviCRM_API3_Exception $exception) {
+          throw new ProfileValidationError(
+            'custom_field_mapping',
+            E::ts(
+              'Custom field custom_%1 does not exist.',
+              [1 => $custom_field_id]
+            ),
+            ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_FAILED
+          );
+        }
+
+        // Only allow custom fields on relevant entities.
+        try {
+          civicrm_api3('CustomGroup', 'getsingle',
+            [
+              'id' => $custom_field['custom_group_id'],
+              'extends' => [
+                'IN' => [
+                  'Contact',
+                  'Individual',
+                  'Organization',
+                  'Contribution',
+                  'ContributionRecur',
+                ],
+              ],
+            ]);
+        } catch (CiviCRM_API3_Exception $exception) {
+          throw new ProfileValidationError(
+            'custom_field_mapping',
+            E::ts(
+              'Custom field custom_%1 is not in a CustomGroup that extends one of the supported CiviCRM entities.',
+              [1 => $custom_field['id']]
+            ),
+            ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_FAILED
+          );
+        }
+      }
+    }
   }
 
   /**
-   * Persists the profile within the CiviCRM settings.
+   * Persists the profile within the database.
+   *
+   * @throws \CRM\Twingle\Exceptions\ProfileException
    */
   public function saveProfile() {
-    // make sure it's valid
-    $this->verifyProfile();
 
-    // check if the profile exists
-    $profile_id = CRM_Core_DAO::singleValueQuery(
-      "SELECT id FROM civicrm_twingle_profile WHERE name = %1", [1 => [$this->name, 'String']]);
-    if ($profile_id) {
-      // existing profile -> just update the config
-      CRM_Core_DAO::executeQuery(
-        "UPDATE civicrm_twingle_profile SET config = %2 WHERE name = %1",
-        [
-          1 => [$this->name, 'String'],
-          2 => [json_encode($this->data), 'String']
-        ]);
-    } else {
-      // new profile -> add new entry to the DB
-      CRM_Core_DAO::executeQuery(
-        "INSERT IGNORE INTO civicrm_twingle_profile(name,config,last_access,access_counter) VALUES (%1, %2, null, 0)",
-        [
-          1 => [$this->name, 'String'],
-          2 => [json_encode($this->data), 'String']
-        ]);
+    try {
+      if ($this->id !== NULL) {
+        // existing profile -> just update the config
+        CRM_Core_DAO::executeQuery(
+          "UPDATE civicrm_twingle_profile SET config = %2, name = %3 WHERE id = %1",
+          [
+            1 => [$this->id, 'String'],
+            2 => [json_encode($this->data), 'String'],
+            3 => [$this->name, 'String'],
+          ]);
+      }
+      else {
+        // new profile -> add new entry to the DB
+        CRM_Core_DAO::executeQuery(
+          "INSERT IGNORE INTO civicrm_twingle_profile(name,config,last_access,access_counter) VALUES (%1, %2, null, 0)",
+          [
+            1 => [$this->name, 'String'],
+            2 => [json_encode($this->data), 'String'],
+          ]);
+      }
+    }
+    catch (Exception $e) {
+      throw new ProfileException(
+        E::ts("Could not save/update profile: %1", [1 => $e->getMessage()]),
+        ProfileException::ERROR_CODE_COULD_NOT_SAVE_PROFILE
+      );
     }
   }
 
   /**
    * Deletes the profile from the database
+   *
+   * @throws \CRM\Twingle\Exceptions\ProfileException
    */
   public function deleteProfile() {
-    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_twingle_profile WHERE name = %1", [1 => [$this->name, 'String']]);
+    // Do only reset default profile
+    if ($this->getName() == 'default') {
+      try {
+        $default_profile = CRM_Twingle_Profile::createDefaultProfile();
+        $default_profile->setId($this->getId());
+        $default_profile->saveProfile();
+
+        // Reset counter
+        CRM_Core_DAO::executeQuery("UPDATE civicrm_twingle_profile SET access_counter = 0, last_access = NULL WHERE id = %1", [
+          1 => [
+            $this->id,
+            'Integer'
+          ]
+        ]);
+      } catch (Exception $e) {
+        throw new ProfileException(
+          E::ts("Could not reset default profile: %1", [1 => $e->getMessage()]),
+          ProfileException::ERROR_CODE_COULD_NOT_RESET_PROFILE
+        );
+      }
+    }
+    else {
+      try {
+        CRM_Core_DAO::executeQuery("DELETE FROM civicrm_twingle_profile WHERE id = %1", [
+          1 => [
+            $this->id,
+            'Integer'
+          ]
+        ]);
+      } catch (Exception $e) {
+        throw new ProfileException(
+          E::ts("Could not delete profile: %1", [1 => $e->getMessage()]),
+          ProfileException::ERROR_CODE_COULD_NOT_DELETE_PROFILE
+        );
+      }
+    }
   }
 
   /**
@@ -255,6 +493,13 @@ class CRM_Twingle_Profile {
         'membership_postprocess_call',
         'newsletter_double_opt_in',
         'required_address_components',
+        'enable_shop_integration',
+        'shop_price_field',
+        'shop_financial_type',
+        'shop_map_products',
+        'shop_open_case',
+        'shop_case_subject',
+        'shop_case_status',
       ],
       // Add payment methods.
       array_keys(static::paymentInstruments()),
@@ -281,7 +526,6 @@ class CRM_Twingle_Profile {
       'pi_paypal' => E::ts('PayPal'),
       'pi_sofortueberweisung' => E::ts('SOFORT Überweisung'),
       'pi_amazonpay' => E::ts('Amazon Pay'),
-      'pi_paydirekt' => E::ts('paydirekt'),
       'pi_applepay' => E::ts('Apple Pay'),
       'pi_googlepay' =>  E::ts('Google Pay'),
       'pi_paydirekt' => E::ts('Paydirekt'),
@@ -302,7 +546,7 @@ class CRM_Twingle_Profile {
    */
   public static function createDefaultProfile($name = 'default') {
     return new CRM_Twingle_Profile($name, [
-      'selector'          => '',
+      'selector'          => NULL,
       'xcm_profile'       => '',
       'location_type_id'  => CRM_Twingle_Submission::LOCATION_TYPE_ID_WORK,
       'location_type_id_organisation' => CRM_Twingle_Submission::LOCATION_TYPE_ID_WORK,
@@ -310,7 +554,7 @@ class CRM_Twingle_Profile {
       'financial_type_id_recur' => 1, // "Donation"
       'pi_banktransfer' => 5, // "EFT"
       'pi_debit_manual' => NULL,
-      'pi_debit_automatic' => 3, // Debit
+      'pi_debit_automatic' => 2, // Debit
       'pi_creditcard' => 1, // "Credit Card"
       'pi_mobilephone_germany' => NULL,
       'pi_paypal' => NULL,
@@ -319,7 +563,6 @@ class CRM_Twingle_Profile {
       'pi_paydirekt' => NULL,
       'pi_applepay' => NULL,
       'pi_googlepay' => NULL,
-      'pi_paydirekt' => NULL,
       'pi_twint' => NULL,
       'pi_ideal' => NULL,
       'pi_post_finance' => NULL,
@@ -344,6 +587,13 @@ class CRM_Twingle_Profile {
         'city',
         'country',
       ],
+      'enable_shop_integration' => FALSE,
+      'shop_price_field' => 1,
+      'shop_financial_type' => 1,
+      'shop_map_products' => FALSE,
+      'shop_open_case' => NULL,
+      'shop_case_subject' => NULL,
+      'shop_case_status' => NULL,
     ]
       // Add contribution status for all payment methods.
       + array_fill_keys(array_map(function($attribute) {
@@ -359,36 +609,53 @@ class CRM_Twingle_Profile {
    * @param $project_id
    *
    * @return CRM_Twingle_Profile
+   * @throws \CRM\Twingle\Exceptions\ProfileException
+   * @throws \Civi\Core\Exception\DBQueryException
    */
   public static function getProfileForProject($project_id) {
     $profiles = self::getProfiles();
+    $default_profile = NULL;
 
     foreach ($profiles as $profile) {
       if ($profile->matches($project_id)) {
         return $profile;
       }
+      if ($profile->is_default()) {
+        $default_profile = $profile;
+      }
     }
 
     // If none matches, use the default profile.
-    return $profiles['default'];
+    $default_profile = $profiles['default'];
+    if (!empty($default_profile)) {
+      return $default_profile;
+    }
+    else {
+      throw new ProfileException(
+        'Could not find default profile',
+        ProfileException::ERROR_CODE_DEFAULT_PROFILE_NOT_FOUND
+      );
+    }
   }
 
   /**
-   * Retrieves the profile with the given name.
+   * Retrieves the profile with the given ID.
    *
-   * @param string $name
+   * @param int|NULL $id
    *
    * @return CRM_Twingle_Profile | NULL
+   * @throws \Civi\Core\Exception\DBQueryException
+   * @throws \CRM\Twingle\Exceptions\ProfileException
    */
-  public static function getProfile($name) {
-    if (!empty($name)) {
-      $profile_data = CRM_Core_DAO::singleValueQuery("SELECT config FROM civicrm_twingle_profile WHERE name = %1", [
-        1 => [$name, 'String']]);
-      if ($profile_data) {
-        return new CRM_Twingle_Profile($name, json_decode($profile_data, 1));
+  public static function getProfile(int $id = NULL) {
+    if (!empty($id)) {
+      $profile_data = CRM_Core_DAO::executeQuery("SELECT id, name, config FROM civicrm_twingle_profile WHERE id = %1",
+        [1 => [$id, 'Integer']]);
+      if ($profile_data->fetch()) {
+        return new CRM_Twingle_Profile($profile_data->name, json_decode($profile_data->config, 1), (int) $profile_data->id);
       }
     }
-    return NULL;
+    throw new ProfileException('Profile not found.', ProfileException::ERROR_CODE_PROFILE_NOT_FOUND);
   }
 
   /**
@@ -397,13 +664,14 @@ class CRM_Twingle_Profile {
    *
    * @return array
    *   profile_name => CRM_Twingle_Profile
+   * @throws \Civi\Core\Exception\DBQueryException
    */
   public static function getProfiles() {
     // todo: cache?
     $profiles = [];
-    $profile_data = CRM_Core_DAO::executeQuery("SELECT name, config FROM civicrm_twingle_profile");
+    $profile_data = CRM_Core_DAO::executeQuery("SELECT id, name, config FROM civicrm_twingle_profile");
     while ($profile_data->fetch()) {
-      $profiles[$profile_data->name] = new CRM_Twingle_Profile($profile_data->name, json_decode($profile_data->config, 1));
+      $profiles[$profile_data->id] = new CRM_Twingle_Profile($profile_data->name, json_decode($profile_data->config, 1), (int) $profile_data->id);
     }
     return $profiles;
   }
@@ -412,6 +680,7 @@ class CRM_Twingle_Profile {
    * Get the stats (access_count, last_access) for all twingle profiles
    *
    * @return CRM_Twingle_Profile[]
+   * @throws \Civi\Core\Exception\DBQueryException
    */
   public static function getProfileStats() {
     $stats = [];
@@ -427,5 +696,4 @@ class CRM_Twingle_Profile {
     }
     return $stats;
   }
-
 }

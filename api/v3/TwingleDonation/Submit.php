@@ -252,6 +252,13 @@ function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
     'api.required' => 0,
     'description'  => E::ts('Additional information for either the contact or the (recurring) contribution.'),
   );
+  $params['products'] = [
+    'name' => 'products',
+    'title' => E::ts('Products'),
+    'type' => CRM_Utils_Type::T_STRING,
+    'api.required' => 0,
+    'description' => E::ts('Products ordered via TwingleShop'),
+  ];
 }
 
 /**
@@ -761,6 +768,11 @@ function civicrm_api3_twingle_donation_Submit($params) {
         }
       }
 
+      // If the submission contains products, do not auto-create a line item
+      if (!empty($params['products']) && $profile->isShopEnabled()) {
+        $contribution_data['skipLineItem'] = 1;
+      }
+
       $contribution = civicrm_api3('Contribution', 'create', $contribution_data);
       if ($contribution['is_error']) {
         throw new CiviCRM_API3_Exception(
@@ -769,7 +781,13 @@ function civicrm_api3_twingle_donation_Submit($params) {
         );
       }
 
-      $result_values['contribution'] = $contribution['values'];
+      $result_values['contribution'] = array_pop($contribution['values']);
+
+      // Add products as line items to the contribution
+      if (!empty($params['products']) && $profile->isShopEnabled()) {
+        $line_items = CRM_Twingle_Submission::createLineItems($result_values, $params, $profile);
+        $result_values['contribution']['line_items'] = $line_items;
+      }
     }
 
     // MEMBERSHIP CREATION
@@ -845,6 +863,20 @@ function civicrm_api3_twingle_donation_Submit($params) {
           );
         }
       }
+    }
+
+    // CASE CREATION
+    if (
+      !empty($params['products']) &&
+      $profile->isShopEnabled() &&
+      !empty($profile->getAttribute('shop_open_case'))
+    ) {
+      $case = CRM_Twingle_Submission::openCase($result_values['contribution'], $profile);
+      $result_values['case'] = array_pop($case);
+
+      // Add contribution activity to case
+      $activity = CRM_Twingle_Submission::addActivityToCase($result_values['contribution'], $result_values['case']);
+      $result_values['activity'] = array_pop($activity);
     }
 
     $result = civicrm_api3_create_success($result_values);

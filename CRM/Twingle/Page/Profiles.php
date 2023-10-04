@@ -20,14 +20,21 @@ class CRM_Twingle_Page_Profiles extends CRM_Core_Page {
   public function run() {
     CRM_Utils_System::setTitle(E::ts("Twingle API Profiles"));
     $profiles = [];
-    foreach (CRM_Twingle_Profile::getProfiles() as $profile_name => $profile) {
-      $profiles[$profile_name]['name'] = $profile_name;
+    foreach (CRM_Twingle_Profile::getProfiles() as $profile_id => $profile) {
+      $profiles[$profile_id]['id'] = $profile_id;
+      $profiles[$profile_id]['name'] = $profile->getName();
+      $profiles[$profile_id]['is_default'] = $profile->is_default();
+      $profiles[$profile_id]['selectors'] = $profile->getProjectIds();
       foreach (CRM_Twingle_Profile::allowedAttributes() as $attribute) {
-        $profiles[$profile_name][$attribute] = $profile->getAttribute($attribute);
+        $profiles[$profile_id][$attribute] = $profile->getAttribute($attribute);
       }
     }
     $this->assign('profiles', $profiles);
     $this->assign('profile_stats', CRM_Twingle_Profile::getProfileStats());
+    $this->assign('twingle_use_shop', (int) Civi::settings()->get('twingle_use_shop'));
+
+    // Add custom css
+    Civi::resources()->addStyleFile(E::LONG_NAME, 'css/twingle.css');
 
     parent::run();
   }

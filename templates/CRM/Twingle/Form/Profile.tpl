@@ -28,6 +28,7 @@
         </tr>
 
         <tr class="crm-section">
+          {if not $form.is_default}
           <td class="label">{$form.selector.label}
             <a
                     onclick='
@@ -45,7 +46,8 @@
                     class="helpicon"
             ></a>
           </td>
-          <td class="content">{$form.selector.html}</td>
+          <td id="selectors" class="content">{$form.selector.html}</td>
+          {/if}
         </tr>
 
         <tr class="crm-section">
@@ -335,6 +337,88 @@
 
       </table>
 
+      {if $twingle_use_shop eq 1}
+
+      <legend>{ts domain="de.systopia.twingle"}Shop Integration{/ts}</legend>
+
+      <table class="form-layout-compressed">
+        <tr class="crm-section">
+          <td class="label">
+              {$form.enable_shop_integration.label}
+            <a
+              onclick='
+                CRM.help(
+                "{ts domain="de.systopia.twingle"}Enable Shop Integration{/ts}",
+              {literal}{
+                "id": "id-enable_shop_integration",
+                "file": "CRM\/Twingle\/Form\/Profile"
+              }{/literal}
+                );
+                return false;
+                '
+              href="#"
+              title="{ts domain="de.systopia.twingle"}Help{/ts}"
+              class="helpicon"
+            ></a>
+          </td>
+          <td class="content">{$form.enable_shop_integration.html}</td>
+        </tr>
+
+          <tr class="crm-section twingle-shop-element">
+            <td class="label">{$form.shop_financial_type.label}</td>
+            <td class="content">{$form.shop_financial_type.html}</td>
+          </tr>
+
+          <tr class="crm-section twingle-shop-element">
+            <td class="label">{$form.shop_price_field.label}</td>
+            <td class="content">{$form.shop_price_field.html}</td>
+          </tr>
+
+          <tr class="crm-section twingle-shop-element">
+            <td class="label">{$form.shop_map_products.label}
+              <a
+                onclick='
+                  CRM.help(
+                  "{ts domain="de.systopia.twingle"}Map Products as Price Fields{/ts}",
+                {literal}{
+                  "id": "id-shop_map_products",
+                  "file": "CRM\/Twingle\/Form\/Profile"
+                }{/literal}
+                  );
+                  return false;
+                  '
+                href="#"
+                title="{ts domain="de.systopia.twingle"}Help{/ts}"
+                class="helpicon"
+              ></a></td>
+            <td class="content">{$form.shop_map_products.html}
+              <span>&nbsp;&nbsp;<button id="btn_fetch_products" class="twingle-product-mapping">
+                      {ts domain="de.systopia.twingle"}Fetch Products{/ts}
+                </button>&nbsp;<i id="twingle-shop-spinner" class="crm-i fa-spinner fa-spin"></i></span>
+                <div class="twingle-product-mapping">
+                  <div id="tableContainer"></div>
+                </div>
+            </td>
+          </tr>
+
+          <tr class="crm-section twingle-shop-element">
+            <td class="label">{$form.shop_open_case.label}</td>
+            <td class="content">{$form.shop_open_case.html}</td>
+          </tr>
+
+          <tr class="crm-section twingle-shop-element">
+            <td class="label">{$form.shop_case_subject.label}</td>
+            <td class="content">{$form.shop_case_subject.html}</td>
+          </tr>
+
+          <tr class="crm-section twingle-shop-element">
+            <td class="label">{$form.shop_case_status.label}</td>
+            <td class="content">{$form.shop_case_status.html}</td>
+          </tr>
+      </table>
+
+      {/if}
+
     </fieldset>
 
   {elseif $op == 'delete'}
@@ -371,11 +455,65 @@
     }
   }
 
-  // register events and run once
+  /**
+   * Update the form fields based on whether shop integration is currently active
+   */
+  function twingle_shop_active_changed() {
+    let active = cj('#enable_shop_integration:checkbox:checked').length;
+    if (active) {
+      cj('.twingle-shop-element').show();
+    } else {
+      cj('.twingle-shop-element').hide();
+    }
+  }
+
+  /**
+   * Display fetch button and product mapping when the corresponding option is active
+   */
+  function twingle_map_products_changed() {
+    let active = cj('#shop_map_products:checkbox:checked').length;
+    if (active) {
+      cj('.twingle-product-mapping').show();
+    } else {
+      cj('.twingle-product-mapping').hide();
+    }
+  }
+
+  function twingle_map_products(products) {} // TODO: Implement function
+
+  function twingle_fetch_products() {
+    let active = cj('#shop_map_products:checkbox:checked').length;
+
+    if (active) {
+      cj('#twingle-shop-spinner').show();
+
+      CRM.api3('TwingleShop', 'fetch', {
+        "project_identifiers": cj('#selectors :input').val()
+      }).then(function (result) {
+        buildProductsTable(result);
+        cj('#twingle-shop-spinner').hide();
+      }, function (error) {
+        cj('#btn_fetch_products').crmError(ts('Could not fetch products. Please check your Twingle API key.'));
+      });
+    }
+  }
+
+  // register events
   cj(document).ready(function (){
     cj('#membership_type_id').change(twingle_membership_active_changed);
     cj('#membership_type_id_recur').change(twingle_membership_active_changed);
+    cj('#enable_shop_integration:checkbox').change(twingle_shop_active_changed);
+    cj('#shop_map_products:checkbox').change(twingle_map_products_changed);
+    cj('#btn_fetch_products').click(function(event) {
+      event.preventDefault(); // Prevent the default form submission behavior
+      twingle_fetch_products();
+    });
   });
+
+  // run once
   twingle_membership_active_changed();
+  twingle_shop_active_changed();
+  twingle_map_products_changed();
+  twingle_fetch_products();
 </script>
 {/literal}

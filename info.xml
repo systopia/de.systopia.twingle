@@ -34,5 +34,7 @@
   </mixins>
   <classloader>
     <psr0 prefix="CRM_" path="."/>
+    <psr4 prefix="CRM\" path="CRM"/>
+    <psr4 prefix="Civi\" path="Civi"/>
   </classloader>
 </extension>
