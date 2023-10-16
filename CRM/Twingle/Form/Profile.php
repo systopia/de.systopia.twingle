@@ -16,8 +16,7 @@
 declare(strict_types = 1);
 
 use CRM_Twingle_ExtensionUtil as E;
-use CRM\Twingle\Exceptions\ProfileException as ProfileException;
-use CRM\Twingle\Exceptions\ProfileValidationError as ProfileValidationError;
+use Civi\Twingle\Exceptions\ProfileException as ProfileException;
 
 /**
  * Form controller class
@@ -560,7 +559,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
               E::ts('Could not parse custom field mapping.')
             );
           }
-          list($twingle_field_name, $custom_field_name) = $custom_field_map;
+          [$twingle_field_name, $custom_field_name] = $custom_field_map;
           $custom_field_id = substr($custom_field_name, strlen('custom_'));
 
           // Check for custom field existence
