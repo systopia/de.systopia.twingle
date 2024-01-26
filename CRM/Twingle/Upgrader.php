@@ -84,4 +84,29 @@ class CRM_Twingle_Upgrader extends CRM_Twingle_Upgrader_Base {
 
     return TRUE;
   }
+
+  /**
+   * Add the "generic" payment instrument with default values to all profiles
+   * to avoid "Payment method could not be matched to existing payment
+   * instrument." error.
+   *
+   * @return TRUE on success
+   * @throws Exception
+   */
+  public function upgrade_5150() {
+    $this->ctx->log->info('Add "generic" payment instrument to all profiles.');
+
+    $profiles = CRM_Twingle_Profile::getProfiles();
+    if ($profiles) {
+      foreach ($profiles as $profile) {
+        if (!$profile->getAttribute('pi_generic', False)) {
+          $profile->setAttribute('pi_generic', 1);
+          $profile->setAttribute('pi_generic_status', 1);
+          $profile->saveProfile();
+        }
+      }
+    }
+    
+    return TRUE;
+  }
 }
