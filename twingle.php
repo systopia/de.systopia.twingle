@@ -81,7 +81,10 @@ function twingle_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_permission
  */
 function twingle_civicrm_permission(&$permissions) {
-  $permissions['access Twingle API'] = 'Twingle API: Access Twingle API';
+  $permissions['access Twingle API'] = [
+    'label' => E::ts('Twingle API: Access Twingle API'),
+    'description' => E::ts('Allows access to the Twingle API actions.'),
+  ];
 }
 
 /**
