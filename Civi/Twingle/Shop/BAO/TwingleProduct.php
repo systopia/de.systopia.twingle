@@ -306,6 +306,7 @@ class TwingleProduct extends TwingleProductDAO {
       'is_active' => $this->is_active,
       'weight' => $this->sort,
       'html_type' => 'Text',
+      'is_required' => false,
     ];
     // Add id if in edit mode
     if ($mode == 'edit') {
