@@ -1,6 +1,6 @@
 <?php
 
-namespace CRM\Twingle\Exceptions;
+namespace Civi\Twingle\Exceptions;
 
 /**
  * A simple custom error indicating a problem with the validation of the

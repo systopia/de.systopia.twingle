@@ -14,8 +14,8 @@
 +-------------------------------------------------------------*/
 
 use CRM_Twingle_ExtensionUtil as E;
-use CRM\Twingle\Exceptions\ProfileException as ProfileException;
-use CRM\Twingle\Exceptions\ProfileValidationError as ProfileValidationError;
+use Civi\Twingle\Exceptions\ProfileException as ProfileException;
+use Civi\Twingle\Exceptions\ProfileValidationError as ProfileValidationError;
 
 /**
  * Form controller class
@@ -148,8 +148,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     }
 
     // Verify that a profile with the given id exists.
-
-    if ($this->_op != 'copy') {
+    if ($this->_op != 'copy' && $this->_op != 'create') {
       $this->profile_id = CRM_Utils_Request::retrieve('id', 'Int', $this);
       $this->profile = CRM_Twingle_Profile::getProfile($this->profile_id);
     }
@@ -224,8 +223,9 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
 
     // Assign template variables.
     $this->assign('op', $this->_op);
-    $this->assign('profile_name', $profile_name);
+    $this->assign('profile_name', $this->getName());
     $this->assign('is_default', $this->profile->is_default());
+    $this->assign('twingle_use_shop', (int) Civi::settings()->get('twingle_use_shop'));
 
     // Add form elements.
     $this->add(
@@ -326,6 +326,10 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         E::ts('Prefix option for submitted value "other"'),
         static::getPrefixOptions()
     );
+
+    // Add script and css for Twingle Shop integration
+    Civi::resources()->addScriptUrl(E::url('js/twingle_shop.js'));
+    Civi::resources()->addStyleFile(E::LONG_NAME, 'css/twingle_shop.css');
 
     $payment_instruments = CRM_Twingle_Profile::paymentInstruments();
     $this->assign('payment_instruments', $payment_instruments);
@@ -468,6 +472,42 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       []
     );
 
+    if (Civi::settings()->get('twingle_use_shop')) {
+      $this->add(
+        'checkbox', // field type
+        'enable_shop_integration', // field name
+        E::ts('Enable Shop Integration'), // field label
+        FALSE,
+        []
+      );
+
+      $this->add(
+        'select', // field type
+        'shop_financial_type', // field name
+        E::ts('Default Financial Type'), // field label
+        static::getFinancialTypes(), // list of options
+        TRUE,
+        ['class' => 'crm-select2 huge']
+      );
+
+      $this->add(
+        'select', // field type
+        'shop_donation_financial_type', // field name
+        E::ts('Financial Type for top up donations'), // field label
+        static::getFinancialTypes(), // list of options
+        TRUE,
+        ['class' => 'crm-select2 huge']
+      );
+
+      $this->add(
+        'checkbox', // field type
+        'shop_map_products', // field name
+        E::ts('Map Products as Price Fields'), // field label
+        FALSE, // is not required
+        []
+      );
+    }
+
     $this->addButtons([
       [
         'type' => 'submit',
@@ -508,9 +548,6 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
           case ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_WARNING:
             CRM_Core_Session::setStatus($e->getMessage(), E::ts('Warning'));
         }
-      }
-      catch (ProfileValidationError $e) {
-        $this->setElementError($e->getAffectedFieldName(), $e->getMessage());
       }
     }
 
@@ -910,5 +947,4 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     }
     return static::$_campaigns;
   }
-
 }

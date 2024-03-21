@@ -75,4 +75,13 @@
       <li><strong>ContributionRecur</strong> &ndash; Will be set on the recurring contribution and deriving single contributions</li>
     </ul>{/ts}
 {/htxt}
+
+{htxt id='id-enable_shop_integration'}
+    <p>{ts domain="de.systopia.twingle"}Enable the processing of orders via Twingle Shop for this profile. The ordered products will then appear as line items in the contribution.{/ts}</p>
+{/htxt}
+
+{htxt id='id-shop_map_products'}
+    <p>{ts domain="de.systopia.twingle"}If this option is enabled, all Twingle Shop products corresponding to the specified project IDs will be retrieved from Twingle and mapped as price sets and price fields. Each Twingle Shop is mapped as a price set with its products as price fields.</p>
+    <p>This allows you to manually create contributions with the same line items for phone orders, for example, as would be the case for orders placed through the Twingle Shop.</p>
+{/htxt}
 {/crmScope}

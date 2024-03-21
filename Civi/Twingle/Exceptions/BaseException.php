@@ -1,6 +1,6 @@
 <?php
 
-namespace CRM\Twingle\Exceptions;
+namespace Civi\Twingle\Exceptions;
 
 use CRM_Twingle_ExtensionUtil as E;
 

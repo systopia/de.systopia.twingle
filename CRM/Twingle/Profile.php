@@ -14,8 +14,8 @@
 +-------------------------------------------------------------*/
 
 use CRM_Twingle_ExtensionUtil as E;
-use CRM\Twingle\Exceptions\ProfileException as ProfileException;
-use CRM\Twingle\Exceptions\ProfileValidationError as ProfileValidationError;
+use Civi\Twingle\Exceptions\ProfileException;
+use Civi\Twingle\Exceptions\ProfileValidationError;
 
 /**
  * Profiles define how incoming submissions from the Twingle API are
@@ -40,6 +40,16 @@ class CRM_Twingle_Profile {
    *   The properties of the profile.
    */
   protected $data = NULL;
+
+  /**
+   * @var array $check_box_fields
+   *   List of check box fields
+   */
+  public $check_box_fields = [
+    'newsletter_double_opt_in',
+    'enable_shop_integration',
+    'shop_map_products',
+  ];
 
   /**
    * CRM_Twingle_Profile constructor.
@@ -185,6 +195,16 @@ class CRM_Twingle_Profile {
   }
 
   /**
+   * Determine if Twingle Shop integration is enabled in general and
+   * specifically for this profile.
+   * @return bool
+   */
+  public function isShopEnabled(): bool {
+    return Civi::settings()->get('twingle_use_shop') &&
+      $this->data['enable_shop_integration'];
+  }
+
+  /**
    * Retrieves an attribute of the profile.
    *
    * @param string $attribute_name
@@ -202,7 +222,7 @@ class CRM_Twingle_Profile {
    * @param string $attribute_name
    * @param mixed $value
    *
-   * @throws \CRM\Twingle\Exceptions\ProfileException
+   * @throws \Civi\Twingle\Exceptions\ProfileException
    *   When the attribute name is not known.
    */
   public function setAttribute($attribute_name, $value) {
@@ -235,7 +255,7 @@ class CRM_Twingle_Profile {
    * Verifies whether the profile is valid (i.e. consistent and not colliding
    * with other profiles).
    *
-   * @throws \CRM\Twingle\Exceptions\ProfileValidationError
+   * @throws \Civi\Twingle\Exceptions\ProfileValidationError
    * @throws \Civi\Core\Exception\DBQueryException
    *   When the profile could not be successfully validated.
    */
@@ -363,7 +383,7 @@ class CRM_Twingle_Profile {
   /**
    * Persists the profile within the database.
    *
-   * @throws \CRM\Twingle\Exceptions\ProfileException
+   * @throws \Civi\Twingle\Exceptions\ProfileException
    */
   public function saveProfile() {
 
@@ -399,7 +419,7 @@ class CRM_Twingle_Profile {
   /**
    * Deletes the profile from the database
    *
-   * @throws \CRM\Twingle\Exceptions\ProfileException
+   * @throws \Civi\Twingle\Exceptions\ProfileException
    */
   public function deleteProfile() {
     // Do only reset default profile
@@ -473,6 +493,10 @@ class CRM_Twingle_Profile {
         'membership_postprocess_call',
         'newsletter_double_opt_in',
         'required_address_components',
+        'enable_shop_integration',
+        'shop_financial_type',
+        'shop_donation_financial_type',
+        'shop_map_products',
       ],
       // Add payment methods.
       array_keys(static::paymentInstruments()),
@@ -560,6 +584,10 @@ class CRM_Twingle_Profile {
         'city',
         'country',
       ],
+      'enable_shop_integration' => FALSE,
+      'shop_financial_type' => 1,
+      'shop_donation_financial_type' => 1,
+      'shop_map_products' => FALSE,
     ]
       // Add contribution status for all payment methods.
       + array_fill_keys(array_map(function($attribute) {
@@ -575,7 +603,7 @@ class CRM_Twingle_Profile {
    * @param $project_id
    *
    * @return CRM_Twingle_Profile
-   * @throws \CRM\Twingle\Exceptions\ProfileException
+   * @throws \Civi\Twingle\Exceptions\ProfileException
    * @throws \Civi\Core\Exception\DBQueryException
    */
   public static function getProfileForProject($project_id) {
@@ -592,7 +620,6 @@ class CRM_Twingle_Profile {
     }
 
     // If none matches, use the default profile.
-    $default_profile = $profiles['default'];
     if (!empty($default_profile)) {
       return $default_profile;
     }
@@ -611,7 +638,7 @@ class CRM_Twingle_Profile {
    *
    * @return CRM_Twingle_Profile | NULL
    * @throws \Civi\Core\Exception\DBQueryException
-   * @throws \CRM\Twingle\Exceptions\ProfileException
+   * @throws \Civi\Twingle\Exceptions\ProfileException
    */
   public static function getProfile(int $id = NULL) {
     if (!empty($id)) {
@@ -662,5 +689,4 @@ class CRM_Twingle_Profile {
     }
     return $stats;
   }
-
 }

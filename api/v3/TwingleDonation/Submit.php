@@ -252,6 +252,13 @@ function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
     'api.required' => 0,
     'description'  => E::ts('Additional information for either the contact or the (recurring) contribution.'),
   );
+  $params['products'] = [
+    'name' => 'products',
+    'title' => E::ts('Products'),
+    'type' => CRM_Utils_Type::T_STRING,
+    'api.required' => 0,
+    'description' => E::ts('Products ordered via TwingleShop'),
+  ];
 }
 
 /**
@@ -605,6 +612,11 @@ function civicrm_api3_twingle_donation_Submit($params) {
       'total_amount' => $params['amount'] / 100,
     );
 
+    // If the submission contains products, do not auto-create a line item
+    if (!empty($params['products']) && $profile->isShopEnabled()) {
+      $contribution_data['skipLineItem'] = 1;
+    }
+
     // Add custom field values.
     if (!empty($custom_fields['Contribution'])) {
       $contribution_data += $custom_fields['Contribution'];
@@ -692,7 +704,28 @@ function civicrm_api3_twingle_donation_Submit($params) {
       // Create the mandate.
       $mandate = civicrm_api3('SepaMandate', 'createfull', $mandate_data);
 
-      $result_values['sepa_mandate'] = $mandate['values'];
+      $result_values['sepa_mandate'] = CRM_Utils_Array::first($mandate['values']);
+
+      // Add contribution data to result_values for later use
+      $contribution_id = $result_values['sepa_mandate']['entity_id'];
+      if ($contribution_id) {
+        $contribution = civicrm_api3(
+          'Contribution',
+          'getsingle',
+          ['id' => $contribution_id]
+        );
+        $result_values['contribution'] = $contribution;
+      } else {
+        $mandate_id = $result_values['sepa_mandate']['id'];
+        $message = E::LONG_NAME . ": could not find contribution for sepa mandate $mandate_id";
+        throw new CiviCRM_API3_Exception($message, 'api_error');
+      }
+
+      // Add products as line items to the contribution
+      if (!empty($params['products']) && $profile->isShopEnabled()) {
+        $line_items = CRM_Twingle_Submission::createLineItems($result_values, $params, $profile);
+        $result_values['contribution']['line_items'] = $line_items;
+      }
     }
     else {
       // Set financial type depending on donation rhythm. This applies for
@@ -769,7 +802,13 @@ function civicrm_api3_twingle_donation_Submit($params) {
         );
       }
 
-      $result_values['contribution'] = $contribution['values'];
+      $result_values['contribution'] = array_pop($contribution['values']);
+
+      // Add products as line items to the contribution
+      if (!empty($params['products']) && $profile->isShopEnabled()) {
+        $line_items = CRM_Twingle_Submission::createLineItems($result_values, $params, $profile);
+        $result_values['contribution']['line_items'] = $line_items;
+      }
     }
 
     // MEMBERSHIP CREATION

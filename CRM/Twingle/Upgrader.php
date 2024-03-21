@@ -84,4 +84,16 @@ class CRM_Twingle_Upgrader extends CRM_Twingle_Upgrader_Base {
 
     return TRUE;
   }
+
+  /**
+   * The Upgrade to 1.5 creates the tables civicrm_twingle_product and
+   * civicrm_twingle_shop.
+   *
+   * @return TRUE on success
+   */
+  public function upgrade_5150() {
+    $this->ctx->log->info('Creating tables for Twingle Shop.');
+    $this->executeSqlFile('sql/civicrm_twingle_shop.sql');
+    return TRUE;
+  }
 }

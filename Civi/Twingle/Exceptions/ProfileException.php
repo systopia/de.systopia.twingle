@@ -1,6 +1,6 @@
 <?php
 
-namespace CRM\Twingle\Exceptions;
+namespace Civi\Twingle\Exceptions;
 
 /**
  * A simple custom exception that indicates a problem within the

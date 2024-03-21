@@ -46,7 +46,7 @@
                     class="helpicon"
             ></a>
           </td>
-          <td class="content">{$form.selector.html}</td>
+          <td id="selectors" class="content">{$form.selector.html}</td>
           {/if}
         </tr>
 
@@ -337,6 +337,71 @@
 
       </table>
 
+      {if $twingle_use_shop eq 1}
+
+      <legend>{ts domain="de.systopia.twingle"}Shop Integration{/ts}</legend>
+
+      <table class="form-layout-compressed">
+        <tr class="crm-section">
+          <td class="label">
+              {$form.enable_shop_integration.label}
+            <a
+              onclick='
+                CRM.help(
+                "{ts domain="de.systopia.twingle"}Enable Shop Integration{/ts}",
+              {literal}{
+                "id": "id-enable_shop_integration",
+                "file": "CRM\/Twingle\/Form\/Profile"
+              }{/literal}
+                );
+                return false;
+                '
+              href="#"
+              title="{ts domain="de.systopia.twingle"}Help{/ts}"
+              class="helpicon"
+            ></a>
+          </td>
+          <td class="content">{$form.enable_shop_integration.html}</td>
+        </tr>
+
+          <tr class="crm-section twingle-shop-element">
+            <td class="label">{$form.shop_financial_type.label}</td>
+            <td class="content">{$form.shop_financial_type.html}</td>
+          </tr>
+
+          <tr class="crm-section twingle-shop-element">
+            <td class="label">{$form.shop_donation_financial_type.label}</td>
+            <td class="content">{$form.shop_donation_financial_type.html}</td>
+          </tr>
+
+          <tr class="crm-section twingle-shop-element">
+            <td class="label">{$form.shop_map_products.label}
+              <a
+                onclick='
+                  CRM.help(
+                  "{ts domain="de.systopia.twingle"}Map Products as Price Fields{/ts}",
+                {literal}{
+                  "id": "id-shop_map_products",
+                  "file": "CRM\/Twingle\/Form\/Profile"
+                }{/literal}
+                  );
+                  return false;
+                  '
+                href="#"
+                title="{ts domain="de.systopia.twingle"}Help{/ts}"
+                class="helpicon"
+              ></a></td>
+            <td class="content">{$form.shop_map_products.html}
+              <i id="twingle-shop-spinner" class="crm-i fa-spinner fa-spin"></i>
+                <div class="twingle-product-mapping">
+                  <div id="tableContainer"></div>
+                </div>
+            </td>
+          </tr>
+      </table>
+
+      {/if}
+
     </fieldset>
 
   {elseif $op == 'delete'}
@@ -373,11 +438,18 @@
     }
   }
 
-  // register events and run once
+  // register events
   cj(document).ready(function (){
     cj('#membership_type_id').change(twingle_membership_active_changed);
     cj('#membership_type_id_recur').change(twingle_membership_active_changed);
+
+    // init Twingle Shop integration
+    if ({/literal}{if $twingle_use_shop eq 1}true{else}false{/if}{literal}) {
+      twingleShopInit();
+    }
   });
+
+  // run once
   twingle_membership_active_changed();
 </script>
 {/literal}
