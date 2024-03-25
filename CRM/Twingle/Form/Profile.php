@@ -23,7 +23,7 @@ use CRM_Twingle_ExtensionUtil as E;
 class CRM_Twingle_Form_Profile extends CRM_Core_Form {
 
   /**
-   * @var CRM_Twingle_Profile $profile
+   * @var CRM_Twingle_Profile
    *
    * The profile object the form is acting on.
    */
@@ -151,25 +151,27 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     switch ($this->_op) {
       case 'delete':
         if ($profile_name) {
-          CRM_Utils_System::setTitle(E::ts('Delete Twingle API profile <em>%1</em>', array(1 => $profile_name)));
-          $this->addButtons(array(
-            array(
+          CRM_Utils_System::setTitle(E::ts('Delete Twingle API profile <em>%1</em>', [1 => $profile_name]));
+          $this->addButtons([
+            [
               'type' => 'submit',
               'name' => ($profile_name == 'default' ? E::ts('Reset') : E::ts('Delete')),
               'isDefault' => TRUE,
-            ),
-          ));
+            ],
+          ]);
         }
         parent::buildQuickForm();
         return;
+
       case 'edit':
         // When editing without a valid profile name, edit the default profile.
         if (!$profile_name) {
           $profile_name = 'default';
           $this->profile = CRM_Twingle_Profile::getProfile($profile_name);
         }
-        CRM_Utils_System::setTitle(E::ts('Edit Twingle API profile <em>%1</em>', array(1 => $this->profile->getName())));
+        CRM_Utils_System::setTitle(E::ts('Edit Twingle API profile <em>%1</em>', [1 => $this->profile->getName()]));
         break;
+
       case 'copy':
         // Retrieve the source profile name.
         $profile_name = CRM_Utils_Request::retrieve('source_name', 'String', $this);
@@ -184,6 +186,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         $this->profile->setName($profile_name);
         CRM_Utils_System::setTitle(E::ts('New Twingle API profile'));
         break;
+
       case 'create':
         // Load factory default profile values.
         $this->profile = CRM_Twingle_Profile::createDefaultProfile($profile_name);
@@ -201,16 +204,20 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       ($is_default ? 'static' : 'text'),
       'name',
       E::ts('Profile name'),
-      array(),
+      [],
       !$is_default
     );
 
     $this->add(
-      'text', // field type
-      'selector', // field name
-      E::ts('Project IDs'), // field label
+    // field type
+      'text',
+    // field name
+      'selector',
+    // field label
+      E::ts('Project IDs'),
       ['class' => 'huge'],
-      TRUE // is required
+    // is required
+      TRUE
     );
 
     $this->add(
@@ -238,18 +245,28 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     );
 
     $this->add(
-      'select', // field type
-      'financial_type_id', // field name
-      E::ts('Financial type'), // field label
-      static::getFinancialTypes(), // list of options
-      TRUE // is required
+    // field type
+      'select',
+    // field name
+      'financial_type_id',
+    // field label
+      E::ts('Financial type'),
+    // list of options
+      static::getFinancialTypes(),
+    // is required
+      TRUE
     );
     $this->add(
-      'select', // field type
-      'financial_type_id_recur', // field name
-      E::ts('Financial type (recurring)'), // field label
-      static::getFinancialTypes(), // list of options
-      TRUE // is required
+    // field type
+      'select',
+    // field name
+      'financial_type_id_recur',
+    // field label
+      E::ts('Financial type (recurring)'),
+    // list of options
+      static::getFinancialTypes(),
+    // is required
+      TRUE
     );
 
     $this->add(
@@ -297,11 +314,16 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     $this->assign('payment_instruments', $payment_instruments);
     foreach ($payment_instruments as $pi_name => $pi_label) {
       $this->add(
-        'select', // field type
-        $pi_name, // field name
-        E::ts('Record %1 as', [1 => $pi_label]), // field label
-        static::getPaymentInstruments(), // list of options
-        TRUE // is required
+      // field type
+        'select',
+      // field name
+        $pi_name,
+      // field label
+        E::ts('Record %1 as', [1 => $pi_label]),
+      // list of options
+        static::getPaymentInstruments(),
+      // is required
+        TRUE
       );
 
       $this->add(
@@ -324,46 +346,70 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     }
 
     $this->add(
-      'checkbox', // field type
-      'newsletter_double_opt_in', // field name
-      E::ts('Use Double-Opt-In for newsletter'), // field label
-      FALSE, // is not required
+    // field type
+      'checkbox',
+    // field name
+      'newsletter_double_opt_in',
+    // field label
+      E::ts('Use Double-Opt-In for newsletter'),
+    // is not required
+      FALSE,
       []
       );
 
     $this->add(
-      'select', // field type
-      'newsletter_groups', // field name
-      E::ts('Sign up for newsletter groups'), // field label
-      static::getNewsletterGroups(), // list of options
-      FALSE, // is not required
+    // field type
+      'select',
+    // field name
+      'newsletter_groups',
+    // field label
+      E::ts('Sign up for newsletter groups'),
+    // list of options
+      static::getNewsletterGroups(),
+    // is not required
+      FALSE,
       ['class' => 'crm-select2 huge', 'multiple' => 'multiple']
     );
 
     $this->add(
-      'select', // field type
-      'postinfo_groups', // field name
-      E::ts('Sign up for postal mail groups'), // field label
-      static::getPostinfoGroups(), // list of options
-      FALSE, // is not required
+    // field type
+      'select',
+    // field name
+      'postinfo_groups',
+    // field label
+      E::ts('Sign up for postal mail groups'),
+    // list of options
+      static::getPostinfoGroups(),
+    // is not required
+      FALSE,
       ['class' => 'crm-select2 huge', 'multiple' => 'multiple']
     );
 
     $this->add(
-      'select', // field type
-      'donation_receipt_groups', // field name
-      E::ts('Sign up for Donation receipt groups'), // field label
-      static::getDonationReceiptGroups(), // list of options
-      FALSE, // is not required
+    // field type
+      'select',
+    // field name
+      'donation_receipt_groups',
+    // field label
+      E::ts('Sign up for Donation receipt groups'),
+    // list of options
+      static::getDonationReceiptGroups(),
+    // is not required
+      FALSE,
       ['class' => 'crm-select2 huge', 'multiple' => 'multiple']
     );
 
     $this->add(
-      'select', // field type
-      'campaign', // field name
-      E::ts('Default Campaign'), // field label
-      ['' => E::ts('- none -')] + static::getCampaigns(), // list of options
-      FALSE, // is not required
+    // field type
+      'select',
+    // field name
+      'campaign',
+    // field label
+      E::ts('Default Campaign'),
+    // list of options
+      ['' => E::ts('- none -')] + static::getCampaigns(),
+    // is not required
+      FALSE,
       ['class' => 'crm-select2 huge']
     );
 
@@ -372,30 +418,41 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       'campaign_targets',
       E::ts('Set Campaign for'),
       [
-        'contribution' => E::ts("Contribution"),
-        'recurring'    => E::ts("Recurring Contribution"),
-        'membership'   => E::ts("Membership"),
-        'mandate'      => E::ts("SEPA Mandate"),
-        'contact'      => E::ts("Contacts (XCM)"),
+        'contribution' => E::ts('Contribution'),
+        'recurring'    => E::ts('Recurring Contribution'),
+        'membership'   => E::ts('Membership'),
+        'mandate'      => E::ts('SEPA Mandate'),
+        'contact'      => E::ts('Contacts (XCM)'),
       ],
-      FALSE, // is not required
+      // is not required
+      FALSE,
       ['class' => 'crm-select2 huge', 'multiple' => 'multiple']
     );
 
     $this->add(
-      'select', // field type
-      'membership_type_id', // field name
-      E::ts('Create membership of type'), // field label
-      ['' => E::ts('- none -')] + static::getMembershipTypes(), // list of options
-      FALSE, // is not required
+    // field type
+      'select',
+    // field name
+      'membership_type_id',
+    // field label
+      E::ts('Create membership of type'),
+    // list of options
+      ['' => E::ts('- none -')] + static::getMembershipTypes(),
+    // is not required
+      FALSE,
       ['class' => 'crm-select2 huge']
     );
     $this->add(
-      'select', // field type
-      'membership_type_id_recur', // field name
-      E::ts('Create membership of type (recurring)'), // field label
-      ['' => E::ts('- none -')] + static::getMembershipTypes(), // list of options
-      FALSE, // is not required
+    // field type
+      'select',
+    // field name
+      'membership_type_id_recur',
+    // field label
+      E::ts('Create membership of type (recurring)'),
+    // list of options
+      ['' => E::ts('- none -')] + static::getMembershipTypes(),
+    // is not required
+      FALSE,
       ['class' => 'crm-select2 huge']
     );
     $this->add(
@@ -407,9 +464,12 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     $this->addRule('membership_postprocess_call', E::ts("The API call must have the form 'Entity.Action'."), 'regex', '/^[A-Za-z_]+[.][A-Za-z_]+$/');
 
     $this->add(
-      'text', // field type
-      'contribution_source', // field name
-      E::ts('Contribution source'), // field label
+    // field type
+      'text',
+    // field name
+      'contribution_source',
+    // field label
+      E::ts('Contribution source'),
       []
     );
 
@@ -418,19 +478,23 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       'required_address_components',
       E::ts('Required address components'),
       [
-        'street_address' => E::ts("Street"),
-        'postal_code'    => E::ts("Postal Code"),
-        'city'           => E::ts("City"),
-        'country'        => E::ts("Country"),
+        'street_address' => E::ts('Street'),
+        'postal_code'    => E::ts('Postal Code'),
+        'city'           => E::ts('City'),
+        'country'        => E::ts('Country'),
       ],
-      FALSE, // is not required
+      // is not required
+      FALSE,
       ['class' => 'crm-select2 huge', 'multiple' => 'multiple']
     );
 
     $this->add(
-      'textarea', // field type
-      'custom_field_mapping', // field name
-      E::ts('Custom field mapping'), // field label
+    // field type
+      'textarea',
+    // field name
+      'custom_field_mapping',
+    // field label
+      E::ts('Custom field mapping'),
       []
     );
 
@@ -469,7 +533,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     }
 
     // Restrict profile names to alphanumeric characters and the underscore.
-    if (isset($values['name']) && preg_match("/[^A-Za-z0-9\_]/", $values['name'])) {
+    if (isset($values['name']) && preg_match('/[^A-Za-z0-9\_]/', $values['name'])) {
       $this->_errors['name'] = E::ts('Only alphanumeric characters and the underscore (_) are allowed for profile names.');
     }
 
@@ -483,7 +547,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
           );
         }
         foreach ($custom_field_mapping as $custom_field_map) {
-          $custom_field_map = explode("=", $custom_field_map);
+          $custom_field_map = explode('=', $custom_field_map);
           if (count($custom_field_map) !== 2) {
             throw new Exception(
               E::ts('Could not parse custom field mapping.')
@@ -494,40 +558,41 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
 
           // Check for custom field existence
           try {
-            $custom_field = civicrm_api3('CustomField', 'getsingle', array(
+            $custom_field = civicrm_api3('CustomField', 'getsingle', [
               'id' => $custom_field_id,
-            ));
+            ]);
           }
           catch (CiviCRM_API3_Exception $exception) {
             throw new Exception(
               E::ts(
                 'Custom field custom_%1 does not exist.',
-                array(1 => $custom_field_id)
+                [1 => $custom_field_id]
               )
             );
           }
 
           // Only allow custom fields on relevant entities.
           try {
-            $custom_group = civicrm_api3('CustomGroup', 'getsingle', array(
+            $custom_group = civicrm_api3('CustomGroup', 'getsingle', [
               'id' => $custom_field['custom_group_id'],
-              'extends' => array(
-                'IN' => array(
+              'extends' => [
+                'IN' => [
                   'Contact',
                   'Individual',
                   'Organization',
                   'Contribution',
                   'ContributionRecur',
-                ),
-              ),
-            ));
-          } catch (CiviCRM_API3_Exception $exception) {
+                ],
+              ],
+            ]);
+          }
+          catch (CiviCRM_API3_Exception $exception) {
             throw new Exception(
               E::ts(
                 'Custom field custom_%1 is not in a CustomGroup that extends one of the supported CiviCRM entities.',
-                array(1 => $custom_field['id'])
+                [1 => $custom_field['id']]
               )
-            );
+                      );
           }
         }
       }
@@ -563,7 +628,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    */
   public function postProcess() {
     $values = $this->exportValues();
-    if (in_array($this->_op, array('create', 'edit', 'copy'))) {
+    if (in_array($this->_op, ['create', 'edit', 'copy'])) {
       if (empty($values['name'])) {
         $values['name'] = 'default';
       }
@@ -614,9 +679,9 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   public static function getXCMProfiles() {
     if (!isset(static::$_xcm_profiles)) {
       if (method_exists('CRM_Xcm_Configuration', 'getProfileList')) {
-        static::$_xcm_profiles = array(
-          '' => E::ts("&lt;select profile&gt;"),
-        );
+        static::$_xcm_profiles = [
+          '' => E::ts('&lt;select profile&gt;'),
+        ];
         $profiles = CRM_Xcm_Configuration::getProfileList();
         foreach ($profiles as $profile_key => $profile_name) {
           static::$_xcm_profiles[$profile_key] = $profile_name;
@@ -640,7 +705,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       $query = civicrm_api3('FinancialType', 'get', [
         'option.limit' => 0,
         'is_active' => 1,
-        'return' => 'id,name'
+        'return' => 'id,name',
       ]);
       foreach ($query['values'] as $type) {
         static::$_financialTypes[$type['id']] = $type['name'];
@@ -663,7 +728,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       $query = civicrm_api3('MembershipType', 'get', [
         'option.limit' => 0,
         'is_active' => 1,
-        'return' => 'id,name'
+        'return' => 'id,name',
       ]);
       foreach ($query['values'] as $type) {
         static::$_membershipTypes[$type['id']] = $type['name'];
@@ -711,13 +776,13 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     if (!isset(static::$_prefixOptions)) {
       static::$_prefixOptions = ['' => E::ts('none')];
       $query = civicrm_api3('OptionValue', 'get', [
-          'option.limit' => 0,
-          'option_group_id' => 'individual_prefix',
-          'is_active' => 1,
-          'return' => [
-              'value',
-              'label',
-          ],
+        'option.limit' => 0,
+        'option_group_id' => 'individual_prefix',
+        'is_active' => 1,
+        'return' => [
+          'value',
+          'label',
+        ],
       ]);
       foreach ($query['values'] as $prefix) {
         static::$_prefixOptions[$prefix['value']] = $prefix['label'];
@@ -763,7 +828,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         'option.limit' => 0,
         'option_group_id' => 'payment_instrument',
         'is_active'  => 1,
-        'return' => 'value,label'
+        'return' => 'value,label',
       ]);
       foreach ($query['values'] as $payment_instrument) {
         // Do not include CiviSEPA payment instruments, but add a SEPA option if
@@ -802,7 +867,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
           'return' => [
             'value',
             'label',
-          ]
+          ],
         ]
       );
 
@@ -837,7 +902,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
           'is_active' => 1,
           'group_type' => ['LIKE' => '%' . CRM_Utils_Array::implodePadded($group_type['value']) . '%'],
           'option.limit'   => 0,
-          'return'         => 'id,name'
+          'return'         => 'id,name',
         ]);
         foreach ($query['values'] as $group) {
           static::$_newsletterGroups[$group['id']] = $group['name'];
@@ -863,7 +928,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       $query = civicrm_api3('Group', 'get', [
         'option.limit' => 0,
         'is_active' => 1,
-        'return' => 'id,name'
+        'return' => 'id,name',
       ]);
       foreach ($query['values'] as $group) {
         static::$_groups[$group['id']] = $group['name'];
@@ -911,7 +976,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         'return' => [
           'id',
           'title',
-        ]
+        ],
       ]);
       foreach ($query['values'] as $campaign) {
         static::$_campaigns[$campaign['id']] = $campaign['title'];

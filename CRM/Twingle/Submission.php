@@ -54,13 +54,13 @@ class CRM_Twingle_Submission {
     }
 
     // Validate donation rhythm.
-    if (!in_array($params['donation_rhythm'], array(
+    if (!in_array($params['donation_rhythm'], [
       'one_time',
       'halfyearly',
       'quarterly',
       'yearly',
       'monthly',
-    ))) {
+    ])) {
       throw new CiviCRM_API3_Exception(
         E::ts('Invalid donation rhythm.'),
         'invalid_format'
@@ -108,7 +108,7 @@ class CRM_Twingle_Submission {
     // Validate custom fields parameter, if given.
     if (!empty($params['custom_fields'])) {
       if (is_string($params['custom_fields'])) {
-          $params['custom_fields'] = json_decode($params['custom_fields'], TRUE);
+        $params['custom_fields'] = json_decode($params['custom_fields'], TRUE);
       }
       if (!is_array($params['custom_fields'])) {
         throw new CiviCRM_API3_Exception(
@@ -137,7 +137,8 @@ class CRM_Twingle_Submission {
           'getsingle',
           ['id' => $params['campaign_id']]
         );
-      } catch (CiviCRM_API3_Exception $e) {
+      }
+      catch (CiviCRM_API3_Exception $e) {
         unset($params['campaign_id']);
       }
     }
@@ -186,14 +187,14 @@ class CRM_Twingle_Submission {
       }
       else {
         // Look up the country depending on the given ISO code.
-        $country = civicrm_api3('Country', 'get', array('iso_code' => $contact_data['country']));
+        $country = civicrm_api3('Country', 'get', ['iso_code' => $contact_data['country']]);
         if (!empty($country['id'])) {
           $contact_data['country_id'] = $country['id'];
           unset($contact_data['country']);
         }
         else {
           throw new \CiviCRM_API3_Exception(
-            E::ts('Unknown country %1.', array(1 => $contact_data['country'])),
+            E::ts('Unknown country %1.', [1 => $contact_data['country']]),
             'invalid_format'
           );
         }
@@ -241,18 +242,20 @@ class CRM_Twingle_Submission {
     }
 
     // Check whether organisation has a WORK address.
-    $existing_org_addresses = civicrm_api3('Address', 'get', array(
+    $existing_org_addresses = civicrm_api3('Address', 'get', [
       'contact_id'       => $organisation_id,
-      'location_type_id' => $location_type_id));
+      'location_type_id' => $location_type_id,
+    ]);
     if ($existing_org_addresses['count'] <= 0) {
       // Organisation does not have a WORK address.
       return FALSE;
     }
 
     // Check whether contact already has a WORK address.
-    $existing_contact_addresses = civicrm_api3('Address', 'get', array(
+    $existing_contact_addresses = civicrm_api3('Address', 'get', [
       'contact_id'       => $contact_id,
-      'location_type_id' => $location_type_id));
+      'location_type_id' => $location_type_id,
+    ]);
     if ($existing_contact_addresses['count'] > 0) {
       // Contact already has a WORK address.
       return FALSE;
@@ -284,21 +287,21 @@ class CRM_Twingle_Submission {
     }
 
     // see if there is already one
-    $existing_relationship = civicrm_api3('Relationship', 'get', array(
+    $existing_relationship = civicrm_api3('Relationship', 'get', [
       'relationship_type_id' => self::EMPLOYER_RELATIONSHIP_TYPE_ID,
       'contact_id_a' => $contact_id,
       'contact_id_b' => $organisation_id,
       'is_active' => 1,
-    ));
+    ]);
 
     if ($existing_relationship['count'] == 0) {
       // There is currently no (active) relationship between these contacts.
-      $new_relationship_data = array(
+      $new_relationship_data = [
         'relationship_type_id' => self::EMPLOYER_RELATIONSHIP_TYPE_ID,
         'contact_id_a' => $contact_id,
         'contact_id_b' => $organisation_id,
         'is_active' => 1,
-      );
+      ];
 
       civicrm_api3('Relationship', 'create', $new_relationship_data);
     }
@@ -312,12 +315,11 @@ class CRM_Twingle_Submission {
    * @throws \CiviCRM_API3_Exception
    */
   public static function civiSepaEnabled() {
-    $sepa_extension = civicrm_api3('Extension', 'get', array(
+    $sepa_extension = civicrm_api3('Extension', 'get', [
       'full_name' => 'org.project60.sepa',
       'is_active' => 1,
-    ));
-    return
-      Civi::settings()->get('twingle_use_sepa')
+    ]);
+    return Civi::settings()->get('twingle_use_sepa')
       && $sepa_extension['count'];
   }
 
@@ -334,25 +336,25 @@ class CRM_Twingle_Submission {
    *   to contribution parameter arrays.
    */
   public static function getFrequencyMapping($donation_rhythm) {
-    $mapping = array(
-      'halfyearly' => array(
+    $mapping = [
+      'halfyearly' => [
         'frequency_unit' => 'month',
         'frequency_interval' => 6,
-      ),
-      'quarterly' => array(
+      ],
+      'quarterly' => [
         'frequency_unit' => 'month',
         'frequency_interval' => 3,
-      ),
-      'yearly' => array(
+      ],
+      'yearly' => [
         'frequency_unit' => 'month',
         'frequency_interval' => 12,
-      ),
-      'monthly' => array(
+      ],
+      'monthly' => [
         'frequency_unit' => 'month',
         'frequency_interval' => 1,
-      ),
-      'one_time' => array(),
-    );
+      ],
+      'one_time' => [],
+    ];
 
     return $mapping[$donation_rhythm];
   }
@@ -371,15 +373,15 @@ class CRM_Twingle_Submission {
    *   The next possible day of this or the next month to start collecting.
    */
   public static function getSEPACycleDay($start_date, $creditor_id) {
-    $buffer_days = (int) CRM_Sepa_Logic_Settings::getSetting("pp_buffer_days");
-    $frst_notice_days = (int) CRM_Sepa_Logic_Settings::getSetting("batching.FRST.notice", $creditor_id);
+    $buffer_days = (int) CRM_Sepa_Logic_Settings::getSetting('pp_buffer_days');
+    $frst_notice_days = (int) CRM_Sepa_Logic_Settings::getSetting('batching.FRST.notice', $creditor_id);
     $earliest_rcur_date = strtotime("$start_date + $frst_notice_days days + $buffer_days days");
 
     // Find the next cycle day
-    $cycle_days = CRM_Sepa_Logic_Settings::getListSetting("cycledays", range(1, 28), $creditor_id);
+    $cycle_days = CRM_Sepa_Logic_Settings::getListSetting('cycledays', range(1, 28), $creditor_id);
     $earliest_cycle_day = $earliest_rcur_date;
     while (!in_array(date('j', $earliest_cycle_day), $cycle_days)) {
-      $earliest_cycle_day = strtotime("+ 1 day", $earliest_cycle_day);
+      $earliest_cycle_day = strtotime('+ 1 day', $earliest_cycle_day);
     }
 
     return date('j', $earliest_cycle_day);
@@ -406,7 +408,7 @@ class CRM_Twingle_Submission {
 
     // then: check if campaign should be set it this context
     $enabled_contexts = $profile->getAttribute('campaign_targets');
-    if ($enabled_contexts === null || !is_array($enabled_contexts)) {
+    if ($enabled_contexts === NULL || !is_array($enabled_contexts)) {
       // backward compatibility:
       $enabled_contexts = ['contribution', 'contact'];
     }
@@ -414,10 +416,12 @@ class CRM_Twingle_Submission {
       // use the submitted campaign if set
       if (!empty($submission['campaign_id'])) {
         $entity_data['campaign_id'] = $submission['campaign_id'];
-      } // otherwise use the profile's
+      }
+      // otherwise use the profile's
       elseif (!empty($campaign = $profile->getAttribute('campaign'))) {
         $entity_data['campaign_id'] = $campaign;
       }
     }
   }
+
 }

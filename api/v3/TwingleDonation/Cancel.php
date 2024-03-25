@@ -26,34 +26,34 @@ use CRM_Twingle_ExtensionUtil as E;
  * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
  */
 function _civicrm_api3_twingle_donation_Cancel_spec(&$params) {
-  $params['project_id'] = array(
+  $params['project_id'] = [
     'name' => 'project_id',
     'title' => E::ts('Project ID'),
     'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
     'description' => E::ts('The Twingle project ID.'),
-  );
-  $params['trx_id'] = array(
+  ];
+  $params['trx_id'] = [
     'name' => 'trx_id',
     'title' => E::ts('Transaction ID'),
     'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
     'description' => E::ts('The unique transaction ID of the donation'),
-  );
-  $params['cancelled_at'] = array(
+  ];
+  $params['cancelled_at'] = [
     'name'         => 'cancelled_at',
     'title'        => E::ts('Cancelled at'),
     'type'         => CRM_Utils_Type::T_INT,
     'api.required' => 1,
     'description'  => E::ts('The date when the donation was cancelled, format: YmdHis.'),
-  );
-  $params['cancel_reason'] = array(
+  ];
+  $params['cancel_reason'] = [
     'name'         => 'cancel_reason',
     'title'        => E::ts('Cancel reason'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
     'description'  => E::ts('The reason for the donation being cancelled.'),
-  );
+  ];
 }
 
 /**
@@ -82,15 +82,15 @@ function civicrm_api3_twingle_donation_Cancel($params) {
     // Retrieve (recurring) contribution.
     $default_profile = CRM_Twingle_Profile::getProfile('default');
     try {
-      $contribution = civicrm_api3('Contribution', 'getsingle', array(
+      $contribution = civicrm_api3('Contribution', 'getsingle', [
         'trxn_id' => $default_profile->getTransactionID($params['trx_id']),
-      ));
+      ]);
       $contribution_type = 'Contribution';
     }
     catch (CiviCRM_API3_Exception $exception) {
-      $contribution = civicrm_api3('ContributionRecur', 'getsingle', array(
-          'trxn_id' => $default_profile->getTransactionID($params['trx_id']),
-      ));
+      $contribution = civicrm_api3('ContributionRecur', 'getsingle', [
+        'trxn_id' => $default_profile->getTransactionID($params['trx_id']),
+      ]);
       $contribution_type = 'ContributionRecur';
     }
 
@@ -102,7 +102,7 @@ function civicrm_api3_twingle_donation_Cancel($params) {
       $mandate = CRM_Twingle_Tools::getMandateFor($contribution['id']);
       if (!$mandate) {
         throw new CiviCRM_API3_Exception(
-            E::ts("SEPA Mandate for contribution [%1 not found.", [1 => $contribution['id']]),
+            E::ts('SEPA Mandate for contribution [%1 not found.', [1 => $contribution['id']]),
             'api_error'
         );
       }
@@ -115,7 +115,8 @@ function civicrm_api3_twingle_donation_Cancel($params) {
         $end_date = date('Ymd', max(
             time(),
             $end_date->getTimestamp()));
-      } else {
+      }
+      else {
         // end date couldn't be parsed, use 'now'
         $end_date = date('Ymd');
       }
@@ -132,19 +133,19 @@ function civicrm_api3_twingle_donation_Cancel($params) {
       }
 
       // Retrieve updated contribution for return value.
-      $contribution = civicrm_api3($contribution_type, 'getsingle', array(
+      $contribution = civicrm_api3($contribution_type, 'getsingle', [
         'id' => $contribution['id'],
-      ));
+      ]);
     }
     else {
       // regular contribution
       CRM_Twingle_Tools::$protection_suspended = TRUE;
-      $contribution = civicrm_api3($contribution_type, 'create', array(
+      $contribution = civicrm_api3($contribution_type, 'create', [
         'id' => $contribution['id'],
         'cancel_date' => $params['cancelled_at'],
         'contribution_status_id' => 'Cancelled',
         'cancel_reason' => $params['cancel_reason'],
-      ));
+      ]);
       CRM_Twingle_Tools::$protection_suspended = FALSE;
     }
 

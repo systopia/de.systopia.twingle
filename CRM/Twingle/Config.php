@@ -29,9 +29,10 @@ class CRM_Twingle_Config {
    */
   public static function getRecurringProtectionOptions() {
     return [
-        self::RCUR_PROTECTION_OFF       => E::ts("No"),
-        self::RCUR_PROTECTION_EXCEPTION => E::ts("Raise Exception"),
-        self::RCUR_PROTECTION_ACTIVITY  => E::ts("Create Activity"),
+      self::RCUR_PROTECTION_OFF       => E::ts('No'),
+      self::RCUR_PROTECTION_EXCEPTION => E::ts('Raise Exception'),
+      self::RCUR_PROTECTION_ACTIVITY  => E::ts('Create Activity'),
     ];
   }
+
 }

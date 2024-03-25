@@ -20,11 +20,11 @@ class CRM_Twingle_Upgrader extends CRM_Twingle_Upgrader_Base {
   /**
    * Example: Run an external SQL script when the module is uninstalled.
    *
-  public function uninstall() {
-   $this->executeSqlFile('sql/myuninstall.sql');
-  }
-
-  /**
+   * public function uninstall() {
+   * $this->executeSqlFile('sql/myuninstall.sql');
+   * }
+   *
+   * /**
    * Copy financial_type_id setting to new setting financial_type_id_recur.
    */
   public function upgrade_4000() {
@@ -74,14 +74,15 @@ class CRM_Twingle_Upgrader extends CRM_Twingle_Upgrader_Base {
         $profile = new CRM_Twingle_Profile($profile_name, $profile_data);
         $data = json_encode($profile->getData());
         CRM_Core_DAO::executeQuery(
-          "INSERT IGNORE INTO civicrm_twingle_profile(name,config,last_access,access_counter) VALUES (%1, %2, NOW(), 0)",
+          'INSERT IGNORE INTO civicrm_twingle_profile(name,config,last_access,access_counter) VALUES (%1, %2, NOW(), 0)',
           [
             1 => [$profile_name, 'String'],
-            2 => [$data, 'String']
+            2 => [$data, 'String'],
           ]);
       }
     }
 
     return TRUE;
   }
+
 }

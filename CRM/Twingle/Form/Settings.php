@@ -23,69 +23,69 @@ use CRM_Twingle_ExtensionUtil as E;
 class CRM_Twingle_Form_Settings extends CRM_Core_Form {
 
   /**
-   * @var array list of all settings options
+   * @var arraylistofallsettingsoptions
    */
   public static $SETTINGS_LIST = [
-      'twingle_prefix',
-      'twingle_use_sepa',
-      'twingle_dont_use_reference',
-      'twingle_protect_recurring',
-      'twingle_protect_recurring_activity_type',
-      'twingle_protect_recurring_activity_subject',
-      'twingle_protect_recurring_activity_status',
-      'twingle_protect_recurring_activity_assignee',
+    'twingle_prefix',
+    'twingle_use_sepa',
+    'twingle_dont_use_reference',
+    'twingle_protect_recurring',
+    'twingle_protect_recurring_activity_type',
+    'twingle_protect_recurring_activity_subject',
+    'twingle_protect_recurring_activity_status',
+    'twingle_protect_recurring_activity_assignee',
   ];
 
   /**
    * @inheritdoc
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     // Set redirect destination.
     $this->controller->_destination = CRM_Utils_System::url('civicrm/admin/settings/twingle', 'reset=1');
 
     $this->add(
         'text',
         'twingle_prefix',
-        E::ts("Twingle ID Prefix")
+        E::ts('Twingle ID Prefix')
     );
 
     $this->add(
         'checkbox',
         'twingle_use_sepa',
-        E::ts("Use CiviSEPA")
+        E::ts('Use CiviSEPA')
     );
 
     $this->add(
       'checkbox',
       'twingle_dont_use_reference',
-      E::ts("Use CiviSEPA generated reference")
+      E::ts('Use CiviSEPA generated reference')
     );
 
     $this->add(
         'select',
         'twingle_protect_recurring',
-        E::ts("Protect Recurring Contributions"),
+        E::ts('Protect Recurring Contributions'),
         CRM_Twingle_Config::getRecurringProtectionOptions()
     );
 
     $this->add(
         'select',
         'twingle_protect_recurring_activity_type',
-        E::ts("Activity Type"),
+        E::ts('Activity Type'),
         $this->getOptionValueList('activity_type', [0])
     );
 
     $this->add(
         'text',
         'twingle_protect_recurring_activity_subject',
-        E::ts("Subject"),
+        E::ts('Subject'),
         ['class' => 'huge']
     );
 
     $this->add(
         'select',
         'twingle_protect_recurring_activity_status',
-        E::ts("Status"),
+        E::ts('Status'),
         $this->getOptionValueList('activity_status')
     );
 
@@ -102,18 +102,18 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
       ]
     );
 
-    $this->addButtons(array(
-      array (
-          'type'      => 'submit',
-          'name'      => E::ts('Save'),
-          'isDefault' => TRUE,
-      )
-    ));
+    $this->addButtons([
+      [
+        'type'      => 'submit',
+        'name'      => E::ts('Save'),
+        'isDefault' => TRUE,
+      ],
+    ]);
 
     // set defaults
     foreach (self::$SETTINGS_LIST as $setting) {
       $this->setDefaults([
-          $setting => Civi::settings()->get($setting)
+        $setting => Civi::settings()->get($setting),
       ]);
     }
 
@@ -132,12 +132,13 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
     $protection_mode = CRM_Utils_Array::value('twingle_protect_recurring', $this->_submitValues);
     if ($protection_mode == CRM_Twingle_Config::RCUR_PROTECTION_ACTIVITY) {
       foreach (['twingle_protect_recurring_activity_type',
-                'twingle_protect_recurring_activity_subject',
-                'twingle_protect_recurring_activity_status',
-                'twingle_protect_recurring_activity_assignee',] as $activity_field) {
+        'twingle_protect_recurring_activity_subject',
+        'twingle_protect_recurring_activity_status',
+        'twingle_protect_recurring_activity_assignee',
+      ] as $activity_field) {
         $current_value = CRM_Utils_Array::value($activity_field, $this->_submitValues);
         if (empty($current_value)) {
-          $this->_errors[$activity_field] = E::ts("This is required for activity creation");
+          $this->_errors[$activity_field] = E::ts('This is required for activity creation');
         }
       }
     }
@@ -145,11 +146,10 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
     return (0 == count($this->_errors));
   }
 
-
   /**
    * @inheritdoc
    */
-  function postProcess() {
+  public function postProcess() {
     $values = $this->exportValues();
 
     // store settings
@@ -160,25 +160,25 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
     parent::postProcess();
   }
 
-
   /**
    * Get a list of option group items
    * @param $group_id  string group ID or name
    * @return array list of ID(value) => label
    * @throws CiviCRM_API3_Exception
    */
-  protected function getOptionValueList($group_id, $reserved = [0,1]) {
-    $list = ['' => E::ts("-select-")];
+  protected function getOptionValueList($group_id, $reserved = [0, 1]) {
+    $list = ['' => E::ts('-select-')];
     $query = civicrm_api3('OptionValue', 'get', [
-        'option_group_id' => $group_id,
-        'option.limit'    => 0,
-        'is_active'       => 1,
-        'is_reserved'     => ['IN' => $reserved],
-        'return'          => 'value,label',
+      'option_group_id' => $group_id,
+      'option.limit'    => 0,
+      'is_active'       => 1,
+      'is_reserved'     => ['IN' => $reserved],
+      'return'          => 'value,label',
     ]);
     foreach ($query['values'] as $value) {
       $list[$value['value']] = $value['label'];
     }
     return $list;
   }
+
 }
