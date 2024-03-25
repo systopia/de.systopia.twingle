@@ -350,7 +350,6 @@ class CRM_Twingle_Profile {
    * @param $project_id
    *
    * @return CRM_Twingle_Profile
-   * @throws \CRM\Twingle\Exceptions\ProfileException
    * @throws \Civi\Core\Exception\DBQueryException
    */
   public static function getProfileForProject($project_id) {
