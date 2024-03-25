@@ -4,7 +4,7 @@ use CRM_Twingle_ExtensionUtil as E;
 /**
  * Collection of upgrade steps.
  */
-class CRM_Twingle_Upgrader extends CRM_Twingle_Upgrader_Base {
+class CRM_Twingle_Upgrader extends CRM_Extension_Upgrader_Base {
 
   /**
    * Installer script
