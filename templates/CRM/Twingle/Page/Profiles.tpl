@@ -33,6 +33,7 @@
       </thead>
       <tbody>
       {foreach from=$profiles item=profile}
+        {assign var="profile_id" value=$profile.id}
         {assign var="profile_name" value=$profile.name}
         <tr>
           <td>{$profile.name}</td>
@@ -42,12 +43,12 @@
           <td>{ts domain="de.systopia.twingle"}{$profile_stats.$profile_name.access_counter_txt}{/ts}</td>
           <td>{ts domain="de.systopia.twingle"}{$profile_stats.$profile_name.last_access_txt}{/ts}</td>
           <td>
-            <a href="{crmURL p="civicrm/admin/settings/twingle/profile" q="op=edit&name=$profile_name"}" title="{ts domain="de.systopia.twingle" 1=$profile.name}Edit profile %1{/ts}" class="action-item crm-hover-button">{ts domain="de.systopia.twingle"}Edit{/ts}</a>
-            <a href="{crmURL p="civicrm/admin/settings/twingle/profile" q="op=copy&source_name=$profile_name"}" title="{ts domain="de.systopia.twingle" 1=$profile.name}Copy profile %1{/ts}" class="action-item crm-hover-button">{ts domain="de.systopia.twingle"}Copy{/ts}</a>
+            <a href="{crmURL p="civicrm/admin/settings/twingle/profile" q="op=edit&id=$profile_id"}" title="{ts domain="de.systopia.twingle" 1=$profile.name}Edit profile %1{/ts}" class="action-item crm-hover-button">{ts domain="de.systopia.twingle"}Edit{/ts}</a>
+            <a href="{crmURL p="civicrm/admin/settings/twingle/profile" q="op=copy&source_id=$profile_id"}" title="{ts domain="de.systopia.twingle" 1=$profile.name}Copy profile %1{/ts}" class="action-item crm-hover-button">{ts domain="de.systopia.twingle"}Copy{/ts}</a>
             {if $profile_name == 'default'}
-              <a href="{crmURL p="civicrm/admin/settings/twingle/profile" q="op=delete&name=$profile_name"}" title="{ts domain="de.systopia.twingle" 1=$profile.name}Reset profile %1{/ts}" class="action-item crm-hover-button">{ts domain="de.systopia.twingle"}Reset{/ts}</a>
+              <a href="{crmURL p="civicrm/admin/settings/twingle/profile" q="op=delete&id=$profile_id"}" title="{ts domain="de.systopia.twingle" 1=$profile.name}Reset profile %1{/ts}" class="action-item crm-hover-button">{ts domain="de.systopia.twingle"}Reset{/ts}</a>
             {else}
-              <a href="{crmURL p="civicrm/admin/settings/twingle/profile" q="op=delete&name=$profile_name"}" title="{ts domain="de.systopia.twingle" 1=$profile.name}Delete profile %1{/ts}" class="action-item crm-hover-button">{ts domain="de.systopia.twingle"}Delete{/ts}</a>
+              <a href="{crmURL p="civicrm/admin/settings/twingle/profile" q="op=delete&id=$profile_id"}" title="{ts domain="de.systopia.twingle" 1=$profile.name}Delete profile %1{/ts}" class="action-item crm-hover-button">{ts domain="de.systopia.twingle"}Delete{/ts}</a>
             {/if}
 
           </td>
