@@ -13,6 +13,8 @@
 | written permission from the original author(s).             |
 +-------------------------------------------------------------*/
 
+declare(strict_types = 1);
+
 use CRM_Twingle_ExtensionUtil as E;
 
 class CRM_Twingle_Submission {
@@ -20,22 +22,22 @@ class CRM_Twingle_Submission {
   /**
    * The default ID of the "Work" location type.
    */
-  const LOCATION_TYPE_ID_WORK = 2;
+  public const LOCATION_TYPE_ID_WORK = 2;
 
   /**
    * The option value name of the group type for newsletter subscribers.
    */
-  const GROUP_TYPE_NEWSLETTER = 'Mailing List';
+  public const GROUP_TYPE_NEWSLETTER = 'Mailing List';
 
   /**
    * The option value for the contribution type for completed contributions.
    */
-  const CONTRIBUTION_STATUS_COMPLETED = 'Completed';
+  public const CONTRIBUTION_STATUS_COMPLETED = 'Completed';
 
   /**
    * The default ID of the "Employer of" relationship type.
    */
-  const EMPLOYER_RELATIONSHIP_TYPE_ID = 5;
+  public const EMPLOYER_RELATIONSHIP_TYPE_ID = 5;
 
   /**
    * @param array &$params
@@ -157,7 +159,7 @@ class CRM_Twingle_Submission {
    * @param array $submission
    *   Submission data
    *
-   * @return int | NULL
+   * @return int|NULL
    *   The ID of the matching/created contact, or NULL if no matching contact
    *   was found and no new contact could be created.
    * @throws \CiviCRM_API3_Exception
@@ -235,7 +237,11 @@ class CRM_Twingle_Submission {
    * @throws \CiviCRM_API3_Exception
    *   When looking up or creating the shared address failed.
    */
-  public static function shareWorkAddress($contact_id, $organisation_id, $location_type_id = self::LOCATION_TYPE_ID_WORK) {
+  public static function shareWorkAddress(
+    $contact_id,
+    $organisation_id,
+    $location_type_id = self::LOCATION_TYPE_ID_WORK
+  ) {
     if (empty($organisation_id)) {
       // Only if organisation exists.
       return FALSE;

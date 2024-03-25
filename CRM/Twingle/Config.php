@@ -13,13 +13,15 @@
 | written permission from the original author(s).             |
 +-------------------------------------------------------------*/
 
+declare(strict_types = 1);
+
 use CRM_Twingle_ExtensionUtil as E;
 
 class CRM_Twingle_Config {
 
-  const RCUR_PROTECTION_OFF       = 0;
-  const RCUR_PROTECTION_EXCEPTION = 1;
-  const RCUR_PROTECTION_ACTIVITY  = 2;
+  public const RCUR_PROTECTION_OFF       = 0;
+  public const RCUR_PROTECTION_EXCEPTION = 1;
+  public const RCUR_PROTECTION_ACTIVITY  = 2;
 
   /**
    * Get the options for protecting a recurring contribution linked Twingle

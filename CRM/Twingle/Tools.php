@@ -13,6 +13,8 @@
 | written permission from the original author(s).             |
 +-------------------------------------------------------------*/
 
+declare(strict_types = 1);
+
 use CRM_Twingle_ExtensionUtil as E;
 
 class CRM_Twingle_Tools {
@@ -121,7 +123,9 @@ class CRM_Twingle_Tools {
         break;
 
       case CRM_Twingle_Config::RCUR_PROTECTION_EXCEPTION:
-        throw new Exception(E::ts('This is a Twingle recurring contribution. It should be terminated through the Twingle interface, otherwise it will still be collected.'));
+        throw new Exception(E::ts(
+          'This is a Twingle recurring contribution. It should be terminated through the Twingle interface, otherwise it will still be collected.'
+        ));
 
       case CRM_Twingle_Config::RCUR_PROTECTION_ACTIVITY:
         // create contact source activity

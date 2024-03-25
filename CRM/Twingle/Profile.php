@@ -13,6 +13,8 @@
 | written permission from the original author(s).             |
 +-------------------------------------------------------------*/
 
+declare(strict_types = 1);
+
 use CRM_Twingle_ExtensionUtil as E;
 
 /**
@@ -22,13 +24,13 @@ use CRM_Twingle_ExtensionUtil as E;
 class CRM_Twingle_Profile {
 
   /**
-   * @var string $name
+   * @var string
    *   The name of the profile.
    */
   protected $name = NULL;
 
   /**
-   * @var array $data
+   * @var array
    *   The properties of the profile.
    */
   protected $data = NULL;
@@ -54,18 +56,18 @@ class CRM_Twingle_Profile {
    * Logs (production) access to this profile
    */
   public function logAccess() {
-    CRM_Core_DAO::executeQuery("
+    CRM_Core_DAO::executeQuery('
         UPDATE civicrm_twingle_profile
         SET
             last_access = NOW(),
             access_counter = access_counter + 1
-        WHERE name = %1", [1 => [$this->name, 'String']]);
+        WHERE name = %1', [1 => [$this->name, 'String']]);
   }
 
   /**
    * Checks whether the profile's selector matches the given project ID.
    *
-   * @param string | int $project_id
+   * @param string|int $project_id
    *
    * @return bool
    */
@@ -88,7 +90,7 @@ class CRM_Twingle_Profile {
     $custom_field_mapping = [];
     if (!empty($custom_field_definition = $this->getAttribute('custom_field_mapping'))) {
       foreach (preg_split('/\r\n|\r|\n/', $custom_field_definition, -1, PREG_SPLIT_NO_EMPTY) as $custom_field_map) {
-        [$twingle_field_name, $custom_field_name] = explode("=", $custom_field_map);
+        [$twingle_field_name, $custom_field_name] = explode('=', $custom_field_map);
         $custom_field_mapping[$twingle_field_name] = $custom_field_name;
       }
     }
@@ -161,7 +163,8 @@ class CRM_Twingle_Profile {
     $prefix = Civi::settings()->get('twingle_prefix');
     if (empty($prefix)) {
       return $twingle_id;
-    } else {
+    }
+    else {
       return $prefix . $twingle_id;
     }
   }
@@ -188,22 +191,23 @@ class CRM_Twingle_Profile {
 
     // check if the profile exists
     $profile_id = CRM_Core_DAO::singleValueQuery(
-      "SELECT id FROM civicrm_twingle_profile WHERE name = %1", [1 => [$this->name, 'String']]);
+      'SELECT id FROM civicrm_twingle_profile WHERE name = %1', [1 => [$this->name, 'String']]);
     if ($profile_id) {
       // existing profile -> just update the config
       CRM_Core_DAO::executeQuery(
-        "UPDATE civicrm_twingle_profile SET config = %2 WHERE name = %1",
+        'UPDATE civicrm_twingle_profile SET config = %2 WHERE name = %1',
         [
           1 => [$this->name, 'String'],
-          2 => [json_encode($this->data), 'String']
+          2 => [json_encode($this->data), 'String'],
         ]);
-    } else {
+    }
+    else {
       // new profile -> add new entry to the DB
       CRM_Core_DAO::executeQuery(
-        "INSERT IGNORE INTO civicrm_twingle_profile(name,config,last_access,access_counter) VALUES (%1, %2, null, 0)",
+        'INSERT IGNORE INTO civicrm_twingle_profile(name,config,last_access,access_counter) VALUES (%1, %2, null, 0)',
         [
           1 => [$this->name, 'String'],
-          2 => [json_encode($this->data), 'String']
+          2 => [json_encode($this->data), 'String'],
         ]);
     }
   }
@@ -212,7 +216,10 @@ class CRM_Twingle_Profile {
    * Deletes the profile from the database
    */
   public function deleteProfile() {
-    CRM_Core_DAO::executeQuery("DELETE FROM civicrm_twingle_profile WHERE name = %1", [1 => [$this->name, 'String']]);
+    CRM_Core_DAO::executeQuery(
+      'DELETE FROM civicrm_twingle_profile WHERE name = %1',
+      [1 => [$this->name, 'String']]
+    );
   }
 
   /**
@@ -275,7 +282,7 @@ class CRM_Twingle_Profile {
       'pi_sofortueberweisung' => E::ts('SOFORT Überweisung'),
       'pi_amazonpay' => E::ts('Amazon Pay'),
       'pi_applepay' => E::ts('Apple Pay'),
-      'pi_googlepay' =>  E::ts('Google Pay'),
+      'pi_googlepay' => E::ts('Google Pay'),
       'pi_paydirekt' => E::ts('Paydirekt'),
       'pi_twint' => E::ts('Twint'),
       'pi_ideal' => E::ts('iDEAL'),
@@ -294,16 +301,21 @@ class CRM_Twingle_Profile {
    */
   public static function createDefaultProfile($name = 'default') {
     return new CRM_Twingle_Profile($name, [
-      'selector'          => '',
-      'xcm_profile'       => '',
-      'location_type_id'  => CRM_Twingle_Submission::LOCATION_TYPE_ID_WORK,
+      'selector' => '',
+      'xcm_profile' => '',
+      'location_type_id' => CRM_Twingle_Submission::LOCATION_TYPE_ID_WORK,
       'location_type_id_organisation' => CRM_Twingle_Submission::LOCATION_TYPE_ID_WORK,
-      'financial_type_id' => 1, // "Donation"
-      'financial_type_id_recur' => 1, // "Donation"
-      'pi_banktransfer' => 5, // "EFT"
+      // "Donation"
+      'financial_type_id' => 1,
+      // "Donation"
+      'financial_type_id_recur' => 1,
+      // "EFT"
+      'pi_banktransfer' => 5,
       'pi_debit_manual' => NULL,
-      'pi_debit_automatic' => 2, // Debit
-      'pi_creditcard' => 1, // "Credit Card"
+      // Debit
+      'pi_debit_automatic' => 2,
+      // "Credit Card"
+      'pi_creditcard' => 1,
       'pi_mobilephone_germany' => NULL,
       'pi_paypal' => NULL,
       'pi_sofortueberweisung' => NULL,
@@ -336,10 +348,10 @@ class CRM_Twingle_Profile {
         'country',
       ],
     ]
-      // Add contribution status for all payment methods.
-      + array_fill_keys(array_map(function($attribute) {
-        return $attribute . '_status';
-      }, array_keys(static::paymentInstruments())), CRM_Twingle_Submission::CONTRIBUTION_STATUS_COMPLETED));
+    // Add contribution status for all payment methods.
+    + array_fill_keys(array_map(function($attribute) {
+      return $attribute . '_status';
+    }, array_keys(static::paymentInstruments())), CRM_Twingle_Submission::CONTRIBUTION_STATUS_COMPLETED));
   }
 
   /**
@@ -383,8 +395,10 @@ class CRM_Twingle_Profile {
    */
   public static function getProfile($name) {
     if (!empty($name)) {
-      $profile_data = CRM_Core_DAO::singleValueQuery("SELECT config FROM civicrm_twingle_profile WHERE name = %1", [
-        1 => [$name, 'String']]);
+      $profile_data = CRM_Core_DAO::singleValueQuery(
+        'SELECT config FROM civicrm_twingle_profile WHERE name = %1',
+        [1 => [$name, 'String']]
+      );
       if ($profile_data) {
         return new CRM_Twingle_Profile($name, json_decode($profile_data, 1));
       }
@@ -402,9 +416,12 @@ class CRM_Twingle_Profile {
   public static function getProfiles() {
     // todo: cache?
     $profiles = [];
-    $profile_data = CRM_Core_DAO::executeQuery("SELECT name, config FROM civicrm_twingle_profile");
+    $profile_data = CRM_Core_DAO::executeQuery('SELECT name, config FROM civicrm_twingle_profile');
     while ($profile_data->fetch()) {
-      $profiles[$profile_data->name] = new CRM_Twingle_Profile($profile_data->name, json_decode($profile_data->config, 1));
+      $profiles[$profile_data->name] = new CRM_Twingle_Profile(
+        $profile_data->name,
+        json_decode($profile_data->config, 1)
+      );
     }
     return $profiles;
   }
@@ -416,14 +433,18 @@ class CRM_Twingle_Profile {
    */
   public static function getProfileStats() {
     $stats = [];
-    $profile_data = CRM_Core_DAO::executeQuery("SELECT name, last_access, access_counter FROM civicrm_twingle_profile");
+    $profile_data = CRM_Core_DAO::executeQuery('SELECT name, last_access, access_counter FROM civicrm_twingle_profile');
     while ($profile_data->fetch()) {
       $stats[$profile_data->name] = [
         'name' => $profile_data->name,
         'last_access' => $profile_data->last_access,
-        'last_access_txt' => $profile_data->last_access ? date('Y-m-d H:i:s', strtotime($profile_data->last_access)) : E::ts("never"),
+        'last_access_txt' => $profile_data->last_access
+          ? date('Y-m-d H:i:s', strtotime($profile_data->last_access))
+          : E::ts('never'),
         'access_counter' => $profile_data->access_counter,
-        'access_counter_txt' => $profile_data->access_counter ? ((int) $profile_data->access_counter) . 'x' : E::ts("never"),
+        'access_counter_txt' => $profile_data->access_counter
+          ? ((int) $profile_data->access_counter) . 'x'
+          : E::ts('never'),
       ];
     }
     return $stats;

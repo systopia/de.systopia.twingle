@@ -13,6 +13,8 @@
 | written permission from the original author(s).             |
 +-------------------------------------------------------------*/
 
+declare(strict_types = 1);
+
 use CRM_Twingle_ExtensionUtil as E;
 
 /**
@@ -27,231 +29,231 @@ use CRM_Twingle_ExtensionUtil as E;
  * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
  */
 function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
-  $params['project_id'] = array(
+  $params['project_id'] = [
     'name' => 'project_id',
     'title' => E::ts('Project ID'),
     'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
     'description' => E::ts('The Twingle project ID.'),
-  );
-  $params['trx_id'] = array(
+  ];
+  $params['trx_id'] = [
     'name' => 'trx_id',
     'title' => E::ts('Transaction ID'),
     'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
     'description' => E::ts('The unique transaction ID of the donation'),
-  );
-  $params['confirmed_at'] = array(
+  ];
+  $params['confirmed_at'] = [
     'name'         => 'confirmed_at',
     'title'        => E::ts('Confirmed at'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
     'description'  => E::ts('The date when the donation was issued, format: YmdHis.'),
-  );
-  $params['purpose'] = array(
+  ];
+  $params['purpose'] = [
     'name'         => 'purpose',
     'title'        => E::ts('Purpose'),
     'type'         => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
     'description'  => E::ts('The purpose of the donation.'),
-  );
-  $params['amount'] = array(
+  ];
+  $params['amount'] = [
     'name'         => 'amount',
     'title'        => E::ts('Amount'),
     'type'         => CRM_Utils_Type::T_INT,
     'api.required' => 1,
     'description'  => E::ts('The donation amount in minor currency unit.'),
-  );
-  $params['currency'] = array(
-    'name'         => 'currency',
-    'title'        => E::ts('Currency'),
-    'type'         => CRM_Utils_Type::T_STRING,
+  ];
+  $params['currency'] = [
+    'name' => 'currency',
+    'title' => E::ts('Currency'),
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
-    'description'  => E::ts('The ISO-4217 currency code of the donation.'),
-  );
-  $params['newsletter'] = array(
-    'name'         => 'newsletter',
-    'title'        => E::ts('Newsletter'),
-    'type'         => CRM_Utils_Type::T_BOOLEAN,
+    'description' => E::ts('The ISO-4217 currency code of the donation.'),
+  ];
+  $params['newsletter'] = [
+    'name' => 'newsletter',
+    'title' => E::ts('Newsletter'),
+    'type' => CRM_Utils_Type::T_BOOLEAN,
     'api.required' => 0,
-    'description'  => E::ts('Whether to subscribe the contact to the newsletter group defined in the profile.'),
-  );
-  $params['postinfo'] = array(
-    'name'         => 'postinfo',
-    'title'        => E::ts('Postal mailing'),
-    'type'         => CRM_Utils_Type::T_BOOLEAN,
+    'description' => E::ts('Whether to subscribe the contact to the newsletter group defined in the profile.'),
+  ];
+  $params['postinfo'] = [
+    'name' => 'postinfo',
+    'title' => E::ts('Postal mailing'),
+    'type' => CRM_Utils_Type::T_BOOLEAN,
     'api.required' => 0,
-    'description'  => E::ts('Whether to subscribe the contact to the postal mailing group defined in the profile.'),
-  );
-  $params['donation_receipt'] = array(
-    'name'         => 'donation_receipt',
-    'title'        => E::ts('Donation receipt'),
-    'type'         => CRM_Utils_Type::T_BOOLEAN,
+    'description' => E::ts('Whether to subscribe the contact to the postal mailing group defined in the profile.'),
+  ];
+  $params['donation_receipt'] = [
+    'name' => 'donation_receipt',
+    'title' => E::ts('Donation receipt'),
+    'type' => CRM_Utils_Type::T_BOOLEAN,
     'api.required' => 0,
-    'description'  => E::ts('Whether the contact requested a donation receipt.'),
-  );
-  $params['payment_method'] = array(
-    'name'         => 'payment_method',
-    'title'        => E::ts('Payment method'),
-    'type'         => CRM_Utils_Type::T_STRING,
+    'description' => E::ts('Whether the contact requested a donation receipt.'),
+  ];
+  $params['payment_method'] = [
+    'name' => 'payment_method',
+    'title' => E::ts('Payment method'),
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
-    'description'  => E::ts('The Twingle payment method used for the donation.'),
-  );
-  $params['donation_rhythm'] = array(
-    'name'         => 'donation_rhythm',
-    'title'        => E::ts('Donation rhythm'),
-    'type'         => CRM_Utils_Type::T_STRING,
+    'description' => E::ts('The Twingle payment method used for the donation.'),
+  ];
+  $params['donation_rhythm'] = [
+    'name' => 'donation_rhythm',
+    'title' => E::ts('Donation rhythm'),
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 1,
-    'description'  => E::ts('The interval which the donation is recurring in.'),
-  );
-  $params['debit_iban'] = array(
-    'name'         => 'debit_iban',
-    'title'        => E::ts('SEPA IBAN'),
-    'type'         => CRM_Utils_Type::T_STRING,
+    'description' => E::ts('The interval which the donation is recurring in.'),
+  ];
+  $params['debit_iban'] = [
+    'name' => 'debit_iban',
+    'title' => E::ts('SEPA IBAN'),
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => E::ts('The IBAN for SEPA Direct Debit payments, conforming with ISO 13616-1:2007.'),
-  );
-  $params['debit_bic'] = array(
-    'name'         => 'debit_bic',
-    'title'        => E::ts('SEPA BIC'),
-    'type'         => CRM_Utils_Type::T_STRING,
+    'description' => E::ts('The IBAN for SEPA Direct Debit payments, conforming with ISO 13616-1:2007.'),
+  ];
+  $params['debit_bic'] = [
+    'name' => 'debit_bic',
+    'title' => E::ts('SEPA BIC'),
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => E::ts('The BIC for SEPA Direct Debit payments, conforming with ISO 9362.'),
-  );
-  $params['debit_mandate_reference'] = array(
-    'name'         => 'debit_mandate_reference',
-    'title'        => E::ts('SEPA Direct Debit Mandate reference'),
-    'type'         => CRM_Utils_Type::T_STRING,
+    'description' => E::ts('The BIC for SEPA Direct Debit payments, conforming with ISO 9362.'),
+  ];
+  $params['debit_mandate_reference'] = [
+    'name' => 'debit_mandate_reference',
+    'title' => E::ts('SEPA Direct Debit Mandate reference'),
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => E::ts('The mandate reference for SEPA Direct Debit payments.'),
-  );
-  $params['debit_account_holder'] = array(
-    'name'         => 'debit_account_holder',
-    'title'        => E::ts('SEPA Direct Debit Account holder'),
-    'type'         => CRM_Utils_Type::T_STRING,
+    'description' => E::ts('The mandate reference for SEPA Direct Debit payments.'),
+  ];
+  $params['debit_account_holder'] = [
+    'name' => 'debit_account_holder',
+    'title' => E::ts('SEPA Direct Debit Account holder'),
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => E::ts('The account holder for SEPA Direct Debit payments.'),
-  );
-  $params['is_anonymous'] = array(
-    'name'         => 'is_anonymous',
-    'title'        => E::ts('Anonymous donation'),
-    'type'         => CRM_Utils_Type::T_BOOLEAN,
+    'description' => E::ts('The account holder for SEPA Direct Debit payments.'),
+  ];
+  $params['is_anonymous'] = [
+    'name' => 'is_anonymous',
+    'title' => E::ts('Anonymous donation'),
+    'type' => CRM_Utils_Type::T_BOOLEAN,
     'api.required' => 0,
-    'api.default'  => 0,
-    'description'  => E::ts('Whether the donation is submitted anonymously.'),
-  );
-  $params['user_gender'] = array(
-    'name'         => 'user_gender',
-    'title'        => E::ts('Gender'),
-    'type'         => CRM_Utils_Type::T_STRING,
+    'api.default' => 0,
+    'description' => E::ts('Whether the donation is submitted anonymously.'),
+  ];
+  $params['user_gender'] = [
+    'name' => 'user_gender',
+    'title' => E::ts('Gender'),
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => E::ts('The gender of the contact.'),
-  );
-  $params['user_birthdate'] = array(
-    'name'         => 'user_birthdate',
-    'title'        => E::ts('Date of birth'),
-    'type'         => CRM_Utils_Type::T_STRING,
+    'description' => E::ts('The gender of the contact.'),
+  ];
+  $params['user_birthdate'] = [
+    'name' => 'user_birthdate',
+    'title' => E::ts('Date of birth'),
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => E::ts('The date of birth of the contact, format: Ymd.'),
-  );
-  $params['user_title'] = array(
-    'name'         => 'user_title',
-    'title'        => E::ts('Formal title'),
-    'type'         => CRM_Utils_Type::T_STRING,
+    'description' => E::ts('The date of birth of the contact, format: Ymd.'),
+  ];
+  $params['user_title'] = [
+    'name' => 'user_title',
+    'title' => E::ts('Formal title'),
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => E::ts('The formal title of the contact.'),
-  );
-  $params['user_email'] = array(
-    'name'         => 'user_email',
-    'title'        => E::ts('Email address'),
-    'type'         => CRM_Utils_Type::T_STRING,
+    'description' => E::ts('The formal title of the contact.'),
+  ];
+  $params['user_email'] = [
+    'name' => 'user_email',
+    'title' => E::ts('Email address'),
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => E::ts('The e-mail address of the contact.'),
-  );
-  $params['user_firstname'] = array(
-    'name'         => 'user_firstname',
-    'title'        => E::ts('First name'),
-    'type'         => CRM_Utils_Type::T_STRING,
+    'description' => E::ts('The e-mail address of the contact.'),
+  ];
+  $params['user_firstname'] = [
+    'name' => 'user_firstname',
+    'title' => E::ts('First name'),
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => E::ts('The first name of the contact.'),
-  );
-  $params['user_lastname'] = array(
-    'name'         => 'user_lastname',
-    'title'        => E::ts('Last name'),
-    'type'         => CRM_Utils_Type::T_STRING,
+    'description' => E::ts('The first name of the contact.'),
+  ];
+  $params['user_lastname'] = [
+    'name' => 'user_lastname',
+    'title' => E::ts('Last name'),
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => E::ts('The last name of the contact.'),
-  );
-  $params['user_street'] = array(
-    'name'         => 'user_street',
-    'title'        => E::ts('Street address'),
-    'type'         => CRM_Utils_Type::T_STRING,
+    'description' => E::ts('The last name of the contact.'),
+  ];
+  $params['user_street'] = [
+    'name' => 'user_street',
+    'title' => E::ts('Street address'),
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => E::ts('The street address of the contact.'),
-  );
-  $params['user_postal_code'] = array(
-    'name'         => 'user_postal_code',
-    'title'        => E::ts('Postal code'),
-    'type'         => CRM_Utils_Type::T_STRING,
+    'description' => E::ts('The street address of the contact.'),
+  ];
+  $params['user_postal_code'] = [
+    'name' => 'user_postal_code',
+    'title' => E::ts('Postal code'),
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => E::ts('The postal code of the contact.'),
-  );
-  $params['user_city'] = array(
-    'name'         => 'user_city',
-    'title'        => E::ts('City'),
-    'type'         => CRM_Utils_Type::T_STRING,
+    'description' => E::ts('The postal code of the contact.'),
+  ];
+  $params['user_city'] = [
+    'name' => 'user_city',
+    'title' => E::ts('City'),
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => E::ts('The city of the contact.'),
-  );
-  $params['user_country'] = array(
-    'name'         => 'user_country',
-    'title'        => E::ts('Country'),
-    'type'         => CRM_Utils_Type::T_STRING,
+    'description' => E::ts('The city of the contact.'),
+  ];
+  $params['user_country'] = [
+    'name' => 'user_country',
+    'title' => E::ts('Country'),
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => E::ts('The country of the contact.'),
-  );
-  $params['user_telephone'] = array(
-    'name'         => 'user_telephone',
-    'title'        => E::ts('Telephone'),
-    'type'         => CRM_Utils_Type::T_STRING,
+    'description' => E::ts('The country of the contact.'),
+  ];
+  $params['user_telephone'] = [
+    'name' => 'user_telephone',
+    'title' => E::ts('Telephone'),
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => E::ts('The telephone number of the contact.'),
-  );
-  $params['user_company'] = array(
-    'name'         => 'user_company',
-    'title'        => E::ts('Company'),
-    'type'         => CRM_Utils_Type::T_STRING,
+    'description' => E::ts('The telephone number of the contact.'),
+  ];
+  $params['user_company'] = [
+    'name' => 'user_company',
+    'title' => E::ts('Company'),
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => E::ts('The company of the contact.'),
-  );
-  $params['user_language'] = array(
-    'name'         => 'user_language',
-    'title'        => E::ts('Language'),
-    'type'         => CRM_Utils_Type::T_STRING,
+    'description' => E::ts('The company of the contact.'),
+  ];
+  $params['user_language'] = [
+    'name' => 'user_language',
+    'title' => E::ts('Language'),
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => E::ts('The preferred language of the contact. A 2-digit ISO-639-1 language code.'),
-  );
-  $params['user_extrafield'] = array(
-    'name'         => 'user_extrafield',
-    'title'        => E::ts('User extra field'),
-    'type'         => CRM_Utils_Type::T_STRING,
+    'description' => E::ts('The preferred language of the contact. A 2-digit ISO-639-1 language code.'),
+  ];
+  $params['user_extrafield'] = [
+    'name' => 'user_extrafield',
+    'title' => E::ts('User extra field'),
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => E::ts('Additional information of the contact.'),
-  );
-  $params['campaign_id'] = array(
+    'description' => E::ts('Additional information of the contact.'),
+  ];
+  $params['campaign_id'] = [
     'name' => 'campaign_id',
     'title' => E::ts('Campaign ID'),
     'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
     'description' => E::ts('The CiviCRM ID of a campaign to assign the contribution.'),
-  );
-  $params['custom_fields'] = array(
-    'name'         => 'custom_fields',
-    'title'        => E::ts('Custom fields'),
-    'type'         => CRM_Utils_Type::T_STRING,
+  ];
+  $params['custom_fields'] = [
+    'name' => 'custom_fields',
+    'title' => E::ts('Custom fields'),
+    'type' => CRM_Utils_Type::T_STRING,
     'api.required' => 0,
-    'description'  => E::ts('Additional information for either the contact or the (recurring) contribution.'),
-  );
+    'description' => E::ts('Additional information for either the contact or the (recurring) contribution.'),
+  ];
 }
 
 /**
@@ -273,7 +275,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
     $original_params = $params;
 
     // Prepare results array.
-    $result_values = array();
+    $result_values = [];
 
     // Get the profile defined for the given form ID, or the default profile
     // if none matches.
@@ -285,12 +287,12 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
     // Do not process an already existing contribution with the given
     // transaction ID.
-    $existing_contribution = civicrm_api3('Contribution', 'get', array(
-      'trxn_id' => $profile->getTransactionID($params['trx_id'])
-    ));
-    $existing_contribution_recur = civicrm_api3('ContributionRecur', 'get', array(
-      'trxn_id' => $profile->getTransactionID($params['trx_id'])
-    ));
+    $existing_contribution = civicrm_api3('Contribution', 'get', [
+      'trxn_id' => $profile->getTransactionID($params['trx_id']),
+    ]);
+    $existing_contribution_recur = civicrm_api3('ContributionRecur', 'get', [
+      'trxn_id' => $profile->getTransactionID($params['trx_id']),
+    ]);
     if ($existing_contribution['count'] > 0 || $existing_contribution_recur['count'] > 0) {
       throw new CiviCRM_API3_Exception(
         E::ts('Contribution with the given transaction ID already exists.'),
@@ -300,13 +302,13 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
     // Extract custom field values using the profile's mapping of Twingle fields
     // to CiviCRM custom fields.
-    $custom_fields = array();
+    $custom_fields = [];
     if (!empty($params['custom_fields'])) {
       $custom_field_mapping = $profile->getCustomFieldMapping();
 
       // Include user_extrafield in custom_field_mapping if it is referenced there.
       // See issue #50.
-      if(!empty($params['user_extrafield']) && isset($custom_field_mapping['user_extrafield'])) {
+      if (!empty($params['user_extrafield']) && isset($custom_field_mapping['user_extrafield'])) {
         $params['custom_fields']['user_extrafield'] = $params['user_extrafield'];
       }
 
@@ -315,11 +317,11 @@ function civicrm_api3_twingle_donation_Submit($params) {
           // Get custom field definition to store values by entity the field
           // extends.
           $custom_field_id = substr($custom_field_mapping[$twingle_field], strlen('custom_'));
-          $custom_field = civicrm_api3('CustomField', 'getsingle', array(
+          $custom_field = civicrm_api3('CustomField', 'getsingle', [
             'id' => $custom_field_id,
             // Chain a CustomGroup.getsingle API call.
-            'api.CustomGroup.getsingle' => array(),
-          ));
+            'api.CustomGroup.getsingle' => [],
+          ]);
           $custom_fields[$custom_field['api.CustomGroup.getsingle']['extends']][$custom_field_mapping[$twingle_field]] = $value;
         }
       }
@@ -329,18 +331,18 @@ function civicrm_api3_twingle_donation_Submit($params) {
     if ($params['is_anonymous']) {
       // Retrieve the ID of the contact to use for anonymous donations defined
       // within the profile
-      $contact_id = civicrm_api3('Contact', 'getsingle', array(
+      $contact_id = civicrm_api3('Contact', 'getsingle', [
         'id' => $profile->getAttribute('anonymous_contact_id'),
-      ))['id'];
+      ])['id'];
     }
     else {
       // Prepare parameter mapping for address.
-      foreach (array(
-                 'user_street' => 'street_address',
-                 'user_postal_code' => 'postal_code',
-                 'user_city' => 'city',
-                 'user_country' => 'country',
-               ) as $address_param => $address_component) {
+      foreach ([
+        'user_street' => 'street_address',
+        'user_postal_code' => 'postal_code',
+        'user_city' => 'city',
+        'user_country' => 'country',
+      ] as $address_param => $address_component) {
         if (!empty($params[$address_param])) {
           $params[$address_component] = $params[$address_param];
           if ($address_param != $address_component) {
@@ -355,11 +357,11 @@ function civicrm_api3_twingle_donation_Submit($params) {
       foreach ($profile->getAttribute('required_address_components', []) as $required_address_component) {
         if (empty($params[$required_address_component])) {
           foreach ([
-                     'street_address',
-                     'postal_code',
-                     'city',
-                     'country',
-                   ] as $address_param) {
+            'street_address',
+            'postal_code',
+            'city',
+            'country',
+          ] as $address_param) {
             unset($params[$address_param]);
           }
           break;
@@ -383,14 +385,14 @@ function civicrm_api3_twingle_donation_Submit($params) {
       // Exclude address for now when retrieving/creating the individual contact
       // as we are checking organisation address first and share it with the
       // individual.
-      $submitted_address = array();
-      foreach (array(
-                 'street_address',
-                 'postal_code',
-                 'city',
-                 'country',
-                 'location_type_id',
-               ) as $address_component) {
+      $submitted_address = [];
+      foreach ([
+        'street_address',
+        'postal_code',
+        'city',
+        'country',
+        'location_type_id',
+      ] as $address_component) {
         if (!empty($params[$address_component])) {
           $submitted_address[$address_component] = $params[$address_component];
           unset($params[$address_component]);
@@ -399,18 +401,18 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
       // Get the ID of the contact matching the given contact data, or create a
       // new contact if none exists for the given contact data.
-      $contact_data = array();
-      foreach (array(
-                 'user_firstname' => 'first_name',
-                 'user_lastname' => 'last_name',
-                 'gender_id' => 'gender_id',
-                 'user_birthdate' => 'birth_date',
-                 'user_email' => 'email',
-                 'user_telephone' => 'phone',
-                 'user_language' => 'preferred_language',
-                 'user_title' => 'formal_title',
-                 'debit_iban' => 'iban',
-               ) as $contact_param => $contact_component) {
+      $contact_data = [];
+      foreach ([
+        'user_firstname' => 'first_name',
+        'user_lastname' => 'last_name',
+        'gender_id' => 'gender_id',
+        'user_birthdate' => 'birth_date',
+        'user_email' => 'email',
+        'user_telephone' => 'phone',
+        'user_language' => 'preferred_language',
+        'user_title' => 'formal_title',
+        'debit_iban' => 'iban',
+      ] as $contact_param => $contact_component) {
         if (!empty($params[$contact_param])) {
           $contact_data[$contact_component] = $params[$contact_param];
         }
@@ -434,9 +436,9 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
       // Organisation lookup.
       if (!empty($params['organization_name'])) {
-        $organisation_data = array(
+        $organisation_data = [
           'organization_name' => $params['organization_name'],
-        );
+        ];
 
         // Add custom field values.
         if (!empty($custom_fields['Organization'])) {
@@ -478,11 +480,11 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
       // Save user_extrafield as contact note.
       if (!empty($params['user_extrafield'])) {
-        civicrm_api3('Note', 'create', array(
+        civicrm_api3('Note', 'create', [
           'entity_table' => 'civicrm_contact',
           'entity_id' => $contact_id,
           'note' => $params['user_extrafield'],
-        ));
+        ]);
       }
 
       // Share organisation address with individual contact, using configured
@@ -509,7 +511,10 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
     // If usage of double opt-in is selected, use MailingEventSubscribe.create
     // to add contact to newsletter groups defined in the profile
-    $result_values['newsletter']['newsletter_double_opt_in'] = ($profile->getAttribute('newsletter_double_opt_in')) ? 'true' : 'false';
+    $result_values['newsletter']['newsletter_double_opt_in']
+      = ($profile->getAttribute('newsletter_double_opt_in'))
+      ? 'true'
+      : 'false';
     if (
       $profile->getAttribute('newsletter_double_opt_in') &&
       !empty($params['newsletter']) &&
@@ -519,10 +524,10 @@ function civicrm_api3_twingle_donation_Submit($params) {
         civicrm_api3(
           'GroupContact',
           'get',
-          array(
+          [
             'sequential' => 1,
             'contact_id' => $contact_id,
-          )
+          ]
         )['values'],
         'group_id'
       );
@@ -530,19 +535,19 @@ function civicrm_api3_twingle_donation_Submit($params) {
         $is_public_group = civicrm_api3(
           'Group',
             'getsingle',
-            array(
+            [
               'id' => (int) $group_id,
-            )
+            ]
           )['visibility'] == 'Public Pages';
         if (!in_array($group_id, $group_memberships) && $is_public_group) {
           $result_values['newsletter'][][$group_id] = civicrm_api3(
             'MailingEventSubscribe',
             'create',
-            array(
+            [
               'email' => $params['user_email'],
               'group_id' => (int) $group_id,
               'contact_id' => $contact_id,
-            )
+            ]
           );
         }
         elseif ($is_public_group) {
@@ -559,10 +564,10 @@ function civicrm_api3_twingle_donation_Submit($params) {
         civicrm_api3(
           'GroupContact',
           'create',
-          array(
+          [
             'group_id' => $group_id,
             'contact_id' => $contact_id,
-          )
+          ]
         );
 
         $result_values['newsletter'][] = $group_id;
@@ -572,10 +577,10 @@ function civicrm_api3_twingle_donation_Submit($params) {
     // If requested, add contact to postinfo groups defined in the profile.
     if (!empty($params['postinfo']) && !empty($groups = $profile->getAttribute('postinfo_groups'))) {
       foreach ($groups as $group_id) {
-        civicrm_api3('GroupContact', 'create', array(
+        civicrm_api3('GroupContact', 'create', [
           'group_id' => $group_id,
           'contact_id' => $contact_id,
-        ));
+        ]);
 
         $result_values['postinfo'][] = $group_id;
       }
@@ -585,10 +590,10 @@ function civicrm_api3_twingle_donation_Submit($params) {
     // profile.
     if (!empty($params['donation_receipt']) && !empty($groups = $profile->getAttribute('donation_receipt_groups'))) {
       foreach ($groups as $group_id) {
-        civicrm_api3('GroupContact', 'create', array(
+        civicrm_api3('GroupContact', 'create', [
           'group_id' => $group_id,
           'contact_id' => $contact_id,
-        ));
+        ]);
 
         $result_values['donation_receipt'][] = $group_id;
       }
@@ -596,14 +601,14 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
     // Create contribution or SEPA mandate. Those attributes are valid for both,
     // single and recurring contributions.
-    $contribution_data = array(
+    $contribution_data = [
       'contact_id' => (isset($organisation_id) ? $organisation_id : $contact_id),
       'currency' => $params['currency'],
       'trxn_id' => $profile->getTransactionID($params['trx_id']),
       'payment_instrument_id' => $params['payment_instrument_id'],
       'amount' => $params['amount'] / 100,
       'total_amount' => $params['amount'] / 100,
-    );
+    ];
 
     // Add custom field values.
     if (!empty($custom_fields['Contribution'])) {
@@ -628,15 +633,15 @@ function civicrm_api3_twingle_donation_Submit($params) {
       // If CiviSEPA is installed and the financial type is a CiviSEPA-one,
       // create SEPA mandate (and recurring contribution, using "createfull" API
       // action).
-      foreach (array(
+      foreach ([
         'debit_iban',
         'debit_bic',
-               ) as $sepa_attribute) {
+      ] as $sepa_attribute) {
         if (empty($params[$sepa_attribute])) {
           throw new CiviCRM_API3_Exception(
-            E::ts('Missing attribute %1 for SEPA mandate', array(
+            E::ts('Missing attribute %1 for SEPA mandate', [
               1 => $sepa_attribute,
-            )),
+            ]),
             'invalid_format'
           );
         }
@@ -648,23 +653,25 @@ function civicrm_api3_twingle_donation_Submit($params) {
       $mandate_data =
         $contribution_data
         // ... CiviSEPA mandate attributes, ...
-        + array(
+        + [
           'type' => ($params['donation_rhythm'] == 'one_time' ? 'OOFF' : 'RCUR'),
           'iban' => $params['debit_iban'],
           'bic' => $params['debit_bic'],
           'reference' => $params['debit_mandate_reference'],
-          'date' => $params['confirmed_at'], // Signature date
-          'start_date' => $params['confirmed_at'], // Earliest collection date.
+          // Signature date
+          'date' => $params['confirmed_at'],
+          // Earliest collection date.
+          'start_date' => $params['confirmed_at'],
           'creditor_id' => $creditor_id,
-        )
-      // ... and frequency unit and interval from a static mapping.
-      + CRM_Twingle_Submission::getFrequencyMapping($params['donation_rhythm']);
+        ]
+        // ... and frequency unit and interval from a static mapping.
+        + CRM_Twingle_Submission::getFrequencyMapping($params['donation_rhythm']);
       // Add custom field values.
       if (!empty($custom_fields['ContributionRecur'])) {
         $mandate_data += $custom_fields['ContributionRecur'];
       }
       if (!empty($mandate_source = $profile->getAttribute('contribution_source'))) {
-          $mandate_data['source'] = $mandate_source;
+        $mandate_data['source'] = $mandate_source;
       }
 
       // Add cycle day for recurring contributions.
@@ -714,10 +721,10 @@ function civicrm_api3_twingle_donation_Submit($params) {
         // Create recurring contribution first.
         $contribution_recur_data =
           $contribution_data
-          + array(
+          + [
             'contribution_status_id' => 'Pending',
             'start_date' => $params['confirmed_at'],
-          )
+          ]
           + CRM_Twingle_Submission::getFrequencyMapping($params['donation_rhythm']);
 
         // Add custom field values.
@@ -741,17 +748,17 @@ function civicrm_api3_twingle_donation_Submit($params) {
       }
 
       // Create contribution.
-      $contribution_data += array(
+      $contribution_data += [
         'contribution_status_id' => $profile->getAttribute("pi_{$params['payment_method']}_status", CRM_Twingle_Submission::CONTRIBUTION_STATUS_COMPLETED),
         'receive_date' => $params['confirmed_at'],
-      );
+      ];
 
       // Assign to recurring contribution.
       if (!empty($params['parent_trx_id'])) {
         try {
-          $parent_contribution = civicrm_api3('ContributionRecur', 'getsingle', array(
+          $parent_contribution = civicrm_api3('ContributionRecur', 'getsingle', [
             'trxn_id' => $profile->getTransactionID($params['parent_trx_id']),
-          ));
+          ]);
           $contribution_data['contribution_recur_id'] = $parent_contribution['id'];
         }
         catch (Exception $exception) {
@@ -778,15 +785,16 @@ function civicrm_api3_twingle_donation_Submit($params) {
     if ($params['donation_rhythm'] == 'one_time') {
       // membership creation based on one-off contributions
       $membership_type_id = $profile->getAttribute('membership_type_id');
-
-    } else {
+    }
+    else {
       // membership creation based on recurring contributions
       if (empty($params['parent_trx_id'])) {
         // this is the initial payment
         $membership_type_id = $profile->getAttribute('membership_type_id_recur');
-      } else {
+      }
+      else {
         // this is a follow-up recurring payment
-        $membership_type_id = false;
+        $membership_type_id = FALSE;
       }
     }
 
@@ -800,7 +808,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       CRM_Twingle_Submission::setCampaign($membership_data, 'membership', $params, $profile);
       // set source
       if (!empty($membership_source = $profile->getAttribute('contribution_source'))) {
-          $membership_data['source'] = $membership_source;
+        $membership_data['source'] = $membership_source;
       }
 
       $membership = civicrm_api3('Membership', 'create', $membership_data);
@@ -809,13 +817,14 @@ function civicrm_api3_twingle_donation_Submit($params) {
       // call the postprocess API
       $postprocess_call = $profile->getAttribute('membership_postprocess_call');
       if (!empty($postprocess_call)) {
-        list($pp_entity, $pp_action) = explode('.', $postprocess_call, 2);
+        [$pp_entity, $pp_action] = explode('.', $postprocess_call, 2);
         try {
           // gather the contribution IDs
           $recurring_contribution_id = $contribution_id = '';
           if (isset($contribution_recur['id'])) {
             $recurring_contribution_id = $contribution_recur['id'];
-          } elseif (!empty($result_values['sepa_mandate'])) {
+          }
+          elseif (!empty($result_values['sepa_mandate'])) {
             $mandate = reset($result_values['sepa_mandate']);
             if ($mandate['entity_table'] == 'civicrm_contribution_recur') {
               $recurring_contribution_id = (int) $mandate['entity_id'];
@@ -827,21 +836,24 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
           // run the call
           civicrm_api3(trim($pp_entity), trim($pp_action), [
-              'membership_id'             => $membership['id'],
-              'contact_id'                => $contact_id,
-              'organization_id'           => isset($organisation_id) ? $organisation_id : '',
-              'contribution_id'           => $contribution_id,
-              'recurring_contribution_id' => $recurring_contribution_id,
+            'membership_id' => $membership['id'],
+            'contact_id' => $contact_id,
+            'organization_id' => isset($organisation_id) ? $organisation_id : '',
+            'contribution_id' => $contribution_id,
+            'recurring_contribution_id' => $recurring_contribution_id,
           ]);
 
           // refresh membership data
           $result_values['membership'] = civicrm_api3('Membership', 'getsingle', ['id' => $membership['id']]);
-
-        } catch (CiviCRM_API3_Exception $ex) {
+        }
+        catch (CiviCRM_API3_Exception $ex) {
           // TODO: more error handling?
-          Civi::log()->warning("Twingle membership postprocessing call {$pp_entity}.{$pp_action} has failed: " . $ex->getMessage());
+          Civi::log()
+            ->warning(
+              "Twingle membership postprocessing call {$pp_entity}.{$pp_action} has failed: " . $ex->getMessage()
+            );
           throw new Exception(
-              E::ts("Twingle membership postprocessing call has failed, see log for more information")
+            E::ts('Twingle membership postprocessing call has failed, see log for more information')
           );
         }
       }

@@ -13,6 +13,8 @@
 | written permission from the original author(s).             |
 +-------------------------------------------------------------*/
 
+declare(strict_types = 1);
+
 use CRM_Twingle_ExtensionUtil as E;
 
 /**
@@ -461,7 +463,12 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         E::ts('API Call for Membership Postprocessing'),
         FALSE
     );
-    $this->addRule('membership_postprocess_call', E::ts("The API call must have the form 'Entity.Action'."), 'regex', '/^[A-Za-z_]+[.][A-Za-z_]+$/');
+    $this->addRule(
+      'membership_postprocess_call',
+      E::ts("The API call must have the form 'Entity.Action'."),
+      'regex',
+      '/^[A-Za-z_]+[.][A-Za-z_]+$/'
+    );
 
     $this->add(
     // field type
@@ -513,10 +520,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   /**
    * Validates the profile form.
    *
-   * @param array $values
-   *   The submitted form values, keyed by form element name.
-   *
-   * @return bool | array
+   * @return bool|array
    *   TRUE when the form was successfully validated, or an array of error
    *   messages, keyed by form element name.
    */
@@ -534,7 +538,8 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
 
     // Restrict profile names to alphanumeric characters and the underscore.
     if (isset($values['name']) && preg_match('/[^A-Za-z0-9\_]/', $values['name'])) {
-      $this->_errors['name'] = E::ts('Only alphanumeric characters and the underscore (_) are allowed for profile names.');
+      $this->_errors['name'] =
+        E::ts('Only alphanumeric characters and the underscore (_) are allowed for profile names.');
     }
 
     // Validate custom field mapping.
