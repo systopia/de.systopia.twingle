@@ -143,7 +143,7 @@ class CRM_Twingle_Profile {
    * @param string $attribute_name
    * @param mixed $value
    *
-   * @throws \CRM_Twingle_Exceptions_ProfileException
+   * @throws \Civi\Twingle\Exceptions\ProfileException
    *   When the attribute name is not known.
    */
   public function setAttribute($attribute_name, $value) {
