@@ -653,7 +653,8 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       elseif ($this->_op == 'delete') {
         $this->profile->deleteProfile();
       }
-    } catch (ProfileException $e) {
+    }
+    catch (ProfileException $e) {
       Civi::log()->error($e->getLogMessage());
       CRM_Core_Session::setStatus(
         E::ts('Error'),
