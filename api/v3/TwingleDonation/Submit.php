@@ -306,10 +306,10 @@ function civicrm_api3_twingle_donation_Submit($params) {
     if (!empty($params['custom_fields'])) {
       $custom_field_mapping = $profile->getCustomFieldMapping();
 
-    // Make all params available for custom field mapping
-    $allowed_params = [];
-    _civicrm_api3_twingle_donation_Submit_spec($allowed_params);
-    $params['custom_fields'] += array_intersect_key($params, $custom_field_mapping, $allowed_params);
+      // Make all params available for custom field mapping
+      $allowed_params = [];
+      _civicrm_api3_twingle_donation_Submit_spec($allowed_params);
+      $params['custom_fields'] += array_intersect_key($params, $custom_field_mapping, $allowed_params);
 
       foreach ($params['custom_fields'] as $twingle_field => $value) {
         if (isset($custom_field_mapping[$twingle_field])) {
