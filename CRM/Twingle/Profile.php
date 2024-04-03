@@ -353,6 +353,7 @@ class CRM_Twingle_Profile {
       ],
     ]
     // Add contribution status for all payment methods.
+    // phpcs:ignore Drupal.Formatting.SpaceUnaryOperator.PlusMinus
     + array_fill_keys(array_map(function($attribute) {
       return $attribute . '_status';
     }, array_keys(static::paymentInstruments())), CRM_Twingle_Submission::CONTRIBUTION_STATUS_COMPLETED));
@@ -440,6 +441,7 @@ class CRM_Twingle_Profile {
     $stats = [];
     $profile_data = CRM_Core_DAO::executeQuery('SELECT name, last_access, access_counter FROM civicrm_twingle_profile');
     while ($profile_data->fetch()) {
+      // phpcs:disable Drupal.Arrays.Array.ArrayIndentation
       $stats[$profile_data->name] = [
         'name' => $profile_data->name,
         'last_access' => $profile_data->last_access,
@@ -451,6 +453,7 @@ class CRM_Twingle_Profile {
           ? ((int) $profile_data->access_counter) . 'x'
           : E::ts('never'),
       ];
+      // phpcs:enable
     }
     return $stats;
   }

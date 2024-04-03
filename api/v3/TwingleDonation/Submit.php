@@ -321,7 +321,8 @@ function civicrm_api3_twingle_donation_Submit($params) {
             // Chain a CustomGroup.getsingle API call.
             'api.CustomGroup.getsingle' => [],
           ]);
-          $custom_fields[$custom_field['api.CustomGroup.getsingle']['extends']][$custom_field_mapping[$twingle_field]] = $value;
+          $entity = $custom_field['api.CustomGroup.getsingle']['extends'];
+          $custom_fields[$entity][$custom_field_mapping[$twingle_field]] = $value;
         }
       }
     }
@@ -652,6 +653,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       $mandate_data =
         $contribution_data
         // ... CiviSEPA mandate attributes, ...
+        // phpcs:ignore Drupal.Formatting.SpaceUnaryOperator.PlusMinus
         + [
           'type' => ($params['donation_rhythm'] == 'one_time' ? 'OOFF' : 'RCUR'),
           'iban' => $params['debit_iban'],
@@ -664,6 +666,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
           'creditor_id' => $creditor_id,
         ]
         // ... and frequency unit and interval from a static mapping.
+        // phpcs:ignore Drupal.Formatting.SpaceUnaryOperator.PlusMinus
         + CRM_Twingle_Submission::getFrequencyMapping($params['donation_rhythm']);
       // Add custom field values.
       if (!empty($custom_fields['ContributionRecur'])) {
@@ -748,7 +751,10 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
       // Create contribution.
       $contribution_data += [
-        'contribution_status_id' => $profile->getAttribute("pi_{$params['payment_method']}_status", CRM_Twingle_Submission::CONTRIBUTION_STATUS_COMPLETED),
+        'contribution_status_id' => $profile->getAttribute(
+          "pi_{$params['payment_method']}_status",
+          CRM_Twingle_Submission::CONTRIBUTION_STATUS_COMPLETED
+        ),
         'receive_date' => $params['confirmed_at'],
       ];
 

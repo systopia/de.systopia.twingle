@@ -89,8 +89,9 @@ class CRM_Twingle_Upgrader extends CRM_Extension_Upgrader_Base {
       foreach ($profiles_data as $profile_name => $profile_data) {
         $profile = new CRM_Twingle_Profile($profile_name, $profile_data);
         $data = json_encode($profile->getData());
-        CRM_Core_DAO::executeQuery(
-          'INSERT IGNORE INTO civicrm_twingle_profile(name,config,last_access,access_counter) VALUES (%1, %2, NOW(), 0)',
+        CRM_Core_DAO::executeQuery(<<<SQL
+          INSERT IGNORE INTO civicrm_twingle_profile(name,config,last_access,access_counter) VALUES (%1, %2, NOW(), 0)
+          SQL,
           [
             1 => [$profile_name, 'String'],
             2 => [$data, 'String'],

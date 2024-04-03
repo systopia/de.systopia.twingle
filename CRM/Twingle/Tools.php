@@ -123,9 +123,12 @@ class CRM_Twingle_Tools {
         break;
 
       case CRM_Twingle_Config::RCUR_PROTECTION_EXCEPTION:
+        // phpcs:disable Generic.Files.LineLength.TooLong
         throw new Exception(E::ts(
           'This is a Twingle recurring contribution. It should be terminated through the Twingle interface, otherwise it will still be collected.'
         ));
+
+        // phpcs:enable
 
       case CRM_Twingle_Config::RCUR_PROTECTION_ACTIVITY:
         // create contact source activity
@@ -157,8 +160,12 @@ class CRM_Twingle_Tools {
             'target_id'          => $target_id,
             'assignee_id'        => Civi::settings()->get('twingle_protect_recurring_activity_assignee'),
             'status_id'          => Civi::settings()->get('twingle_protect_recurring_activity_status'),
-            'details'            => E::ts("Recurring contribution [%1] (Transaction ID '%2') was terminated by a user. You need to end the corresponding record in Twingle as well, or it will still be collected.",
-                                                  [1 => $recurring_contribution_id, 2 => $trxn_id]),
+            // phpcs:disable Generic.Files.LineLength.TooLong
+            'details'            => E::ts(
+              "Recurring contribution [%1] (Transaction ID '%2') was terminated by a user. You need to end the corresponding record in Twingle as well, or it will still be collected.",
+              [1 => $recurring_contribution_id, 2 => $trxn_id]
+            ),
+            // phpcs:enable
             'source_contact_id'  => CRM_Core_Session::getLoggedInContactID(),
           ]);
         }
