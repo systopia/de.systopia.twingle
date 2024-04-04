@@ -25,7 +25,8 @@ use CRM_Twingle_ExtensionUtil as E;
 class CRM_Twingle_Form_Settings extends CRM_Core_Form {
 
   /**
-   * @var arraylistofallsettingsoptions
+   * @var array<string>
+   *   List of all settings options.
    */
   public static $SETTINGS_LIST = [
     'twingle_prefix',
@@ -133,7 +134,8 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
     // if activity creation is active, make sure the fields are set
     $protection_mode = CRM_Utils_Array::value('twingle_protect_recurring', $this->_submitValues);
     if ($protection_mode == CRM_Twingle_Config::RCUR_PROTECTION_ACTIVITY) {
-      foreach (['twingle_protect_recurring_activity_type',
+      foreach ([
+        'twingle_protect_recurring_activity_type',
         'twingle_protect_recurring_activity_subject',
         'twingle_protect_recurring_activity_status',
         'twingle_protect_recurring_activity_assignee',
