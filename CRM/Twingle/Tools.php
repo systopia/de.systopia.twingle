@@ -16,6 +16,7 @@
 declare(strict_types = 1);
 
 use CRM_Twingle_ExtensionUtil as E;
+use Civi\Twingle\Exceptions\BaseException;
 
 class CRM_Twingle_Tools {
 
@@ -29,11 +30,11 @@ class CRM_Twingle_Tools {
    * Check if the attempted modification of the recurring contribution is allowed.
    * If not, an exception will be raised
    *
-   * @param $recurring_contribution_id int
-   * @param $change                    array
+   * @param int $recurring_contribution_id
+   * @param array<mixed> $change
    * @throws Exception if the change is not allowed
    */
-  public static function checkRecurringContributionChange($recurring_contribution_id, $change) {
+  public static function checkRecurringContributionChange(int $recurring_contribution_id, array $change): void {
     // check if a change to the status is planned
     if (empty($change['contribution_status_id'])) {
       return;
@@ -77,14 +78,17 @@ class CRM_Twingle_Tools {
     }
 
     // this _IS_ on of the cases where we should step in:
-    CRM_Twingle_Tools::processRecurringContributionTermination($recurring_contribution_id, $recurring_contribution);
+    CRM_Twingle_Tools::processRecurringContributionTermination(
+      $recurring_contribution_id,
+      $recurring_contribution
+    );
   }
 
   /**
    * @param $recurring_contribution_id    int recurring contribution ID to check
    * @param $recurring_contribution       array recurring contribution data, optional
    * @return bool|null  true, false or null if can't be determined
-   * @throws CiviCRM_API3_Exception
+   * @throws \CRM_Core_Exception
    */
   public static function isTwingleRecurringContribution($recurring_contribution_id, $recurring_contribution = NULL) {
     // this currently only works with prefixes
@@ -106,11 +110,13 @@ class CRM_Twingle_Tools {
   /**
    * Execute the recurring contribution protection
    *
-   * @param $recurring_contribution_id int    recurring contribution ID
-   * @param $recurring_contribution    array  recurring contribution fields
+   * @param int $recurring_contribution_id
+   *   Recurring contribution ID.
+   * @param array<mixed> $recurring_contribution
+   *   Recurring contribution fields.
    * @throws Exception could be one of the measures
    */
-  public static function processRecurringContributionTermination($recurring_contribution_id, $recurring_contribution) {
+  public static function processRecurringContributionTermination(int $recurring_contribution_id, array $recurring_contribution) {
     // check if we're suspended
     if (self::$protection_suspended) {
       return;
@@ -124,7 +130,7 @@ class CRM_Twingle_Tools {
 
       case CRM_Twingle_Config::RCUR_PROTECTION_EXCEPTION:
         // phpcs:disable Generic.Files.LineLength.TooLong
-        throw new Exception(E::ts(
+        throw new BaseException(E::ts(
           'This is a Twingle recurring contribution. It should be terminated through the Twingle interface, otherwise it will still be collected.'
         ));
 
@@ -183,10 +189,10 @@ class CRM_Twingle_Tools {
   /**
    * Check if the given payment instrument is SEPA
    *
-   * @param $payment_instrument_id string payment instrument
+   * @param string $payment_instrument_id
    * @return boolean
    */
-  public static function isSDD($payment_instrument_id) {
+  public static function isSDD(string $payment_instrument_id) {
     static $sepa_payment_instruments = NULL;
     if ($sepa_payment_instruments === NULL) {
       // init with instrument names
@@ -208,11 +214,10 @@ class CRM_Twingle_Tools {
   /**
    * Get a CiviSEPA mandate for the given contribution ID
    *
-   * @param $contribution_id integer contribution ID *or* recurring contribution ID
-   * @return integer mandate ID or null
+   * @param int $contribution_id contribution ID *or* recurring contribution ID
+   * @return array<string, mixed>|null mandate or null
    */
-  public static function getMandateFor($contribution_id) {
-    $contribution_id = (int) $contribution_id;
+  public static function getMandateFor(int $contribution_id): ?array {
     if ($contribution_id) {
       try {
         // try recurring mandate

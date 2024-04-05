@@ -16,7 +16,8 @@
 declare(strict_types = 1);
 
 use CRM_Twingle_ExtensionUtil as E;
-use Civi\Twingle\Exceptions\ProfileException as ProfileException;
+use Civi\Twingle\Exceptions\ProfileException;
+use Civi\Twingle\Exceptions\BaseException;
 
 /**
  * Form controller class
@@ -30,7 +31,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    *
    * The profile object the form is acting on.
    */
-  protected $profile;
+  protected ?CRM_Twingle_Profile $profile = NULL;
 
   /**
    * @var string
@@ -40,120 +41,128 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   protected $_op;
 
   /**
-   * @var array
+   * @var array<string, string>
    *
    * A static cache of retrieved payment instruments found within
    * self::getPaymentInstruments().
    */
-  protected static $_paymentInstruments = NULL;
+  protected static $_paymentInstruments;
 
   /**
-   * @var array
+   * @var array<int, string>
    *
    * A static cache of retrieved contribution statuses found within
    * static::getContributionStatusOptions().
    */
-  protected static $_contributionStatusOptions = NULL;
+  protected static array $_contributionStatusOptions;
 
   /**
-   * @var array
+   * @var array<int, string>
    *
    * A static cache of retrieved groups found within static::getGroups().
    */
-  protected static $_groups = NULL;
+  protected static array $_groups;
 
   /**
-   * @var array
+   * @var array<string, string>
    *
    * A static cache of retrieved newsletter groups found within
    * static::getNewsletterGroups().
    */
-  protected static $_newsletterGroups = NULL;
+  protected static array $_newsletterGroups;
 
   /**
-   * @var array
+   * @var array<int, string>
    *
    * A static cache of retrieved campaigns found within static::getCampaigns().
    */
-  protected static $_campaigns = NULL;
+  protected static array $_campaigns;
 
   /**
-   * @var array
+   * @var array<int, string>
    *
    * A static cache of retrieved financial types found within
    * static::getFinancialTypes().
    */
-  protected static $_financialTypes = NULL;
+  protected static array $_financialTypes;
 
   /**
-   * @var array
+   * @var array<int, string>
    *
    * A static cache of retrieved genders found within
    * static::getGenderOptions().
    */
-  protected static $_genderOptions = NULL;
+  protected static array $_genderOptions;
 
   /**
-   * @var array
+   * @var array<int, string>
    *
    * A static cache of retrieved prefixes found within
    * static::getGenderOptions().
    */
-  protected static $_prefixOptions = NULL;
+  protected static array $_prefixOptions;
 
   /**
-   * @var array
+   * @var array<int, string>
    *
    * A static cache of retrieved location types found within
    * static::getLocationTypes().
    */
-  protected static $_locationTypes = NULL;
+  protected static array $_locationTypes;
 
   /**
-   * @var array
+   * @var array<string, string>
    *
    * A static cache of retrieved location types found within
    * static::getXCMProfiles().
    */
-  protected static $_xcm_profiles = NULL;
+  protected static array $_xcm_profiles;
 
   /**
-   * @var array
+   * @var array<int, string>
    *
    * A static cache of retrieved membership types found within
    * static::getMembershipTypes().
    */
-  protected static $_membershipTypes = NULL;
+  protected static array $_membershipTypes;
 
   /**
-   * @var array
+   * @var array<int, string>
    *
    * A static cache of retrieved CiviSEPA creditors found within
    * static::getSepaCreditors().
    */
-  protected static $_sepaCreditors = NULL;
+  protected static array $_sepaCreditors;
+
+  public function preProcess(): void {
+    // "Create" is the default operation.
+    $op = CRM_Utils_Request::retrieve('op', 'String', $this);
+    $this->_op = is_string($op) ? $op : 'create';
+
+    // Verify that a profile with the given name exists.
+    $profile_name = CRM_Utils_Request::retrieve('name', 'String', $this);
+    if (is_string($profile_name)) {
+      $this->profile = CRM_Twingle_Profile::getProfile($profile_name);
+    }
+
+    // Set redirect destination.
+    $this->controller->_destination = CRM_Utils_System::url(
+      'civicrm/admin/settings/twingle/profiles',
+      'reset=1'
+    );
+
+    parent::preProcess();
+  }
 
   /**
    * Builds the form structure.
    */
-  public function buildQuickForm() {
-    // "Create" is the default operation.
-    if (!$this->_op = CRM_Utils_Request::retrieve('op', 'String', $this)) {
-      $this->_op = 'create';
-    }
-
-    // Verify that a profile with the given name exists.
-    $profile_name = CRM_Utils_Request::retrieve('name', 'String', $this);
-    if (!$this->profile = CRM_Twingle_Profile::getProfile($profile_name)) {
-      $profile_name = NULL;
-    }
-
-    // Set redirect destination.
-    $this->controller->_destination = CRM_Utils_System::url('civicrm/admin/settings/twingle/profiles', 'reset=1');
+  public function buildQuickForm(): void {
+    $profile_name = (isset($this->profile) ? $this->profile->getName() : NULL);
 
     switch ($this->_op) {
       case 'delete':
-        if ($profile_name) {
+        if (isset($profile_name)) {
           CRM_Utils_System::setTitle(E::ts('Delete Twingle API profile <em>%1</em>', [1 => $profile_name]));
           $this->addButtons([
             [
@@ -168,9 +177,12 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
 
       case 'edit':
         // When editing without a valid profile name, edit the default profile.
-        if (!$profile_name) {
+        if (!isset($profile_name)) {
           $profile_name = 'default';
           $this->profile = CRM_Twingle_Profile::getProfile($profile_name);
+        }
+        if (!isset($this->profile)) {
+          throw new BaseException(E::ts('Could not retrieve profile with name "%1"', [1 => $profile_name]));
         }
         CRM_Utils_System::setTitle(E::ts('Edit Twingle API profile <em>%1</em>', [1 => $this->profile->getName()]));
         break;
@@ -179,10 +191,14 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         // Retrieve the source profile name.
         $profile_name = CRM_Utils_Request::retrieve('source_name', 'String', $this);
         // When copying without a valid profile name, copy the default profile.
-        if (!$profile_name) {
+        if (!is_string($profile_name)) {
           $profile_name = 'default';
         }
-        $this->profile = clone CRM_Twingle_Profile::getProfile($profile_name);
+        $originalProfile = CRM_Twingle_Profile::getProfile($profile_name);
+        if (!isset($originalProfile)) {
+          throw new BaseException(E::ts('Could not retrieve profile with name "%1"', [1 => $profile_name]));
+        }
+        $this->profile = clone $originalProfile;
 
         // Propose a new name for this profile.
         $profile_name = $profile_name . '_copy';
@@ -192,7 +208,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
 
       case 'create':
         // Load factory default profile values.
-        $this->profile = CRM_Twingle_Profile::createDefaultProfile($profile_name);
+        $this->profile = CRM_Twingle_Profile::createDefaultProfile($profile_name ?? 'default');
         CRM_Utils_System::setTitle(E::ts('New Twingle API profile'));
         break;
     }
@@ -354,10 +370,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     // field name
       'newsletter_double_opt_in',
     // field label
-      E::ts('Use Double-Opt-In for newsletter'),
-    // is not required
-      FALSE,
-      []
+      E::ts('Use Double-Opt-In for newsletter')
       );
 
     $this->add(
@@ -461,8 +474,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     $this->add(
         'text',
         'membership_postprocess_call',
-        E::ts('API Call for Membership Postprocessing'),
-        FALSE
+        E::ts('API Call for Membership Postprocessing')
     );
     $this->addRule(
       'membership_postprocess_call',
@@ -521,9 +533,8 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   /**
    * Validates the profile form.
    *
-   * @return bool|array
-   *   TRUE when the form was successfully validated, or an array of error
-   *   messages, keyed by form element name.
+   * @return bool
+   *   TRUE when the form was successfully validated.
    */
   public function validate() {
     $values = $this->exportValues();
@@ -531,14 +542,14 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     // Validate new profile names.
     if (
       isset($values['name'])
-      && ($values['name'] != $this->profile->getName() || $this->_op != 'edit')
-      && !empty(CRM_Twingle_Profile::getProfile($values['name']))
+      && (!isset($this->profile) || $values['name'] != $this->profile->getName() || $this->_op != 'edit')
+      && NULL !== CRM_Twingle_Profile::getProfile($values['name'])
     ) {
       $this->_errors['name'] = E::ts('A profile with this name already exists.');
     }
 
     // Restrict profile names to alphanumeric characters and the underscore.
-    if (isset($values['name']) && preg_match('/[^A-Za-z0-9\_]/', $values['name'])) {
+    if (isset($values['name']) && 1 === preg_match('/[^A-Za-z0-9\_]/', $values['name'])) {
       $this->_errors['name'] =
         E::ts('Only alphanumeric characters and the underscore (_) are allowed for profile names.');
     }
@@ -548,14 +559,14 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       if (isset($values['custom_field_mapping'])) {
         $custom_field_mapping = preg_split('/\r\n|\r|\n/', $values['custom_field_mapping'], -1, PREG_SPLIT_NO_EMPTY);
         if (!is_array($custom_field_mapping)) {
-          throw new Exception(
+          throw new BaseException(
             E::ts('Could not parse custom field mapping.')
           );
         }
         foreach ($custom_field_mapping as $custom_field_map) {
           $custom_field_map = explode('=', $custom_field_map);
           if (count($custom_field_map) !== 2) {
-            throw new Exception(
+            throw new BaseException(
               E::ts('Could not parse custom field mapping.')
             );
           }
@@ -568,12 +579,14 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
               'id' => $custom_field_id,
             ]);
           }
-          catch (CiviCRM_API3_Exception $exception) {
-            throw new Exception(
+          catch (CRM_Core_Exception $exception) {
+            throw new BaseException(
               E::ts(
                 'Custom field custom_%1 does not exist.',
                 [1 => $custom_field_id]
-              )
+              ),
+              NULL,
+              $exception
             );
           }
 
@@ -592,18 +605,20 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
               ],
             ]);
           }
-          catch (CiviCRM_API3_Exception $exception) {
-            throw new Exception(
+          catch (CRM_Core_Exception $exception) {
+            throw new BaseException(
               E::ts(
                 'Custom field custom_%1 is not in a CustomGroup that extends one of the supported CiviCRM entities.',
                 [1 => $custom_field['id']]
-              )
-                      );
+              ),
+              NULL,
+              $exception
+            );
           }
         }
       }
     }
-    catch (Exception $exception) {
+    catch (BaseException $exception) {
       $this->_errors['custom_field_mapping'] = $exception->getMessage();
     }
 
@@ -612,12 +627,14 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
 
   /**
    * Set the default values (i.e. the profile's current data) in the form.
+   *
+   * @return array<string, mixed>
    */
   public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
-    if (in_array($this->_op, ['create', 'edit', 'copy'])) {
-      $defaults['name'] = $this->profile->getName();
-      $profile_data = $this->profile->getData();
+    if (in_array($this->_op, ['create', 'edit', 'copy'], TRUE)) {
+      $defaults['name'] = isset($this->profile) ? $this->profile->getName() : NULL;
+      $profile_data = isset($this->profile) ? $this->profile->getData() : [];
       foreach ($profile_data as $element_name => $value) {
         $defaults[$element_name] = $value;
       }
@@ -632,11 +649,14 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   /**
    * Store the values submitted with the form in the profile.
    */
-  public function postProcess() {
+  public function postProcess(): void {
     $values = $this->exportValues();
     try {
-      if (in_array($this->_op, ['create', 'edit', 'copy'])) {
-        if (empty($values['name'])) {
+      if (!isset($this->profile)) {
+        throw new BaseException(E::ts('No profile set.'));
+      }
+      if (in_array($this->_op, ['create', 'edit', 'copy'], TRUE)) {
+        if (!is_string($values['name'])) {
           $values['name'] = 'default';
         }
         $this->profile->setName($values['name']);
@@ -670,9 +690,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    * Retrieves location types present within the system as options for select
    * form elements.
    *
-   * @return array
-   *
-   * @throws \CiviCRM_API3_Exception
+   * @return array<int, string>
    */
   public static function getLocationTypes() {
     if (!isset(static::$_locationTypes)) {
@@ -682,7 +700,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         'is_active' => 1,
       ]);
       foreach ($query['values'] as $type) {
-        static::$_locationTypes[$type['id']] = $type['name'];
+        static::$_locationTypes[(int) $type['id']] = $type['name'];
       }
     }
     return static::$_locationTypes;
@@ -691,11 +709,11 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   /**
    * Retrieves XCM profiles (if supported). 'default' profile is always available
    *
-   * @return array
+   * @return array<string, string>
    */
   public static function getXCMProfiles() {
     if (!isset(static::$_xcm_profiles)) {
-      if (method_exists('CRM_Xcm_Configuration', 'getProfileList')) {
+      if (class_exists('CRM_Xcm_Configuration')) {
         static::$_xcm_profiles = [
           '' => E::ts('&lt;select profile&gt;'),
         ];
@@ -712,9 +730,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    * Retrieves financial types present within the system as options for select
    * form elements.
    *
-   * @return array
-   *
-   * @throws \CiviCRM_API3_Exception
+   * @return array<int, string>
    */
   public static function getFinancialTypes() {
     if (!isset(static::$_financialTypes)) {
@@ -725,7 +741,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         'return' => 'id,name',
       ]);
       foreach ($query['values'] as $type) {
-        static::$_financialTypes[$type['id']] = $type['name'];
+        static::$_financialTypes[(int) $type['id']] = $type['name'];
       }
     }
     return static::$_financialTypes;
@@ -735,9 +751,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    * Retrieves membership types present within the system as options for select
    * form elements.
    *
-   * @return array
-   *
-   * @throws \CiviCRM_API3_Exception
+   * @return array<int, string>
    */
   public static function getMembershipTypes() {
     if (!isset(static::$_membershipTypes)) {
@@ -758,9 +772,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    * Retrieves genders present within the system as options for select form
    * elements.
    *
-   * @return array
-   *
-   * @throws \CiviCRM_API3_Exception
+   * @return array<int, string>
    */
   public static function getGenderOptions() {
     if (!isset(static::$_genderOptions)) {
@@ -775,7 +787,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         ],
       ]);
       foreach ($query['values'] as $gender) {
-        static::$_genderOptions[$gender['value']] = $gender['label'];
+        static::$_genderOptions[(int) $gender['value']] = $gender['label'];
       }
     }
     return static::$_genderOptions;
@@ -785,9 +797,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    * Retrieves prefixes present within the system as options for select form
    * elements.
    *
-   * @return array
-   *
-   * @throws \CiviCRM_API3_Exception
+   * @return array<int, string>
    */
   public static function getPrefixOptions() {
     if (!isset(static::$_prefixOptions)) {
@@ -802,7 +812,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         ],
       ]);
       foreach ($query['values'] as $prefix) {
-        static::$_prefixOptions[$prefix['value']] = $prefix['label'];
+        static::$_prefixOptions[(int) $prefix['value']] = $prefix['label'];
       }
     }
     return static::$_prefixOptions;
@@ -811,9 +821,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   /**
    * Retrieves CiviSEPA creditors as options for select form elements.
    *
-   * @return array
-   *
-   * @throws \CiviCRM_API3_Exception
+   * @return array<int, string>
    */
   public static function getSepaCreditors() {
     if (!isset(static::$_sepaCreditors)) {
@@ -823,7 +831,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
           'option.limit' => 0,
         ]);
         foreach ($result['values'] as $sepa_creditor) {
-          static::$_sepaCreditors[$sepa_creditor['id']] = $sepa_creditor['name'];
+          static::$_sepaCreditors[(int) $sepa_creditor['id']] = $sepa_creditor['name'];
         }
       }
     }
@@ -834,9 +842,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    * Retrieves payment instruments present within the system as options for
    * select form elements.
    *
-   * @return array
-   *
-   * @throws \CiviCRM_API3_Exception
+   * @return array<string, string>
    */
   public static function getPaymentInstruments() {
     if (!isset(self::$_paymentInstruments)) {
@@ -869,9 +875,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   /**
    * Retrieves contribution statuses as options for select form elements.
    *
-   * @return array
-   *
-   * @throws \CiviCRM_API3_Exception
+   * @return array<int, string>
    */
   public static function getContributionStatusOptions() {
     if (!isset(self::$_contributionStatusOptions)) {
@@ -889,7 +893,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       );
 
       foreach ($query['values'] as $contribution_status) {
-        self::$_contributionStatusOptions[$contribution_status['value']] = $contribution_status['label'];
+        self::$_contributionStatusOptions[(int) $contribution_status['value']] = $contribution_status['label'];
       }
     }
 
@@ -900,9 +904,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    * Retrieves active groups used as mailing lists within the system as options
    * for select form elements.
    *
-   * @return array
-   *
-   * @throws \CiviCRM_API3_Exception
+   * @return array<string, string>
    *
    */
   public static function getNewsletterGroups() {
@@ -935,9 +937,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   /**
    * Retrieves active groups as options for select form elements.
    *
-   * @return array
-   *
-   * @throws \CiviCRM_API3_Exception
+   * @return array<int, string>
    */
   public static function getGroups() {
     if (!isset(static::$_groups)) {
@@ -948,7 +948,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         'return' => 'id,name',
       ]);
       foreach ($query['values'] as $group) {
-        static::$_groups[$group['id']] = $group['name'];
+        static::$_groups[(int) $group['id']] = $group['name'];
       }
     }
     return static::$_groups;
@@ -958,9 +958,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    * Retrieves active groups used as postal mailing lists within the system as
    * options for select form elements.
    *
-   * @return array
-   *
-   * @throws \CiviCRM_API3_Exception
+   * @return array<int, string>
    */
   public static function getPostinfoGroups() {
     return static::getGroups();
@@ -970,9 +968,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    * Retrieves active groups used as donation receipt requester lists within the
    * system as options for select form elements.
    *
-   * @return array
-   *
-   * @throws \CiviCRM_API3_Exception
+   * @return array<int, string>
    */
   public static function getDonationReceiptGroups() {
     return static::getGroups();
@@ -981,9 +977,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   /**
    * Retrieves campaigns as options for select elements.
    *
-   * @return array
-   *
-   * @throws \CiviCRM_API3_Exception
+   * @return array<int, string>
    */
   public static function getCampaigns() {
     if (!isset(static::$_campaigns)) {
@@ -996,7 +990,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         ],
       ]);
       foreach ($query['values'] as $campaign) {
-        static::$_campaigns[$campaign['id']] = $campaign['title'];
+        static::$_campaigns[(int) $campaign['id']] = $campaign['title'];
       }
     }
     return static::$_campaigns;

@@ -21,7 +21,7 @@ use CRM_Twingle_ExtensionUtil as E;
  * TwingleDonation.Cancel API specification (optional)
  * This is used for documentation and validation.
  *
- * @param array $params description of fields supported by this API call
+ * @param array<string, array<string, mixed>> $params description of fields supported by this API call
  *
  * @return void
  *
@@ -61,8 +61,8 @@ function _civicrm_api3_twingle_donation_Cancel_spec(&$params) {
 /**
  * TwingleDonation.Cancel API
  *
- * @param array $params
- * @return array API result descriptor
+ * @param array<string, mixed> $params
+ * @return array<string, mixed> API result descriptor
  * @see civicrm_api3_create_success
  * @see civicrm_api3_create_error
  */
@@ -75,7 +75,7 @@ function civicrm_api3_twingle_donation_Cancel($params) {
   try {
     // Validate date for parameter "cancelled_at".
     if (!DateTime::createFromFormat('YmdHis', $params['cancelled_at'])) {
-      throw new CiviCRM_API3_Exception(
+      throw new CRM_Core_Exception(
         E::ts('Invalid date for parameter "cancelled_at".'),
         'invalid_format'
       );
@@ -89,7 +89,7 @@ function civicrm_api3_twingle_donation_Cancel($params) {
       ]);
       $contribution_type = 'Contribution';
     }
-    catch (CiviCRM_API3_Exception $exception) {
+    catch (CRM_Core_Exception $exception) {
       $contribution = civicrm_api3('ContributionRecur', 'getsingle', [
         'trxn_id' => $default_profile->getTransactionID($params['trx_id']),
       ]);
@@ -101,9 +101,9 @@ function civicrm_api3_twingle_donation_Cancel($params) {
         && CRM_Twingle_Tools::isSDD($contribution['payment_instrument_id'])
     ) {
       // End SEPA mandate if applicable.
-      $mandate = CRM_Twingle_Tools::getMandateFor($contribution['id']);
+      $mandate = CRM_Twingle_Tools::getMandateFor((int) $contribution['id']);
       if (!$mandate) {
-        throw new CiviCRM_API3_Exception(
+        throw new CRM_Core_Exception(
             E::ts('SEPA Mandate for contribution [%1 not found.', [1 => $contribution['id']]),
             'api_error'
         );
@@ -112,7 +112,7 @@ function civicrm_api3_twingle_donation_Cancel($params) {
 
       // Mandates can not be terminated in the past.
       $end_date = date_create_from_format('YmdHis', $params['cancelled_at']);
-      if ($end_date) {
+      if (FALSE !== $end_date) {
         // Mandates can not be terminated in the past:
         $end_date = date('Ymd', max(
             time(),
@@ -128,7 +128,7 @@ function civicrm_api3_twingle_donation_Cancel($params) {
         $end_date,
         $params['cancel_reason']
       )) {
-        throw new CiviCRM_API3_Exception(
+        throw new CRM_Core_Exception(
           E::ts('Could not terminate SEPA mandate'),
           'api_error'
         );

@@ -19,7 +19,7 @@ use CRM_Twingle_ExtensionUtil as E;
 
 class CRM_Twingle_Page_Profiles extends CRM_Core_Page {
 
-  public function run() {
+  public function run():void {
     CRM_Utils_System::setTitle(E::ts('Twingle API Profiles'));
     $profiles = [];
     foreach (CRM_Twingle_Profile::getProfiles() as $profile_name => $profile) {

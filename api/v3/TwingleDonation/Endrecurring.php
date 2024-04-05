@@ -21,7 +21,7 @@ use CRM_Twingle_ExtensionUtil as E;
  * TwingleDonation.Endrecurring API specification (optional)
  * This is used for documentation and validation.
  *
- * @param array $params description of fields supported by this API call
+ * @param array<string, array<string, mixed>> $params description of fields supported by this API call
  *
  * @return void
  *
@@ -54,8 +54,8 @@ function _civicrm_api3_twingle_donation_endrecurring_spec(&$params) {
 /**
  * TwingleDonation.Endrecurring API
  *
- * @param array $params
- * @return array API result descriptor
+ * @param array<string, mixed> $params
+ * @return array<string, mixed> API result descriptor
  * @see civicrm_api3_create_success
  * @see civicrm_api3_create_error
  */
@@ -67,8 +67,8 @@ function civicrm_api3_twingle_donation_endrecurring($params) {
 
   try {
     // Validate date for parameter "ended_at".
-    if (!DateTime::createFromFormat('YmdHis', $params['ended_at'])) {
-      throw new CiviCRM_API3_Exception(
+    if (FALSE === DateTime::createFromFormat('YmdHis', $params['ended_at'])) {
+      throw new CRM_Core_Exception(
         E::ts('Invalid date for parameter "ended_at".'),
         'invalid_format'
       );
@@ -86,9 +86,9 @@ function civicrm_api3_twingle_donation_endrecurring($params) {
         && CRM_Twingle_Tools::isSDD($contribution['payment_instrument_id'])
     ) {
       // END SEPA MANDATE
-      $mandate = CRM_Twingle_Tools::getMandateFor($contribution['id']);
-      if (!$mandate) {
-        throw new CiviCRM_API3_Exception(
+      $mandate = CRM_Twingle_Tools::getMandateFor((int) $contribution['id']);
+      if (!isset($mandate)) {
+        throw new CRM_Core_Exception(
             E::ts('SEPA Mandate for recurring contribution [%1 not found.', [1 => $contribution['id']]),
             'api_error'
         );
@@ -96,7 +96,7 @@ function civicrm_api3_twingle_donation_endrecurring($params) {
 
       $mandate_id = $mandate['id'];
       $end_date = date_create_from_format('YmdHis', $params['ended_at']);
-      if ($end_date) {
+      if (FALSE !== $end_date) {
         // Mandates can not be terminated in the past:
         $end_date = date('Ymd', max(
             time(),
@@ -109,7 +109,7 @@ function civicrm_api3_twingle_donation_endrecurring($params) {
 
       // verify that the mandate has not been terminated in the past
       if ($mandate['status'] != 'FRST' && $mandate['status'] != 'RCUR') {
-        throw new CiviCRM_API3_Exception(
+        throw new CRM_Core_Exception(
             E::ts('SEPA Mandate [%1] already terminated.', [1 => $mandate_id]),
             'api_error'
         );
@@ -120,7 +120,7 @@ function civicrm_api3_twingle_donation_endrecurring($params) {
         $end_date,
         E::ts('Mandate closed by TwingleDonation.Endrecurring API call')
       )) {
-        throw new CiviCRM_API3_Exception(
+        throw new CRM_Core_Exception(
           E::ts('Could not terminate SEPA mandate'),
           'api_error'
         );

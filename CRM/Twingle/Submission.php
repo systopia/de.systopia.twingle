@@ -16,6 +16,7 @@
 declare(strict_types = 1);
 
 use CRM_Twingle_ExtensionUtil as E;
+use Civi\Twingle\Exceptions\BaseException;
 
 class CRM_Twingle_Submission {
 
@@ -40,18 +41,18 @@ class CRM_Twingle_Submission {
   public const EMPLOYER_RELATIONSHIP_TYPE_ID = 5;
 
   /**
-   * @param array &$params
+   * @param array<string, mixed> &$params
    *   A reference to the parameters array of the submission.
    *
    * @param \CRM_Twingle_Profile $profile
    *   The Twingle profile to use for validation, defaults to the default
    *   profile.
    *
-   * @throws \CiviCRM_API3_Exception
+   * @throws \CRM_Core_Exception
    *   When invalid parameters have been submitted.
    */
-  public static function validateSubmission(&$params, $profile = NULL) {
-    if (!$profile) {
+  public static function validateSubmission(&$params, $profile = NULL): void {
+    if (!isset($profile)) {
       $profile = CRM_Twingle_Profile::createDefaultProfile();
     }
 
@@ -62,8 +63,8 @@ class CRM_Twingle_Submission {
       'quarterly',
       'yearly',
       'monthly',
-    ])) {
-      throw new CiviCRM_API3_Exception(
+    ], TRUE)) {
+      throw new CRM_Core_Exception(
         E::ts('Invalid donation rhythm.'),
         'invalid_format'
       );
@@ -71,8 +72,9 @@ class CRM_Twingle_Submission {
 
     // Get the payment instrument defined within the profile, or return an error
     // if none matches (i.e. an unknown payment method was submitted).
-    if (!$payment_instrument_id = $profile->getAttribute('pi_' . $params['payment_method'])) {
-      throw new CiviCRM_API3_Exception(
+    $payment_instrument_id = $profile->getAttribute('pi_' . $params['payment_method']);
+    if (!isset($payment_instrument_id)) {
+      throw new CRM_Core_Exception(
         E::ts('Payment method could not be matched to existing payment instrument.'),
         'invalid_format'
       );
@@ -80,16 +82,16 @@ class CRM_Twingle_Submission {
     $params['payment_instrument_id'] = $payment_instrument_id;
 
     // Validate date for parameter "confirmed_at".
-    if (!DateTime::createFromFormat('YmdHis', $params['confirmed_at'])) {
-      throw new CiviCRM_API3_Exception(
+    if (FALSE === DateTime::createFromFormat('YmdHis', $params['confirmed_at'])) {
+      throw new CRM_Core_Exception(
         E::ts('Invalid date for parameter "confirmed_at".'),
         'invalid_format'
       );
     }
 
     // Validate date for parameter "user_birthdate".
-    if (!empty($params['user_birthdate']) && !DateTime::createFromFormat('Ymd', $params['user_birthdate'])) {
-      throw new CiviCRM_API3_Exception(
+    if (!empty($params['user_birthdate']) && FALSE === DateTime::createFromFormat('Ymd', $params['user_birthdate'])) {
+      throw new CRM_Core_Exception(
         E::ts('Invalid date for parameter "user_birthdate".'),
         'invalid_format'
       );
@@ -97,9 +99,10 @@ class CRM_Twingle_Submission {
 
     // Get the gender ID defined within the profile, or return an error if none
     // matches (i.e. an unknown gender was submitted).
-    if (!empty($params['user_gender'])) {
-      if (!$gender_id = $profile->getAttribute('gender_' . $params['user_gender'])) {
-        throw new CiviCRM_API3_Exception(
+    if (is_string($params['user_gender'])) {
+      $gender_id = $profile->getAttribute('gender_' . $params['user_gender']);
+      if (!isset($gender_id)) {
+        throw new CRM_Core_Exception(
           E::ts('Gender could not be matched to existing gender.'),
           'invalid_format'
         );
@@ -108,12 +111,12 @@ class CRM_Twingle_Submission {
     }
 
     // Validate custom fields parameter, if given.
-    if (!empty($params['custom_fields'])) {
+    if (isset($params['custom_fields'])) {
       if (is_string($params['custom_fields'])) {
         $params['custom_fields'] = json_decode($params['custom_fields'], TRUE);
       }
       if (!is_array($params['custom_fields'])) {
-        throw new CiviCRM_API3_Exception(
+        throw new CRM_Core_Exception(
           E::ts('Invalid format for custom fields.'),
           'invalid_format'
         );
@@ -121,13 +124,13 @@ class CRM_Twingle_Submission {
     }
 
     // Validate campaign_id, if given.
-    if (!empty($params['campaign_id'])) {
+    if (isset($params['campaign_id'])) {
       // Check whether campaign_id is a numeric string and cast it to an integer.
       if (is_numeric($params['campaign_id'])) {
         $params['campaign_id'] = intval($params['campaign_id']);
       }
       else {
-        throw new CiviCRM_API3_Exception(
+        throw new CRM_Core_Exception(
           E::ts('campaign_id must be a numeric string. '),
           'invalid_format'
         );
@@ -140,7 +143,7 @@ class CRM_Twingle_Submission {
           ['id' => $params['campaign_id']]
         );
       }
-      catch (CiviCRM_API3_Exception $e) {
+      catch (CRM_Core_Exception $e) {
         unset($params['campaign_id']);
       }
     }
@@ -152,28 +155,33 @@ class CRM_Twingle_Submission {
    *
    * @param string $contact_type
    *   The contact type to look for/to create.
-   * @param array $contact_data
+   * @param array<string, mixed> $contact_data
    *   Data to use for contact lookup/to create a contact with.
    * @param CRM_Twingle_Profile $profile
    *   Profile used for this process
-   * @param array $submission
+   * @param array<string, mixed> $submission
    *   Submission data
    *
    * @return int|NULL
    *   The ID of the matching/created contact, or NULL if no matching contact
    *   was found and no new contact could be created.
-   * @throws \CiviCRM_API3_Exception
+   * @throws \CRM_Core_Exception
    *   When invalid data was given.
    */
-  public static function getContact($contact_type, $contact_data, $profile, $submission = []) {
+  public static function getContact(
+    string $contact_type,
+    array $contact_data,
+    CRM_Twingle_Profile $profile,
+    array $submission = []
+  ) {
     // If no parameters are given, do nothing.
-    if (empty($contact_data)) {
+    if ([] === $contact_data) {
       return NULL;
     }
 
     // add xcm profile
     $xcm_profile = $profile->getAttribute('xcm_profile');
-    if (!empty($xcm_profile)) {
+    if (isset($xcm_profile) && '' !== $xcm_profile) {
       $contact_data['xcm_profile'] = $xcm_profile;
     }
 
@@ -181,7 +189,7 @@ class CRM_Twingle_Submission {
     CRM_Twingle_Submission::setCampaign($contact_data, 'contact', $submission, $profile);
 
     // Prepare values: country.
-    if (!empty($contact_data['country'])) {
+    if (isset($contact_data['country'])) {
       if (is_numeric($contact_data['country'])) {
         // If a country ID is given, update the parameters.
         $contact_data['country_id'] = $contact_data['country'];
@@ -190,12 +198,12 @@ class CRM_Twingle_Submission {
       else {
         // Look up the country depending on the given ISO code.
         $country = civicrm_api3('Country', 'get', ['iso_code' => $contact_data['country']]);
-        if (!empty($country['id'])) {
+        if (isset($country['id'])) {
           $contact_data['country_id'] = $country['id'];
           unset($contact_data['country']);
         }
         else {
-          throw new \CiviCRM_API3_Exception(
+          throw new \CRM_Core_Exception(
             E::ts('Unknown country %1.', [1 => $contact_data['country']]),
             'invalid_format'
           );
@@ -204,7 +212,7 @@ class CRM_Twingle_Submission {
     }
 
     // Prepare values: language.
-    if (!empty($contact_data['preferred_language'])) {
+    if (is_string($contact_data['preferred_language']) && '' !== $contact_data['preferred_language']) {
       $mapping = CRM_Core_I18n_PseudoConstant::longForShortMapping();
       // Override the default mapping for German.
       $mapping['de'] = 'de_DE';
@@ -214,39 +222,31 @@ class CRM_Twingle_Submission {
     // Pass to XCM.
     $contact_data['contact_type'] = $contact_type;
     $contact = civicrm_api3('Contact', 'getorcreate', $contact_data);
-    if (empty($contact['id'])) {
-      return NULL;
-    }
 
-    return $contact['id'];
+    return isset($contact['id']) ? (int) $contact['id'] : NULL;
   }
 
   /**
    * Shares an organisation's work address, unless the contact already has one.
    *
-   * @param $contact_id
+   * @param int $contact_id
    *   The ID of the contact to share the organisation address with.
-   * @param $organisation_id
+   * @param int $organisation_id
    *   The ID of the organisation whose address to share with the contact.
-   * @param $location_type_id
+   * @param int $location_type_id
    *   The ID of the location type to use for address lookup.
    *
    * @return boolean
    *   Whether the organisation address has been shared with the contact.
    *
-   * @throws \CiviCRM_API3_Exception
+   * @throws \CRM_Core_Exception
    *   When looking up or creating the shared address failed.
    */
   public static function shareWorkAddress(
-    $contact_id,
-    $organisation_id,
-    $location_type_id = self::LOCATION_TYPE_ID_WORK
+    int $contact_id,
+    int $organisation_id,
+    int $location_type_id = self::LOCATION_TYPE_ID_WORK
   ) {
-    if (empty($organisation_id)) {
-      // Only if organisation exists.
-      return FALSE;
-    }
-
     // Check whether organisation has a WORK address.
     $existing_org_addresses = civicrm_api3('Address', 'get', [
       'contact_id'       => $organisation_id,
@@ -285,13 +285,9 @@ class CRM_Twingle_Submission {
    * @param int $organisation_id
    *   The ID of the employer contact.
    *
-   * @throws \CiviCRM_API3_Exception
+   * @throws \CRM_Core_Exception
    */
-  public static function updateEmployerRelation($contact_id, $organisation_id) {
-    if (empty($contact_id) || empty($organisation_id)) {
-      return;
-    }
-
+  public static function updateEmployerRelation(int $contact_id, int $organisation_id): void {
     // see if there is already one
     $existing_relationship = civicrm_api3('Relationship', 'get', [
       'relationship_type_id' => self::EMPLOYER_RELATIONSHIP_TYPE_ID,
@@ -318,15 +314,15 @@ class CRM_Twingle_Submission {
    * functionality is activated within the Twingle extension settings.
    *
    * @return bool
-   * @throws \CiviCRM_API3_Exception
+   * @throws \CRM_Core_Exception
    */
   public static function civiSepaEnabled() {
     $sepa_extension = civicrm_api3('Extension', 'get', [
       'full_name' => 'org.project60.sepa',
       'is_active' => 1,
     ]);
-    return Civi::settings()->get('twingle_use_sepa')
-      && $sepa_extension['count'];
+    return (bool) Civi::settings()->get('twingle_use_sepa')
+      && $sepa_extension['count'] >= 0;
   }
 
   /**
@@ -337,7 +333,7 @@ class CRM_Twingle_Submission {
    *   The submitted "donation_rhythm" paramter according to the API action
    *   specification.
    *
-   * @return array
+   * @return array{'frequency_unit'?: string, 'frequency_interval'?: int}
    *   An array with "frequency_unit" and "frequency_interval" keys, to be added
    *   to contribution parameter arrays.
    */
@@ -378,19 +374,21 @@ class CRM_Twingle_Submission {
    * @return int
    *   The next possible day of this or the next month to start collecting.
    */
-  public static function getSEPACycleDay($start_date, $creditor_id) {
+  public static function getSEPACycleDay($start_date, $creditor_id): int {
     $buffer_days = (int) CRM_Sepa_Logic_Settings::getSetting('pp_buffer_days');
     $frst_notice_days = (int) CRM_Sepa_Logic_Settings::getSetting('batching.FRST.notice', $creditor_id);
-    $earliest_rcur_date = strtotime("$start_date + $frst_notice_days days + $buffer_days days");
+    if (FALSE === ($earliest_rcur_date = strtotime("$start_date + $frst_notice_days days + $buffer_days days"))) {
+      throw new BaseException(E::ts('Could not calculate SEPA cycle day from configuration.'));
+    }
 
     // Find the next cycle day
     $cycle_days = CRM_Sepa_Logic_Settings::getListSetting('cycledays', range(1, 28), $creditor_id);
     $earliest_cycle_day = $earliest_rcur_date;
-    while (!in_array(date('j', $earliest_cycle_day), $cycle_days)) {
+    while (!in_array(date('j', $earliest_cycle_day), $cycle_days, TRUE)) {
       $earliest_cycle_day = strtotime('+ 1 day', $earliest_cycle_day);
     }
 
-    return date('j', $earliest_cycle_day);
+    return (int) date('j', $earliest_cycle_day);
   }
 
   /**
@@ -399,16 +397,21 @@ class CRM_Twingle_Submission {
    * from the submission data. Should that be empty, the profile's default
    * campaign is used.
    *
-   * @param array $entity_data
+   * @param array<string, mixed> $entity_data
    *   the data set where the campaign_id should be set
    * @param string $context
    *   defines the type of the entity_data: one of 'contribution', 'membership','mandate', 'recurring', 'contact'
-   * @param array $submission
+   * @param array<string, mixed> $submission
    *   the submitted data
    * @param CRM_Twingle_Profile $profile
    *   the twingle profile used
    */
-  public static function setCampaign(&$entity_data, $context, $submission, $profile) {
+  public static function setCampaign(
+    array &$entity_data,
+    string $context,
+    array $submission,
+    CRM_Twingle_Profile $profile
+  ): void {
     // first: make sure it's not set from other workflows
     unset($entity_data['campaign_id']);
 
@@ -418,13 +421,13 @@ class CRM_Twingle_Submission {
       // backward compatibility:
       $enabled_contexts = ['contribution', 'contact'];
     }
-    if (in_array($context, $enabled_contexts)) {
+    if (in_array($context, $enabled_contexts, TRUE)) {
       // use the submitted campaign if set
-      if (!empty($submission['campaign_id'])) {
+      if (is_numeric($submission['campaign_id'])) {
         $entity_data['campaign_id'] = $submission['campaign_id'];
       }
       // otherwise use the profile's
-      elseif (!empty($campaign = $profile->getAttribute('campaign'))) {
+      elseif (is_numeric($campaign = $profile->getAttribute('campaign'))) {
         $entity_data['campaign_id'] = $campaign;
       }
     }

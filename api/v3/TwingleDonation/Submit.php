@@ -16,12 +16,13 @@
 declare(strict_types = 1);
 
 use CRM_Twingle_ExtensionUtil as E;
+use Civi\Twingle\Exceptions\BaseException;
 
 /**
  * TwingleDonation.Submit API specification
  * This is used for documentation and validation.
  *
- * @param array $params
+ * @param array<string,array<string,mixed>> $params
  *   Description of fields supported by this API call.
  *
  * @return void
@@ -259,8 +260,8 @@ function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
 /**
  * TwingleDonation.Submit API
  *
- * @param array $params
- * @return array API result descriptor
+ * @param array<string, mixed> $params
+ * @return array<string, mixed> API result descriptor
  * @see civicrm_api3_create_success
  * @see civicrm_api3_create_error
  */
@@ -294,7 +295,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       'trxn_id' => $profile->getTransactionID($params['trx_id']),
     ]);
     if ($existing_contribution['count'] > 0 || $existing_contribution_recur['count'] > 0) {
-      throw new CiviCRM_API3_Exception(
+      throw new CRM_Core_Exception(
         E::ts('Contribution with the given transaction ID already exists.'),
         'api_error'
       );
@@ -303,7 +304,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
     // Extract custom field values using the profile's mapping of Twingle fields
     // to CiviCRM custom fields.
     $custom_fields = [];
-    if (!empty($params['custom_fields'])) {
+    if (is_array($params['custom_fields'])) {
       $custom_field_mapping = $profile->getCustomFieldMapping();
 
       // Make all params available for custom field mapping
@@ -343,11 +344,9 @@ function civicrm_api3_twingle_donation_Submit($params) {
         'user_city' => 'city',
         'user_country' => 'country',
       ] as $address_param => $address_component) {
-        if (!empty($params[$address_param])) {
+        if (isset($params[$address_param]) && '' !== $params[$address_param]) {
           $params[$address_component] = $params[$address_param];
-          if ($address_param != $address_component) {
-            unset($params[$address_param]);
-          }
+          unset($params[$address_param]);
         }
       }
 
@@ -369,13 +368,13 @@ function civicrm_api3_twingle_donation_Submit($params) {
       }
 
       // Prepare parameter mapping for organisation.
-      if (!empty($params['user_company'])) {
+      if (is_string($params['user_company']) && '' !== $params['user_company']) {
         $params['organization_name'] = $params['user_company'];
         unset($params['user_company']);
       }
 
       // Remove parameter "id".
-      if (!empty($params['id'])) {
+      if (isset($params['id'])) {
         unset($params['id']);
       }
 
@@ -419,67 +418,67 @@ function civicrm_api3_twingle_donation_Submit($params) {
       }
 
       // Get the prefix ID defined within the profile
-      if (!empty($params['user_gender'])) {
-        $prefix_id = (int) $profile->getAttribute('prefix_' . $params['user_gender']);
-        if ($prefix_id) {
-          $contact_data['prefix_id'] = $prefix_id;
-        }
+      if (
+        isset($params['user_gender'])
+        && NULL !== ($prefix_id = $profile->getAttribute('prefix_' . $params['user_gender']))
+      ) {
+        $contact_data['prefix_id'] = $prefix_id;
       }
 
       // Add custom field values.
-      if (!empty($custom_fields['Contact'])) {
+      if (isset($custom_fields['Contact'])) {
         $contact_data += $custom_fields['Contact'];
       }
-      if (!empty($custom_fields['Individual'])) {
+      if (isset($custom_fields['Individual'])) {
         $contact_data += $custom_fields['Individual'];
       }
 
       // Organisation lookup.
-      if (!empty($params['organization_name'])) {
+      if (is_string($params['organization_name']) && '' !== $params['organization_name']) {
         $organisation_data = [
           'organization_name' => $params['organization_name'],
         ];
 
         // Add custom field values.
-        if (!empty($custom_fields['Organization'])) {
+        if (isset($custom_fields['Organization'])) {
           $organisation_data += $custom_fields['Organization'];
         }
 
-        if (!empty($submitted_address)) {
+        if ([] !== $submitted_address) {
           $organisation_data += $submitted_address;
           // Use configured location type for organisation address.
           $organisation_data['location_type_id'] = (int) $profile->getAttribute('location_type_id_organisation');
         }
-        if (!$organisation_id = CRM_Twingle_Submission::getContact(
+        if (!is_int($organisation_id = CRM_Twingle_Submission::getContact(
           'Organization',
           $organisation_data,
           $profile,
           $params
-        )) {
-          throw new CiviCRM_API3_Exception(
+        ))) {
+          throw new CRM_Core_Exception(
             E::ts('Organisation contact could not be found or created.'),
             'api_error'
           );
         }
       }
-      elseif (!empty($submitted_address)) {
+      elseif ([] !== $submitted_address) {
         $contact_data += $submitted_address;
       }
 
-      if (!$contact_id = CRM_Twingle_Submission::getContact(
+      if (!is_int($contact_id = CRM_Twingle_Submission::getContact(
         'Individual',
         $contact_data,
         $profile,
         $params
-      )) {
-        throw new CiviCRM_API3_Exception(
+      ))) {
+        throw new CRM_Core_Exception(
           E::ts('Individual contact could not be found or created.'),
           'api_error'
         );
       }
 
       // Save user_extrafield as contact note.
-      if (!empty($params['user_extrafield'])) {
+      if (isset($params['user_extrafield']) && '' != $params['user_extrafield']) {
         civicrm_api3('Note', 'create', [
           'entity_table' => 'civicrm_contact',
           'entity_id' => $contact_id,
@@ -512,13 +511,13 @@ function civicrm_api3_twingle_donation_Submit($params) {
     // If usage of double opt-in is selected, use MailingEventSubscribe.create
     // to add contact to newsletter groups defined in the profile
     $result_values['newsletter']['newsletter_double_opt_in']
-      = ($profile->getAttribute('newsletter_double_opt_in'))
+      = (bool) $profile->getAttribute('newsletter_double_opt_in')
       ? 'true'
       : 'false';
     if (
-      $profile->getAttribute('newsletter_double_opt_in') &&
-      !empty($params['newsletter']) &&
-      !empty($groups = $profile->getAttribute('newsletter_groups'))
+      (bool) $profile->getAttribute('newsletter_double_opt_in')
+      && isset($params['newsletter'])
+      && is_array($groups = $profile->getAttribute('newsletter_groups'))
     ) {
       $group_memberships = array_column(
         civicrm_api3(
@@ -539,7 +538,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
               'id' => (int) $group_id,
             ]
           )['visibility'] == 'Public Pages';
-        if (!in_array($group_id, $group_memberships) && $is_public_group) {
+        if (!in_array($group_id, $group_memberships, FALSE) && $is_public_group) {
           $result_values['newsletter'][][$group_id] = civicrm_api3(
             'MailingEventSubscribe',
             'create',
@@ -557,8 +556,8 @@ function civicrm_api3_twingle_donation_Submit($params) {
       // If requested, add contact to newsletter groups defined in the profile.
     }
     elseif (
-      !empty($params['newsletter'])
-      && !empty($groups = $profile->getAttribute('newsletter_groups'))
+      isset($params['newsletter'])
+      && is_array($groups = $profile->getAttribute('newsletter_groups'))
     ) {
       foreach ($groups as $group_id) {
         civicrm_api3(
@@ -575,7 +574,10 @@ function civicrm_api3_twingle_donation_Submit($params) {
     }
 
     // If requested, add contact to postinfo groups defined in the profile.
-    if (!empty($params['postinfo']) && !empty($groups = $profile->getAttribute('postinfo_groups'))) {
+    if (
+      isset($params['postinfo'])
+      && is_array($groups = $profile->getAttribute('postinfo_groups'))
+    ) {
       foreach ($groups as $group_id) {
         civicrm_api3('GroupContact', 'create', [
           'group_id' => $group_id,
@@ -588,7 +590,10 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
     // If requested, add contact to donation_receipt groups defined in the
     // profile.
-    if (!empty($params['donation_receipt']) && !empty($groups = $profile->getAttribute('donation_receipt_groups'))) {
+    if (
+      isset($params['donation_receipt'])
+      && is_array($groups = $profile->getAttribute('donation_receipt_groups'))
+    ) {
       foreach ($groups as $group_id) {
         civicrm_api3('GroupContact', 'create', [
           'group_id' => $group_id,
@@ -611,18 +616,18 @@ function civicrm_api3_twingle_donation_Submit($params) {
     ];
 
     // Add custom field values.
-    if (!empty($custom_fields['Contribution'])) {
+    if (isset($custom_fields['Contribution'])) {
       $contribution_data += $custom_fields['Contribution'];
     }
 
-    if (!empty($params['purpose'])) {
+    if (isset($params['purpose'])) {
       $contribution_data['note'] = $params['purpose'];
     }
 
     // set campaign, subject to configuration
     CRM_Twingle_Submission::setCampaign($contribution_data, 'contribution', $params, $profile);
 
-    if (!empty($contribution_source = $profile->getAttribute('contribution_source'))) {
+    if (NULL !== ($contribution_source = $profile->getAttribute('contribution_source'))) {
       $contribution_data['source'] = $contribution_source;
     }
 
@@ -637,8 +642,8 @@ function civicrm_api3_twingle_donation_Submit($params) {
         'debit_iban',
         'debit_bic',
       ] as $sepa_attribute) {
-        if (empty($params[$sepa_attribute])) {
-          throw new CiviCRM_API3_Exception(
+        if (!isset($params[$sepa_attribute])) {
+          throw new CRM_Core_Exception(
             E::ts('Missing attribute %1 for SEPA mandate', [
               1 => $sepa_attribute,
             ]),
@@ -648,6 +653,11 @@ function civicrm_api3_twingle_donation_Submit($params) {
       }
 
       $creditor_id = $profile->getAttribute('sepa_creditor_id');
+      if (!is_int($creditor_id)) {
+        throw new BaseException(
+          E::ts('SEPA creditor is not configured for profile "%1".', [1 => $profile->getName()])
+        );
+      }
 
       // Compose mandate data from contribution data, ...
       $mandate_data =
@@ -669,10 +679,10 @@ function civicrm_api3_twingle_donation_Submit($params) {
         // phpcs:ignore Drupal.Formatting.SpaceUnaryOperator.PlusMinus
         + CRM_Twingle_Submission::getFrequencyMapping($params['donation_rhythm']);
       // Add custom field values.
-      if (!empty($custom_fields['ContributionRecur'])) {
+      if (isset($custom_fields['ContributionRecur'])) {
         $mandate_data += $custom_fields['ContributionRecur'];
       }
-      if (!empty($mandate_source = $profile->getAttribute('contribution_source'))) {
+      if (NULL !== ($mandate_source = $profile->getAttribute('contribution_source'))) {
         $mandate_data['source'] = $mandate_source;
       }
 
@@ -691,7 +701,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
       // If requested, let CiviSEPA generate the mandate reference
       $use_own_mandate_reference = Civi::settings()->get('twingle_dont_use_reference');
-      if (!empty($use_own_mandate_reference)) {
+      if ((bool) $use_own_mandate_reference) {
         unset($mandate_data['reference']);
       }
 
@@ -730,7 +740,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
           + CRM_Twingle_Submission::getFrequencyMapping($params['donation_rhythm']);
 
         // Add custom field values.
-        if (!empty($custom_fields['ContributionRecur'])) {
+        if (isset($custom_fields['ContributionRecur'])) {
           $contribution_recur_data += $custom_fields['ContributionRecur'];
           $contribution_data += $custom_fields['ContributionRecur'];
         }
@@ -740,7 +750,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
         $contribution_recur = civicrm_api3('ContributionRecur', 'create', $contribution_recur_data);
         if ($contribution_recur['is_error']) {
-          throw new CiviCRM_API3_Exception(
+          throw new CRM_Core_Exception(
             E::ts('Could not create recurring contribution.'),
             'api_error'
           );
@@ -766,7 +776,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
           ]);
           $contribution_data['contribution_recur_id'] = $parent_contribution['id'];
         }
-        catch (Exception $exception) {
+        catch (CRM_Core_Exception $exception) {
           $result_values['parent_contribution'] = E::ts(
             'Could not find recurring contribution with given parent transaction ID.'
           );
@@ -775,7 +785,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
       $contribution = civicrm_api3('Contribution', 'create', $contribution_data);
       if ($contribution['is_error']) {
-        throw new CiviCRM_API3_Exception(
+        throw new CRM_Core_Exception(
           E::ts('Could not create contribution'),
           'api_error'
         );
@@ -799,12 +809,12 @@ function civicrm_api3_twingle_donation_Submit($params) {
       }
       else {
         // this is a follow-up recurring payment
-        $membership_type_id = FALSE;
+        $membership_type_id = NULL;
       }
     }
 
     // CREATE the membership if required
-    if (!empty($membership_type_id)) {
+    if (isset($membership_type_id)) {
       $membership_data = [
         'contact_id'         => $contact_id,
         'membership_type_id' => $membership_type_id,
@@ -821,7 +831,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
       // call the postprocess API
       $postprocess_call = $profile->getAttribute('membership_postprocess_call');
-      if (!empty($postprocess_call)) {
+      if (is_string($postprocess_call)) {
         [$pp_entity, $pp_action] = explode('.', $postprocess_call, 2);
         try {
           // gather the contribution IDs
@@ -829,7 +839,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
           if (isset($contribution_recur['id'])) {
             $recurring_contribution_id = $contribution_recur['id'];
           }
-          elseif (!empty($result_values['sepa_mandate'])) {
+          elseif (isset($result_values['sepa_mandate'])) {
             $mandate = reset($result_values['sepa_mandate']);
             if ($mandate['entity_table'] == 'civicrm_contribution_recur') {
               $recurring_contribution_id = (int) $mandate['entity_id'];
@@ -851,14 +861,20 @@ function civicrm_api3_twingle_donation_Submit($params) {
           // refresh membership data
           $result_values['membership'] = civicrm_api3('Membership', 'getsingle', ['id' => $membership['id']]);
         }
-        catch (CiviCRM_API3_Exception $ex) {
+        catch (CRM_Core_Exception $exception) {
           // TODO: more error handling?
-          Civi::log()
-            ->warning(
-              "Twingle membership postprocessing call {$pp_entity}.{$pp_action} has failed: " . $ex->getMessage()
-            );
-          throw new Exception(
-            E::ts('Twingle membership postprocessing call has failed, see log for more information')
+          Civi::log()->warning(
+              sprintf(
+                'Twingle membership postprocessing call %s.%s has failed: %s',
+                $pp_entity,
+                $pp_action,
+                $exception->getMessage()
+              )
+          );
+          throw new BaseException(
+            E::ts('Twingle membership postprocessing call has failed, see log for more information'),
+            NULL,
+            $exception
           );
         }
       }

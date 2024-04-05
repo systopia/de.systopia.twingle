@@ -8,7 +8,7 @@ use CRM_Twingle_ExtensionUtil as E;
  */
 function twingle_civicrm_pre($op, $objectName, $id, &$params) {
   if ($objectName == 'ContributionRecur' && $op == 'edit') {
-    CRM_Twingle_Tools::checkRecurringContributionChange($id, $params);
+    CRM_Twingle_Tools::checkRecurringContributionChange((int) $id, $params);
   }
 }
 

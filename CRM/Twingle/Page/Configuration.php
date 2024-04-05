@@ -19,7 +19,7 @@ use CRM_Twingle_ExtensionUtil as E;
 
 class CRM_Twingle_Page_Configuration extends CRM_Core_Page {
 
-  public function run() {
+  public function run(): void {
     parent::run();
   }
 

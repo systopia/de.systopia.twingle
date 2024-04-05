@@ -25,7 +25,7 @@ class CRM_Twingle_Upgrader extends CRM_Extension_Upgrader_Base {
   /**
    * Installer script
    */
-  public function install() {
+  public function install(): void {
     // create a DB table for the twingle profiles
     $this->executeSqlFile('sql/civicrm_twingle_profile.sql');
 
@@ -43,7 +43,7 @@ class CRM_Twingle_Upgrader extends CRM_Extension_Upgrader_Base {
    * /**
    * Copy financial_type_id setting to new setting financial_type_id_recur.
    */
-  public function upgrade_4000() {
+  public function upgrade_4000(): bool {
     $this->ctx->log->info('Applying update 4000: Copying Financial type to new setting Financial type (recurring).');
     foreach (CRM_Twingle_Profile::getProfiles() as $profile) {
       $profile->setAttribute('financial_type_id_recur', $profile->getAttribute('financial_type_id'));
@@ -57,7 +57,7 @@ class CRM_Twingle_Upgrader extends CRM_Extension_Upgrader_Base {
    *
    * @link https://civicrm.org/advisory/civi-sa-2019-21-poi-saved-search-and-report-instance-apis
    */
-  public function upgrade_5011() {
+  public function upgrade_5011(): bool {
     // Do not use CRM_Core_BAO::getItem() or Civi::settings()->get().
     // Extract and unserialize directly from the database.
     $twingle_profiles_query = CRM_Core_DAO::executeQuery("
@@ -78,14 +78,14 @@ class CRM_Twingle_Upgrader extends CRM_Extension_Upgrader_Base {
    * @return TRUE on success
    * @throws Exception
    */
-  public function upgrade_5140() {
+  public function upgrade_5140(): bool {
     $this->ctx->log->info('Converting twingle profiles.');
 
     // create a DB table for the twingle profiles
     $this->executeSqlFile('sql/civicrm_twingle_profile.sql');
 
     // migrate the current profiles
-    if ($profiles_data = Civi::settings()->get('twingle_profiles')) {
+    if (is_array($profiles_data = Civi::settings()->get('twingle_profiles'))) {
       foreach ($profiles_data as $profile_name => $profile_data) {
         $profile = new CRM_Twingle_Profile($profile_name, $profile_data);
         $data = json_encode($profile->getData());

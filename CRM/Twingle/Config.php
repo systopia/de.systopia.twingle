@@ -27,7 +27,7 @@ class CRM_Twingle_Config {
    * Get the options for protecting a recurring contribution linked Twingle
    *  against ending or cancellation (because Twingle would keep on collecting them)
    *
-   * @return array
+   * @return array<int, string>
    */
   public static function getRecurringProtectionOptions() {
     return [

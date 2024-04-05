@@ -25,7 +25,8 @@ use CRM_Twingle_ExtensionUtil as E;
 class CRM_Twingle_Form_Settings extends CRM_Core_Form {
 
   /**
-   * @var arraylistofallsettingsoptions
+   * @var array<string>
+   *   List of all settings options.
    */
   public static $SETTINGS_LIST = [
     'twingle_prefix',
@@ -41,7 +42,7 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
   /**
    * @inheritdoc
    */
-  public function buildQuickForm() {
+  public function buildQuickForm(): void {
     // Set redirect destination.
     $this->controller->_destination = CRM_Utils_System::url('civicrm/admin/settings/twingle', 'reset=1');
 
@@ -131,15 +132,14 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
     parent::validate();
 
     // if activity creation is active, make sure the fields are set
-    $protection_mode = CRM_Utils_Array::value('twingle_protect_recurring', $this->_submitValues);
+    $protection_mode = $this->_submitValues['twingle_protect_recurring'] ?? NULL;
     if ($protection_mode == CRM_Twingle_Config::RCUR_PROTECTION_ACTIVITY) {
       foreach (['twingle_protect_recurring_activity_type',
         'twingle_protect_recurring_activity_subject',
         'twingle_protect_recurring_activity_status',
         'twingle_protect_recurring_activity_assignee',
       ] as $activity_field) {
-        $current_value = CRM_Utils_Array::value($activity_field, $this->_submitValues);
-        if (empty($current_value)) {
+        if (NULL !== ($this->_submitValues[$activity_field] ?? NULL)) {
           $this->_errors[$activity_field] = E::ts('This is required for activity creation');
         }
       }
@@ -151,12 +151,12 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
   /**
    * @inheritdoc
    */
-  public function postProcess() {
+  public function postProcess(): void {
     $values = $this->exportValues();
 
     // store settings
     foreach (self::$SETTINGS_LIST as $setting) {
-      Civi::settings()->set($setting, CRM_Utils_Array::value($setting, $values));
+      Civi::settings()->set($setting, $values[$setting]);
     }
 
     parent::postProcess();
@@ -164,11 +164,13 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
 
   /**
    * Get a list of option group items
-   * @param $group_id  string group ID or name
-   * @return array list of ID(value) => label
-   * @throws CiviCRM_API3_Exception
+   * @param string $group_id
+   *   Group ID or name.
+   * @param array<int> $reserved
+   * @return array<int|string, string> list of ID(value) => label
+   * @throws \CRM_Core_Exception
    */
-  protected function getOptionValueList($group_id, $reserved = [0, 1]) {
+  protected function getOptionValueList(string $group_id, array $reserved = [0, 1]): array {
     $list = ['' => E::ts('-select-')];
     $query = civicrm_api3('OptionValue', 'get', [
       'option_group_id' => $group_id,

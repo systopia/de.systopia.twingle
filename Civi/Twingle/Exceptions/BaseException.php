@@ -35,14 +35,16 @@ class BaseException extends \Exception {
 
   /**
    * BaseException Constructor
-   * @param string $message
-   *  Error message
-   * @param string $error_code
-   *  A meaningful error code
+   * @param string|null $message
+   *   Error message
+   * @param string|null $error_code
+   *   A meaningful error code
+   * @param \Throwable|null $previous
+   *   A previously thrown exception to include.
    */
-  public function __construct(string $message = '', string $error_code = '') {
-    parent::__construct($message, 1);
-    $this->log_message = !empty($message) ? E::LONG_NAME . ': ' . $message : '';
+  public function __construct(?string $message = '', ?string $error_code = '', ?\Throwable $previous = NULL) {
+    parent::__construct($message, 1, $previous);
+    $this->log_message = '' !== $message ? E::LONG_NAME . ': ' . $message : '';
     $this->code = $error_code;
   }
 
@@ -59,7 +61,7 @@ class BaseException extends \Exception {
    * @return string
    */
   public function getErrorCode() {
-    return $this->code;
+    return (string) $this->code;
   }
 
 }
