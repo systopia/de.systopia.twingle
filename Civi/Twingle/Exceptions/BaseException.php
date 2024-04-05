@@ -28,21 +28,21 @@ use CRM_Twingle_ExtensionUtil as E;
 class BaseException extends \Exception {
 
   /**
-   * @var int|string
+   * @var string
    */
   protected $code;
   protected string $log_message;
 
   /**
    * BaseException Constructor
-   * @param string|null $message
+   * @param string $message
    *   Error message
-   * @param string|null $error_code
+   * @param string $error_code
    *   A meaningful error code
-   * @param \Throwable|null $previous
+   * @param \Throwable $previous
    *   A previously thrown exception to include.
    */
-  public function __construct(?string $message = '', ?string $error_code = '', ?\Throwable $previous = NULL) {
+  public function __construct(string $message = '', string $error_code = '', \Throwable $previous = NULL) {
     parent::__construct($message, 1, $previous);
     $this->log_message = '' !== $message ? E::LONG_NAME . ': ' . $message : '';
     $this->code = $error_code;
@@ -61,7 +61,7 @@ class BaseException extends \Exception {
    * @return string
    */
   public function getErrorCode() {
-    return (string) $this->code;
+    return $this->code;
   }
 
 }
