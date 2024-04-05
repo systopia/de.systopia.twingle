@@ -16,8 +16,9 @@
 declare(strict_types = 1);
 
 use CRM_Twingle_ExtensionUtil as E;
-use Civi\Twingle\Exceptions\ProfileException;
 use Civi\Twingle\Exceptions\BaseException;
+use Civi\Twingle\Exceptions\ProfileException;
+use Civi\Twingle\Exceptions\ProfileValidationError;
 
 /**
  * Form controller class
@@ -168,7 +169,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
 
     switch ($this->_op) {
       case 'delete':
-        if ($this->profile) {
+        if (isset($this->profile)) {
           CRM_Utils_System::setTitle(E::ts('Delete Twingle API profile <em>%1</em>', [1 => $this->profile->getName()]));
           $this->addButtons([
             [
@@ -185,23 +186,26 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         // Retrieve the source profile name.
         $source_id = CRM_Utils_Request::retrieve('source_id', 'Int', $this);
         // When copying without a valid profile id, copy the default profile.
-        if (!$source_id) {
+        if (!is_int($source_id)) {
           $this->profile = CRM_Twingle_Profile::createDefaultProfile();
-        } else {
+        }
+        else {
           try {
             $source_profile = CRM_Twingle_Profile::getProfile($source_id);
             $this->profile = $source_profile->copy();
             $this->profile->validate();
-          } catch (ProfileValidationError $e) {
-            if ($e->getErrorCode() == ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_FAILED) {
-              Civi::log()->error($e->getLogMessage());
+          }
+          catch (ProfileValidationError $exception) {
+            if ($exception->getErrorCode() == ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_FAILED) {
+              Civi::log()->error($exception->getLogMessage());
               CRM_Core_Session::setStatus(E::ts('The profile is invalid and cannot be copied.'), E::ts('Error'));
               CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/settings/twingle/profiles', 'reset=1'));
               return;
             }
-          } catch (ProfileException $e) {
-            if ($e->getErrorCode() == ProfileException::ERROR_CODE_PROFILE_NOT_FOUND) {
-              Civi::log()->error($e->getLogMessage());
+          }
+          catch (ProfileException $exception) {
+            if ($exception->getErrorCode() == ProfileException::ERROR_CODE_PROFILE_NOT_FOUND) {
+              Civi::log()->error($exception->getLogMessage());
               CRM_Core_Session::setStatus(E::ts('The profile to be copied could not be found.'), E::ts('Error'));
               CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/settings/twingle/profiles', 'reset=1'));
               return;
@@ -209,7 +213,10 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
           }
           catch (Civi\Core\Exception\DBQueryException $e) {
             Civi::log()->error($e->getMessage());
-            CRM_Core_Session::setStatus(E::ts('A database error has occurred. See the log for details.'), E::ts('Error'));
+            CRM_Core_Session::setStatus(
+              E::ts('A database error has occurred. See the log for details.'),
+              E::ts('Error')
+            );
             CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/settings/twingle/profiles', 'reset=1'));
             return;
           }
@@ -218,7 +225,9 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         break;
 
       case 'edit':
-        CRM_Utils_System::setTitle(E::ts('Edit Twingle API profile <em>%1</em>', [1 => $this->profile->getName()]));
+        CRM_Utils_System::setTitle(
+          E::ts('Edit Twingle API profile <em>%1</em>', [1 => $this->profile->getName()])
+        );
         break;
 
       case 'create':
@@ -554,8 +563,8 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
    */
   public function validate() {
 
-    if (in_array($this->_op, ['create', 'edit', 'copy'])) {
-      // Create profile with new values
+    if (in_array($this->_op, ['create', 'edit', 'copy'], TRUE)) {
+      // Create profile with new values.
       $profile_values = $this->exportValues();
       $profile = new CRM_Twingle_Profile(
         $profile_values['name'],
@@ -572,6 +581,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
           case ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_FAILED:
             $this->setElementError($e->getAffectedFieldName(), $e->getMessage());
             break;
+
           case ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_WARNING:
             CRM_Core_Session::setStatus($e->getMessage(), E::ts('Warning'));
         }
