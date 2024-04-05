@@ -26,12 +26,16 @@ class CRM_Twingle_Page_Profiles extends CRM_Core_Page {
       $profiles[$profile_id]['id'] = $profile_id;
       $profiles[$profile_id]['name'] = $profile->getName();
       $profiles[$profile_id]['is_default'] = $profile->is_default();
+      $profiles[$profile_id]['selectors'] = $profile->getProjectIds();
       foreach (CRM_Twingle_Profile::allowedAttributes() as $attribute) {
         $profiles[$profile_id][$attribute] = $profile->getAttribute($attribute);
       }
     }
     $this->assign('profiles', $profiles);
     $this->assign('profile_stats', CRM_Twingle_Profile::getProfileStats());
+
+    // Add custom css
+    Civi::resources()->addStyleFile(E::LONG_NAME, 'css/twingle.css');
 
     parent::run();
   }
