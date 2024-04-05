@@ -25,7 +25,13 @@ use Civi\Twingle\Exceptions\ProfileException as ProfileException;
 class CRM_Twingle_Profile {
 
   /**
-   * @var string
+   * @var int $id
+   *   The id of the profile.
+   */
+  protected $id = NULL;
+
+  /**
+   * @var string $name
    *   The name of the profile.
    */
   protected $name;
@@ -43,8 +49,10 @@ class CRM_Twingle_Profile {
    *   The name of the profile.
    * @param array<string, mixed> $data
    *   The properties of the profile
+   * @param int|NULL $id
    */
-  public function __construct($name, $data) {
+  public function __construct($name, $data, $id = NULL) {
+    $this->id = $id;
     $this->name = $name;
     $allowed_attributes = self::allowedAttributes();
     $this->data = $data + array_combine(
@@ -63,6 +71,24 @@ class CRM_Twingle_Profile {
             last_access = NOW(),
             access_counter = access_counter + 1
         WHERE name = %1', [1 => [$this->name, 'String']]);
+  }
+
+  /**
+   * Copy this profile by returning a clone with all unique information removed.
+   *
+   * @return CRM_Twingle_Profile
+   */
+  public function copy() {
+    $copy = clone $this;
+
+    // Remove unique data
+    $copy->id = NULL;
+    $copy->data['selector'] = NULL;
+
+    // Propose a new name for this profile.
+    $profile_name = $this->getName() . '_copy';
+    $copy->setName($profile_name);
+    return $copy;
   }
 
   /**
@@ -115,6 +141,24 @@ class CRM_Twingle_Profile {
    */
   public function getData() {
     return $this->data;
+  }
+
+  /**
+   * Retrieves the profile id.
+   *
+   * @return int
+   */
+  public function getId() {
+    return $this->id;
+  }
+
+  /**
+   * Set the profile id.
+   *
+   * @param int $id
+   */
+  public function setId(int $id) {
+    $this->id = $id;
   }
 
   /**
@@ -189,43 +233,85 @@ class CRM_Twingle_Profile {
   }
 
   /**
-   * Persists the profile within the CiviCRM settings.
+   * Persists the profile within the database.
+   *
+   * @throws \Civi\Twingle\Exceptions\ProfileException
    */
   public function saveProfile(): void {
     // make sure it's valid
     $this->verifyProfile();
 
-    // check if the profile exists
-    $profile_id = CRM_Core_DAO::singleValueQuery(
-      'SELECT id FROM civicrm_twingle_profile WHERE name = %1', [1 => [$this->name, 'String']]);
-    if (isset($profile_id)) {
-      // existing profile -> just update the config
-      CRM_Core_DAO::executeQuery(
-        'UPDATE civicrm_twingle_profile SET config = %2 WHERE name = %1',
-        [
-          1 => [$this->name, 'String'],
-          2 => [json_encode($this->data), 'String'],
-        ]);
+    try {
+      if ($this->id !== NULL) {
+        // existing profile -> just update the config
+        CRM_Core_DAO::executeQuery(
+          "UPDATE civicrm_twingle_profile SET config = %2, name = %3 WHERE id = %1",
+          [
+            1 => [$this->id, 'String'],
+            2 => [json_encode($this->data), 'String'],
+            3 => [$this->name, 'String'],
+          ]);
+      }
+      else {
+        // new profile -> add new entry to the DB
+        CRM_Core_DAO::executeQuery(
+          "INSERT IGNORE INTO civicrm_twingle_profile(name,config,last_access,access_counter) VALUES (%1, %2, null, 0)",
+          [
+            1 => [$this->name, 'String'],
+            2 => [json_encode($this->data), 'String'],
+          ]);
+      }
     }
-    else {
-      // new profile -> add new entry to the DB
-      CRM_Core_DAO::executeQuery(
-        'INSERT IGNORE INTO civicrm_twingle_profile(name,config,last_access,access_counter) VALUES (%1, %2, null, 0)',
-        [
-          1 => [$this->name, 'String'],
-          2 => [json_encode($this->data), 'String'],
-        ]);
+    catch (Exception $e) {
+      throw new ProfileException(
+        E::ts("Could not save/update profile: %1", [1 => $e->getMessage()]),
+        ProfileException::ERROR_CODE_COULD_NOT_SAVE_PROFILE
+      );
     }
   }
 
   /**
    * Deletes the profile from the database
+   *
+   * @throws \Civi\Twingle\Exceptions\ProfileException
    */
-  public function deleteProfile(): void {
-    CRM_Core_DAO::executeQuery(
-      'DELETE FROM civicrm_twingle_profile WHERE name = %1',
-      [1 => [$this->name, 'String']]
-    );
+  public function deleteProfile() {
+    // Do only reset default profile
+    if ($this->getName() == 'default') {
+      try {
+        $default_profile = CRM_Twingle_Profile::createDefaultProfile();
+        $default_profile->setId($this->getId());
+        $default_profile->saveProfile();
+
+        // Reset counter
+        CRM_Core_DAO::executeQuery("UPDATE civicrm_twingle_profile SET access_counter = 0, last_access = NULL WHERE id = %1", [
+          1 => [
+            $this->id,
+            'Integer'
+          ]
+        ]);
+      } catch (Exception $e) {
+        throw new ProfileException(
+          E::ts("Could not reset default profile: %1", [1 => $e->getMessage()]),
+          ProfileException::ERROR_CODE_COULD_NOT_RESET_PROFILE
+        );
+      }
+    }
+    else {
+      try {
+        CRM_Core_DAO::executeQuery("DELETE FROM civicrm_twingle_profile WHERE id = %1", [
+          1 => [
+            $this->id,
+            'Integer'
+          ]
+        ]);
+      } catch (Exception $e) {
+        throw new ProfileException(
+          E::ts("Could not delete profile: %1", [1 => $e->getMessage()]),
+          ProfileException::ERROR_CODE_COULD_NOT_DELETE_PROFILE
+        );
+      }
+    }
   }
 
   /**
@@ -307,9 +393,9 @@ class CRM_Twingle_Profile {
    */
   public static function createDefaultProfile($name = 'default') {
     return new CRM_Twingle_Profile($name, [
-      'selector' => '',
-      'xcm_profile' => '',
-      'location_type_id' => CRM_Twingle_Submission::LOCATION_TYPE_ID_WORK,
+      'selector'          => NULL,
+      'xcm_profile'       => '',
+      'location_type_id'  => CRM_Twingle_Submission::LOCATION_TYPE_ID_WORK,
       'location_type_id_organisation' => CRM_Twingle_Submission::LOCATION_TYPE_ID_WORK,
       // "Donation"
       'financial_type_id' => 1,
@@ -392,18 +478,23 @@ class CRM_Twingle_Profile {
   }
 
   /**
-   * Retrieves the profile with the given name.
+   * Retrieves the profile with the given ID.
    *
-   * @param string $name
+   * @param int|NULL $id
    *
-   * @return CRM_Twingle_Profile|NULL
+   * @return CRM_Twingle_Profile | NULL
+   * @throws \Civi\Core\Exception\DBQueryException
+   * @throws \Civi\Twingle\Exceptions\ProfileException
    */
-  public static function getProfile($name) {
-    $profile_data = CRM_Core_DAO::singleValueQuery(
-      'SELECT config FROM civicrm_twingle_profile WHERE name = %1',
-      [1 => [$name, 'String']]
-    );
-    return isset($profile_data) ? new CRM_Twingle_Profile($name, (array) json_decode($profile_data, TRUE)) : NULL;
+  public static function getProfile(int $id = NULL) {
+    if (!empty($id)) {
+      $profile_data = CRM_Core_DAO::executeQuery("SELECT id, name, config FROM civicrm_twingle_profile WHERE id = %1",
+        [1 => [$id, 'Integer']]);
+      if ($profile_data->fetch()) {
+        return new CRM_Twingle_Profile($profile_data->name, json_decode($profile_data->config, 1), (int) $profile_data->id);
+      }
+    }
+    throw new ProfileException('Profile not found.', ProfileException::ERROR_CODE_PROFILE_NOT_FOUND);
   }
 
   /**
@@ -412,16 +503,14 @@ class CRM_Twingle_Profile {
    *
    * @return array<string, \CRM_Twingle_Profile>
    *   profile_name => CRM_Twingle_Profile
+   * @throws \Civi\Core\Exception\DBQueryException
    */
   public static function getProfiles() {
     // todo: cache?
     $profiles = [];
-    $profile_data = CRM_Core_DAO::executeQuery('SELECT name, config FROM civicrm_twingle_profile');
+    $profile_data = CRM_Core_DAO::executeQuery("SELECT id, name, config FROM civicrm_twingle_profile");
     while ($profile_data->fetch()) {
-      $profiles[$profile_data->name] = new CRM_Twingle_Profile(
-        $profile_data->name,
-        json_decode($profile_data->config, 1)
-      );
+      $profiles[$profile_data->id] = new CRM_Twingle_Profile($profile_data->name, json_decode($profile_data->config, 1), (int) $profile_data->id);
     }
     return $profiles;
   }

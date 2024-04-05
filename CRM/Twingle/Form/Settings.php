@@ -134,7 +134,8 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
     // if activity creation is active, make sure the fields are set
     $protection_mode = $this->_submitValues['twingle_protect_recurring'] ?? NULL;
     if ($protection_mode == CRM_Twingle_Config::RCUR_PROTECTION_ACTIVITY) {
-      foreach (['twingle_protect_recurring_activity_type',
+      foreach ([
+        'twingle_protect_recurring_activity_type',
         'twingle_protect_recurring_activity_subject',
         'twingle_protect_recurring_activity_status',
         'twingle_protect_recurring_activity_assignee',
