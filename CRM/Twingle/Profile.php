@@ -462,45 +462,103 @@ class CRM_Twingle_Profile {
   /**
    * Returns an array of attributes allowed for a profile.
    *
-   * @return array<string>
+   * @return array<string>|array<string, bool>
    */
-  public static function allowedAttributes() {
-    return array_merge(
+  public static function allowedAttributes(bool $asMetadata = FALSE) {
+    $attributes = array_merge(
       [
-        'selector',
-        'xcm_profile',
-        'location_type_id',
-        'location_type_id_organisation',
-        'financial_type_id',
-        'financial_type_id_recur',
-        'sepa_creditor_id',
-        'gender_male',
-        'gender_female',
-        'gender_other',
-        'prefix_male',
-        'prefix_female',
-        'prefix_other',
-        'newsletter_groups',
-        'postinfo_groups',
-        'donation_receipt_groups',
-        'campaign',
-        'campaign_targets',
-        'contribution_source',
-        'custom_field_mapping',
-        'membership_type_id',
-        'membership_type_id_recur',
-        'membership_postprocess_call',
-        'newsletter_double_opt_in',
-        'required_address_components',
+        'selector' => [
+          'label' => E::ts('Project IDs'),
+          'required' => TRUE,
+        ],
+        'xcm_profile' => ['required' => FALSE],
+        'location_type_id' => [
+          'label' => E::ts('Location type'),
+          'required' => TRUE,
+        ],
+        'location_type_id_organisation' => [
+          'label' => E::ts('Location type for organisations'),
+          'required' => TRUE,
+        ],
+        'financial_type_id' => [
+          'label' => E::ts('Financial type'),
+          'required' => TRUE,
+        ],
+        'financial_type_id_recur' => [
+          'label' => E::ts('Financial type (recurring)'),
+          'required' => TRUE,
+        ],
+        'sepa_creditor_id' => [
+          'label' => E::ts('CiviSEPA creditor'),
+          'required' => CRM_Twingle_Submission::civiSepaEnabled(),
+        ],
+        'gender_male' => [
+          'label' => E::ts('Gender option for submitted value "male"'),
+          'required' => TRUE,
+        ],
+        'gender_female' => [
+          'label' => E::ts('Gender option for submitted value "female"'),
+          'required' => TRUE,
+        ],
+        'gender_other' => [
+          'label' => E::ts('Gender option for submitted value "other"'),
+          'required' => TRUE,
+        ],
+        'prefix_male' => [
+          'label' => E::ts('Prefix option for submitted value "male"'),
+          'required' => TRUE,
+        ],
+        'prefix_female' => [
+          'label' => E::ts('Prefix option for submitted value "female"'),
+          'required' => TRUE,
+        ],
+        'prefix_other' => [
+          'label' => E::ts('Prefix option for submitted value "other"'),
+          'required' => TRUE,
+        ],
+        'newsletter_groups' => ['required' => FALSE],
+        'postinfo_groups' => ['required' => FALSE],
+        'donation_receipt_groups' => ['required' => FALSE],
+        'campaign' => ['required' => FALSE],
+        'campaign_targets' => ['required' => FALSE],
+        'contribution_source' => ['required' => FALSE],
+        'custom_field_mapping' => ['required' => FALSE],
+        'membership_type_id' => ['required' => FALSE],
+        'membership_type_id_recur' => ['required' => FALSE],
+        'membership_postprocess_call' => ['required' => FALSE],
+        'newsletter_double_opt_in' => ['required' => FALSE],
+        'required_address_components' => ['required' => FALSE],
       ],
       // Add payment methods.
-      array_keys(static::paymentInstruments()),
+      array_combine(
+        array_keys(static::paymentInstruments()),
+        array_map(
+        function ($value) {
+          return [
+            'label' => $value,
+            'required' => TRUE,
+          ];
+        },
+        static::paymentInstruments()
+      )),
 
       // Add contribution status for all payment methods.
-      array_map(function ($attribute) {
-        return $attribute . '_status';
-      }, array_keys(static::paymentInstruments()))
+      array_combine(
+        array_map(function($attribute) {
+          return $attribute . '_status';
+        }, array_keys(static::paymentInstruments())),
+        array_map(
+          function($value) {
+            return [
+              'label' => $value . ' - ' . E::ts('Contribution Status'),
+              'required' => TRUE,
+            ];
+          },
+          static::paymentInstruments()
+        )),
     );
+
+    return $asMetadata ? $attributes : array_keys($attributes);
   }
 
   /**

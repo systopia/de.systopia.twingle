@@ -562,9 +562,25 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       foreach ($profile_data as $element_name => $value) {
         $defaults[$element_name] = $value;
       }
+
       // backwards compatibility, see issue #27
       if (!isset($profile_data['campaign_targets'])) {
         $defaults['campaign_targets'] = ['contribution', 'contact'];
+      }
+
+      // Show warning when there is configuration missing for required fields.
+      $requiredConfig = CRM_Twingle_Profile::allowedAttributes(TRUE);
+      foreach ($requiredConfig as $key => $metadata) {
+        if (!isset($profile_data[$key]) && $metadata['required']) {
+          CRM_Core_Session::setStatus(
+            E::ts(
+              'The required configuration option "%1" has no value. Saving the profile might set this option to a possibly unwanted default value.',
+              [1 => $metadata['label'] ?? $key]
+            ),
+            E::ts('Error'),
+            'error'
+          );
+        }
       }
     }
     return $defaults;
