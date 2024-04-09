@@ -259,8 +259,7 @@ class CRM_Twingle_Profile {
     }
 
     // Restrict profile names to alphanumeric characters, space and the underscore.
-    $contains_illegal_characters = (1 !== preg_match('/[^A-Za-z0-9_\s]/', $this->getName()));
-    if ($contains_illegal_characters) {
+    if (1 === preg_match('/[^A-Za-z0-9_\s]/', $this->getName())) {
       throw new ProfileValidationError(
         'name',
         E::ts('Only alphanumeric characters, space and the underscore (_) are allowed for profile names.'),
