@@ -810,6 +810,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       else {
         // this is a follow-up recurring payment
         $membership_type_id = NULL;
+        $isInstallment = TRUE;
       }
     }
 
@@ -878,6 +879,18 @@ function civicrm_api3_twingle_donation_Submit($params) {
           );
         }
       }
+    }
+
+    if (
+      ($isInstallment ?? FALSE)
+      && is_string(
+        $membershipInstallmentPostprocessCall = $profile->getAttribute('membership_installment_postprocess_call')
+      )
+    ) {
+      // TODO: MembershipPayment post process call
+      //       * either via org.project60.membership
+      //       * or via custom API call (e.g. form processor)
+      //       receiving contribution_recur_id, contribution_id, contact_id
     }
 
     $result = civicrm_api3_create_success($result_values);
