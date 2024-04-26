@@ -530,6 +530,8 @@ class CRM_Twingle_Profile {
         'membership_postprocess_call' => ['required' => FALSE],
         'newsletter_double_opt_in' => ['required' => FALSE],
         'required_address_components' => ['required' => FALSE],
+        'map_as_contribution_notes' => ['required' => FALSE],
+        'map_as_contact_notes' => ['required' => FALSE],
       ],
       // Add payment methods.
       array_combine(
@@ -646,6 +648,8 @@ class CRM_Twingle_Profile {
         'city',
         'country',
       ],
+      'map_as_contribution_notes' => [],
+      'map_as_contact_notes' => [],
     ]
     // Add contribution status for all payment methods.
     // phpcs:ignore Drupal.Formatting.SpaceUnaryOperator.PlusMinus
