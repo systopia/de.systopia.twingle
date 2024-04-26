@@ -75,4 +75,14 @@
       <li><strong>ContributionRecur</strong> &ndash; Will be set on the recurring contribution and deriving single contributions</li>
     </ul>{/ts}
 {/htxt}
+
+{htxt id='id-map_as_contribution_notes'}
+    {ts domain="de.systopia.twingle"}<p>Create a contribution note for each field specified in this selection.</p>
+    <p><i>Tip: You can enable or disable this fields in the TwingleMANAGER.</i></p>{/ts}
+{/htxt}
+
+{htxt id='id-map_as_contact_notes'}
+    {ts domain="de.systopia.twingle"}<p>Create a contact note for each field specified in this selection.</p>
+    <p><i>Tip: You can enable or disable this fields in the TwingleMANAGER.</i></p>{/ts}
+{/htxt}
 {/crmScope}
