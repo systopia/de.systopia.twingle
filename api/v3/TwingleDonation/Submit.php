@@ -255,6 +255,13 @@ function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
     'api.required' => 0,
     'description' => E::ts('Additional information for either the contact or the (recurring) contribution.'),
   ];
+  $params['remarks'] = [
+    'name' => 'remarks',
+    'title' => E::ts('Remarks'),
+    'type' => CRM_Utils_Type::T_STRING,
+    'api.required' => 0,
+    'description' => E::ts('Additional remarks for the donation.'),
+  ];
 }
 
 /**
@@ -477,13 +484,20 @@ function civicrm_api3_twingle_donation_Submit($params) {
         );
       }
 
-      // Save user_extrafield as contact note.
-      if (isset($params['user_extrafield']) && '' != $params['user_extrafield']) {
-        civicrm_api3('Note', 'create', [
-          'entity_table' => 'civicrm_contact',
-          'entity_id' => $contact_id,
-          'note' => $params['user_extrafield'],
-        ]);
+      // Create contact notes.
+      $contact_note_mappings = $profile->getAttribute('map_as_contact_notes', []);
+      foreach (['user_extrafield'] as $target) {
+        if (
+          isset($params[$target])
+          && '' != $params[$target]
+          && in_array($target, $contact_note_mappings)
+        ) {
+          civicrm_api3('Note', 'create', [
+            'entity_table' => 'civicrm_contact',
+            'entity_id' => $contact_id,
+            'note' => $params[$target],
+          ]);
+        }
       }
 
       // Share organisation address with individual contact, using configured
@@ -618,10 +632,6 @@ function civicrm_api3_twingle_donation_Submit($params) {
     // Add custom field values.
     if (isset($custom_fields['Contribution'])) {
       $contribution_data += $custom_fields['Contribution'];
-    }
-
-    if (isset($params['purpose'])) {
-      $contribution_data['note'] = $params['purpose'];
     }
 
     // set campaign, subject to configuration
@@ -792,6 +802,22 @@ function civicrm_api3_twingle_donation_Submit($params) {
       }
 
       $result_values['contribution'] = $contribution['values'];
+    }
+
+    // Add notes to the contribution.
+    $contribution_note_mappings = $profile->getAttribute("map_as_contribution_notes");
+    foreach (['purpose', 'remarks'] as $target) {
+      if (
+        in_array($target, $contribution_note_mappings)
+        && isset($params[$target])
+        && '' != $params[$target]
+      ) {
+        civicrm_api3('Note', 'create', [
+          'entity_table' => 'civicrm_contribution',
+          'entity_id' => CRM_Utils_Array::first($result_values['contribution'])['id'],
+          'note' => $params[$target],
+        ]);
+      }
     }
 
     // MEMBERSHIP CREATION
