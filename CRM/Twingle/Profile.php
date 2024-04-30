@@ -205,7 +205,9 @@ class CRM_Twingle_Profile {
    * @return mixed | NULL
    */
   public function getAttribute($attribute_name, $default = NULL) {
-    return !empty($this->data[$attribute_name]) ? $this->data[$attribute_name] : $default;
+    return (isset($this->data[$attribute_name]) && $this->data[$attribute_name] !== '')
+      ? $this->data[$attribute_name]
+      : $default;
   }
 
   /**
