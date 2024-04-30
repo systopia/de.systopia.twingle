@@ -97,6 +97,26 @@ msgstr ""
 "erlaubt."
 
 #: CRM/Twingle/Form/Profile.php
+msgid "Create contribution notes for"
+msgstr "Zuwendungs-Notizen erstellen für"
+
+#: CRM/Twingle/Form/Profile.php ./api/v3/TwingleDonation/Submit.php
+msgid "Purpose"
+msgstr "Zweck"
+
+#: CRM/Twingle/Form/Profile.php ./api/v3/TwingleDonation/Submit.php
+msgid "Remarks"
+msgstr "Anmerkungen"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Create contact notes for"
+msgstr "Kontakt-Notizen erstellen für"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "User Extra Field"
+msgstr "Benutzer-Extra-Feld"
+
+#: CRM/Twingle/Form/Profile.php
 msgid "CiviSEPA"
 msgstr "CiviSEPA"
 
@@ -230,6 +250,22 @@ msgstr "Zahlungsmethoden"
 #: templates/CRM/Twingle/Form/Profile.tpl
 msgid "Groups"
 msgstr "Gruppen"
+
+#: templates/CRM/Twingle/Form/Profile.tpl
+msgid "Create contribution note for"
+msgstr "Zuwendungs-Notiz erstellen für"
+
+#: templates/CRM/Twingle/Form/Profile.tpl
+msgid "Create contact note for"
+msgstr "Kontakt-Notiz erstellen für"
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid "<p>Create a contribution note for each field specified in this selection.</p>\n    <p><i>Tip: You can enable or disable this fields in the TwingleMANAGER.</i></p>"
+msgstr "<p>Erstelle eine Zuwendungs-Notiz für jedes Feld, das in dieser Auswahl angegeben ist.</p>\n    <p><i>Tipp: Sie können diese Felder im TwingleMANAGER aktivieren oder deaktivieren.</i></p>"
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid "<p>Create a contact note for each field specified in this selection.</p>\n    <p><i>Tip: You can enable or disable this fields in the TwingleMANAGER.</i></p>"
+msgstr "<p>Erstelle eine Kontakt-Notiz für jedes Feld, das in dieser Auswahl angegeben ist.</p>\n    <p><i>Tipp: Sie können diese Felder im TwingleMANAGER aktivieren oder deaktivieren.</i></p>"
 
 #: templates/CRM/Twingle/Form/Profile.tpl
 msgid "Are you sure you want to reset the default profile?"
