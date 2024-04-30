@@ -75,6 +75,26 @@ msgid "Only alphanumeric characters and the underscore (_) are allowed for profi
 msgstr ""
 
 #: ./CRM/Twingle/Form/Profile.php
+msgid "Create contribution notes for"
+msgstr ""
+
+#: ./CRM/Twingle/Form/Profile.php ./api/v3/TwingleDonation/Submit.php
+msgid "Purpose"
+msgstr ""
+
+#: ./CRM/Twingle/Form/Profile.php ./api/v3/TwingleDonation/Submit.php
+msgid "Remarks"
+msgstr ""
+
+#: ./CRM/Twingle/Form/Profile.php
+msgid "Create contact notes for"
+msgstr ""
+
+#: ./CRM/Twingle/Form/Profile.php
+msgid "User Extra Field"
+msgstr ""
+
+#: ./CRM/Twingle/Form/Profile.php
 msgid "CiviSEPA"
 msgstr ""
 
@@ -204,6 +224,22 @@ msgstr ""
 
 #: ./templates/CRM/Twingle/Form/Profile.tpl
 msgid "Groups"
+msgstr ""
+
+#: ./templates/CRM/Twingle/Form/Profile.tpl
+msgid "Create contribution note for"
+msgstr ""
+
+#: ./templates/CRM/Twingle/Form/Profile.tpl
+msgid "Create contact note for"
+msgstr ""
+
+#: ./templates/CRM/Twingle/Form/Profile.hlp
+msgid "<p>Create a contribution note for each field specified in this selection.</p>\n    <p><i>Tip: You can enable or disable this fields in the TwingleMANAGER.</i></p>"
+msgstr ""
+
+#: ./templates/CRM/Twingle/Form/Profile.hlp
+msgid "<p>Create a contact note for each field specified in this selection.</p>\n    <p><i>Tip: You can enable or disable this fields in the TwingleMANAGER.</i></p>"
 msgstr ""
 
 #: ./templates/CRM/Twingle/Form/Profile.tpl
