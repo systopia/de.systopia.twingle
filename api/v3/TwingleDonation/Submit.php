@@ -589,7 +589,8 @@ function civicrm_api3_twingle_donation_Submit($params) {
     }
 
     // If requested, add contact to donation_receipt groups defined in the
-    // profile.
+    // profile. If an organisation is provided, add it to the groups instead.
+    // (see issue #83)
     if (
       isset($params['donation_receipt'])
       && is_array($groups = $profile->getAttribute('donation_receipt_groups'))
@@ -597,7 +598,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       foreach ($groups as $group_id) {
         civicrm_api3('GroupContact', 'create', [
           'group_id' => $group_id,
-          'contact_id' => $contact_id,
+          'contact_id' => $organisation_id ?? $contact_id,
         ]);
 
         $result_values['donation_receipt'][] = $group_id;
