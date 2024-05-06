@@ -817,7 +817,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
     // CREATE the membership if required
     if (isset($membership_type_id)) {
       $membership_data = [
-        'contact_id'         => $contact_id,
+        'contact_id'         => $organisation_id ?? $contact_id,
         'membership_type_id' => $membership_type_id,
       ];
       // set campaign, subject to configuration
