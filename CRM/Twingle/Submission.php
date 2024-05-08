@@ -46,6 +46,7 @@ class CRM_Twingle_Submission {
    * List of allowed product attributes.
    */
   const ALLOWED_PRODUCT_ATTRIBUTES = [
+    'id',
     'name',
     'internal_id',
     'price',
@@ -513,8 +514,8 @@ class CRM_Twingle_Submission {
       // If found, use the financial type and price field id from the price field
       if ($price_field) {
 
-        // Log warning if price differs from the submission
-        if ($price_field->price != (int) $product['price']) {
+        // Log warning if price is not variable and differs from the submission
+        if ($price_field->price !== Null && $price_field->price != (int) $product['price']) {
           Civi::log()->warning(E::LONG_NAME .
             ": Price for product " . $product['name'] . " differs from the PriceField. " .
             "Using the price from the submission.", ['price_field' => $price_field->price, 'submission' => $product['price']]);

@@ -45,7 +45,7 @@ function filter_attributes(array &$data, array $allowed_attributes, array $can_b
 function convert_str_to_int(array &$data, array $str_to_int_conversion): void {
   // Convert string to int
   foreach ($str_to_int_conversion as $attribute) {
-    if (isset($data[$attribute])) {
+    if (isset($data[$attribute]) && $data[$attribute] !== '') {
       try {
         $data[$attribute] = (int) $data[$attribute];
       } catch (\Exception $e) {
@@ -108,18 +108,17 @@ function convert_str_to_date(array &$data, array $str_to_date_conversion): void 
 }
 
 /**
- * Convert null to int
+ * Convert an empty string to null.
  *
  * @param array $data
- * @param array $null_to_int_conversion
+ * @param array $empty_string_to_null
  *
  * @return void
  */
-function convert_null_to_int(array &$data, array $null_to_int_conversion): void {
-  // Convert null to int
-  foreach ($null_to_int_conversion as $attribute) {
-    if (array_key_exists($attribute, $data) && $data[$attribute] === NULL) {
-      $data[$attribute] = 0;
+function convert_empty_string_to_null(array &$data, array $empty_string_to_null): void {
+  foreach ($empty_string_to_null as $attribute) {
+    if (isset($data[$attribute]) && $data[$attribute] === '') {
+      $data[$attribute] = NULL;
     }
   }
 }

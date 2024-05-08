@@ -14,7 +14,7 @@ use CRM_Utils_Type;
 use function Civi\Twingle\Shop\Utils\convert_int_to_bool;
 use function Civi\Twingle\Shop\Utils\convert_str_to_date;
 use function Civi\Twingle\Shop\Utils\convert_str_to_int;
-use function Civi\Twingle\Shop\Utils\convert_null_to_int;
+use function Civi\Twingle\Shop\Utils\convert_empty_string_to_null;
 use function Civi\Twingle\Shop\Utils\filter_attributes;
 use function Civi\Twingle\Shop\Utils\validate_data_types;
 
@@ -112,9 +112,9 @@ class TwingleProduct extends TwingleProductDAO {
   ];
 
   /**
-   * Attributes that need to be converted from NULL to int.
+   * Empty string to null conversion.
    */
-  protected const NULL_TO_INT_CONVERSION = [
+  protected const EMPTY_STRING_TO_NULL = [
     "price",
   ];
 
@@ -198,6 +198,28 @@ class TwingleProduct extends TwingleProductDAO {
       self::CAN_BE_ZERO,
     );
 
+    // Does this product allow to enter a custom price?
+    $custom_price = array_key_exists('price', $product_data) && $product_data['price'] === Null;
+    if (!$custom_price && isset($product_data['price_field_id'])) {
+      try {
+        $price_field = civicrm_api3('PriceField', 'getsingle', [
+          'id' => $product_data['price_field_id'],
+          'return' => 'is_enter_qty',
+        ]);
+        $custom_price = (bool) $price_field['is_enter_qty'];
+      }
+      catch (CRM_Core_Exception $e) {
+        throw new ProductException(
+          E::ts("Could not find PriceField for Twingle Product ['id': %1, 'external_id': %2]: %3",
+            [
+              1 => $product_data['id'],
+              2 => $product_data['external_id'],
+              3 => $e->getMessage(),
+            ]),
+          ProductException::ERROR_CODE_PRICE_FIELD_NOT_FOUND);
+      }
+    }
+
     // Amend data from corresponding PriceFieldValue
     if (isset($product_data['price_field_id'])) {
       try {
@@ -216,7 +238,7 @@ class TwingleProduct extends TwingleProductDAO {
           ProductException::ERROR_CODE_PRICE_FIELD_VALUE_NOT_FOUND);
       }
       $product_data['name'] = $product_data['name'] ?? $price_field_value['label'];
-      $product_data['price'] = $product_data['price'] ?? $price_field_value['amount'];
+      $product_data['price'] = $custom_price ? Null : $product_data['price'] ?? $price_field_value['amount'];
       $product_data['financial_type_id'] = $product_data['financial_type_id'] ?? $price_field_value['financial_type_id'];
       $product_data['is_active'] = $product_data['is_active'] ?? $price_field_value['is_active'];
       $product_data['sort'] = $product_data['sort'] ?? $price_field_value['weight'];
@@ -228,7 +250,7 @@ class TwingleProduct extends TwingleProductDAO {
       convert_str_to_int($product_data, self::STR_TO_INT_CONVERSION);
       convert_int_to_bool($product_data, self::INT_TO_BOOL_CONVERSION);
       convert_str_to_date($product_data, self::STR_TO_DATE_CONVERSION);
-      convert_null_to_int($product_data, self::NULL_TO_INT_CONVERSION);
+      convert_empty_string_to_null($product_data, self::EMPTY_STRING_TO_NULL);
     }
     catch (\Exception $e) {
       throw new ProductException($e->getMessage(), ProductException::ERROR_CODE_ATTRIBUTE_WRONG_DATA_TYPE);
@@ -308,6 +330,13 @@ class TwingleProduct extends TwingleProductDAO {
       'html_type' => 'Text',
       'is_required' => false,
     ];
+
+    // If the product has no fixed price, allow the user to enter a custom price
+    if ($this->price === Null) {
+      $price_field_data['is_enter_qty'] = true;
+      $price_field_data['is_display_amounts'] = false;
+    }
+
     // Add id if in edit mode
     if ($mode == 'edit') {
       $price_field_data['id'] = $this->price_field_id;
@@ -348,7 +377,7 @@ class TwingleProduct extends TwingleProductDAO {
       'price_field_id' => $this->price_field_id,
       'financial_type_id' => $this->financial_type_id,
       'label' => $this->name,
-      'amount' => $this->price,
+      'amount' => $this->price === Null ? 1 : $this->price,
       'is_active' => $this->is_active,
       'description' => $this->description,
     ];
