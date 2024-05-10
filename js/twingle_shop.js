@@ -219,6 +219,11 @@ class Product {
       button.disabled = true;
     }
 
+    // Deactivate 'update' button if product is not outdated
+    if (action === 'update' && !this.isOutdated) {
+      button.disabled = true;
+    }
+
     // Add icon
     const icon = document.createElement('i');
     const iconClass = action === 'create' ? 'fa-plus-circle' : action === 'update' ? 'fa-refresh' : 'fa-trash';
@@ -357,13 +362,11 @@ class Product {
     // Determine actions; if product has price field id, it can be updated or
     // deleted, otherwise it can be created
     if (this.priceFieldId) {
-      if (this.isOutdated) {
+      if (!this.isOrphaned) {
         actionsAndHandlers.push(['update', this.createPriceFieldHandler()]);
-      } else if (!this.isOrphaned) {
-        actionsAndHandlers.push(['update', null]);
       }
       actionsAndHandlers.push(['delete', this.deletePriceFieldHandler()]);
-    } else {
+    } else if (!this.isOrphaned) {
       actionsAndHandlers.push(['create', this.createPriceFieldHandler()]);
     }
 
@@ -410,10 +413,10 @@ class Product {
     let self = this;
     dropdown.onchange = function () {
 
-      //  Enable 'create' button if financial type is selected
-      const createButton = document.getElementById('twingle_product_tw_' + self.externalId).getElementsByClassName('twingle-shop-cell-button')[0];
-      if (createButton.textContent.includes('Create')) {
-        createButton.disabled = dropdown.value === '0';
+      //  Enable 'create' or 'update' button if financial type is selected
+      const button = document.getElementById('twingle_product_tw_' + self.externalId).getElementsByClassName('twingle-shop-cell-button')[0];
+      if (button.textContent.includes('Create') || button.textContent.includes('Update')) {
+        button.disabled = dropdown.value === '0';
       }
 
       // Update financial type
