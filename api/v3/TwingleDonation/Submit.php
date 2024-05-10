@@ -420,7 +420,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       // Get the prefix ID defined within the profile
       if (
         isset($params['user_gender'])
-        && NULL !== ($prefix_id = $profile->getAttribute('prefix_' . $params['user_gender']))
+        && is_numeric($prefix_id = $profile->getAttribute('prefix_' . $params['user_gender']))
       ) {
         $contact_data['prefix_id'] = $prefix_id;
       }
@@ -830,8 +830,8 @@ function civicrm_api3_twingle_donation_Submit($params) {
       $result_values['membership'] = $membership;
 
       // call the postprocess API
-      $postprocess_call = $profile->getAttribute('membership_postprocess_call');
-      if (is_string($postprocess_call)) {
+      if ('' !== ($postprocess_call = $profile->getAttribute('membership_postprocess_call', ''))) {
+        /** @var string $postprocess_call */
         [$pp_entity, $pp_action] = explode('.', $postprocess_call, 2);
         try {
           // gather the contribution IDs

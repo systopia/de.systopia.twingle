@@ -111,7 +111,8 @@ class CRM_Twingle_Profile {
    */
   public function getCustomFieldMapping() {
     $custom_field_mapping = [];
-    if (is_string($custom_field_definition = $this->getAttribute('custom_field_mapping'))) {
+    if ('' !== ($custom_field_definition = $this->getAttribute('custom_field_mapping', ''))) {
+      /** @var string $custom_field_definition */
       $custom_field_maps = preg_split(
         '/\r\n|\r|\n/',
         $custom_field_definition,
