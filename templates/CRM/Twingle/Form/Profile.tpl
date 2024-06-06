@@ -28,7 +28,7 @@
         </tr>
 
         <tr class="crm-section">
-          {if not $form.is_default}
+          {if not $is_default}
           <td class="label">{$form.selector.label}
             <a
                     onclick='
