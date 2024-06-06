@@ -822,7 +822,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
         }
       }
 
-      $result_values['contribution'] = $contribution['values'];
+      $result_values['contribution'] = CRM_Utils_Array::first($contribution['values']);
     }
 
     // MEMBERSHIP CREATION
