@@ -73,7 +73,7 @@ class CRM_Twingle_Submission {
     // Get the payment instrument defined within the profile, or return an error
     // if none matches (i.e. an unknown payment method was submitted).
     $payment_instrument_id = $profile->getAttribute('pi_' . $params['payment_method'], '');
-    if ('' !== $payment_instrument_id) {
+    if ('' === $payment_instrument_id) {
       throw new CRM_Core_Exception(
         E::ts('Payment method could not be matched to existing payment instrument.'),
         'invalid_format'
