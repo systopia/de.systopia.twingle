@@ -571,7 +571,15 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       // Show warning when there is configuration missing for required fields.
       $requiredConfig = CRM_Twingle_Profile::allowedAttributes(TRUE);
       foreach ($requiredConfig as $key => $metadata) {
-        if (!isset($profile_data[$key]) && $metadata['required']) {
+        $required = $metadata['required'] ?? FALSE;
+        // Do not require twingle project IDs/selector for the default profile.
+        if (
+          $this->profile->is_default()
+          && 'selector' === $key
+        ) {
+          $required = FALSE;
+        }
+        if (!isset($profile_data[$key]) && $required) {
           CRM_Core_Session::setStatus(
             E::ts(
               'The required configuration option "%1" has no value. Saving the profile might set this option to a possibly unwanted default value.',
