@@ -157,7 +157,7 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
 
     // store settings
     foreach (self::$SETTINGS_LIST as $setting) {
-      Civi::settings()->set($setting, $values[$setting]);
+      Civi::settings()->set($setting, $values[$setting] ?? NULL);
     }
 
     parent::postProcess();
