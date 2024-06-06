@@ -725,7 +725,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       // Create the mandate.
       $mandate = civicrm_api3('SepaMandate', 'createfull', $mandate_data);
 
-      $result_values['sepa_mandate'] = $mandate['values'];
+      $result_values['sepa_mandate'] = CRM_Utils_Array::first($mandate['values']);
     }
     else {
       // Set financial type depending on donation rhythm. This applies for
