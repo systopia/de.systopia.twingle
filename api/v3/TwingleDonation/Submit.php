@@ -814,7 +814,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       ) {
         civicrm_api3('Note', 'create', [
           'entity_table' => 'civicrm_contribution',
-          'entity_id' => CRM_Utils_Array::first($result_values['contribution'])['id'],
+          'entity_id' => $result_values['contribution']['id'],
           'note' => $params[$target],
         ]);
       }
