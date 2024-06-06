@@ -618,8 +618,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
           'group_id' => $group_id,
           'contact_id' => $organisation_id ?? $contact_id,
         ]);
-
-        $result_values['donation_receipt'][] = $group_id;
+        $result_values['donation_receipt_group_ids'][] = $group_id;
       }
     }
 
