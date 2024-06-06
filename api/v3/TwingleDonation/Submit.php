@@ -489,7 +489,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       foreach (['user_extrafield'] as $target) {
         if (
           isset($params[$target])
-          && '' != $params[$target]
+          && '' !== $params[$target]
           && in_array($target, $contact_note_mappings)
         ) {
           civicrm_api4('Note', 'create', [
@@ -812,7 +812,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       if (
         in_array($target, $contribution_note_mappings)
         && isset($params[$target])
-        && '' != $params[$target]
+        && '' !== $params[$target]
       ) {
         civicrm_api4('Note', 'create', [
           'values' => [
