@@ -260,12 +260,12 @@ msgid "Create contact note for"
 msgstr "Kontakt-Notiz erstellen für"
 
 #: templates/CRM/Twingle/Form/Profile.hlp
-msgid "<p>Create a contribution note for each field specified in this selection.</p>\n    <p><i>Tip: You can enable or disable this fields in the TwingleMANAGER.</i></p>"
-msgstr "<p>Erstelle eine Zuwendungs-Notiz für jedes Feld, das in dieser Auswahl angegeben ist.</p>\n    <p><i>Tipp: Sie können diese Felder im TwingleMANAGER aktivieren oder deaktivieren.</i></p>"
+msgid "Create a contribution note for each field specified in this selection. Tip: You can enable or disable this fields in the TwingleMANAGER."
+msgstr "Erstelle eine Zuwendungs-Notiz für jedes Feld, das in dieser Auswahl angegeben ist. Tipp: Sie können diese Felder im TwingleMANAGER aktivieren oder deaktivieren."
 
 #: templates/CRM/Twingle/Form/Profile.hlp
-msgid "<p>Create a contact note for each field specified in this selection.</p>\n    <p><i>Tip: You can enable or disable this fields in the TwingleMANAGER.</i></p>"
-msgstr "<p>Erstelle eine Kontakt-Notiz für jedes Feld, das in dieser Auswahl angegeben ist.</p>\n    <p><i>Tipp: Sie können diese Felder im TwingleMANAGER aktivieren oder deaktivieren.</i></p>"
+msgid "Create a contact note for each field specified in this selection. Tip: You can enable or disable this fields in the TwingleMANAGER."
+msgstr "Erstelle eine Kontakt-Notiz für jedes Feld, das in dieser Auswahl angegeben ist. Tipp: Sie können diese Felder im TwingleMANAGER aktivieren oder deaktivieren."
 
 #: templates/CRM/Twingle/Form/Profile.tpl
 msgid "Are you sure you want to reset the default profile?"
