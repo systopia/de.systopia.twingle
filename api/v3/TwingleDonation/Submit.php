@@ -807,7 +807,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
     }
 
     // Add notes to the contribution.
-    $contribution_note_mappings = $profile->getAttribute("map_as_contribution_notes");
+    $contribution_note_mappings = $profile->getAttribute("map_as_contribution_notes", []);
     foreach (['purpose', 'remarks'] as $target) {
       if (
         in_array($target, $contribution_note_mappings)
