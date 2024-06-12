@@ -670,7 +670,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       }
 
       $creditor_id = $profile->getAttribute('sepa_creditor_id');
-      if (!is_int($creditor_id)) {
+      if (!isset($creditor_id) || '' === $creditor_id) {
         throw new BaseException(
           E::ts('SEPA creditor is not configured for profile "%1".', [1 => $profile->getName()])
         );
