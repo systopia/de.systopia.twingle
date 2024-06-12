@@ -116,7 +116,10 @@ class CRM_Twingle_Tools {
    *   Recurring contribution fields.
    * @throws Exception could be one of the measures
    */
-  public static function processRecurringContributionTermination(int $recurring_contribution_id, array $recurring_contribution) {
+  public static function processRecurringContributionTermination(
+    int $recurring_contribution_id,
+    array $recurring_contribution
+  ) {
     // check if we're suspended
     if (self::$protection_suspended) {
       return;

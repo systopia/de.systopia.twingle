@@ -532,8 +532,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       : 'false';
     if (
       (bool) $profile->getAttribute('newsletter_double_opt_in')
-      && isset($params['newsletter'])
-      && 1 == $params['newsletter']
+      && (bool) ($params['newsletter'] ?? FALSE)
       && is_array($groups = $profile->getAttribute('newsletter_groups'))
     ) {
       $group_memberships = array_column(
@@ -573,8 +572,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       // If requested, add contact to newsletter groups defined in the profile.
     }
     elseif (
-      isset($params['newsletter'])
-      && 1 == $params['newsletter']
+      (bool) ($params['newsletter'] ?? FALSE)
       && is_array($groups = $profile->getAttribute('newsletter_groups'))
     ) {
       foreach ($groups as $group_id) {
@@ -593,8 +591,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
     // If requested, add contact to postinfo groups defined in the profile.
     if (
-      isset($params['postinfo'])
-      && 1 == $params['postinfo']
+      (bool) ($params['postinfo'] ?? FALSE)
       && is_array($groups = $profile->getAttribute('postinfo_groups'))
     ) {
       foreach ($groups as $group_id) {
@@ -611,8 +608,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
     // profile. If an organisation is provided, add it to the groups instead.
     // (see issue #83)
     if (
-      isset($params['donation_receipt'])
-      && 1 == $params['donation_receipt']
+      (bool) ($params['donation_receipt'] ?? FALSE)
       && is_array($groups = $profile->getAttribute('donation_receipt_groups'))
     ) {
       foreach ($groups as $group_id) {

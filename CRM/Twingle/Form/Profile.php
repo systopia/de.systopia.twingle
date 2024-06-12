@@ -607,7 +607,8 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         if (!isset($profile_data[$key]) && $required) {
           CRM_Core_Session::setStatus(
             E::ts(
-              'The required configuration option "%1" has no value. Saving the profile might set this option to a possibly unwanted default value.',
+              'The required configuration option "%1" has no value.'
+              . ' Saving the profile might set this option to a possibly unwanted default value.',
               [1 => $metadata['label'] ?? $key]
             ),
             E::ts('Error'),
