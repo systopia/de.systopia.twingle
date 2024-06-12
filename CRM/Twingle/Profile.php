@@ -687,7 +687,10 @@ class CRM_Twingle_Profile {
       return $default_profile;
     }
     else {
-      throw new ProfileException('Could not find default profile', ProfileException::ERROR_CODE_DEFAULT_PROFILE_NOT_FOUND);
+      throw new ProfileException(
+        'Could not find default profile',
+        ProfileException::ERROR_CODE_DEFAULT_PROFILE_NOT_FOUND
+      );
     }
   }
 

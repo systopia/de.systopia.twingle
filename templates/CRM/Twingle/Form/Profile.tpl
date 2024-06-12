@@ -316,21 +316,7 @@
         <tr class="crm-section">
           <td class="label">
             {$form.map_as_contribution_notes.label}
-            <a
-              onclick='
-                CRM.help(
-                "{ts domain="de.systopia.twingle"}Create contribution note for{/ts}",
-              {literal}{
-                "id": "id-map_as_contribution_notes",
-                "file": "CRM\/Twingle\/Form\/Profile"
-              }{/literal}
-                );
-                return false;
-                '
-              href="#"
-              title="{ts domain="de.systopia.twingle"}Help{/ts}"
-              class="helpicon"
-            ></a>
+            {help id="id-map_as_contribution_notes" title=$form.map_as_contribution_notes.label}
           </td>
           <td class="content">{$form.map_as_contribution_notes.html}</td>
         </tr>
@@ -338,21 +324,7 @@
         <tr class="crm-section">
           <td class="label">
             {$form.map_as_contact_notes.label}
-            <a
-              onclick='
-                CRM.help(
-                "{ts domain="de.systopia.twingle"}Create contact note for{/ts}",
-              {literal}{
-                "id": "id-map_as_contact_notes",
-                "file": "CRM\/Twingle\/Form\/Profile"
-              }{/literal}
-                );
-                return false;
-                '
-              href="#"
-              title="{ts domain="de.systopia.twingle"}Help{/ts}"
-              class="helpicon"
-            ></a>
+            {help id="id-map_as_contact_notes" title=$form.map_as_contact_notes.label}
           </td>
           <td class="content">{$form.map_as_contact_notes.html}</td>
         </tr>

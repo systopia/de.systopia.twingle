@@ -17,6 +17,7 @@ declare(strict_types = 1);
 
 use CRM_Twingle_ExtensionUtil as E;
 use Civi\Twingle\Exceptions\BaseException;
+use Civi\Api4\Note;
 
 /**
  * TwingleDonation.Submit API specification
@@ -485,20 +486,19 @@ function civicrm_api3_twingle_donation_Submit($params) {
       }
 
       // Create contact notes.
+      /** @phpstan-var array<string> $contact_note_mappings */
       $contact_note_mappings = $profile->getAttribute('map_as_contact_notes', []);
       foreach (['user_extrafield'] as $target) {
         if (
           isset($params[$target])
           && '' !== $params[$target]
-          && in_array($target, $contact_note_mappings)
+          && in_array($target, $contact_note_mappings, TRUE)
         ) {
-          civicrm_api4('Note', 'create', [
-            'values' => [
-              'entity_table' => 'civicrm_contact',
-              'entity_id' => $contact_id,
-              'note' => $params[$target],
-            ],
-          ]);
+          Note::create(FALSE)
+            ->addValue('entity_table', 'civicrm_contact')
+            ->addValue('entity_id', $contact_id)
+            ->addValue('note', $params[$target])
+            ->execute();
         }
       }
 
@@ -803,25 +803,24 @@ function civicrm_api3_twingle_donation_Submit($params) {
         );
       }
 
-      $result_values['contribution'] = $contribution['values'];
-    }
-
-    // Add notes to the contribution.
-    $contribution_note_mappings = $profile->getAttribute("map_as_contribution_notes", []);
-    foreach (['purpose', 'remarks'] as $target) {
-      if (
-        in_array($target, $contribution_note_mappings)
-        && isset($params[$target])
-        && '' !== $params[$target]
-      ) {
-        civicrm_api4('Note', 'create', [
-          'values' => [
-            'entity_table' => 'civicrm_contribution',
-            'entity_id' => CRM_Utils_Array::first($result_values['contribution'])['id'],
-            'note' => $params[$target],
-          ],
-        ]);
+      // Add notes to the contribution.
+      /** @phpstan-var array<string> $contribution_note_mappings */
+      $contribution_note_mappings = $profile->getAttribute('map_as_contribution_notes', []);
+      foreach (['purpose', 'remarks'] as $target) {
+        if (
+          in_array($target, $contribution_note_mappings, TRUE)
+          && isset($params[$target])
+          && '' !== $params[$target]
+        ) {
+          Note::create(FALSE)
+            ->addValue('entity_table', 'civicrm_contribution')
+            ->addValue('entity_id', reset($contribution['values'])['id'])
+            ->addValue('note', reset($params[$target]))
+            ->execute();
+        }
       }
+
+      $result_values['contribution'] = $contribution['values'];
     }
 
     // MEMBERSHIP CREATION
