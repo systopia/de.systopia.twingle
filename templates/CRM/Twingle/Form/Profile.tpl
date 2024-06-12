@@ -315,6 +315,22 @@
 
         <tr class="crm-section">
           <td class="label">
+            {$form.map_as_contribution_notes.label}
+            {help id="id-map_as_contribution_notes" title=$form.map_as_contribution_notes.label}
+          </td>
+          <td class="content">{$form.map_as_contribution_notes.html}</td>
+        </tr>
+
+        <tr class="crm-section">
+          <td class="label">
+            {$form.map_as_contact_notes.label}
+            {help id="id-map_as_contact_notes" title=$form.map_as_contact_notes.label}
+          </td>
+          <td class="content">{$form.map_as_contact_notes.html}</td>
+        </tr>
+
+        <tr class="crm-section">
+          <td class="label">
             {$form.custom_field_mapping.label}
             <a
                     onclick='

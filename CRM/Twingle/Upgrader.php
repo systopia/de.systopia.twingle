@@ -102,4 +102,39 @@ class CRM_Twingle_Upgrader extends CRM_Extension_Upgrader_Base {
     return TRUE;
   }
 
+  /**
+   * Upgrade to 1.5.0
+   *
+   * - Activate mapping of `purpose` and `user_extra_field` to notes in each existing profile to
+   *   maintain default behavior after making the fields optional.
+   *
+   * @return bool
+   * @throws \Civi\Core\Exception\DBQueryException
+   * @throws \Civi\Twingle\Exceptions\ProfileException
+   */
+  public function upgrade_5150(): bool {
+    $this->ctx->log->info('Activate mapping of `purpose` and `user_extra_field` to notes in each existing profile.');
+
+    foreach (CRM_Twingle_Profile::getProfiles() as $profile) {
+      $profile_changed = FALSE;
+      /** @phpstan-var array<string> $contribution_notes */
+      $contribution_notes = $profile->getAttribute('map_as_contribution_notes', []);
+      /** @phpstan-var array<string> $contact_notes */
+      $contact_notes = $profile->getAttribute('map_as_contact_notes', []);
+      if (!in_array('purpose', $contribution_notes, TRUE)) {
+        $profile->setAttribute('map_as_contribution_notes', array_merge($contribution_notes, ['purpose']));
+        $profile_changed = TRUE;
+      }
+      if (!in_array('user_extrafield', $contact_notes, TRUE)) {
+        $profile->setAttribute('map_as_contact_notes', array_merge($contact_notes, ['user_extrafield']));
+        $profile_changed = TRUE;
+      }
+      if ($profile_changed) {
+        $profile->saveProfile();
+      }
+    }
+
+    return TRUE;
+  }
+
 }

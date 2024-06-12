@@ -17,6 +17,7 @@ declare(strict_types = 1);
 
 use CRM_Twingle_ExtensionUtil as E;
 use Civi\Twingle\Exceptions\BaseException;
+use Civi\Api4\Note;
 
 /**
  * TwingleDonation.Submit API specification
@@ -255,6 +256,13 @@ function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
     'api.required' => 0,
     'description' => E::ts('Additional information for either the contact or the (recurring) contribution.'),
   ];
+  $params['remarks'] = [
+    'name' => 'remarks',
+    'title' => E::ts('Remarks'),
+    'type' => CRM_Utils_Type::T_STRING,
+    'api.required' => 0,
+    'description' => E::ts('Additional remarks for the donation.'),
+  ];
 }
 
 /**
@@ -477,13 +485,21 @@ function civicrm_api3_twingle_donation_Submit($params) {
         );
       }
 
-      // Save user_extrafield as contact note.
-      if (isset($params['user_extrafield']) && '' != $params['user_extrafield']) {
-        civicrm_api3('Note', 'create', [
-          'entity_table' => 'civicrm_contact',
-          'entity_id' => $contact_id,
-          'note' => $params['user_extrafield'],
-        ]);
+      // Create contact notes.
+      /** @phpstan-var array<string> $contact_note_mappings */
+      $contact_note_mappings = $profile->getAttribute('map_as_contact_notes', []);
+      foreach (['user_extrafield'] as $target) {
+        if (
+          isset($params[$target])
+          && '' !== $params[$target]
+          && in_array($target, $contact_note_mappings, TRUE)
+        ) {
+          Note::create(FALSE)
+            ->addValue('entity_table', 'civicrm_contact')
+            ->addValue('entity_id', $contact_id)
+            ->addValue('note', $params[$target])
+            ->execute();
+        }
       }
 
       // Share organisation address with individual contact, using configured
@@ -618,10 +634,6 @@ function civicrm_api3_twingle_donation_Submit($params) {
     // Add custom field values.
     if (isset($custom_fields['Contribution'])) {
       $contribution_data += $custom_fields['Contribution'];
-    }
-
-    if (isset($params['purpose'])) {
-      $contribution_data['note'] = $params['purpose'];
     }
 
     // set campaign, subject to configuration
@@ -789,6 +801,23 @@ function civicrm_api3_twingle_donation_Submit($params) {
           E::ts('Could not create contribution'),
           'api_error'
         );
+      }
+
+      // Add notes to the contribution.
+      /** @phpstan-var array<string> $contribution_note_mappings */
+      $contribution_note_mappings = $profile->getAttribute('map_as_contribution_notes', []);
+      foreach (['purpose', 'remarks'] as $target) {
+        if (
+          in_array($target, $contribution_note_mappings, TRUE)
+          && isset($params[$target])
+          && '' !== $params[$target]
+        ) {
+          Note::create(FALSE)
+            ->addValue('entity_table', 'civicrm_contribution')
+            ->addValue('entity_id', reset($contribution['values'])['id'])
+            ->addValue('note', reset($params[$target]))
+            ->execute();
+        }
       }
 
       $result_values['contribution'] = $contribution['values'];

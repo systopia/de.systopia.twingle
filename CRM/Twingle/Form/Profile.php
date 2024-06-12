@@ -498,6 +498,31 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       []
     );
 
+    $this->add(
+      'select',
+      'map_as_contribution_notes',
+      E::ts('Create contribution notes for'),
+      [
+        'purpose' => E::ts('Purpose'),
+        'remarks' => E::ts('Remarks'),
+      ],
+      // is not required
+      FALSE,
+      ['class' => 'crm-select2 huge', 'multiple' => 'multiple']
+    );
+
+    $this->add(
+      'select',
+      'map_as_contact_notes',
+      E::ts('Create contact notes for'),
+      [
+        'user_extrafield' => E::ts('User Extra Field'),
+      ],
+      // is not required
+      FALSE,
+      ['class' => 'crm-select2 huge', 'multiple' => 'multiple']
+    );
+
     $this->addButtons([
       [
         'type' => 'submit',
