@@ -532,7 +532,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       : 'false';
     if (
       (bool) $profile->getAttribute('newsletter_double_opt_in')
-      && isset($params['newsletter'])
+      && (bool) ($params['newsletter'] ?? FALSE)
       && is_array($groups = $profile->getAttribute('newsletter_groups'))
     ) {
       $group_memberships = array_column(
@@ -572,7 +572,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       // If requested, add contact to newsletter groups defined in the profile.
     }
     elseif (
-      isset($params['newsletter'])
+      (bool) ($params['newsletter'] ?? FALSE)
       && is_array($groups = $profile->getAttribute('newsletter_groups'))
     ) {
       foreach ($groups as $group_id) {
@@ -591,7 +591,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
     // If requested, add contact to postinfo groups defined in the profile.
     if (
-      isset($params['postinfo'])
+      (bool) ($params['postinfo'] ?? FALSE)
       && is_array($groups = $profile->getAttribute('postinfo_groups'))
     ) {
       foreach ($groups as $group_id) {
@@ -608,7 +608,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
     // profile. If an organisation is provided, add it to the groups instead.
     // (see issue #83)
     if (
-      isset($params['donation_receipt'])
+      (bool) ($params['donation_receipt'] ?? FALSE)
       && is_array($groups = $profile->getAttribute('donation_receipt_groups'))
     ) {
       foreach ($groups as $group_id) {
@@ -666,7 +666,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       }
 
       $creditor_id = $profile->getAttribute('sepa_creditor_id');
-      if (!is_int($creditor_id)) {
+      if (!isset($creditor_id) || '' === $creditor_id) {
         throw new BaseException(
           E::ts('SEPA creditor is not configured for profile "%1".', [1 => $profile->getName()])
         );
