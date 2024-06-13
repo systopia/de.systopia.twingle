@@ -535,6 +535,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       && (bool) ($params['newsletter'] ?? FALSE)
       && is_array($groups = $profile->getAttribute('newsletter_groups'))
     ) {
+      // TODO: Ensure the values being integers.
       $group_memberships = array_column(
         civicrm_api3(
           'GroupContact',
@@ -564,7 +565,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
               'contact_id' => $contact_id,
             ]
           );
-          $subscription = CRM_Utils_Array::first($result['values']);
+          $subscription = reset($result['values']);
           $subscription['group_id'] = $group_id;
           $result_values['newsletter_subscriptions'][] = $subscription;
         }
@@ -725,7 +726,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       // Create the mandate.
       $mandate = civicrm_api3('SepaMandate', 'createfull', $mandate_data);
 
-      $result_values['sepa_mandate'] = CRM_Utils_Array::first($mandate['values']);
+      $result_values['sepa_mandate'] = reset($mandate['values']);
     }
     else {
       // Set financial type depending on donation rhythm. This applies for
@@ -798,12 +799,15 @@ function civicrm_api3_twingle_donation_Submit($params) {
       }
 
       $contribution = civicrm_api3('Contribution', 'create', $contribution_data);
-      if ($contribution['is_error']) {
+      /** @phpstan-var array{'values': array<int, array<mixed>>, 'is_error'?: string} $contribution */
+      if ((bool) ($contribution['is_error'] ?? FALSE)) {
         throw new CRM_Core_Exception(
           E::ts('Could not create contribution'),
           'api_error'
         );
       }
+      $contribution = reset($contribution['values']);
+      /** @phpstan-var array{'id': int} $contribution */
 
       // Add notes to the contribution.
       /** @phpstan-var array<string> $contribution_note_mappings */
@@ -816,13 +820,13 @@ function civicrm_api3_twingle_donation_Submit($params) {
         ) {
           Note::create(FALSE)
             ->addValue('entity_table', 'civicrm_contribution')
-            ->addValue('entity_id', reset($contribution['values'])['id'])
+            ->addValue('entity_id', $contribution['id'])
             ->addValue('note', reset($params[$target]))
             ->execute();
         }
       }
 
-      $result_values['contribution'] = CRM_Utils_Array::first($contribution['values']);
+      $result_values['contribution'] = $contribution;
     }
 
     // MEMBERSHIP CREATION
