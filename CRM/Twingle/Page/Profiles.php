@@ -33,6 +33,7 @@ class CRM_Twingle_Page_Profiles extends CRM_Core_Page {
     }
     $this->assign('profiles', $profiles);
     $this->assign('profile_stats', CRM_Twingle_Profile::getProfileStats());
+    $this->assign('twingle_use_shop', (int) Civi::settings()->get('twingle_use_shop'));
 
     // Add custom css
     Civi::resources()->addStyleFile(E::LONG_NAME, 'css/twingle.css');

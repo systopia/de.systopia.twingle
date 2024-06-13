@@ -198,3 +198,25 @@ function _twingle_civix_fixNavigationMenuItems(&$nodes, &$maxNavID, $parentID) {
     }
   }
 }
+
+/**
+ * (Delegated) Implements hook_civicrm_entityTypes().
+ *
+ * Find any *.entityType.php files, merge their content, and return.
+ *
+ * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_entityTypes
+ */
+function _twingle_civix_civicrm_entityTypes(&$entityTypes) {
+  $entityTypes = array_merge($entityTypes, [
+    'Civi\Twingle\Shop\DAO\TwingleProduct' => [
+      'name' => 'TwingleProduct',
+      'class' => 'Civi\Twingle\Shop\DAO\TwingleProduct',
+      'table' => 'civicrm_twingle_product',
+    ],
+    'Civi\Twingle\Shop\DAO\TwingleShop' => [
+      'name' => 'TwingleShop',
+      'class' => 'Civi\Twingle\Shop\DAO\TwingleShop',
+      'table' => 'civicrm_twingle_shop',
+    ],
+  ]);
+}

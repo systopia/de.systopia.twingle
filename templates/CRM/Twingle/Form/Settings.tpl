@@ -37,7 +37,6 @@
       </td>
     </tr>
 
-
     <tr class="crm-twingle-form-block-prefix">
       <td class="label">{$form.twingle_prefix.label}
         {help id="id-twingle_prefix" title=$form.twingle_prefix.label}
@@ -84,6 +83,31 @@
       </td>
     </tr>
 
+  </table>
+
+  <h3>Twingle Shop Integration</h3>
+
+  <table class="form-layout-compressed">
+    <tr class="crm-twingle-form-block-use-shop">
+      <td class="label">{$form.twingle_use_shop.label}&nbsp;&nbsp;<a onclick='CRM.help("{$form.twingle_use_shop.label}", {literal}{"id":"id-{/literal}{$form.twingle_use_shop.name}{literal}","file":"CRM\/Twingle\/Form\/Settings"}{/literal}); return false;' href="#" title="{ts domain="de.systopia.twingle"}Help{/ts}" class="helpicon"></a></td>
+      <td>
+          {$form.twingle_use_shop.html}
+        <br />
+        <span class="description">
+          {$formElements.twingle_use_shop.description}
+        </span>
+      </td>
+    </tr>
+    <tr class="crm-twingle-form-block-access-key twingle-shop-element">
+      <td class="label">{$form.twingle_access_key.label}&nbsp;&nbsp;<a onclick='CRM.help("{$form.twingle_access_key.label}", {literal}{"id":"id-{/literal}{$form.twingle_access_key.name}{literal}","file":"CRM\/Twingle\/Form\/Settings"}{/literal}); return false;' href="#" title="{ts domain="de.systopia.twingle"}Help{/ts}" class="helpicon"></a></td>
+      <td>
+          {$form.twingle_access_key.html}
+        <br />
+        <span class="description">
+          {$formElements.twingle_access_key.description}
+        </span>
+      </td>
+    </tr>
   </table>
 
   <div class="crm-submit-buttons">

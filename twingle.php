@@ -5,10 +5,35 @@ use CRM_Twingle_ExtensionUtil as E;
 
 /**
  * Implements hook_civicrm_pre().
+ *
+ * @throws \Civi\Twingle\Shop\Exceptions\ProductException
+ * @throws \CRM_Core_Exception
+ * @throws \Civi\Twingle\Shop\Exceptions\ShopException
  */
 function twingle_civicrm_pre($op, $objectName, $id, &$params) {
   if ($objectName == 'ContributionRecur' && $op == 'edit') {
     CRM_Twingle_Tools::checkRecurringContributionChange((int) $id, $params);
+  }
+
+  // Create/delete PriceField and PriceFieldValue for TwingleProduct
+  elseif ($objectName == 'TwingleProduct') {
+    $twingle_product = new \Civi\Twingle\Shop\BAO\TwingleProduct();
+    $twingle_product->load($params);
+    if ($op == 'create' || $op == 'edit') {
+      $twingle_product->createPriceField();
+    }
+    elseif ($op == 'delete') {
+      $twingle_product->deletePriceField();
+    }
+    $params = $twingle_product->getAttributes();
+  }
+
+  // Create PriceSet for TwingleShop
+  elseif ($objectName == 'TwingleShop' && ($op == 'create' || $op == 'edit')) {
+    $twingle_shop = new \Civi\Twingle\Shop\BAO\TwingleShop();
+    $twingle_shop->load($params);
+    $twingle_shop->createPriceSet();
+    $params = $twingle_shop->getAttributes();
   }
 }
 
