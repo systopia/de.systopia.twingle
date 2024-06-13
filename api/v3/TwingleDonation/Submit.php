@@ -526,7 +526,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
     // If usage of double opt-in is selected, use MailingEventSubscribe.create
     // to add contact to newsletter groups defined in the profile
-    $result_values['newsletter']['newsletter_double_opt_in']
+    $result_values['newsletter_double_opt_in']
       = (bool) $profile->getAttribute('newsletter_double_opt_in')
       ? 'true'
       : 'false';
@@ -535,6 +535,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       && (bool) ($params['newsletter'] ?? FALSE)
       && is_array($groups = $profile->getAttribute('newsletter_groups'))
     ) {
+      // TODO: Ensure the values being integers.
       $group_memberships = array_column(
         civicrm_api3(
           'GroupContact',
@@ -555,7 +556,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
             ]
           )['visibility'] == 'Public Pages';
         if (!in_array($group_id, $group_memberships, FALSE) && $is_public_group) {
-          $result_values['newsletter'][][$group_id] = civicrm_api3(
+          $result = civicrm_api3(
             'MailingEventSubscribe',
             'create',
             [
@@ -564,9 +565,12 @@ function civicrm_api3_twingle_donation_Submit($params) {
               'contact_id' => $contact_id,
             ]
           );
+          $subscription = reset($result['values']);
+          $subscription['group_id'] = $group_id;
+          $result_values['newsletter_subscriptions'][] = $subscription;
         }
         elseif ($is_public_group) {
-          $result_values['newsletter'][] = $group_id;
+          $result_values['newsletter_group_ids'][] = $group_id;
         }
       }
       // If requested, add contact to newsletter groups defined in the profile.
@@ -584,8 +588,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
             'contact_id' => $contact_id,
           ]
         );
-
-        $result_values['newsletter'][] = $group_id;
+        $result_values['newsletter_group_ids'][] = $group_id;
       }
     }
 
@@ -616,8 +619,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
           'group_id' => $group_id,
           'contact_id' => $organisation_id ?? $contact_id,
         ]);
-
-        $result_values['donation_receipt'][] = $group_id;
+        $result_values['donation_receipt_group_ids'][] = $group_id;
       }
     }
 
@@ -724,7 +726,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       // Create the mandate.
       $mandate = civicrm_api3('SepaMandate', 'createfull', $mandate_data);
 
-      $result_values['sepa_mandate'] = $mandate['values'];
+      $result_values['sepa_mandate'] = reset($mandate['values']);
     }
     else {
       // Set financial type depending on donation rhythm. This applies for
@@ -797,12 +799,15 @@ function civicrm_api3_twingle_donation_Submit($params) {
       }
 
       $contribution = civicrm_api3('Contribution', 'create', $contribution_data);
-      if ($contribution['is_error']) {
+      /** @phpstan-var array{'values': array<int, array<mixed>>, 'is_error'?: string} $contribution */
+      if ((bool) ($contribution['is_error'] ?? FALSE)) {
         throw new CRM_Core_Exception(
           E::ts('Could not create contribution'),
           'api_error'
         );
       }
+      $contribution = reset($contribution['values']);
+      /** @phpstan-var array{'id': int} $contribution */
 
       // Add notes to the contribution.
       /** @phpstan-var array<string> $contribution_note_mappings */
@@ -815,13 +820,13 @@ function civicrm_api3_twingle_donation_Submit($params) {
         ) {
           Note::create(FALSE)
             ->addValue('entity_table', 'civicrm_contribution')
-            ->addValue('entity_id', reset($contribution['values'])['id'])
+            ->addValue('entity_id', $contribution['id'])
             ->addValue('note', $params[$target])
             ->execute();
         }
       }
 
-      $result_values['contribution'] = $contribution['values'];
+      $result_values['contribution'] = $contribution;
     }
 
     // MEMBERSHIP CREATION
