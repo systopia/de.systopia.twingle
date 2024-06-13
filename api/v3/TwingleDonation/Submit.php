@@ -816,7 +816,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
           Note::create(FALSE)
             ->addValue('entity_table', 'civicrm_contribution')
             ->addValue('entity_id', reset($contribution['values'])['id'])
-            ->addValue('note', reset($params[$target]))
+            ->addValue('note', $params[$target])
             ->execute();
         }
       }
