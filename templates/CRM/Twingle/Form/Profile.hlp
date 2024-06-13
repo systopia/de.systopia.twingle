@@ -62,10 +62,10 @@
 {/htxt}
 
 {htxt id='id-custom_field_mapping'}
-    {ts domain="de.systopia.twingle"}<p>Map Twingle custom fields to CiviCRM custom fields using the following format (each assignment in a separate line):</p>
+    {ts domain="de.systopia.twingle"}<p>Map Twingle custom fields to CiviCRM fields using the following format (each assignment in a separate line):</p>
     <pre>twingle_field_1=custom_123<br />twingle_field_2=custom_789</pre>
     <p>Always use the <code>custom_[id]</code> notation for CiviCRM custom fields.</p>
-    <p>This only works for fields that Twingle themselves provide in the <code>custom_fields</code> parameter, not for any parameters; e.g. <code>user_extrafield</code> always ends up in a note.</p>
+    <p>This works for fields that Twingle themselves provide in the <code>custom_fields</code> parameter, and for any other parameter (e.g. <code>user_extrafield</code>)</p>
     <p>Only custom fields extending one of the following CiviCRM entities are allowed:</p>
     <ul>
       <li><strong>Contact</strong> &ndash; Will be set on the Individual contact</li>
