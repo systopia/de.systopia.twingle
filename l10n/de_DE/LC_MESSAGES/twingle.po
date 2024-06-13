@@ -16,6 +16,22 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+#: CRM/Twingle/Config.php
+msgid "No"
+msgstr "Nein"
+
+#: CRM/Twingle/Config.php
+msgid "Raise Exception"
+msgstr "Ausnahme auslösen"
+
+#: CRM/Twingle/Config.php
+msgid "Create Activity"
+msgstr "Aktivität erstellen"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Profile with ID \"%1\" not found"
+msgstr "Profil mit ID \"%1\" nicht gefunden"
+
 #: CRM/Twingle/Form/Profile.php
 msgid "Delete Twingle API profile <em>%1</em>"
 msgstr "Twingle-API-Profil <em>%1</em> löschen"
@@ -29,48 +45,106 @@ msgid "Delete"
 msgstr "Löschen"
 
 #: CRM/Twingle/Form/Profile.php
-msgid "Edit Twingle API profile <em>%1</em>"
-msgstr "Twingle-API-Profil <em>%1</em> bearbeiten"
+msgid "The profile is invalid and cannot be copied."
+msgstr "Das Profil ist ungültig und kann nicht kopiert werden."
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Error"
+msgstr "Fehler"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "The profile to be copied could not be found."
+msgstr "Das zu kopierende Profil konnte nicht gefunden werden."
+
+#: CRM/Twingle/Form/Profile.php
+msgid "A database error has occurred. See the log for details."
+msgstr ""
+"Ein Datenbankfehler ist aufgetreten. Siehe das Protokoll für Einzeilheiten."
 
 #: CRM/Twingle/Form/Profile.php
 msgid "New Twingle API profile"
 msgstr "Neues Twingle-API-Profil"
 
+#: CRM/Twingle/Form/Profile.php
+msgid "Edit Twingle API profile <em>%1</em>"
+msgstr "Twingle-API-Profil <em>%1</em> bearbeiten"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "New Profile"
+msgstr "Neues Profil"
+
 #: CRM/Twingle/Form/Profile.php templates/CRM/Twingle/Page/Profiles.tpl
 msgid "Profile name"
 msgstr "Profil-Name"
 
-#: CRM/Twingle/Form/Profile.php
+#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php
+#: templates/CRM/Twingle/Form/Profile.tpl
 msgid "Project IDs"
 msgstr "Projekt-IDs"
 
 #: CRM/Twingle/Form/Profile.php
+msgid "Contact Matcher (XCM) Profile"
+msgstr "Extended Contact Matcher (XCM)-Profil"
+
+#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php
+#: templates/CRM/Twingle/Form/Profile.tpl
 msgid "Location type"
 msgstr "Adresskategorie"
 
-#: CRM/Twingle/Form/Profile.php
-msgid "Financial Type"
+#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php
+#: templates/CRM/Twingle/Form/Profile.tpl
+msgid "Location type for organisations"
+msgstr "Adresskategorie für Organisationen"
+
+#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php
+#: templates/CRM/Twingle/Form/Profile.tpl
+msgid "Financial type"
 msgstr "Zuwendungsart"
 
-#: CRM/Twingle/Form/Profile.php
+#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php
+#: templates/CRM/Twingle/Form/Profile.tpl
+msgid "Financial type (recurring)"
+msgstr "Zuwendungsart (wiederkehrend)"
+
+#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php
 msgid "Gender option for submitted value \"male\""
 msgstr "Geschlechtsoption für übermittelten Wert \"male\""
 
-#: CRM/Twingle/Form/Profile.php
+#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php
 msgid "Gender option for submitted value \"female\""
 msgstr "Geschlechtsoption für übermittelten Wert \"female\""
 
-#: CRM/Twingle/Form/Profile.php
+#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php
 msgid "Gender option for submitted value \"other\""
 msgstr "Geschlechtsoption für übermittelten Wert \"other\""
+
+#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php
+msgid "Prefix option for submitted value \"male\""
+msgstr "Anredeoption für übermittelten Wert \"male\""
+
+#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php
+msgid "Prefix option for submitted value \"female\""
+msgstr "Anredeoption für übermittelten Wert \"female\""
+
+#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php
+msgid "Prefix option for submitted value \"other\""
+msgstr "Anredeoption für übermittelten Wert \"other\""
 
 #: CRM/Twingle/Form/Profile.php
 msgid "Record %1 as"
 msgstr "%1 erfassen als"
 
 #: CRM/Twingle/Form/Profile.php
+msgid "Record %1 donations with contribution status"
+msgstr "%1 erfassen mit Zuwendungsstatus"
+
+#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php
 msgid "CiviSEPA creditor"
 msgstr "CiviSEPA-Kreditor"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Use Double-Opt-In for newsletter"
+msgstr "Nutze Double-Opt-In für Newsletter"
 
 #: CRM/Twingle/Form/Profile.php
 msgid "Sign up for newsletter groups"
@@ -84,27 +158,91 @@ msgstr "Postversand-Gruppen beitreten"
 msgid "Sign up for Donation receipt groups"
 msgstr "Zuwendungsbescheinigungs-Gruppen beitreten"
 
-#: CRM/Twingle/Form/Profile.php CRM/Twingle/Form/Settings.php
-msgid "Save"
-msgstr "Speichern"
+#: CRM/Twingle/Form/Profile.php
+msgid "Default Campaign"
+msgstr "Standardkampagne"
 
 #: CRM/Twingle/Form/Profile.php
-msgid ""
-"Only alphanumeric characters and the underscore (_) are allowed for profile "
-"names."
-msgstr ""
-"Nur alphanumerische Zeichen und der Unterstrich (_) sind für Profilnamen "
-"erlaubt."
+msgid "- none -"
+msgstr "- keine -"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Set Campaign for"
+msgstr "Kampagne setzen für"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Contribution"
+msgstr "Zuwendung"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Recurring Contribution"
+msgstr "Wiederkehrende Zuwendung"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Membership"
+msgstr "Mitgliedschaft"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "SEPA Mandate"
+msgstr "SEPA-Lastschriftmandat"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Contacts (XCM)"
+msgstr "Kontakte (XCM)"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Create membership of type"
+msgstr "Mitgliedschaft mit Typ erstellen"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Create membership of type (recurring)"
+msgstr "Mitgliedschaft mit Typ erstellen (wiederkehrend)"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "API Call for Membership Postprocessing"
+msgstr "API-Aufruf für Mitgliedschafts-Nachbearbeitung"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "The API call must have the form 'Entity.Action'."
+msgstr "Der API-Aufruf muss in der Form 'Entität.Aktion' angegeben werden."
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Contribution source"
+msgstr "Herkunft der Zuwendung"
+
+#: CRM/Twingle/Form/Profile.php templates/CRM/Twingle/Form/Profile.tpl
+msgid "Required address components"
+msgstr "Erforderliche Adresskomponenten"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Street"
+msgstr "Straße"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Postal Code"
+msgstr "Postleitzahl"
+
+#: CRM/Twingle/Form/Profile.php api/v3/TwingleDonation/Submit.php
+msgid "City"
+msgstr "Ort"
+
+#: CRM/Twingle/Form/Profile.php api/v3/TwingleDonation/Submit.php
+msgid "Country"
+msgstr "Land"
+
+#: CRM/Twingle/Form/Profile.php templates/CRM/Twingle/Form/Profile.tpl
+msgid "Custom field mapping"
+msgstr "Zuordnung benutzerdefinierter Felder"
 
 #: CRM/Twingle/Form/Profile.php
 msgid "Create contribution notes for"
 msgstr "Zuwendungs-Notizen erstellen für"
 
-#: CRM/Twingle/Form/Profile.php ./api/v3/TwingleDonation/Submit.php
+#: CRM/Twingle/Form/Profile.php api/v3/TwingleDonation/Submit.php
 msgid "Purpose"
 msgstr "Zweck"
 
-#: CRM/Twingle/Form/Profile.php ./api/v3/TwingleDonation/Submit.php
+#: CRM/Twingle/Form/Profile.php api/v3/TwingleDonation/Submit.php
 msgid "Remarks"
 msgstr "Anmerkungen"
 
@@ -116,6 +254,26 @@ msgstr "Kontakt-Notizen erstellen für"
 msgid "User Extra Field"
 msgstr "Benutzer-Extra-Feld"
 
+#: CRM/Twingle/Form/Profile.php CRM/Twingle/Form/Settings.php
+msgid "Save"
+msgstr "Speichern"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Warning"
+msgstr "Warnung"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "No profile set."
+msgstr "Kein Profil eingestellt."
+
+#: CRM/Twingle/Form/Profile.php
+msgid "&lt;select profile&gt;"
+msgstr "&lt;Profil auswählen&gt;"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "none"
+msgstr "keines"
+
 #: CRM/Twingle/Form/Profile.php
 msgid "CiviSEPA"
 msgstr "CiviSEPA"
@@ -124,9 +282,106 @@ msgstr "CiviSEPA"
 msgid "No mailing lists available"
 msgstr "Keine Versandlisten verfügbar"
 
+#: CRM/Twingle/Form/Settings.php
+msgid "Twingle ID Prefix"
+msgstr "Twingle-ID-Präfix"
+
+#: CRM/Twingle/Form/Settings.php
+msgid "Use CiviSEPA"
+msgstr "CiviSEPA verwenden"
+
+#: CRM/Twingle/Form/Settings.php
+msgid "Use CiviSEPA generated reference"
+msgstr "Von CiviSEPA erstellte Referenc verwenden"
+
+#: CRM/Twingle/Form/Settings.php
+msgid "Protect Recurring Contributions"
+msgstr "Wiederkehrende Zuwendungen schützen"
+
+#: CRM/Twingle/Form/Settings.php
+msgid "Activity Type"
+msgstr "Aktivitätstyp"
+
+#: CRM/Twingle/Form/Settings.php
+msgid "Subject"
+msgstr "Betreff"
+
+#: CRM/Twingle/Form/Settings.php
+msgid "Status"
+msgstr "Status"
+
+#: CRM/Twingle/Form/Settings.php
+msgid "Assigned To"
+msgstr "Zugewiesen an"
+
+#: CRM/Twingle/Form/Settings.php
+msgid "This is required for activity creation"
+msgstr "Diese Angaben sind erforderlich für das Erstellen von Aktivitäten"
+
+#: CRM/Twingle/Form/Settings.php
+msgid "-select-"
+msgstr "- auswählen -"
+
+#: CRM/Twingle/Page/Profiles.php
+#: managed/Navigation__twingle_configuration.mgd.php
+msgid "Twingle API Profiles"
+msgstr "Twingle-API-Profile"
+
 #: CRM/Twingle/Profile.php
 msgid "Unknown attribute %1."
 msgstr "Unbekanntes Attribut %1."
+
+#: CRM/Twingle/Profile.php
+msgid "Profile name cannot be empty."
+msgstr "Profilname darf nicht leer sein."
+
+#: CRM/Twingle/Profile.php
+msgid ""
+"Only alphanumeric characters, space and the underscore (_) are allowed for "
+"profile names."
+msgstr ""
+"Nur alphanumerische Zeichen und der Unterstrich (_) sind für Profilnamen "
+"erlaubt."
+
+#: CRM/Twingle/Profile.php
+msgid "A profile with the name '%1' already exists."
+msgstr "Ein profil mit dem Namen '%1' existiert bereits."
+
+#: CRM/Twingle/Profile.php
+msgid "Project ID(s) [%1] already used in profile '%2'."
+msgstr "Projekt-ID(s) [%1] werden ebreits in Profil '%2' verwendet."
+
+#: CRM/Twingle/Profile.php
+msgid "Could not parse custom field mapping."
+msgstr "Zuordnung benutzerdefinierter Felder konnte nicht verarbeitet werden."
+
+#: CRM/Twingle/Profile.php
+msgid "Custom field custom_%1 does not exist."
+msgstr "Benutezrdefiniertes Feld custom_%1 existiert nicht."
+
+#: CRM/Twingle/Profile.php
+msgid ""
+"Custom field custom_%1 is not in a CustomGroup that extends one of the "
+"supported CiviCRM entities."
+msgstr ""
+"Benutzerdefiniertes Feld custom_%1 ist in einer benutzerdefinierten "
+"Feldgruppe, die eine nicht unterstützte Entität erweitert."
+
+#: CRM/Twingle/Profile.php
+msgid "Could not save/update profile: %1"
+msgstr "Speichern/Aktualisieren von Profil fehlgeschlagen: %1"
+
+#: CRM/Twingle/Profile.php
+msgid "Could not reset default profile: %1"
+msgstr "Zurücksetzen des Standardprofils fehlgeschlagen: %1"
+
+#: CRM/Twingle/Profile.php
+msgid "Could not delete profile: %1"
+msgstr "Löschen des Profils fehlgeschlagen: %1"
+
+#: CRM/Twingle/Profile.php
+msgid "Contribution Status"
+msgstr "Zuwendungsstatus"
 
 #: CRM/Twingle/Profile.php
 msgid "Bank transfer"
@@ -134,7 +389,7 @@ msgstr "Banküberweisung"
 
 #: CRM/Twingle/Profile.php
 msgid "Debit manual"
-msgstr "manuelle Abbuchung"
+msgstr "Manuelle Abbuchung"
 
 #: CRM/Twingle/Profile.php
 msgid "Debit automatic"
@@ -161,10 +416,6 @@ msgid "Amazon Pay"
 msgstr "Amazon Pay"
 
 #: CRM/Twingle/Profile.php
-msgid "paydirekt"
-msgstr "paydirekt"
-
-#: CRM/Twingle/Profile.php
 msgid "Apple Pay"
 msgstr "Apple Pay"
 
@@ -172,9 +423,37 @@ msgstr "Apple Pay"
 msgid "Google Pay"
 msgstr "Google Pay"
 
+#: CRM/Twingle/Profile.php
+msgid "Paydirekt"
+msgstr "Paydirekt"
+
+#: CRM/Twingle/Profile.php
+msgid "Twint"
+msgstr "Twint"
+
+#: CRM/Twingle/Profile.php
+msgid "iDEAL"
+msgstr "iDEAL"
+
+#: CRM/Twingle/Profile.php
+msgid "Postfinance"
+msgstr "Postfinance"
+
+#: CRM/Twingle/Profile.php
+msgid "Bancontact"
+msgstr "Bancontact"
+
+#: CRM/Twingle/Profile.php
+msgid "Generic Payment Method"
+msgstr "Generische Zahlungsmethode"
+
+#: CRM/Twingle/Profile.php
+msgid "never"
+msgstr "nie"
+
 #: CRM/Twingle/Submission.php
 msgid "Invalid donation rhythm."
-msgstr "Ungültiger Zuwendungsrhythmus"
+msgstr "Ungültiger Zuwendungsrhythmus."
 
 #: CRM/Twingle/Submission.php
 msgid "Payment method could not be matched to existing payment instrument."
@@ -196,76 +475,669 @@ msgstr ""
 "Geschlecht konnte keiner existierenden Geschlechtsoption zugeordnet werden."
 
 #: CRM/Twingle/Submission.php
+msgid "Invalid format for custom fields."
+msgstr "Ungültiges Format für benutzerdefinierte Felder."
+
+#: CRM/Twingle/Submission.php
+msgid "campaign_id must be a numeric string. "
+msgstr "campaign_id muss eine numerische Zeichenkette sein. "
+
+#: CRM/Twingle/Submission.php
 msgid "Unknown country %1."
 msgstr "Unbekanntes Land %1."
+
+#: CRM/Twingle/Submission.php
+msgid "Could not calculate SEPA cycle day from configuration."
+msgstr "SEPA-Einzugstag konnte nicht aus der Konfiguration berechnet werden."
+
+#: CRM/Twingle/Tools.php
+msgid ""
+"This is a Twingle recurring contribution. It should be terminated through "
+"the Twingle interface, otherwise it will still be collected."
+msgstr ""
+"Dies ist eine wiederkehrende Twingle-Zuwendung. Sie sollte durch die Twingle-"
+"Benutzeroberfläche beendet werden, da sie ansonsten weiter eingezogen wird."
+
+#: CRM/Twingle/Tools.php
+msgid ""
+"Recurring contribution [%1] (Transaction ID '%2') was terminated by a user. "
+"You need to end the corresponding record in Twingle as well, or it will "
+"still be collected."
+msgstr ""
+"Wiederkehrende Zuwendung [%1] (Transaktions-ID '%2') wurde von einem "
+"Benutzer beendet. Es ist erforderlich, den zugehörigen Datensatz auch in "
+"Twingle zu beenden, da die Zuwendung ansonsten weiter eingezogen wird."
+
+#: api/v3/TwingleDonation/Cancel.php api/v3/TwingleDonation/Endrecurring.php
+#: api/v3/TwingleDonation/Submit.php
+msgid "Project ID"
+msgstr "Projekt-ID"
+
+#: api/v3/TwingleDonation/Cancel.php api/v3/TwingleDonation/Endrecurring.php
+#: api/v3/TwingleDonation/Submit.php
+msgid "The Twingle project ID."
+msgstr "Die Twingle-Projekt-ID."
+
+#: api/v3/TwingleDonation/Cancel.php api/v3/TwingleDonation/Endrecurring.php
+#: api/v3/TwingleDonation/Submit.php
+msgid "Transaction ID"
+msgstr "Transaktions-ID"
+
+#: api/v3/TwingleDonation/Cancel.php api/v3/TwingleDonation/Endrecurring.php
+#: api/v3/TwingleDonation/Submit.php
+msgid "The unique transaction ID of the donation"
+msgstr "Die eindeutige Transaktions-ID der Zuwendung"
+
+#: api/v3/TwingleDonation/Cancel.php
+msgid "Cancelled at"
+msgstr "Storniert am"
+
+#: api/v3/TwingleDonation/Cancel.php
+msgid "The date when the donation was cancelled, format: YmdHis."
+msgstr "Das Datum der Stornierung der Zuwendung, Format: YmdHis."
+
+#: api/v3/TwingleDonation/Cancel.php
+msgid "Cancel reason"
+msgstr "Stornierungsgrund"
+
+#: api/v3/TwingleDonation/Cancel.php
+msgid "The reason for the donation being cancelled."
+msgstr "Der Grund der Stornierung der Zuwendung."
 
 #: api/v3/TwingleDonation/Cancel.php
 msgid "Invalid date for parameter \"cancelled_at\"."
 msgstr "Ungültiges Datum für Parameter \"cancelled_at\"."
+
+#: api/v3/TwingleDonation/Cancel.php
+msgid "SEPA Mandate for contribution [%1 not found."
+msgstr "SEPA-Lastschriftmandat für Zuwendung [%1] nicht gefunden."
 
 #: api/v3/TwingleDonation/Cancel.php api/v3/TwingleDonation/Endrecurring.php
 msgid "Could not terminate SEPA mandate"
 msgstr "Konnte SEPA-Mandat nicht beenden"
 
 #: api/v3/TwingleDonation/Endrecurring.php
+msgid "Ended at"
+msgstr "Beendet am"
+
+#: api/v3/TwingleDonation/Endrecurring.php
+msgid "The date when the recurring donation was ended, format: YmdHis."
+msgstr ""
+"Das Datum der Beendigung der wiederkehrenden Zuwendung, Format: YmdHis."
+
+#: api/v3/TwingleDonation/Endrecurring.php
 msgid "Invalid date for parameter \"ended_at\"."
 msgstr "Ungültiges Datum für Parameter \"ended_at\"."
+
+#: api/v3/TwingleDonation/Endrecurring.php
+msgid "SEPA Mandate for recurring contribution [%1 not found."
+msgstr ""
+"SEPA-lastschriftmandat für wiederkehrende Zuwendung [%1] nicht gefunden."
+
+#: api/v3/TwingleDonation/Endrecurring.php
+msgid "SEPA Mandate [%1] already terminated."
+msgstr "SEPA-lastschriftmandat [%1] wurde bereits beendet."
 
 #: api/v3/TwingleDonation/Endrecurring.php
 msgid "Mandate closed by TwingleDonation.Endrecurring API call"
 msgstr "Mandat geschlossen durch TwingleDonation.Endrecurring API-Aufruf"
 
 #: api/v3/TwingleDonation/Submit.php
-msgid "Contribution with the given transaction ID already exists."
-msgstr "Zuwendung mit der gegebenen Transkations-ID existiert bereits."
+msgid "Confirmed at"
+msgstr "Bestätigt am"
 
 #: api/v3/TwingleDonation/Submit.php
-msgid "Individual contact could not be found or created."
-msgstr "Kontakt für Person konnte nicht gefunden oder erstellt werden."
+msgid "The date when the donation was issued, format: YmdHis."
+msgstr "Das Datum der Ausstellung der Zuwendung, Format: YmdHis."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "The purpose of the donation."
+msgstr "Der Anlass der Zuwendung."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Amount"
+msgstr "Betrag"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "The donation amount in minor currency unit."
+msgstr ""
+"Der Zuwendungsbetrag in untergeordneter Währungseinheit (z. B. Euro-Cent)"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Currency"
+msgstr "Währung"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "The ISO-4217 currency code of the donation."
+msgstr "Der ISO-4217-Code der Währung der Zuwendung."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Newsletter"
+msgstr "Newsletter"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid ""
+"Whether to subscribe the contact to the newsletter group defined in the "
+"profile."
+msgstr ""
+"Ob der Kontakt in die im Profil definierte Newsletter-Gruppe aufgenommen "
+"werden soll."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Postal mailing"
+msgstr "Postverteiler"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid ""
+"Whether to subscribe the contact to the postal mailing group defined in the "
+"profile."
+msgstr ""
+"Ob der Kontakt in die im Profil definierte Postverteilergruppe aufgenommen "
+"werden soll."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Donation receipt"
+msgstr "Zuwendungsbescheinigung"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Whether the contact requested a donation receipt."
+msgstr "Ob der Kontakt eine Zuwendungsbescheinigung angefordert hat."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Payment method"
+msgstr "Zahlungsmethode"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "The Twingle payment method used for the donation."
+msgstr "Die für die Zuwendung verwendete Twingle-Zahlungsmethode."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Donation rhythm"
+msgstr "Zuwendungsrhythmus"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "The interval which the donation is recurring in."
+msgstr "Das Intervall, in dem die Zuwendung wiederkehrt."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "SEPA IBAN"
+msgstr "SEPA-IBAN"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid ""
+"The IBAN for SEPA Direct Debit payments, conforming with ISO 13616-1:2007."
+msgstr "Die IBAN für SEPA-Lastschriftzahlungen, konform mit ISO 13616-1:2007."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "SEPA BIC"
+msgstr "SEPA-BIC"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "The BIC for SEPA Direct Debit payments, conforming with ISO 9362."
+msgstr "Die BIC für SEPA-Lastschriftzahlungen, konform mit ISO 9362."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "SEPA Direct Debit Mandate reference"
+msgstr "SEPA-Lastschriftmandatsreferenz"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "The mandate reference for SEPA Direct Debit payments."
+msgstr "Die Mandatsreferenz für SEPA-Lastschriftzahlungen."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "SEPA Direct Debit Account holder"
+msgstr "Inhaber des SEPA-Lastschriftkontos"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "The account holder for SEPA Direct Debit payments."
+msgstr "Der Kontoinhaber für SEPA-Lastschriften."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Anonymous donation"
+msgstr "Anonyme Zuwendung"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Whether the donation is submitted anonymously."
+msgstr "Ob die Zuwendung anonym übermittelt wird."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Gender"
+msgstr "Geschlecht"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "The gender of the contact."
+msgstr "Das Geschlecht des Kontakts."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Date of birth"
+msgstr "Geburtsdatum"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "The date of birth of the contact, format: Ymd."
+msgstr "Das Geburtsdatum des Kontakts, Format: Ymd."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Formal title"
+msgstr "Formeller Titel"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "The formal title of the contact."
+msgstr "Der formelle Titel des Kontakts."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Email address"
+msgstr "E-Mail-Adresse"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "The e-mail address of the contact."
+msgstr "Die E-Mail-Adresse des Kontakts."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "First name"
+msgstr "Vorname"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "The first name of the contact."
+msgstr "Der Vorname des Kontakts."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Last name"
+msgstr "Nachname"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "The last name of the contact."
+msgstr "Der Nachname des Kontakts."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Street address"
+msgstr "Straße"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "The street address of the contact."
+msgstr "Die Straße des Kontakts."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Postal code"
+msgstr "Postleitzahl"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "The postal code of the contact."
+msgstr "Die Postleitzahl des Kontakts."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "The city of the contact."
+msgstr "Der Wohnort des Kontakts."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "The country of the contact."
+msgstr "Das Land des Kontakts."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Telephone"
+msgstr "Telefonnummer"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "The telephone number of the contact."
+msgstr "Die Telefonnummer des Kontakts."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Company"
+msgstr "Firma"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "The company of the contact."
+msgstr "Die Firma/Arbeitgeber des Kontakts."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Language"
+msgstr "Sprache"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid ""
+"The preferred language of the contact. A 2-digit ISO-639-1 language code."
+msgstr ""
+"Die bevorzugte Sprache des Kontakts. Ein zweistelliger ISO-639-1-Sprachcode."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "User extra field"
+msgstr "Zusätzliches Benutzerfeld (user extra field)"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Additional information of the contact."
+msgstr "Zusätzliche Kontaktinformationen."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Campaign ID"
+msgstr "Kampagnen-ID"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "The CiviCRM ID of a campaign to assign the contribution."
+msgstr ""
+"Die CiviCRM-ID einer Kampagne, der die Zuwendung zugeordnet werden soll."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Custom fields"
+msgstr "Benutzerdefinierte Felder"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid ""
+"Additional information for either the contact or the (recurring) "
+"contribution."
+msgstr ""
+"Zusätzliche Informationen für entweder den Kontakt oder die (wiederkehrende) "
+"Zuwendung."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Additional remarks for the donation."
+msgstr "Zusätzliche Anmerkungen für die Zuwendung."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Contribution with the given transaction ID already exists."
+msgstr "Zuwendung mit der gegebenen Transkations-ID existiert bereits."
 
 #: api/v3/TwingleDonation/Submit.php
 msgid "Organisation contact could not be found or created."
 msgstr "Kontakt für Organisation konnte nicht gefunden oder erstellt werden."
 
 #: api/v3/TwingleDonation/Submit.php
+msgid "Individual contact could not be found or created."
+msgstr "Kontakt für Person konnte nicht gefunden oder erstellt werden."
+
+#: api/v3/TwingleDonation/Submit.php
 msgid "Missing attribute %1 for SEPA mandate"
 msgstr "Fehlendes Attribute %1 für SEPA-Mandat"
 
 #: api/v3/TwingleDonation/Submit.php
+msgid "SEPA creditor is not configured for profile \"%1\"."
+msgstr "SEPA-Kreditor ist nicht konfiguriert für Profil \"%1\"."
+
+#: api/v3/TwingleDonation/Submit.php
 msgid "Could not create recurring contribution."
-msgstr "Wiederkehrende Zuwendung konnte nicht erstellen."
+msgstr "Wiederkehrende Zuwendung konnte nicht erstellt werden."
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Could not find recurring contribution with given parent transaction ID."
+msgstr ""
+"Wiederkehrende Zuwendung mit angegebener Transkations-ID konnte nicht "
+"gefunden werden."
 
 #: api/v3/TwingleDonation/Submit.php
 msgid "Could not create contribution"
 msgstr "Zuwendung konnte nicht erstellt werden"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid ""
+"Twingle membership postprocessing call has failed, see log for more "
+"information"
+msgstr ""
+"Die Nachbearbeitung (postprocessing) der Twingle-Mitgliedschaft ist "
+"fehlgeschlagen, siehe Protokoll für weitere Informationen."
+
+#: managed/Navigation__twingle_configuration.mgd.php
+msgid "Twingle API Configuration"
+msgstr "Twingle-API-Konfiguration"
+
+#: managed/Navigation__twingle_configuration.mgd.php
+msgid "Twingle API Settings"
+msgstr "Twingle-API-Einstellungen"
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid ""
+"Select which location type to use for addresses for individuals, either when "
+"no organisation name is specified, or an organisation address can not be "
+"shared with the individual contact."
+msgstr ""
+"Wählen Sie die zu verwendende Adresskategorie für Personen, entweder wenn "
+"kein Organisationsname angegeben wurde, oder die Organisationsadresse nicht "
+"mit dem Personen-Kontakt geteilt werden kann."
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid ""
+"Put your project's Twingle ID in here, to activate this profile for that "
+"project."
+msgstr ""
+"Geben Sie hier die Twingle-ID des Projekts ein, um das Profil für dieses "
+"Projekt zu aktivieren."
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid "You can also provide multiple project IDs separated by a comma."
+msgstr ""
+"Es können auch mehrere durch Kommata getrennte Projekt-IDs angegeben werden."
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid ""
+"The Contact Matcher (XCM) manages the identification or creation of the "
+"related contact."
+msgstr ""
+"Der Extended Contact Matcher (XCM) verwaltet die Identifizierung und "
+"Erstellung des zugehörigen Kontakts."
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid ""
+"We recommend creating a new XCM profile only to be used with the Twingle API."
+msgstr ""
+"Es wird empfohlen, ein neues XCM-Profil zur ausschließlichen Verwendung mit "
+"der Twingle-API zu erstellen."
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid ""
+"Select which location type to use for addresses for organisations and shared "
+"organisation addresses for individual contacts."
+msgstr ""
+"Wählen Sie die zu verwendende Adresskategorie für Organisationen und "
+"geteilte Organisationsadressen für Personen-Kontakte."
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid "Select which financial type to use for one-time contributions."
+msgstr "Wählen Sie die Zuwendungsart für einmalige Zuwendungen."
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid "Select which financial type to use for recurring contributions."
+msgstr "Wählen Sie die Zuwendungsart für wiederkehrende Zuwendungen."
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid ""
+"Select whether to use CiviCRM's Double-Opt-In feature for subscribing to "
+"mailing lists. Note that this only works for public mailing lists. Any non-"
+"public mailing list selected above will be ignored when this setting is "
+"enabled."
+msgstr ""
+"Wählen Sie, ob das Double-Opt-In-Verfahren von CiviCRM für das Abonnieren "
+"von E-Mail-Verteilern verwendet werden soll. Beachten Sie, dass dies nur für "
+"öffentliche Verteilerlisten funktioniert. Alle ausgewählten nicht-"
+"öffentlichen Verteilerlisten werden bei Aktivierung dieser Einstellung "
+"ignoriert."
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid ""
+"Also, do not forget to disable Twingle's own Double Opt-In option in the "
+"Twingle Manager to avoid subscribers receiving multiple confirmation e-"
+"mails. Only one or the other option should be enabled."
+msgstr ""
+"Vergessen Sie außerdem nicht, das Double-Opt-In-Verfahren im Twingle-Manager "
+"auszuschalten, um zu verhindern, dass Abonnenten mehrere Bestätigungs-E-Mail-"
+"Nachrichten erhalten. Nur eines der beiden Verfahren sollte aktiviert werden."
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid ""
+"Some organisations have specific conventions on how a membership should be "
+"created. Since the Twingle-API can only create a \"bare bone\" membership "
+"object, you can enter a API Call (as 'Entity.Action') to adjust any newly "
+"created membership to your organisation's needs."
+msgstr ""
+"Einige Organisationen haben bestimmte Vorschriften bzgl. der Erstellung von "
+"Mitgliedschaften. Da die Twingle-API nur ein \"reines\" "
+"Mitgliedschaftsobjekt erstellt, können Sie einen API-Aufruf (als 'Entität."
+"Aktion') angeben, um neu erstellt Mitgliedschaften an die Anforderungen "
+"Ihrer Organisation anzupassen."
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid ""
+"The API call would receive the following parameters:<ul>\n"
+"        <li><code>membership_id</code>: The ID of the newly created "
+"membership</li>\n"
+"        <li><code>contact_id</code>: The ID of the contact involved</li>\n"
+"        <li><code>organization_id</code>: The ID of the contact's "
+"organisation, potentially empty</li>\n"
+"        <li><code>contribution_id</code>: The ID contribution received, "
+"potentially empty</li>\n"
+"        <li><code>recurring_contribution_id</code>: The ID of the recurring "
+"contribution. If empty, this was only a one-off donation.</li>\n"
+"    </ul>"
+msgstr ""
+"Der API-Aufruf nimmt die folgenden Parameter entgegen:<ul>\n"
+"        <li><code>membership_id</code>: Die ID der neu erstellten "
+"Mitgliedschaft</li>\n"
+"        <li><code>contact_id</code>: Die ID des betreffenden Kontakts</li>\n"
+"        <li><code>organization_id</code>: Die ID der dem Kontakt "
+"zugeordneten Organisation (optional)</li>\n"
+"        <li><code>contribution_id</code>: Die ID der erhaltenen Zuwendung "
+"(optional)</li>\n"
+"        <li><code>recurring_contribution_id</code>: Die ID der "
+"wiederkehrenden Zuwendung (optional, falls leer war dies eine einmalige "
+"Zuwendung)</li>\n"
+"    </ul>"
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid ""
+"Select the address components that must be present to create or update an "
+"address for the contact."
+msgstr ""
+"Wählen Sie die erforderlichen Adresskomponenten für die Erstellung oder "
+"Aktualisierung der Adresse des Kontakts."
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid ""
+"Depending on your XCM settings, the transferred address might replace an "
+"existing one."
+msgstr ""
+"Abhängig von den XCM-Einstellungen kann die übertragene Adresse eine "
+"bestehende ersetzen."
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid ""
+"Since in some cases Twingle send the country of the user as the only address "
+"parameter, depending on your XCM configuration, not declaring other address "
+"components as required might lead to the current user address being "
+"overwritten with an address containing the country only."
+msgstr ""
+"Da Twingle in einigen Fällen das Land des Benutzers als den einzigen "
+"Adressparameter übermittelt, kann - abhängig von Ihrer XCM-Konfiguration - "
+"die Definition anderer Adresskomponenten als nicht erforderlich dazu führen, "
+"dass die bestehende Adresse mit einer neuen überschrieben wird, die nur das "
+"Land enthält."
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid ""
+"<p>Map Twingle custom fields to CiviCRM fields using the following format "
+"(each assignment in a separate line):</p>\n"
+"    <pre>twingle_field_1=custom_123<br />twingle_field_2=custom_789</pre>\n"
+"    <p>Always use the <code>custom_[id]</code> notation for CiviCRM custom "
+"fields.</p>\n"
+"    <p>This works for fields that Twingle themselves provide in the "
+"<code>custom_fields</code> parameter, and for any other parameter (e.g. "
+"<code>user_extrafield</code>)</p>\n"
+"    <p>Only custom fields extending one of the following CiviCRM entities "
+"are allowed:</p>\n"
+"    <ul>\n"
+"      <li><strong>Contact</strong> &ndash; Will be set on the Individual "
+"contact</li>\n"
+"      <li><strong>Individual</strong> &ndash; Will be set on the Individual "
+"contact</li>\n"
+"      <li><strong>Organization</strong> &ndash; Will be set on the "
+"Organization contact, if an organisation name was submitted</li>\n"
+"      <li><strong>Contribution</strong> &ndash; Will be set on the "
+"contribution</li>\n"
+"      <li><strong>ContributionRecur</strong> &ndash; Will be set on the "
+"recurring contribution and deriving single contributions</li>\n"
+"    </ul>"
+msgstr ""
+"<p>Zuordnung von Twingle-Feldern zu benutzerdefinierten CiviCRM-Feldern mit "
+"folgendem Format (jede Zuordnung in einer neuen Zeile):</p>\n"
+"    <pre>twingle_field_1=custom_123<br />twingle_field_2=custom_789</pre>\n"
+"    <p>Verwenden Sie immer die Notation <code>custom_[id]</code> für "
+"benutzerdefinierte Felder in CiviCRM.</p>\n"
+"    <p>Unterstützt werden Felder, die Twingle im Parameter "
+"<code>custom_fields</code> bereitstellt, sowie für alle anderen Parameter (z."
+"&nbsp;B. <code>user_extrafield</code>)</p>\n"
+"    <p>Es werden nur benutzerdefinierte CiviCRM-Felder der folgenden "
+"Entitäten unterstützt:</p>\n"
+"    <ul>\n"
+"      <li><strong>Kontakt</strong> &ndash; wird am Personen-Kontakt gesetzt</"
+"li>\n"
+"      <li><strong>Person</strong> &ndash; wird am Personen-Kontakt gesetzt</"
+"li>\n"
+"      <li><strong>Organisation</strong> &ndash; wird am Organisations-"
+"Kontakt gesetzt, sofern ein Organisationsname übermittelt wurde</li>\n"
+"      <li><strong>Zuwendung</strong> &ndash; wird an der Zuwendung gesetzt</"
+"li>\n"
+"      <li><strong>Wiederkehrende Zuwendung</strong> &ndash; wird an der "
+"wiederkehrenden Zuwendung sowie an abgeleiteten Einzel-Zuwendungen gesetzt</"
+"li>\n"
+"    </ul>"
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid ""
+"<p>Create a contribution note for each field specified in this selection.</"
+"p>\n"
+"    <p><i>Tip: You can enable or disable this fields in the TwingleMANAGER.</"
+"i></p>"
+msgstr ""
+"<p>Erstelle eine Zuwendungs-Notiz für jedes Feld, das in dieser Auswahl "
+"angegeben ist.</p>\n"
+"<p><i>Tipp: Sie können diese Felder im TwingleMANAGER aktivieren oder "
+"deaktivieren.</i></p>"
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid ""
+"<p>Create a contact note for each field specified in this selection.</p>\n"
+"    <p><i>Tip: You can enable or disable this fields in the TwingleMANAGER.</"
+"i></p>"
+msgstr ""
+"<p>Erstelle eine Kontakt-Notiz für jedes Feld, das in dieser Auswahl "
+"angegeben ist.</p>\n"
+"    <p><i>Tipp: Sie können diese Felder im TwingleMANAGER aktivieren oder "
+"deaktivieren.</i></p>"
 
 #: templates/CRM/Twingle/Form/Profile.tpl
 msgid "General settings"
 msgstr "Allgemeine Einstellungen"
 
 #: templates/CRM/Twingle/Form/Profile.tpl
+msgid "Help"
+msgstr "Hilfe"
+
+#: templates/CRM/Twingle/Form/Profile.tpl
+msgid "XCM Profile"
+msgstr "XCM-Profil"
+
+#: templates/CRM/Twingle/Form/Profile.tpl
+msgid "Gender/Prefix for value 'male'"
+msgstr "Geschlechts-/Anredeoption für übermittelten Wert \"male\""
+
+#: templates/CRM/Twingle/Form/Profile.tpl
+msgid "Gender/Prefix for value 'female'"
+msgstr "Geschlechts-/Anredeoption für übermittelten Wert \"female\""
+
+#: templates/CRM/Twingle/Form/Profile.tpl
+msgid "Gender/Prefix for value 'other'"
+msgstr "Geschlechts-/Anredeoption für übermittelten Wert \"other\""
+
+#: templates/CRM/Twingle/Form/Profile.tpl
 msgid "Payment methods"
 msgstr "Zahlungsmethoden"
 
 #: templates/CRM/Twingle/Form/Profile.tpl
-msgid "Groups"
-msgstr "Gruppen"
+msgid "Groups and Correlations"
+msgstr "Gruppen und Beziehungen"
 
 #: templates/CRM/Twingle/Form/Profile.tpl
-msgid "Create contribution note for"
-msgstr "Zuwendungs-Notiz erstellen für"
+msgid "Newsletter Double Opt-In"
+msgstr "Double-Opt-In für Newsletter"
 
 #: templates/CRM/Twingle/Form/Profile.tpl
-msgid "Create contact note for"
-msgstr "Kontakt-Notiz erstellen für"
-
-#: templates/CRM/Twingle/Form/Profile.hlp
-msgid "Create a contribution note for each field specified in this selection. Tip: You can enable or disable this fields in the TwingleMANAGER."
-msgstr "Erstelle eine Zuwendungs-Notiz für jedes Feld, das in dieser Auswahl angegeben ist. Tipp: Sie können diese Felder im TwingleMANAGER aktivieren oder deaktivieren."
-
-#: templates/CRM/Twingle/Form/Profile.hlp
-msgid "Create a contact note for each field specified in this selection. Tip: You can enable or disable this fields in the TwingleMANAGER."
-msgstr "Erstelle eine Kontakt-Notiz für jedes Feld, das in dieser Auswahl angegeben ist. Tipp: Sie können diese Felder im TwingleMANAGER aktivieren oder deaktivieren."
+msgid "Membership Postprocessing"
+msgstr "Mitgliedschafts--Nachbearbeitung (Postprocessing)"
 
 #: templates/CRM/Twingle/Form/Profile.tpl
 msgid "Are you sure you want to reset the default profile?"
@@ -291,9 +1163,30 @@ msgstr ""
 "<em>debit_manual</em>), wird bei Einsendung einer Twingle-Zuwendung durch "
 "die API ein SEPA-Mandat mit den gegebenen Daten erzeugt."
 
-#: templates/CRM/Twingle/Form/Settings.tpl
-msgid "Help"
-msgstr "Hilfe"
+#: templates/CRM/Twingle/Form/Settings.hlp
+msgid ""
+"When the %1 is enabled, you can activate this to use your own references "
+"instead of the ones submitted by Twingle."
+msgstr ""
+"Wenn die %1 aktiviert ist, können Sie diese Option aktivieren, um Ihre "
+"eigenen Referenzen statt der von Twingle übermittelten zu verwenden."
+
+#: templates/CRM/Twingle/Form/Settings.hlp
+msgid ""
+"Will protect all recurring contributions created by Twingle from "
+"termination, since this does NOT terminate the Twingle collection process"
+msgstr ""
+"Schützt alle von Twingle erstellten wiederkehrenden Zuwendungen vor "
+"Beendigung, da dies nicht den Einzug bei Twingle beendet."
+
+#: templates/CRM/Twingle/Form/Settings.hlp
+msgid ""
+"You can use this setting to add a prefix to the Twingle transaction ID, in "
+"order to avoid collisions with other transaction ids."
+msgstr ""
+"Sie können diese Einstellung verwenden, um ein Präfix der Twingle-"
+"Transaktions-ID voranzustellen, um Kollisionen mit anderen Transaktions-IDs "
+"auszuschließen."
 
 #: templates/CRM/Twingle/Page/Configuration.tpl
 msgid "Profiles"
@@ -316,16 +1209,20 @@ msgid "New profile"
 msgstr "Neues Profil"
 
 #: templates/CRM/Twingle/Page/Profiles.tpl
-msgid "Properties"
-msgstr "Eigenschaften"
+msgid "Selectors"
+msgstr "Selektoren"
+
+#: templates/CRM/Twingle/Page/Profiles.tpl
+msgid "Used"
+msgstr "Verwendet"
+
+#: templates/CRM/Twingle/Page/Profiles.tpl
+msgid "Last Used"
+msgstr "Zuletzt verwendet"
 
 #: templates/CRM/Twingle/Page/Profiles.tpl
 msgid "Operations"
 msgstr "Operationen"
-
-#: templates/CRM/Twingle/Page/Profiles.tpl
-msgid "Selector"
-msgstr "Selektor"
 
 #: templates/CRM/Twingle/Page/Profiles.tpl
 msgid "Edit profile %1"
@@ -336,6 +1233,14 @@ msgid "Edit"
 msgstr "Bearbeiten"
 
 #: templates/CRM/Twingle/Page/Profiles.tpl
+msgid "Copy profile %1"
+msgstr "Profil %1 kopieren"
+
+#: templates/CRM/Twingle/Page/Profiles.tpl
+msgid "Copy"
+msgstr "Kopieren"
+
+#: templates/CRM/Twingle/Page/Profiles.tpl
 msgid "Reset profile %1"
 msgstr "Profil %1 zurücksetzen"
 
@@ -343,5 +1248,19 @@ msgstr "Profil %1 zurücksetzen"
 msgid "Delete profile %1"
 msgstr "Profil % 1 löschen"
 
-#~ msgid "Use Double-Opt-In for newsletter"
-#~ msgstr "Nutze Double-Opt-In für Newsletter"
+#: twingle.php
+msgid "Twingle API: Access Twingle API"
+msgstr "Twingle-API: Zugriff auf Twingle-API"
+
+#: twingle.php
+msgid "Allows access to the Twingle API actions."
+msgstr "Gewährt Zugriff auf Aktionen der Twingle-API."
+
+#~ msgid "Groups"
+#~ msgstr "Gruppen"
+
+#~ msgid "Create contact note for"
+#~ msgstr "Kontakt-Notiz erstellen für"
+
+#~ msgid "Properties"
+#~ msgstr "Eigenschaften"
