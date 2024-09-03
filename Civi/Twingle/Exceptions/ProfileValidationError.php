@@ -38,13 +38,8 @@ class ProfileValidationError extends BaseException {
    * @param string $error_code
    *  A meaningful error code
    */
-  public function __construct(
-    string $affected_field_name,
-    string $message = '',
-    string $error_code = '',
-    ?\Throwable $previous = NULL
-  ) {
-    parent::__construct($message, $error_code, $previous);
+  public function __construct(string $affected_field_name, string $message = '', string $error_code = '') {
+    parent::__construct($message, $error_code);
     $this->affected_field_name = $affected_field_name;
   }
 

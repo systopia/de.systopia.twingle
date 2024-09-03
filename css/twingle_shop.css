@@ -1,0 +1,37 @@
+.twingle-shop-table-caption {
+  font-weight: bold;
+  font-size: 13px;
+  padding: 6px;
+  text-align: left;
+}
+
+.twingle-shop-table-divider {
+  border-top: 1px solid #ddd;
+  margin-top: 20px;
+  margin-bottom: 4px;
+}
+
+#twingle-shop-spinner {
+  animation: spin 2s linear infinite;
+}
+
+.twingle-shop-table tbody tr {
+  height: 32px;
+}
+
+.twingle-shop-table-button {
+  margin: 10px 15px 0 0 !important;
+}
+
+.twingle-shop-cell-button {
+  margin: 3px 5px 3px 5px;
+}
+
+.strikethrough {
+  text-decoration: line-through;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

@@ -26,6 +26,9 @@
       <tr>
         <th>{ts domain="de.systopia.twingle"}Profile name{/ts}</th>
         <th>{ts domain="de.systopia.twingle"}Selectors{/ts}</th>
+        {if $twingle_use_shop eq 1}
+        <th>{ts domain="de.systopia.twingle"}Shop Integration{/ts}</th>
+        {/if}
         <th>{ts domain="de.systopia.twingle"}Used{/ts}</th>
         <th>{ts domain="de.systopia.twingle"}Last Used{/ts}</th>
         <th>{ts domain="de.systopia.twingle"}Operations{/ts}</th>
@@ -46,6 +49,9 @@
                 </ul>
               {/if}
           </td>
+          {if $twingle_use_shop eq 1}
+          <td>{if $profile.enable_shop_integration}<span style="color:green">{ts domain="de.systopia.twingle"}enabled{/ts}</span>{else}<span>{ts domain="de.systopia.twingle"}disabled{/ts}</span>{/if}</td>
+          {/if}
           <td>{ts domain="de.systopia.twingle"}{$profile_stats.$profile_name.access_counter_txt}{/ts}</td>
           <td>{ts domain="de.systopia.twingle"}{$profile_stats.$profile_name.last_access_txt}{/ts}</td>
           <td>
@@ -56,7 +62,6 @@
             {else}
               <a href="{crmURL p="civicrm/admin/settings/twingle/profile" q="op=delete&id=$profile_id"}" title="{ts domain="de.systopia.twingle" 1=$profile.name}Delete profile %1{/ts}" class="action-item crm-hover-button">{ts domain="de.systopia.twingle"}Delete{/ts}</a>
             {/if}
-
           </td>
         </tr>
       {/foreach}

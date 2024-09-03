@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Twingle/Shop</base>
+  <class>TwingleProduct</class>
+  <name>civicrm_twingle_product</name>
+  <comment>This table contains the Twingle Product data.</comment>
+  <log>false</log>
+  <!--    <add>1.5</add>-->
+
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <unique>true</unique>
+    <comment>Unique TwingleProduct ID</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+
+  <field>
+    <name>external_id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>The ID of this product in the Twingle database</comment>
+    <html>
+      <type>Number</type>
+    </html>
+  </field>
+
+  <field>
+    <name>price_field_id</name>
+    <type>int unsigned</type>
+    <comment>FK to Price Field</comment>
+    <required>true</required>
+  </field>
+  <foreignKey>
+    <name>price_field_id</name>
+    <table>civicrm_contact</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>twingle_shop_id</name>
+    <type>int unsigned</type>
+    <unique>true</unique>
+    <comment>FK to Twingle Shop</comment>
+  </field>
+  <foreignKey>
+    <name>twingle_shop_id</name>
+    <table>civicrm_twingle_shop</table>
+    <key>id</key>
+    <onDelete>CASCADE</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>created_at</name>
+    <type>datetime</type>
+    <required>true</required>
+    <comment>Timestamp of when the product was created in the database</comment>
+  </field>
+
+  <field>
+    <name>updated_at</name>
+    <type>datetime</type>
+    <required>true</required>
+    <comment>Timestamp of when the product was last updated in the database</comment>
+  </field>
+</table>
