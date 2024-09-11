@@ -91,7 +91,7 @@
 {/htxt}
 
 {htxt id='id-shop_map_products'}
-    <p>{ts domain="de.systopia.twingle"}If this option is enabled, all Twingle Shop products corresponding to the specified project IDs will be retrieved from Twingle and mapped as price sets and price fields. Each Twingle Shop is mapped as a price set with its products as price fields.</p>
-    <p>This allows you to manually create contributions with the same line items for phone orders, for example, as would be the case for orders placed through the Twingle Shop.</p>
+    <p>{ts domain="de.systopia.twingle"}If this option is enabled, all Twingle Shop products corresponding to the specified project IDs will be retrieved from Twingle and mapped as price sets and price fields. Each Twingle Shop is mapped as a price set with its products as price fields.{/ts}</p>
+    <p>{ts domain="de.systopia.twingle"}This allows you to manually create contributions with the same line items for phone orders, for example, as would be the case for orders placed through the Twingle Shop.{/ts}</p>
 {/htxt}
 {/crmScope}

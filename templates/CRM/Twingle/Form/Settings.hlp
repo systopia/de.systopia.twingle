@@ -31,3 +31,7 @@
 {htxt id='id-twingle_use_shop'}
     {ts domain="de.systopia.twingle"}If you enable Twingle Shop integration, you can configure Twingle API profiles to include products ordered through Twingle Shop as line items in the created contribution.{/ts}
 {/htxt}
+
+{htxt id='id-twingle_access_key'}
+    {ts domain="de.systopia.twingle"}Enter your twingle API access key.{/ts}
+{/htxt}
