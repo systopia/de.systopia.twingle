@@ -4,7 +4,7 @@
 return [
   [
     'name' => 'TwingleShop',
-    'class' => 'Civi\Twingle\Shop\DAO\TwingleShop',
+    'class' => 'CRM_Twingle_DAO_TwingleShop',
     'table' => 'civicrm_twingle_shop',
   ],
 ];

@@ -20,7 +20,11 @@
   <compatibility>
     <ver>5.58</ver>
   </compatibility>
-  <comments/>
+  <comments></comments>
+  <classloader>
+    <psr4 prefix="Civi\" path="Civi"/>
+    <psr0 prefix="CRM_" path="."/>
+  </classloader>
   <requires>
     <ext>de.systopia.xcm</ext>
   </requires>
@@ -32,10 +36,7 @@
     <mixin>menu-xml@1.0.0</mixin>
     <mixin>mgd-php@1.0.0</mixin>
     <mixin>smarty-v2@1.0.1</mixin>
+    <mixin>entity-types-php@1.0.0</mixin>
   </mixins>
-  <classloader>
-    <psr0 prefix="CRM_" path="."/>
-    <psr4 prefix="Civi\" path="Civi"/>
-  </classloader>
   <upgrader>CRM_Twingle_Upgrader</upgrader>
 </extension>

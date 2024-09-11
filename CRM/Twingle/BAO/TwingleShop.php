@@ -1,15 +1,10 @@
 <?php
 
-namespace Civi\Twingle\Shop\BAO;
-
 // phpcs:disable
 use CRM_Twingle_ExtensionUtil as E;
-use Civi\Twingle\Shop\DAO\TwingleShop as TwingleShopDAO;
-use Civi\Twingle\Shop\BAO\TwingleProduct as TwingleProductBAO;
 use Civi\Twingle\Shop\ApiCall;
 use Civi\Twingle\Shop\Exceptions\ShopException;
 use Civi\Twingle\Shop\Exceptions\ProductException;
-use Exception;
 use function Civi\Twingle\Shop\Utils\filter_attributes;
 use function Civi\Twingle\Shop\Utils\convert_str_to_int;
 use function Civi\Twingle\Shop\Utils\validate_data_types;
@@ -17,7 +12,7 @@ use function Civi\Twingle\Shop\Utils\validate_data_types;
 
 require_once E::path() . '/Civi/Twingle/Shop/Utils/TwingleShopUtils.php';
 
-class TwingleShop extends TwingleShopDAO {
+class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
 
   public const ALLOWED_ATTRIBUTES = [
     'id' => \CRM_Utils_Type::T_INT,
@@ -64,14 +59,14 @@ class TwingleShop extends TwingleShopDAO {
    * @param string $project_identifier
    *   Twingle project identifier
    *
-   * @return TwingleShop
+   * @return CRM_Twingle_BAO_TwingleShop
    *
    * @throws ShopException
    * @throws \Civi\Twingle\Shop\Exceptions\ApiCallError
    * @throws \CRM_Core_Exception
    */
   public static function findByProjectIdentifier(string $project_identifier) {
-    $shop = new TwingleShop();
+    $shop = new CRM_Twingle_BAO_TwingleShop();
     $shop->get('project_identifier', $project_identifier);
     if (!$shop->id) {
       $shop->fetchDataFromTwingle($project_identifier);
@@ -147,7 +142,7 @@ class TwingleShop extends TwingleShopDAO {
 
     // Try to lookup object in database
     try {
-      $dao = TwingleShopDAO::executeQuery("SELECT * FROM civicrm_twingle_shop WHERE project_identifier = %1",
+      $dao = self::executeQuery("SELECT * FROM civicrm_twingle_shop WHERE project_identifier = %1",
         [1 => [$this->project_identifier, 'String']]);
       if ($dao->fetch()) {
         $this->load($dao->toArray());
@@ -259,7 +254,7 @@ class TwingleShop extends TwingleShopDAO {
       }, []);
 
       foreach ($products_from_db as $product) {
-        /* @var TwingleProductBAO $product */
+        /* @var CRM_Twingle_BAO_TwingleProduct $product */
 
         // Find orphaned products which are in the database but not in Twingle
         $found = array_key_exists($product->external_id, $products_from_twingle);
@@ -286,8 +281,8 @@ class TwingleShop extends TwingleShopDAO {
     foreach ($products_from_twingle as $product_from_twingle) {
       $found = array_key_exists($product_from_twingle['id'], $products);
       if (!$found) {
-        $product = new TwingleProduct();
-        $product->load(TwingleProduct::renameTwingleAttrs($product_from_twingle));
+        $product = new CRM_Twingle_BAO_TwingleProduct();
+        $product->load(CRM_Twingle_BAO_TwingleProduct::renameTwingleAttrs($product_from_twingle));
         $product->twingle_shop_id = $this->id;
         $this->products[] = $product;
       }
@@ -305,13 +300,13 @@ class TwingleShop extends TwingleShopDAO {
   public function getProducts() {
     $products = [];
 
-    $result = TwingleProductBAO::executeQuery(
+    $result = CRM_Twingle_BAO_TwingleProduct::executeQuery(
       "SELECT * FROM civicrm_twingle_product WHERE twingle_shop_id = %1",
       [1 => [$this->id, 'Integer']]
     );
 
     while ($result->fetch()) {
-      $product = new TwingleProductBAO();
+      $product = new CRM_Twingle_BAO_TwingleProduct();
       $product->load($result->toArray());
       $products[] = $product;
     }

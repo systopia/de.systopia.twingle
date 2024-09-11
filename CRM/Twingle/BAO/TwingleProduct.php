@@ -1,16 +1,10 @@
 <?php
 
-namespace Civi\Twingle\Shop\BAO;
-
 use Civi\Api4\PriceField;
-use Civi\Twingle\Shop\DAO\TwingleProduct as TwingleProductDAO;
-use Civi\Twingle\Shop\DAO\TwingleShop as TwingleShopDAO;
+use Civi\Api4\PriceFieldValue;
 use Civi\Twingle\Shop\Exceptions\ProductException;
 use Civi\Twingle\Shop\Exceptions\ShopException;
-use CRM_Core_Exception;
-use CRM_Core_Transaction;
 use CRM_Twingle_ExtensionUtil as E;
-use CRM_Utils_Type;
 use function Civi\Twingle\Shop\Utils\convert_int_to_bool;
 use function Civi\Twingle\Shop\Utils\convert_str_to_date;
 use function Civi\Twingle\Shop\Utils\convert_str_to_int;
@@ -24,7 +18,7 @@ require_once E::path() . '/Civi/Twingle/Shop/Utils/TwingleShopUtils.php';
  * TwingleProduct BAO class.
  * This class is used to implement the logic for the TwingleProduct entity.
  */
-class TwingleProduct extends TwingleProductDAO {
+class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
 
   /**
    * Name of this product.
@@ -421,14 +415,14 @@ class TwingleProduct extends TwingleProductDAO {
    * @param int $external_id
    *   External id of the product (by Twingle)
    *
-   * @return TwingleProduct|null
+   * @return CRM_Twingle_BAO_TwingleProduct|null
     *   TwingleProduct object or NULL if not found
    *
    * @throws \Civi\Twingle\Shop\Exceptions\ProductException
    * @throws \Civi\Core\Exception\DBQueryException
    */
   public static function findByExternalId($external_id) {
-    $dao = TwingleShopDAO::executeQuery("SELECT * FROM civicrm_twingle_product WHERE external_id = %1",
+    $dao = CRM_Twingle_BAO_TwingleShop::executeQuery("SELECT * FROM civicrm_twingle_product WHERE external_id = %1",
       [1 => [$external_id, 'String']]);
     if ($dao->fetch()) {
       $product = new self();
@@ -456,7 +450,7 @@ class TwingleProduct extends TwingleProductDAO {
 
     // Try to lookup object in database
     try {
-      $dao = TwingleShopDAO::executeQuery("SELECT * FROM civicrm_twingle_product WHERE external_id = %1",
+      $dao = CRM_Twingle_BAO_TwingleShop::executeQuery("SELECT * FROM civicrm_twingle_product WHERE external_id = %1",
         [1 => [$this->external_id, 'String']]);
       if ($dao->fetch()) {
         $this->copyValues(array_merge($dao->toArray(), $this->getAttributes()));
@@ -514,7 +508,7 @@ class TwingleProduct extends TwingleProductDAO {
   /**
    * Delete TwingleProduct along with associated PriceField and PriceFieldValue.
    *
-   * @override \Civi\Twingle\Shop\DAO\TwingleProduct::delete
+   * @override \CRM_Twingle_DAO_TwingleProduct::delete
    * @throws \CRM_Core_Exception
    * @throws \Civi\Twingle\Shop\Exceptions\ProductException
    */
@@ -570,7 +564,7 @@ class TwingleProduct extends TwingleProductDAO {
   /**
    * Compare two products
    *
-   * @param TwingleProduct $product_to_compare_with
+   * @param CRM_Twingle_BAO_TwingleProduct $product_to_compare_with
    *   Product from database
    *
    * @return bool
@@ -592,7 +586,7 @@ class TwingleProduct extends TwingleProductDAO {
    */
   public function getFinancialTypeId(): ?int {
     if (!empty($this->price_field_id)) {
-      $price_set = \Civi\Api4\PriceField::get()
+      $price_set = PriceField::get()
         ->addSelect('financial_type_id')
         ->addWhere('id', '=', $this->price_field_id)
         ->execute()
@@ -610,7 +604,7 @@ class TwingleProduct extends TwingleProductDAO {
    */
   public function getPriceFieldValueId() {
     if (!empty($this->price_field_id)) {
-      $price_field_value = \Civi\Api4\PriceFieldValue::get()
+      $price_field_value = PriceFieldValue::get()
         ->addSelect('id')
         ->addWhere('price_field_id', '=', $this->price_field_id)
         ->execute()
