@@ -1,7 +1,5 @@
 <?php
 
-namespace Civi\Twingle\Shop\DAO;
-
 /**
  * @package CRM
  * @copyright CiviCRM LLC https://civicrm.org/licensing
@@ -15,7 +13,7 @@ use CRM_Twingle_ExtensionUtil as E;
 /**
  * Database access object for the TwingleShop entity.
  */
-class TwingleShop extends \CRM_Core_DAO {
+class CRM_Twingle_DAO_TwingleShop extends CRM_Core_DAO {
   const EXT = E::LONG_NAME;
   const TABLE_ADDED = '';
 
@@ -134,7 +132,7 @@ class TwingleShop extends \CRM_Core_DAO {
           'where' => 'civicrm_twingle_shop.id',
           'table_name' => 'civicrm_twingle_shop',
           'entity' => 'TwingleShop',
-          'bao' => 'Civi\Twingle\Shop\DAO\TwingleShop',
+          'bao' => 'CRM_Twingle_DAO_TwingleShop',
           'localizable' => 0,
           'html' => [
             'type' => 'Number',
@@ -159,7 +157,7 @@ class TwingleShop extends \CRM_Core_DAO {
           'where' => 'civicrm_twingle_shop.project_identifier',
           'table_name' => 'civicrm_twingle_shop',
           'entity' => 'TwingleShop',
-          'bao' => 'Civi\Twingle\Shop\DAO\TwingleShop',
+          'bao' => 'CRM_Twingle_DAO_TwingleShop',
           'localizable' => 0,
           'html' => [
             'type' => 'Text',
@@ -181,7 +179,7 @@ class TwingleShop extends \CRM_Core_DAO {
           'where' => 'civicrm_twingle_shop.numerical_project_id',
           'table_name' => 'civicrm_twingle_shop',
           'entity' => 'TwingleShop',
-          'bao' => 'Civi\Twingle\Shop\DAO\TwingleShop',
+          'bao' => 'CRM_Twingle_DAO_TwingleShop',
           'localizable' => 0,
           'html' => [
             'type' => 'Number',
@@ -202,7 +200,7 @@ class TwingleShop extends \CRM_Core_DAO {
           'where' => 'civicrm_twingle_shop.price_set_id',
           'table_name' => 'civicrm_twingle_shop',
           'entity' => 'TwingleShop',
-          'bao' => 'Civi\Twingle\Shop\DAO\TwingleShop',
+          'bao' => 'CRM_Twingle_DAO_TwingleShop',
           'localizable' => 0,
           'FKClassName' => 'CRM_Price_DAO_PriceSet',
           'add' => NULL,

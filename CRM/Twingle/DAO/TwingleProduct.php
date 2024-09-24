@@ -1,7 +1,5 @@
 <?php
 
-namespace Civi\Twingle\Shop\DAO;
-
 /**
  * @package CRM
  * @copyright CiviCRM LLC https://civicrm.org/licensing
@@ -15,7 +13,7 @@ use CRM_Twingle_ExtensionUtil as E;
 /**
  * Database access object for the TwingleProduct entity.
  */
-class TwingleProduct extends \CRM_Core_DAO {
+class CRM_Twingle_DAO_TwingleProduct extends CRM_Core_DAO {
   const EXT = E::LONG_NAME;
   const TABLE_ADDED = '';
 
@@ -144,7 +142,7 @@ class TwingleProduct extends \CRM_Core_DAO {
           'where' => 'civicrm_twingle_product.id',
           'table_name' => 'civicrm_twingle_product',
           'entity' => 'TwingleProduct',
-          'bao' => 'Civi\Twingle\Shop\DAO\TwingleProduct',
+          'bao' => 'CRM_Twingle_DAO_TwingleProduct',
           'localizable' => 0,
           'html' => [
             'type' => 'Number',
@@ -167,7 +165,7 @@ class TwingleProduct extends \CRM_Core_DAO {
           'where' => 'civicrm_twingle_product.external_id',
           'table_name' => 'civicrm_twingle_product',
           'entity' => 'TwingleProduct',
-          'bao' => 'Civi\Twingle\Shop\DAO\TwingleProduct',
+          'bao' => 'CRM_Twingle_DAO_TwingleProduct',
           'localizable' => 0,
           'html' => [
             'type' => 'Number',
@@ -189,7 +187,7 @@ class TwingleProduct extends \CRM_Core_DAO {
           'where' => 'civicrm_twingle_product.price_field_id',
           'table_name' => 'civicrm_twingle_product',
           'entity' => 'TwingleProduct',
-          'bao' => 'Civi\Twingle\Shop\DAO\TwingleProduct',
+          'bao' => 'CRM_Twingle_DAO_TwingleProduct',
           'localizable' => 0,
           'FKClassName' => 'CRM_Contact_DAO_Contact',
           'add' => NULL,
@@ -208,9 +206,9 @@ class TwingleProduct extends \CRM_Core_DAO {
           'where' => 'civicrm_twingle_product.twingle_shop_id',
           'table_name' => 'civicrm_twingle_product',
           'entity' => 'TwingleProduct',
-          'bao' => 'Civi\Twingle\Shop\DAO\TwingleProduct',
+          'bao' => 'CRM_Twingle_DAO_TwingleProduct',
           'localizable' => 0,
-          'FKClassName' => 'Civi\Twingle\Shop\DAO\TwingleShop',
+          'FKClassName' => 'CRM_Twingle_DAO_TwingleShop',
           'add' => NULL,
         ],
         'created_at' => [
@@ -228,7 +226,7 @@ class TwingleProduct extends \CRM_Core_DAO {
           'where' => 'civicrm_twingle_product.created_at',
           'table_name' => 'civicrm_twingle_product',
           'entity' => 'TwingleProduct',
-          'bao' => 'Civi\Twingle\Shop\DAO\TwingleProduct',
+          'bao' => 'CRM_Twingle_DAO_TwingleProduct',
           'localizable' => 0,
           'add' => NULL,
         ],
@@ -247,7 +245,7 @@ class TwingleProduct extends \CRM_Core_DAO {
           'where' => 'civicrm_twingle_product.updated_at',
           'table_name' => 'civicrm_twingle_product',
           'entity' => 'TwingleProduct',
-          'bao' => 'Civi\Twingle\Shop\DAO\TwingleProduct',
+          'bao' => 'CRM_Twingle_DAO_TwingleProduct',
           'localizable' => 0,
           'add' => NULL,
         ],

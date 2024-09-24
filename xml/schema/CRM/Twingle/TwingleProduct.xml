@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 
 <table>
-  <base>CRM/Twingle/Shop</base>
+  <base>CRM/Twingle</base>
   <class>TwingleProduct</class>
   <name>civicrm_twingle_product</name>
   <comment>This table contains the Twingle Product data.</comment>
