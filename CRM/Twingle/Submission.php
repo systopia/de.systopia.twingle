@@ -546,7 +546,7 @@ class CRM_Twingle_Submission {
       if (!empty($line_item['is_error'])) {
         $line_item_name = $line_item_data['name'];
         throw new CiviCRM_API3_Exception(
-          E::ts("Could not create line item for product '$line_item_name'"),
+          E::ts("Could not create line item for product '%1'", [1 => $line_item_name]),
           'api_error'
         );
       }

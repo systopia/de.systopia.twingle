@@ -458,7 +458,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
     }
     catch (\Civi\Core\Exception\DBQueryException $e) {
       throw new ProductException(
-        E::ts('Could not find TwingleProduct in database: ' . $e->getMessage()),
+        E::ts('Could not find TwingleProduct in database: %1', [1 => $e->getMessage()]),
         ShopException::ERROR_CODE_COULD_NOT_FIND_SHOP_IN_DB);
     }
 
@@ -466,7 +466,8 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
     $twingle_product_values = $this->getAttributes();
     try {
       \CRM_Utils_Hook::pre($mode, 'TwingleProduct', $this->id, $twingle_product_values);
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       $tx->rollback();
       throw $e;
     }
@@ -481,14 +482,15 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
     // Save object to database
     try {
       $this->save();
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       $tx->rollback();
       throw new ProductException(
-        E::ts('Could not save TwingleProduct to database: ' . $e->getMessage()),
+        E::ts('Could not save TwingleProduct to database: %1', [1 => $e->getMessage()]),
         ProductException::ERROR_CODE_COULD_NOT_CREATE_PRODUCT);
     }
     $result = self::findById($this->id);
-    /* @var self $result */
+    /** @var self $result */
     $this->load($result->getAttributes());
 
     // Register post-hook
@@ -629,7 +631,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
     }
     catch (CRM_Core_Exception $e) {
       throw new ProductException(
-        E::ts('An Error occurred while searching for the associated PriceFieldValue: ' . $e->getMessage()),
+        E::ts('An Error occurred while searching for the associated PriceFieldValue: %1', [1 => $e->getMessage()]),
         ProductException::ERROR_CODE_PRICE_FIELD_VALUE_NOT_FOUND);
     }
     try {
@@ -637,7 +639,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
     }
     catch (CRM_Core_Exception $e) {
       throw new ProductException(
-        E::ts('Could not delete associated PriceFieldValue: ' . $e->getMessage()),
+        E::ts('Could not delete associated PriceFieldValue: %1', [1 => $e->getMessage()]),
         ProductException::ERROR_CODE_COULD_NOT_DELETE_PRICE_FIELD_VALUE);
     }
 
@@ -661,13 +663,14 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
       }
       catch (CRM_Core_Exception $e) {
         throw new ProductException(
-          E::ts('An Error occurred while searching for the associated PriceField: ' . $e->getMessage()),
+          E::ts('An Error occurred while searching for the associated PriceField: %1', [1 => $e->getMessage()]),
           ProductException::ERROR_CODE_PRICE_FIELD_NOT_FOUND);
       }
       throw new ProductException(
-        E::ts('Could not delete associated PriceField: ' . $e->getMessage()),
+        E::ts('Could not delete associated PriceField: %1', [1 => $e->getMessage()]),
         ProductException::ERROR_CODE_COULD_NOT_DELETE_PRICE_FIELD);
     }
     $this->price_field_id = NULL;
   }
+
 }
