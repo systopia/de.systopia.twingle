@@ -1,3 +1,111 @@
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "Could not find PriceField for Twingle Product ['id': %1, 'external_id': %2]: %3"
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "Could not find PriceFieldValue for Twingle Product ['id': %1, 'external_id': %2]: %3"
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "PriceField for this Twingle Product already exists."
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "PriceField for this Twingle Product does not exist and cannot be edited."
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "Could not check if PriceField for this Twingle Product already exists."
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "Could not find PriceSet for this Twingle Product."
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "Could not create PriceField for this Twingle Product: %1"
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "Could not find PriceFieldValue for this Twingle Product: %1"
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "Could not create PriceFieldValue for this Twingle Product: %1"
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "Could not find TwingleProduct in database: %1"
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "Could not save TwingleProduct to database: %1"
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "An Error occurred while searching for the associated PriceFieldValue: %1"
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "Could not delete associated PriceFieldValue: %1"
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "PriceField for this Twingle Product still exists."
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "An Error occurred while searching for the associated PriceField: %1"
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "Could not delete associated PriceField: %1"
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleShop.php
+msgid "Could not find TwingleShop in database: %1"
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleShop.php
+msgid "Could not find associated PriceSet: %1"
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleShop.php
+msgid "Could not delete associated PriceSet: %1"
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleShop.php
+msgid "PriceSet for this Twingle Shop already exists."
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleShop.php
+msgid "PriceSet for this Twingle Shop does not exist and cannot be edited."
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleShop.php
+msgid "Could not check if PriceSet for this TwingleShop already exists."
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleShop.php
+msgid "Could not create PriceSet for this TwingleShop."
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleShop.php
+msgid "This Twingle Project is not a shop."
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleShop.php
+msgid "Could not retrieve Twingle projects from API.\n          Please check your API credentials."
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleShop.php
+msgid "Could not retrieve associated products: %1"
+msgstr ""
+
+#: CRM/Twingle/BAO/TwingleShop.php
+msgid "Could not delete associated products: %1"
+msgstr ""
+
 #: CRM/Twingle/Config.php
 msgid "No"
 msgstr ""
@@ -8,6 +116,106 @@ msgstr ""
 
 #: CRM/Twingle/Config.php
 msgid "Create Activity"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleProduct.php
+msgid "Twingle Products"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleProduct.php
+msgid "Twingle Product"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleProduct.php CRM/Twingle/DAO/TwingleShop.php
+msgid "ID"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleProduct.php
+msgid "Unique TwingleProduct ID"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleProduct.php
+msgid "External ID"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleProduct.php
+msgid "The ID of this product in the Twingle database"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleProduct.php api/v3/TwingleProduct/Get.php
+msgid "Price Field ID"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleProduct.php
+msgid "FK to Price Field"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleProduct.php api/v3/TwingleProduct/Create.php
+msgid "Twingle Shop ID"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleProduct.php
+msgid "FK to Twingle Shop"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleProduct.php
+msgid "Created At"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleProduct.php
+msgid "Timestamp of when the product was created in the database"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleProduct.php
+msgid "Updated At"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleProduct.php
+msgid "Timestamp of when the product was last updated in the database"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleShop.php
+msgid "Twingle Shops"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleShop.php
+msgid "Twingle Shop"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleShop.php
+msgid "Unique TwingleShop ID"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleShop.php api/v3/TwingleProduct/Get.php api/v3/TwingleShop/Create.php api/v3/TwingleShop/Delete.php api/v3/TwingleShop/Get.php
+msgid "Project Identifier"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleShop.php
+msgid "Twingle Project Identifier"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleShop.php
+msgid "Numerical Project ID"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleShop.php
+msgid "Numerical Twingle Project Identifier"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleShop.php api/v3/TwingleShop/Get.php
+msgid "Price Set ID"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleShop.php
+msgid "FK to Price Set"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleShop.php api/v3/TwingleShop/Get.php
+msgid "Name"
+msgstr ""
+
+#: CRM/Twingle/DAO/TwingleShop.php
+msgid "name of the shop"
 msgstr ""
 
 #: CRM/Twingle/Form/Profile.php
@@ -528,214 +736,6 @@ msgstr ""
 
 #: Civi/Twingle/Shop/ApiCall.php
 msgid "Connection not yet established. Use connect() method."
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleProduct.php
-msgid "Could not find PriceField for Twingle Product ['id': %1, 'external_id': %2]: %3"
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleProduct.php
-msgid "Could not find PriceFieldValue for Twingle Product ['id': %1, 'external_id': %2]: %3"
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleProduct.php
-msgid "PriceField for this Twingle Product already exists."
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleProduct.php
-msgid "PriceField for this Twingle Product does not exist and cannot be edited."
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleProduct.php
-msgid "Could not check if PriceField for this Twingle Product already exists."
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleProduct.php
-msgid "Could not find PriceSet for this Twingle Product."
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleProduct.php
-msgid "Could not create PriceField for this Twingle Product: %1"
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleProduct.php
-msgid "Could not find PriceFieldValue for this Twingle Product: %1"
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleProduct.php
-msgid "Could not create PriceFieldValue for this Twingle Product: %1"
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleProduct.php
-msgid "Could not find TwingleProduct in database: %1"
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleProduct.php
-msgid "Could not save TwingleProduct to database: %1"
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleProduct.php
-msgid "An Error occurred while searching for the associated PriceFieldValue: %1"
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleProduct.php
-msgid "Could not delete associated PriceFieldValue: %1"
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleProduct.php
-msgid "PriceField for this Twingle Product still exists."
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleProduct.php
-msgid "An Error occurred while searching for the associated PriceField: %1"
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleProduct.php
-msgid "Could not delete associated PriceField: %1"
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleShop.php
-msgid "Could not find TwingleShop in database: %1"
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleShop.php
-msgid "Could not find associated PriceSet: %1"
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleShop.php
-msgid "Could not delete associated PriceSet: %1"
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleShop.php
-msgid "PriceSet for this Twingle Shop already exists."
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleShop.php
-msgid "PriceSet for this Twingle Shop does not exist and cannot be edited."
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleShop.php
-msgid "Could not check if PriceSet for this TwingleShop already exists."
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleShop.php
-msgid "Could not create PriceSet for this TwingleShop."
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleShop.php
-msgid "This Twingle Project is not a shop."
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleShop.php
-msgid "Could not retrieve Twingle projects from API.\n          Please check your API credentials."
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleShop.php
-msgid "Could not retrieve associated products: %1"
-msgstr ""
-
-#: Civi/Twingle/Shop/BAO/TwingleShop.php
-msgid "Could not delete associated products: %1"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleProduct.php
-msgid "Twingle Products"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleProduct.php
-msgid "Twingle Product"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleProduct.php Civi/Twingle/Shop/DAO/TwingleShop.php
-msgid "ID"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleProduct.php
-msgid "Unique TwingleProduct ID"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleProduct.php
-msgid "External ID"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleProduct.php
-msgid "The ID of this product in the Twingle database"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleProduct.php api/v3/TwingleProduct/Get.php
-msgid "Price Field ID"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleProduct.php
-msgid "FK to Price Field"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleProduct.php api/v3/TwingleProduct/Create.php
-msgid "Twingle Shop ID"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleProduct.php
-msgid "FK to Twingle Shop"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleProduct.php
-msgid "Created At"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleProduct.php
-msgid "Timestamp of when the product was created in the database"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleProduct.php
-msgid "Updated At"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleProduct.php
-msgid "Timestamp of when the product was last updated in the database"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleShop.php
-msgid "Twingle Shops"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleShop.php
-msgid "Twingle Shop"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleShop.php
-msgid "Unique TwingleShop ID"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleShop.php api/v3/TwingleProduct/Get.php api/v3/TwingleShop/Create.php api/v3/TwingleShop/Delete.php api/v3/TwingleShop/Get.php
-msgid "Project Identifier"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleShop.php
-msgid "Twingle Project Identifier"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleShop.php
-msgid "Numerical Project ID"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleShop.php
-msgid "Numerical Twingle Project Identifier"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleShop.php api/v3/TwingleShop/Get.php
-msgid "Price Set ID"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleShop.php
-msgid "FK to Price Set"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleShop.php api/v3/TwingleShop/Get.php
-msgid "Name"
-msgstr ""
-
-#: Civi/Twingle/Shop/DAO/TwingleShop.php
-msgid "name of the shop"
 msgstr ""
 
 #: api/v3/TwingleDonation/Cancel.php api/v3/TwingleDonation/Endrecurring.php api/v3/TwingleDonation/Submit.php
