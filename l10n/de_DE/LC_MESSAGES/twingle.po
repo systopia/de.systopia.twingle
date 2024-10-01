@@ -16,6 +16,139 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid ""
+"Could not find PriceField for Twingle Product ['id': %1, 'external_id': %2]: "
+"%3"
+msgstr ""
+"PriceField für Twingle-Produkt ['id': %1, 'external_id': %2] konnte nicht "
+"gefunden werden: %3"
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid ""
+"Could not find PriceFieldValue for Twingle Product ['id': %1, 'external_id': "
+"%2]: %3"
+msgstr ""
+"PriceFieldValue für Twingle-Produkt ['id': %1, 'external_id': %2] konnte "
+"nicht gefunden werden: %3"
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "PriceField for this Twingle Product already exists."
+msgstr "PriceField für dieses Twingle-Produkt existiert bereits."
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid ""
+"PriceField for this Twingle Product does not exist and cannot be edited."
+msgstr ""
+"PriceField für dieses Twingle-Produkt existiert nicht und kann nicht "
+"bearbeitet werden."
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "Could not check if PriceField for this Twingle Product already exists."
+msgstr ""
+"Es konnte nicht überprüft werden, ob PriceField für dieses Twingle-Produkt "
+"bereits existiert."
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "Could not find PriceSet for this Twingle Product."
+msgstr "PriceSet für dieses Twingle-Produkt konnte nicht gefunden werden."
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "Could not create PriceField for this Twingle Product: %1"
+msgstr "PriceField für dieses Twingle-Produkt konnte nicht erstellt werden: %1"
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "Could not find PriceFieldValue for this Twingle Product: %1"
+msgstr "PriceField für dieses Twingle-Produkt konnte nicht gefunden werden: %1"
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "Could not create PriceFieldValue for this Twingle Product: %1"
+msgstr "PriceField für dieses Twingle-Produkt konnte nicht erstellt werden: %1"
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "Could not find TwingleProduct in database: %1"
+msgstr "TwingleProduct konnte nicht in der Datenbank gefunden werden: %1"
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "Could not save TwingleProduct to database: %1"
+msgstr "TwingleProduct konnte nicht in die Datenbank geschrieben werden: %1"
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid ""
+"An Error occurred while searching for the associated PriceFieldValue: %1"
+msgstr ""
+"Während der Suche nach zugehörigem PriceFieldValue ist ein Fehler "
+"aufgetreten: %1"
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "Could not delete associated PriceFieldValue: %1"
+msgstr "Zugehöriger PriceFieldValue konnte nicht gelöscht werden: %1"
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "PriceField for this Twingle Product still exists."
+msgstr "PriceField für dieses Twingle-Produkt existiert noch."
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "An Error occurred while searching for the associated PriceField: %1"
+msgstr ""
+"Während der Suche nach zugehörigem PriceField ist ein Fehler aufgetreten: %1"
+
+#: CRM/Twingle/BAO/TwingleProduct.php
+msgid "Could not delete associated PriceField: %1"
+msgstr "Zugehöriges PriceField konnte nicht gelöscht werden: %1"
+
+#: CRM/Twingle/BAO/TwingleShop.php
+msgid "Could not find TwingleShop in database: %1"
+msgstr "TwingleShop konnte nicht in der Datenbank gefunden werden: %1"
+
+#: CRM/Twingle/BAO/TwingleShop.php
+msgid "Could not find associated PriceSet: %1"
+msgstr "Zugehöriges PriceSet konnte nicht gefunden werden: %1"
+
+#: CRM/Twingle/BAO/TwingleShop.php
+msgid "Could not delete associated PriceSet: %1"
+msgstr "Zugehöriges PriceSet konnte nicht gelöscht werden: %1"
+
+#: CRM/Twingle/BAO/TwingleShop.php
+msgid "PriceSet for this Twingle Shop already exists."
+msgstr "PriceSet für diesen Twingle-Shop existiert bereits."
+
+#: CRM/Twingle/BAO/TwingleShop.php
+msgid "PriceSet for this Twingle Shop does not exist and cannot be edited."
+msgstr ""
+"PriceSet für diesen Twingle-Shop existiert nicht und kann nicht bearbeitet "
+"werden."
+
+#: CRM/Twingle/BAO/TwingleShop.php
+msgid "Could not check if PriceSet for this TwingleShop already exists."
+msgstr ""
+"Es konnte nicht überprüft werden, ob PriceSet für diesen TwingleShop bereits "
+"existiert."
+
+#: CRM/Twingle/BAO/TwingleShop.php
+msgid "Could not create PriceSet for this TwingleShop."
+msgstr "PriceSet für diesen TwingleShop konnte nicht erstellt werden."
+
+#: CRM/Twingle/BAO/TwingleShop.php
+msgid "This Twingle Project is not a shop."
+msgstr "Dieses Twingle-Projekt ist kein Shop."
+
+#: CRM/Twingle/BAO/TwingleShop.php
+msgid ""
+"Could not retrieve Twingle projects from API.\n"
+"          Please check your API credentials."
+msgstr ""
+"Twingle-Projekte konnte nicht über die API abgerufen werden. Überprüfen Sie "
+"Ihre Zugangsdaten."
+
+#: CRM/Twingle/BAO/TwingleShop.php
+msgid "Could not retrieve associated products: %1"
+msgstr "Zugehörige Profukte konnten nicht abgerufen werden: %1"
+
+#: CRM/Twingle/BAO/TwingleShop.php
+msgid "Could not delete associated products: %1"
+msgstr "Zugehörige Produkte konnten nicht gelöscht werden: %1"
+
 #: CRM/Twingle/Config.php
 msgid "No"
 msgstr "Nein"
@@ -27,6 +160,108 @@ msgstr "Ausnahme auslösen"
 #: CRM/Twingle/Config.php
 msgid "Create Activity"
 msgstr "Aktivität erstellen"
+
+#: CRM/Twingle/DAO/TwingleProduct.php
+msgid "Twingle Products"
+msgstr "Twingle-Produkte"
+
+#: CRM/Twingle/DAO/TwingleProduct.php
+msgid "Twingle Product"
+msgstr "Twingle-Produkt"
+
+#: CRM/Twingle/DAO/TwingleProduct.php CRM/Twingle/DAO/TwingleShop.php
+msgid "ID"
+msgstr "ID"
+
+#: CRM/Twingle/DAO/TwingleProduct.php
+msgid "Unique TwingleProduct ID"
+msgstr "Eindeutige TwingleProduct-ID"
+
+#: CRM/Twingle/DAO/TwingleProduct.php
+msgid "External ID"
+msgstr "Externe ID"
+
+#: CRM/Twingle/DAO/TwingleProduct.php
+msgid "The ID of this product in the Twingle database"
+msgstr "Die ID dieses Produkts in der Twingle-Datenbank"
+
+#: CRM/Twingle/DAO/TwingleProduct.php api/v3/TwingleProduct/Get.php
+msgid "Price Field ID"
+msgstr "Preisfeld-ID"
+
+#: CRM/Twingle/DAO/TwingleProduct.php
+msgid "FK to Price Field"
+msgstr "Fremdschlüssel zu Preisfeld"
+
+#: CRM/Twingle/DAO/TwingleProduct.php api/v3/TwingleProduct/Create.php
+msgid "Twingle Shop ID"
+msgstr "Twingle-Shop-ID"
+
+#: CRM/Twingle/DAO/TwingleProduct.php
+msgid "FK to Twingle Shop"
+msgstr "Fremdschlüssel zu Twingle-Shop"
+
+#: CRM/Twingle/DAO/TwingleProduct.php
+msgid "Created At"
+msgstr "Erstellt am"
+
+#: CRM/Twingle/DAO/TwingleProduct.php
+msgid "Timestamp of when the product was created in the database"
+msgstr "Zeitstempel der Erstellung des Produkts in der Datenbank"
+
+#: CRM/Twingle/DAO/TwingleProduct.php
+msgid "Updated At"
+msgstr "Aktualisiert am"
+
+#: CRM/Twingle/DAO/TwingleProduct.php
+msgid "Timestamp of when the product was last updated in the database"
+msgstr "Zeitstempel der letzten Aktualisierung des Produkts in der Datenbank"
+
+#: CRM/Twingle/DAO/TwingleShop.php
+msgid "Twingle Shops"
+msgstr "Twingle-Shops"
+
+#: CRM/Twingle/DAO/TwingleShop.php
+msgid "Twingle Shop"
+msgstr "Twingle-Shops"
+
+#: CRM/Twingle/DAO/TwingleShop.php
+msgid "Unique TwingleShop ID"
+msgstr "Eindeutige Twingle-Shop-ID"
+
+#: CRM/Twingle/DAO/TwingleShop.php api/v3/TwingleProduct/Get.php
+#: api/v3/TwingleShop/Create.php api/v3/TwingleShop/Delete.php
+#: api/v3/TwingleShop/Get.php
+msgid "Project Identifier"
+msgstr "Projekt-Identifikator"
+
+#: CRM/Twingle/DAO/TwingleShop.php
+msgid "Twingle Project Identifier"
+msgstr "Twingle-Projekt-Identifikator"
+
+#: CRM/Twingle/DAO/TwingleShop.php
+msgid "Numerical Project ID"
+msgstr "Numerische Projekt-ID"
+
+#: CRM/Twingle/DAO/TwingleShop.php
+msgid "Numerical Twingle Project Identifier"
+msgstr "Numerischer Twingle-Projekt-Identifikator"
+
+#: CRM/Twingle/DAO/TwingleShop.php api/v3/TwingleShop/Get.php
+msgid "Price Set ID"
+msgstr "Preisschema-ID"
+
+#: CRM/Twingle/DAO/TwingleShop.php
+msgid "FK to Price Set"
+msgstr "Fremdschlüssel zu Preisschema"
+
+#: CRM/Twingle/DAO/TwingleShop.php api/v3/TwingleShop/Get.php
+msgid "Name"
+msgstr "Name"
+
+#: CRM/Twingle/DAO/TwingleShop.php
+msgid "name of the shop"
+msgstr "Name des Shops"
 
 #: CRM/Twingle/Form/Profile.php
 msgid "Profile with ID \"%1\" not found"
@@ -40,7 +275,8 @@ msgstr "Twingle-API-Profil <em>%1</em> löschen"
 msgid "Reset"
 msgstr "Zurücksetzen"
 
-#: CRM/Twingle/Form/Profile.php templates/CRM/Twingle/Page/Profiles.tpl
+#: CRM/Twingle/Form/Profile.php js/twingle_shop.js
+#: templates/CRM/Twingle/Page/Profiles.tpl
 msgid "Delete"
 msgstr "Löschen"
 
@@ -254,6 +490,22 @@ msgstr "Kontakt-Notizen erstellen für"
 msgid "User Extra Field"
 msgstr "Benutzer-Extra-Feld"
 
+#: CRM/Twingle/Form/Profile.php templates/CRM/Twingle/Form/Profile.tpl
+msgid "Enable Shop Integration"
+msgstr "Shop-Integration aktivieren"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Default Financial Type"
+msgstr "Standard-Zuwendungsart"
+
+#: CRM/Twingle/Form/Profile.php
+msgid "Financial Type for top up donations"
+msgstr "Zuwendungsart für zusätzliche Spenden"
+
+#: CRM/Twingle/Form/Profile.php templates/CRM/Twingle/Form/Profile.tpl
+msgid "Map Products as Price Fields"
+msgstr "Produkte Preisfeldern zuordnen"
+
 #: CRM/Twingle/Form/Profile.php CRM/Twingle/Form/Settings.php
 msgid "Save"
 msgstr "Speichern"
@@ -261,6 +513,15 @@ msgstr "Speichern"
 #: CRM/Twingle/Form/Profile.php
 msgid "Warning"
 msgstr "Warnung"
+
+#: CRM/Twingle/Form/Profile.php
+msgid ""
+"The required configuration option \"%1\" has no value. Saving the profile "
+"might set this option to a possibly unwanted default value."
+msgstr ""
+"Die erforderliche Konfigurationsoption \"%1\" hat keinen Wert. Das Speichern "
+"des Profils könnte diese Option auf einen möglicherweise ungewollten "
+"Standardwert setzen."
 
 #: CRM/Twingle/Form/Profile.php
 msgid "No profile set."
@@ -315,8 +576,22 @@ msgid "Assigned To"
 msgstr "Zugewiesen an"
 
 #: CRM/Twingle/Form/Settings.php
+msgid "Use Twingle Shop Integration"
+msgstr "Twingle-Shop-Integration verwenden"
+
+#: CRM/Twingle/Form/Settings.php
+msgid "Twingle Access Key"
+msgstr "Twingle-Zugriffsschlüssel"
+
+#: CRM/Twingle/Form/Settings.php
 msgid "This is required for activity creation"
 msgstr "Diese Angaben sind erforderlich für das Erstellen von Aktivitäten"
+
+#: CRM/Twingle/Form/Settings.php
+msgid "An Access Key is required to enable Twingle Shop Integration"
+msgstr ""
+"Ein Zugriffsschlüssel ist für die Aktivierung der Twingle-Shop-Integration "
+"erforderlich"
 
 #: CRM/Twingle/Form/Settings.php
 msgid "-select-"
@@ -479,6 +754,10 @@ msgid "Invalid format for custom fields."
 msgstr "Ungültiges Format für benutzerdefinierte Felder."
 
 #: CRM/Twingle/Submission.php
+msgid "Invalid format for products."
+msgstr "Ungültiges Format für Produkte."
+
+#: CRM/Twingle/Submission.php
 msgid "campaign_id must be a numeric string. "
 msgstr "campaign_id muss eine numerische Zeichenkette sein. "
 
@@ -489,6 +768,14 @@ msgstr "Unbekanntes Land %1."
 #: CRM/Twingle/Submission.php
 msgid "Could not calculate SEPA cycle day from configuration."
 msgstr "SEPA-Einzugstag konnte nicht aus der Konfiguration berechnet werden."
+
+#: CRM/Twingle/Submission.php
+msgid "Could not create line item for product '%1'"
+msgstr "Belegzeile für Produkt konnte nicht erstellt werden: %1"
+
+#: CRM/Twingle/Submission.php
+msgid "Could not create line item for donation"
+msgstr "Belegzeile für Spende konnte nicht erstellt werden"
 
 #: CRM/Twingle/Tools.php
 msgid ""
@@ -507,6 +794,30 @@ msgstr ""
 "Wiederkehrende Zuwendung [%1] (Transaktions-ID '%2') wurde von einem "
 "Benutzer beendet. Es ist erforderlich, den zugehörigen Datensatz auch in "
 "Twingle zu beenden, da die Zuwendung ansonsten weiter eingezogen wird."
+
+#: Civi/Twingle/Shop/ApiCall.php
+msgid "Could not find Twingle API token"
+msgstr "Twingle-API-Token konnte nicht gefunden werden"
+
+#: Civi/Twingle/Shop/ApiCall.php
+msgid "Call to Twingle API failed. Please check your api token."
+msgstr "Aufruf der Twingle-API fehlgeschlagen. Überprüfen Sie Ihren API-Token."
+
+#: Civi/Twingle/Shop/ApiCall.php
+msgid "GET curl failed"
+msgstr "GET cURL fehlgeschlagen"
+
+#: Civi/Twingle/Shop/ApiCall.php
+msgid "http status code 404 (not found)"
+msgstr "HTTP-Statuscode 404 (not found)"
+
+#: Civi/Twingle/Shop/ApiCall.php
+msgid "https status code 500 (internal error)"
+msgstr "HTTP-Statuscode 500 (internal error)"
+
+#: Civi/Twingle/Shop/ApiCall.php
+msgid "Connection not yet established. Use connect() method."
+msgstr "Verbindung nch nicht hergestellt. connect()-Methode verwenden."
 
 #: api/v3/TwingleDonation/Cancel.php api/v3/TwingleDonation/Endrecurring.php
 #: api/v3/TwingleDonation/Submit.php
@@ -828,6 +1139,14 @@ msgstr ""
 "Zuwendung."
 
 #: api/v3/TwingleDonation/Submit.php
+msgid "Products"
+msgstr "Produkte"
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Products ordered via TwingleShop"
+msgstr "Über TwingleShop bestellte Produkte"
+
+#: api/v3/TwingleDonation/Submit.php
 msgid "Additional remarks for the donation."
 msgstr "Zusätzliche Anmerkungen für die Zuwendung."
 
@@ -872,6 +1191,285 @@ msgid ""
 msgstr ""
 "Die Nachbearbeitung (postprocessing) der Twingle-Mitgliedschaft ist "
 "fehlgeschlagen, siehe Protokoll für weitere Informationen."
+
+#: api/v3/TwingleProduct/Create.php api/v3/TwingleProduct/Delete.php
+#: api/v3/TwingleProduct/Get.php
+msgid "TwingleProduct ID"
+msgstr "TwingleProduct-ID"
+
+#: api/v3/TwingleProduct/Create.php
+msgid "The TwingleProduct ID in the database"
+msgstr "Die TwingleProduct-ID in der Datenbank"
+
+#: api/v3/TwingleProduct/Create.php
+msgid "Twingle ID"
+msgstr "Twingle-ID"
+
+#: api/v3/TwingleProduct/Create.php
+msgid "External product ID in Twingle database"
+msgstr "Externe Produkt-ID in der Twingle-Datenbank"
+
+#: api/v3/TwingleProduct/Create.php
+msgid "ID of the corresponding Twingle Shop"
+msgstr "ID des zugehlrigen Twingle-Shops"
+
+#: api/v3/TwingleProduct/Create.php
+msgid "Product Name"
+msgstr "Produktname"
+
+#: api/v3/TwingleProduct/Create.php
+msgid "Name of the product"
+msgstr "Name des Produkts"
+
+#: api/v3/TwingleProduct/Create.php
+msgid "Is active?"
+msgstr "Status"
+
+#: api/v3/TwingleProduct/Create.php
+msgid "Is the product active?"
+msgstr "Ob das Produkt aktiviert ist"
+
+#: api/v3/TwingleProduct/Create.php
+msgid "Product Description"
+msgstr "Produktbeschreibung"
+
+#: api/v3/TwingleProduct/Create.php
+msgid "Short description of the product"
+msgstr "Kurzbeschreibung des Produkts"
+
+#: api/v3/TwingleProduct/Create.php
+msgid "Product Price"
+msgstr "Produkt-Preis"
+
+#: api/v3/TwingleProduct/Create.php
+msgid "Price of the product"
+msgstr "Preis des Produkts"
+
+#: api/v3/TwingleProduct/Create.php
+msgid "Sort"
+msgstr "Sortierung"
+
+#: api/v3/TwingleProduct/Create.php
+msgid "Sort order of the product"
+msgstr "Sortierungsreihenfolge des Produkts"
+
+#: api/v3/TwingleProduct/Create.php api/v3/TwingleShop/Create.php
+msgid "Financial Type ID"
+msgstr "Zuwendungsart"
+
+#: api/v3/TwingleProduct/Create.php
+msgid "ID of the financial type of the product"
+msgstr "ID der Zuwendungsart des Produkts"
+
+#: api/v3/TwingleProduct/Create.php
+msgid "FK to TwingleShop"
+msgstr "Fremdschlüssel zu TwingleShop"
+
+#: api/v3/TwingleProduct/Create.php
+msgid "Twingle timestamp"
+msgstr "Twingle-Zeitstempel"
+
+#: api/v3/TwingleProduct/Create.php
+msgid "Timestamp of last update in Twingle db"
+msgstr "Zeitstempel der letzten Aktualisierung in der Twingle-Datenbank"
+
+#: api/v3/TwingleProduct/Create.php
+msgid "FK to PriceField"
+msgstr "Fremdschlüssel zu PriceField"
+
+#: api/v3/TwingleProduct/Delete.php api/v3/TwingleProduct/Get.php
+msgid "The TwingleProduct ID in CiviCRM"
+msgstr "Die TwingleProduct-ID in CiviCRM"
+
+#: api/v3/TwingleProduct/Delete.php api/v3/TwingleProduct/Get.php
+msgid "External TwingleProduct ID"
+msgstr "Externe TwingleProduct-ID"
+
+#: api/v3/TwingleProduct/Delete.php api/v3/TwingleProduct/Get.php
+msgid "Twingle's ID of the product"
+msgstr "Twingles ID des Produkts"
+
+#: api/v3/TwingleProduct/Delete.php
+msgid "TwingleProduct could not be deleted."
+msgstr "TwingleProduct konnte nicht gelöscht werden."
+
+#: api/v3/TwingleProduct/Get.php
+msgid "FK to civicrm_price_field"
+msgstr "Fremdschlüssel zu civicrm_price_field"
+
+#: api/v3/TwingleProduct/Get.php api/v3/TwingleShop/Delete.php
+#: api/v3/TwingleShop/Get.php
+msgid "TwingleShop ID"
+msgstr "TwingleShop-ID"
+
+#: api/v3/TwingleProduct/Get.php api/v3/TwingleShop/Delete.php
+#: api/v3/TwingleShop/Get.php
+msgid "The TwingleShop ID in CiviCRM"
+msgstr "Die TwingleShop-ID in CiviCRM"
+
+#: api/v3/TwingleProduct/Get.php api/v3/TwingleShop/Create.php
+#: api/v3/TwingleShop/Delete.php api/v3/TwingleShop/Get.php
+msgid "Twingle project identifier"
+msgstr "Twingle-Projekt-Identifikator"
+
+#: api/v3/TwingleProduct/Get.php api/v3/TwingleShop/Create.php
+#: api/v3/TwingleShop/Get.php
+msgid "Numerical Project Identifier"
+msgstr "Numerischer Projekt-Identifikator"
+
+#: api/v3/TwingleProduct/Get.php api/v3/TwingleShop/Get.php
+msgid "Twingle numerical project identifier"
+msgstr "Twingles numerischer Projekt-Identifikator"
+
+#: api/v3/TwingleShop/Create.php
+msgid "Numerical Twingle project identifier"
+msgstr "Numerischer Twingle-Projekt-Identifikator"
+
+#: api/v3/TwingleShop/Create.php
+msgid "Shop Name"
+msgstr "Shop-Name"
+
+#: api/v3/TwingleShop/Create.php
+msgid "Name of the shop"
+msgstr "Name des Shops"
+
+#: api/v3/TwingleShop/Create.php
+msgid "FK to civicrm_financial_type"
+msgstr "ZuwendungsartFremdschlüssel zu civicrm_financial_type"
+
+#: api/v3/TwingleShop/Delete.php
+msgid "TwingleShop could not be found."
+msgstr "TwingleShop konnte nicht gefunden werden."
+
+#: api/v3/TwingleShop/Delete.php
+msgid "TwingleShop could not be deleted."
+msgstr "TwingleShop konnte nicht gelöscht werden."
+
+#: api/v3/TwingleShop/Fetch.php
+msgid "Project Identifiers"
+msgstr "Projekt-Identifikatoren"
+
+#: api/v3/TwingleShop/Fetch.php
+msgid "Comma separated list of Twingle project identifiers."
+msgstr "Kommaseparierte Liste von Twingle-Projekt-Identifikatoren."
+
+#: api/v3/TwingleShop/Get.php
+msgid "Name of the TwingleShop"
+msgstr "Name des TwingleShop"
+
+#: api/v3/TwingleShop/Get.php
+msgid "FK to civicrm_price_set"
+msgstr "Fremdschlüssel zu civicrm_price_set"
+
+#: js/twingle_shop.js
+msgid "Could not fetch products"
+msgstr "Produkte konnten nicht abgerufen werden"
+
+#: js/twingle_shop.js
+msgid "Could not fetch products. Please check your Twingle API key."
+msgstr ""
+"Produkte konnten nicht abgerufen werden. Überprüfen Sie Ihren Twingle-API-"
+"Schlüssel."
+
+#: js/twingle_shop.js
+msgid "Create"
+msgstr "Erstellen"
+
+#: js/twingle_shop.js
+msgid "Update"
+msgstr "Bearbeiten"
+
+#: js/twingle_shop.js
+msgid "Could not create Price Field for this product"
+msgstr "Preisfeld für dieses Produkt konnte nicht erstellt werden"
+
+#: js/twingle_shop.js
+msgid "Delete Price Field"
+msgstr "Preisfeld löschen"
+
+#: js/twingle_shop.js
+msgid ""
+"Are you sure you want to delete the price field associated with this product?"
+msgstr "Möchten Sie wirklich das diesem Produkt zugehörige Preisfeld löschen?"
+
+#: js/twingle_shop.js
+msgid "Could not delete Price Field"
+msgstr "Preisfeld konnte nicht gelöscht werden"
+
+#: js/twingle_shop.js
+msgid "The Price Field was deleted successfully."
+msgstr "Das Preisfeld wurde erfolgreich gelöscht."
+
+#: js/twingle_shop.js
+msgid "Price Field deleted"
+msgstr "Preisfeld gelöscht"
+
+#: js/twingle_shop.js
+msgid "select financial type"
+msgstr "Zuwendungsart auswählen"
+
+#: js/twingle_shop.js
+msgid "Product"
+msgstr "Produkt"
+
+#: js/twingle_shop.js
+msgid "Financial Type"
+msgstr "Zuwendungsart"
+
+#: js/twingle_shop.js
+msgid "Price Field"
+msgstr "Preisfeld"
+
+#: js/twingle_shop.js
+msgid "Create Price Set"
+msgstr "Preisschema erstellen"
+
+#: js/twingle_shop.js
+msgid "Update Price Set"
+msgstr "Preisschema bearbeiten"
+
+#: js/twingle_shop.js
+msgid "Delete Price Set"
+msgstr "Preisschema löschen"
+
+#: js/twingle_shop.js
+msgid "Could not create Twingle Shop"
+msgstr "Twingle-Shop konnte nicht erstellt werden"
+
+#: js/twingle_shop.js
+msgid "The Price Set was created successfully."
+msgstr "Das Preisschema wurde erfolgreich erstellt."
+
+#: js/twingle_shop.js
+msgid "Price Field created"
+msgstr "Preisfeld erstellt"
+
+#: js/twingle_shop.js
+msgid "Could not create TwingleShop"
+msgstr "TwingleShop konnte nicht erstellt werden"
+
+#: js/twingle_shop.js
+msgid ""
+"Are you sure you want to delete the price set associated with this Twingle "
+"Shop?"
+msgstr ""
+"Möchten Sie wirklich das diesem Twingle-Shop zugehörige Preisschema löschen?"
+
+#: js/twingle_shop.js
+msgid "Could not delete Twingle Shop"
+msgstr "Twingle-Shop konnte nicht gelöscht werden"
+
+#: js/twingle_shop.js
+msgid "The Price Set was deleted successfully."
+msgstr "Das Preisschema wurde erfolgreiche gelöscht."
+
+#: js/twingle_shop.js
+msgid "Price Set deleted"
+msgstr "Preisschema gelöscht"
+
+#: js/twingle_shop.js
+msgid "Could not update Twingle Shop"
+msgstr "Twingle-Shop konnte nicht aktualisiert werden"
 
 #: managed/Navigation__twingle_configuration.mgd.php
 msgid "Twingle API Configuration"
@@ -1099,6 +1697,37 @@ msgstr ""
 "    <p><i>Tipp: Sie können diese Felder im TwingleMANAGER aktivieren oder "
 "deaktivieren.</i></p>"
 
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid ""
+"Enable the processing of orders via Twingle Shop for this profile. The "
+"ordered products will then appear as line items in the contribution."
+msgstr ""
+"Aktiviert die Verarbeitung von Bestellungen über den Twingle-Shop für dieses "
+"Profil. Die bestellten Produkte werden als Belegzeilen der Zuwendung "
+"erscheinen."
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid ""
+"If this option is enabled, all Twingle Shop products corresponding to the "
+"specified project IDs will be retrieved from Twingle and mapped as price "
+"sets and price fields. Each Twingle Shop is mapped as a price set with its "
+"products as price fields."
+msgstr ""
+"Wenn diese Option aktiviert ist, werden alle zur angegebenen Projekt-ID "
+"gehörenden Twingle-Shop-Produkte von Twingle abgerufen und als Preisschemata "
+"und Preisfelder zugeordnet. Jeder Twingle-Shop wird als ein Preisschema mit "
+"seinen Produkten als Preisfelder zugeordnet."
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid ""
+"This allows you to manually create contributions with the same line items "
+"for phone orders, for example, as would be the case for orders placed "
+"through the Twingle Shop."
+msgstr ""
+"Dies ermöglicht das manuelle Erstellen von Zuwendungen mit den gleichen "
+"Belegzeilen wie bei Bestellungen über den Twingle-Shop, z. B. für "
+"telefonische Bestellungen."
+
 #: templates/CRM/Twingle/Form/Profile.tpl
 msgid "General settings"
 msgstr "Allgemeine Einstellungen"
@@ -1138,6 +1767,11 @@ msgstr "Double-Opt-In für Newsletter"
 #: templates/CRM/Twingle/Form/Profile.tpl
 msgid "Membership Postprocessing"
 msgstr "Mitgliedschafts--Nachbearbeitung (Postprocessing)"
+
+#: templates/CRM/Twingle/Form/Profile.tpl
+#: templates/CRM/Twingle/Page/Profiles.tpl
+msgid "Shop Integration"
+msgstr "Shop-Integration"
 
 #: templates/CRM/Twingle/Form/Profile.tpl
 msgid "Are you sure you want to reset the default profile?"
@@ -1188,6 +1822,20 @@ msgstr ""
 "Transaktions-ID voranzustellen, um Kollisionen mit anderen Transaktions-IDs "
 "auszuschließen."
 
+#: templates/CRM/Twingle/Form/Settings.hlp
+msgid ""
+"If you enable Twingle Shop integration, you can configure Twingle API "
+"profiles to include products ordered through Twingle Shop as line items in "
+"the created contribution."
+msgstr ""
+"Mit aktivierter Twingle-Shop-Integration können Twingle-API-Profile so "
+"konfiguriert werden, dass über den Twingle-Shop bestellte Produkte als "
+"Belegzeilen in der erstellten Zuwendung enthalten sind."
+
+#: templates/CRM/Twingle/Form/Settings.hlp
+msgid "Enter your twingle API access key."
+msgstr "Geben Sie ihren Zugriffsschlüssel für die Twingle-API ein."
+
 #: templates/CRM/Twingle/Page/Configuration.tpl
 msgid "Profiles"
 msgstr "Profile"
@@ -1223,6 +1871,14 @@ msgstr "Zuletzt verwendet"
 #: templates/CRM/Twingle/Page/Profiles.tpl
 msgid "Operations"
 msgstr "Operationen"
+
+#: templates/CRM/Twingle/Page/Profiles.tpl
+msgid "enabled"
+msgstr "aktiviert"
+
+#: templates/CRM/Twingle/Page/Profiles.tpl
+msgid "disabled"
+msgstr "deaktiviert"
 
 #: templates/CRM/Twingle/Page/Profiles.tpl
 msgid "Edit profile %1"
