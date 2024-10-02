@@ -900,6 +900,11 @@ function civicrm_api3_twingle_donation_Submit($params) {
         $membership_data['source'] = $membership_source;
       }
 
+      // Add custom fields from mapping.
+      if (isset($custom_fields['Membership'])) {
+        $membership_data += $custom_fields['Membership'];
+      }
+
       $membership = civicrm_api3('Membership', 'create', $membership_data);
       $result_values['membership'] = $membership;
 
