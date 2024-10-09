@@ -1,7 +1,6 @@
 <?php
 
 use CRM_Twingle_ExtensionUtil as E;
-use Civi\Twingle\Shop\BAO\TwingleProduct;
 
 /**
  * TwingleProduct.Get API specification (optional)
@@ -87,7 +86,7 @@ function civicrm_api3_twingle_product_Get($params) {
     $altered_params = [];
 
     // Specify product fields to define table prefix
-    $productFields = array_keys(TwingleProduct::fields());
+    $productFields = array_keys(CRM_Twingle_BAO_TwingleProduct::fields());
 
     // Alter params (prefix with table name)
     foreach ($possible_params as $param) {
@@ -118,7 +117,7 @@ function civicrm_api3_twingle_product_Get($params) {
 
   // Execute query
   try {
-    $dao = TwingleProduct::executeQuery($query, $query_params);
+    $dao = CRM_Twingle_BAO_TwingleProduct::executeQuery($query, $query_params);
   }
   catch (Exception $e) {
     return civicrm_api3_create_error($e->getMessage(), [

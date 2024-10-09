@@ -1,7 +1,6 @@
 <?php
 
 use CRM_Twingle_ExtensionUtil as E;
-use Civi\Twingle\Shop\BAO\TwingleProduct;
 
 /**
  * TwingleProduct.Delete API specification (optional)
@@ -56,7 +55,7 @@ function civicrm_api3_twingle_product_Delete($params) {
   }
 
   // Get TwingleProduct object
-  $product = TwingleProduct::findById($product_data['id']);
+  $product = CRM_Twingle_BAO_TwingleProduct::findById($product_data['id']);
 
   // Delete TwingleProduct and associated PriceField and PriceFieldValue
   $result = $product->delete();

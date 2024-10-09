@@ -1,6 +1,6 @@
 <?php
+
 use CRM_Twingle_ExtensionUtil as E;
-use Civi\Twingle\Shop\BAO\TwingleShop;
 
 /**
  * TwingleShop.Get API specification (optional)
@@ -92,7 +92,7 @@ function civicrm_api3_twingle_shop_Get($params) {
 
   // Execute query
   try {
-    $dao = TwingleShop::executeQuery($query, $query_params);
+    $dao = CRM_Twingle_BAO_TwingleShop::executeQuery($query, $query_params);
   }
   catch (\Exception $e) {
     return civicrm_api3_create_error($e->getMessage(), [

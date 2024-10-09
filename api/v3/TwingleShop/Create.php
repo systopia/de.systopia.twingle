@@ -1,6 +1,5 @@
 <?php
 use CRM_Twingle_ExtensionUtil as E;
-use Civi\Twingle\Shop\BAO\TwingleShop;
 use Civi\Twingle\Shop\Exceptions\ShopException;
 
 /**
@@ -62,7 +61,7 @@ function civicrm_api3_twingle_shop_Create($params) {
 
   try {
     // Create TwingleShop and load params
-    $shop = new TwingleShop();
+    $shop = new CRM_Twingle_BAO_TwingleShop();
     $shop->load($params);
 
     // Save TwingleShop

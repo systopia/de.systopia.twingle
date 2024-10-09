@@ -18,7 +18,6 @@ declare(strict_types = 1);
 use CRM_Twingle_ExtensionUtil as E;
 use Civi\Twingle\Exceptions\BaseException;
 use Civi\Twingle\Shop\Exceptions\LineItemException;
-use Civi\Twingle\Shop\BAO\TwingleProduct;
 
 class CRM_Twingle_Submission {
 
@@ -503,7 +502,7 @@ class CRM_Twingle_Submission {
       // Try to find the TwingleProduct with its corresponding PriceField
       // for this product
       try {
-        $price_field = TwingleProduct::findByExternalId($product['id']);
+        $price_field = CRM_Twingle_BAO_TwingleProduct::findByExternalId($product['id']);
       }
       catch (Exception $e) {
         Civi::log()->error(E::LONG_NAME .
