@@ -294,7 +294,7 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
   /**
    * Get associated products.
    *
-   * @return array[Civi\Twingle\Shop\BAO\TwingleProduct]
+   * @return list<CRM_Twingle_BAO_TwingleProduct>
    * @throws \Civi\Core\Exception\DBQueryException
    * @throws \Civi\Twingle\Shop\Exceptions\ProductException
    */

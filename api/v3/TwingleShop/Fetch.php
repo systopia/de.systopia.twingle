@@ -1,7 +1,6 @@
 <?php
 
 use CRM_Twingle_ExtensionUtil as E;
-use Civi\Twingle\Shop\BAO\TwingleShop;
 use Civi\Twingle\Shop\Exceptions\ApiCallError;
 use Civi\Twingle\Shop\Exceptions\ProductException;
 use Civi\Twingle\Shop\Exceptions\ShopException;
@@ -55,7 +54,7 @@ function civicrm_api3_twingle_shop_Fetch($params) {
   // Get products for all projects of type 'shop'
   foreach ($projectIds as $projectId) {
     try {
-      $shop = TwingleShop::findByProjectIdentifier($projectId);
+      $shop = CRM_Twingle_BAO_TwingleShop::findByProjectIdentifier($projectId);
       $products = $shop->fetchProducts();
       $returnValues[$projectId] = [];
       $returnValues[$projectId] += $shop->getAttributes();
@@ -63,7 +62,7 @@ function civicrm_api3_twingle_shop_Fetch($params) {
         return $product->getAttributes();
       }, $products);
     }
-    catch (ShopException|ApiCallError|ProductException $e) {
+    catch (ShopException | ApiCallError | ProductException $e) {
       // If this project identifier doesn't belong to a project of type
       // 'shop', just skip it
       if ($e->getErrorCode() == ShopException::ERROR_CODE_NOT_A_SHOP) {

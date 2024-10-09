@@ -17,7 +17,7 @@ function twingle_civicrm_pre($op, $objectName, $id, &$params) {
 
   // Create/delete PriceField and PriceFieldValue for TwingleProduct
   elseif ($objectName == 'TwingleProduct') {
-    $twingle_product = new \Civi\Twingle\Shop\BAO\TwingleProduct();
+    $twingle_product = new CRM_Twingle_BAO_TwingleProduct();
     $twingle_product->load($params);
     if ($op == 'create' || $op == 'edit') {
       $twingle_product->createPriceField();
@@ -30,7 +30,7 @@ function twingle_civicrm_pre($op, $objectName, $id, &$params) {
 
   // Create PriceSet for TwingleShop
   elseif ($objectName == 'TwingleShop' && ($op == 'create' || $op == 'edit')) {
-    $twingle_shop = new \Civi\Twingle\Shop\BAO\TwingleShop();
+    $twingle_shop = new CRM_Twingle_BAO_TwingleShop();
     $twingle_shop->load($params);
     $twingle_shop->createPriceSet();
     $params = $twingle_shop->getAttributes();

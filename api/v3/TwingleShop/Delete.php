@@ -1,6 +1,6 @@
 <?php
+
 use CRM_Twingle_ExtensionUtil as E;
-use Civi\Twingle\Shop\BAO\TwingleShop;
 
 /**
  * TwingleShop.Delete API specification (optional)
@@ -56,10 +56,10 @@ function civicrm_api3_twingle_shop_Delete($params) {
   }
 
   // Get TwingleShop object
-  $shop = TwingleShop::findById($shop_data['id']);
+  $shop = CRM_Twingle_BAO_TwingleShop::findById($shop_data['id']);
 
   // Delete TwingleShop
-  /* @var \Civi\Twingle\Shop\BAO\TwingleShop $shop */
+  /** @var \CRM_Twingle_BAO_TwingleShop $shop */
   $result = $shop->deleteByConstraint();
   if ($result) {
     return civicrm_api3_create_success(1, $params, 'TwingleShop', 'Delete');

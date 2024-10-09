@@ -2,7 +2,6 @@
 
 use Civi\Twingle\Shop\Exceptions\ProductException;
 use CRM_Twingle_ExtensionUtil as E;
-use Civi\Twingle\Shop\BAO\TwingleProduct;
 
 /**
  * TwingleProduct.Create API specification (optional)
@@ -121,7 +120,7 @@ function civicrm_api3_twingle_product_Create($params): array {
 
   try {
     // Create TwingleProduct and load params
-    $product = new TwingleProduct();
+    $product = new CRM_Twingle_BAO_TwingleProduct();
     $product->load($params);
 
     // Save TwingleProduct
