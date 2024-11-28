@@ -31,48 +31,12 @@ function twingle_civicrm_install() {
 }
 
 /**
- * Implements hook_civicrm_postInstall().
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_postInstall
- */
-function twingle_civicrm_postInstall() {
-  _twingle_civix_civicrm_postInstall();
-}
-
-/**
- * Implements hook_civicrm_uninstall().
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_uninstall
- */
-function twingle_civicrm_uninstall() {
-  _twingle_civix_civicrm_uninstall();
-}
-
-/**
  * Implements hook_civicrm_enable().
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_enable
  */
 function twingle_civicrm_enable() {
   _twingle_civix_civicrm_enable();
-}
-
-/**
- * Implements hook_civicrm_disable().
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_disable
- */
-function twingle_civicrm_disable() {
-  _twingle_civix_civicrm_disable();
-}
-
-/**
- * Implements hook_civicrm_upgrade().
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_upgrade
- */
-function twingle_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
-  return _twingle_civix_civicrm_upgrade($op, $queue);
 }
 
 /**
@@ -137,12 +101,3 @@ function twingle_civicrm_navigationMenu(&$menu) {
   ));
   _twingle_civix_navigationMenu($menu);
 } // */
-
-/**
- * Implements hook_civicrm_entityTypes().
- *
- * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_entityTypes
- */
-function twingle_civicrm_entityTypes(&$entityTypes) {
-  _twingle_civix_civicrm_entityTypes($entityTypes);
-}
