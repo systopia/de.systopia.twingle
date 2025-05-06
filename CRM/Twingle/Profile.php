@@ -510,6 +510,10 @@ class CRM_Twingle_Profile {
           'label' => E::ts('Financial type (recurring)'),
           'required' => TRUE,
         ],
+        'use_booking_date' => [
+          'label' => E::ts('Use booking date if available'),
+          'required' => FALSE,
+        ],
         'sepa_creditor_id' => [
           'label' => E::ts('CiviSEPA creditor'),
           'required' => CRM_Twingle_Submission::civiSepaEnabled(),
@@ -633,6 +637,7 @@ class CRM_Twingle_Profile {
       'financial_type_id' => 1,
       // "Donation"
       'financial_type_id_recur' => 1,
+      'use_booking_date' => TRUE,
       // "EFT"
       'pi_banktransfer' => 5,
       'pi_debit_manual' => NULL,
