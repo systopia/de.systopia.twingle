@@ -326,7 +326,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
     // Extract custom field values using the profile's mapping of Twingle fields
     // to CiviCRM custom fields.
     $custom_fields = [];
-    if (is_array($params['custom_fields'])) {
+    if (is_array($params['custom_fields'] ?? NULL)) {
       $custom_field_mapping = $profile->getCustomFieldMapping();
 
       // Make all params available for custom field mapping
@@ -456,7 +456,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       }
 
       // Organisation lookup.
-      if (is_string($params['organization_name']) && '' !== $params['organization_name']) {
+      if (is_string($params['organization_name'] ?? NULL) && '' !== $params['organization_name']) {
         $organisation_data = [
           'organization_name' => $params['organization_name'],
         ];
