@@ -679,9 +679,12 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         }
         $this->profile->setName($values['name']);
         foreach ($this->profile->getData() as $element_name => $value) {
-          if ($element_name == 'newsletter_double_opt_in') {
+          // Store unset checkboxes.
+          if (in_array($element_name, $this->profile->check_box_fields, TRUE)) {
+            // TODO: Use bool.
             $values[$element_name] = (int) isset($values[$element_name]);
           }
+
           if (isset($values[$element_name])) {
             $this->profile->setAttribute($element_name, $values[$element_name]);
           }

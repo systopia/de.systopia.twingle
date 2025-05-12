@@ -49,6 +49,7 @@ class CRM_Twingle_Profile {
    */
   public $check_box_fields = [
     'newsletter_double_opt_in',
+    'use_booking_date',
     'enable_shop_integration',
     'shop_map_products',
   ];

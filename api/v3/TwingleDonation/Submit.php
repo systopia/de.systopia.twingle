@@ -816,7 +816,6 @@ function civicrm_api3_twingle_donation_Submit($params) {
       }
 
       /** @phpstan-var bool $useBookingDate */
-      // TODO: Add upgrade task for setting this option to FALSE for existing profiles.
       $useBookingDate = $profile->getAttribute('use_booking_date') ?? FALSE;
       $bookingDate = isset($params['booked_at'])
         ? date_create_from_format('YmdHis', $params['booked_at'])
