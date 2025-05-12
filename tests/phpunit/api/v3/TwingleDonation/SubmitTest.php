@@ -35,13 +35,13 @@ class api_v3_TwingleDonation_SubmitTest extends \PHPUnit\Framework\TestCase impl
 
   use \Civi\Test\Api3TestTrait;
 
-  private const string PROJECT_ID = 'tw583f49b20c7bf';
+  private const PROJECT_ID = 'tw583f49b20c7bf';
 
-  private const string BOOKING_DATE = '20250424080844';
+  private const BOOKING_DATE = '20250424080844';
 
-  private const string CONFIRMATION_DATE = '20250424100831';
+  private const CONFIRMATION_DATE = '20250424100831';
 
-  private const array SUBMISSION = [
+  private const SUBMISSION = [
     'project_id' => self::PROJECT_ID,
     'trx_id' => 'GL947LC',
     'parent_trx_id' => NULL,
