@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eu -o pipefail
 
+XCM_VERSION=1.13.0
+
 EXT_DIR=$(dirname "$(dirname "$(realpath "$0")")")
 EXT_NAME=$(basename "$EXT_DIR")
 
@@ -36,6 +38,8 @@ else
   # For headless tests these files need to exist.
   touch /var/www/html/sites/all/modules/civicrm/sql/test_data.mysql
   touch /var/www/html/sites/all/modules/civicrm/sql/test_data_second_domain.mysql
+
+  cv ext:download "de.systopia.xcm@https://github.com/systopia/de.systopia.xcm/releases/download/$XCM_VERSION/de.systopia.xcm-$XCM_VERSION.zip"
 
   cv ext:enable "$EXT_NAME"
 fi
