@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 use Civi\Test\CiviEnvBuilder;
 use Civi\Test\HeadlessInterface;
 use Civi\Test\HookInterface;
@@ -8,9 +10,13 @@ use Civi\Test\TransactionalInterface;
 /**
  * TwingleProduct.Getsingle API Test Case
  * This is a generic test class implemented with PHPUnit.
+ *
  * @group headless
  */
+// phpcs:disable Generic.Files.LineLength.TooLong
 class api_v3_TwingleProduct_GetsingleTest extends \PHPUnit\Framework\TestCase implements HeadlessInterface, HookInterface, TransactionalInterface {
+// phpcs: enable
+
   use \Civi\Test\Api3TestTrait;
 
   /**
