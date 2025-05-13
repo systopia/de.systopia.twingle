@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 use Civi\Test\CiviEnvBuilder;
 use Civi\Test\HeadlessInterface;
-use Civi\Test\HookInterface;
 use Civi\Test\TransactionalInterface;
 
 /**
@@ -14,7 +13,7 @@ use Civi\Test\TransactionalInterface;
  * @group headless
  */
 // phpcs:disable Generic.Files.LineLength.TooLong
-class api_v3_TwingleProduct_DeleteTest extends \PHPUnit\Framework\TestCase implements HeadlessInterface, HookInterface, TransactionalInterface {
+class api_v3_TwingleProduct_DeleteTest extends \PHPUnit\Framework\TestCase implements HeadlessInterface, TransactionalInterface {
 // phpcs: enable
 
   use \Civi\Test\Api3TestTrait;

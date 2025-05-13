@@ -17,7 +17,6 @@ declare(strict_types = 1);
 
 use Civi\Test\CiviEnvBuilder;
 use Civi\Test\HeadlessInterface;
-use Civi\Test\HookInterface;
 use Civi\Test\TransactionalInterface;
 use Civi\Api4\Contribution;
 use CRM_Twingle_ExtensionUtil as E;
@@ -30,7 +29,7 @@ use CRM_Twingle_ExtensionUtil as E;
  * @covers ::\civicrm_api3_twingle_donation_Submit()
  */
 // phpcs:disable Generic.Files.LineLength.TooLong
-class api_v3_TwingleDonation_SubmitTest extends \PHPUnit\Framework\TestCase implements HeadlessInterface, HookInterface, TransactionalInterface {
+class api_v3_TwingleDonation_SubmitTest extends \PHPUnit\Framework\TestCase implements HeadlessInterface, TransactionalInterface {
 // phpcs: enable
 
   use \Civi\Test\Api3TestTrait;
