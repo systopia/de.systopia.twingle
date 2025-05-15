@@ -180,6 +180,11 @@
           <td class="content">{$form.financial_type_id_recur.html}</td>
         </tr>
 
+        <tr class="crm-section">
+          <td class="label">{$form.use_booking_date.label}</td>
+          <td class="content">{$form.use_booking_date.html}</td>
+        </tr>
+
         {if isset($form.sepa_creditor_id)}
           <tr class="crm-section">
             <td class="label">{$form.sepa_creditor_id.label}</td>

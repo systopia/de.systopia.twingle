@@ -315,6 +315,12 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     );
 
     $this->add(
+      'checkbox',
+      'use_booking_date',
+      E::ts('Use booking date if available')
+    );
+
+    $this->add(
       'select',
       'gender_male',
       E::ts('Gender option for submitted value "male"'),
@@ -393,7 +399,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       'checkbox',
       'newsletter_double_opt_in',
       E::ts('Use Double-Opt-In for newsletter')
-      );
+    );
 
     $this->add(
       'select',
@@ -528,39 +534,37 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       ['class' => 'crm-select2 huge', 'multiple' => 'multiple']
     );
 
-    if (Civi::settings()->get('twingle_use_shop')) {
+    /** @phpstan-var bool $useShop */
+    $useShop = Civi::settings()->get('twingle_use_shop');
+    if ($useShop) {
       $this->add(
-        'checkbox', // field type
-        'enable_shop_integration', // field name
-        E::ts('Enable Shop Integration'), // field label
-        FALSE,
-        []
+        'checkbox',
+        'enable_shop_integration',
+        E::ts('Enable Shop Integration')
       );
 
       $this->add(
-        'select', // field type
-        'shop_financial_type', // field name
-        E::ts('Default Financial Type'), // field label
-        static::getFinancialTypes(), // list of options
+        'select',
+        'shop_financial_type',
+        E::ts('Default Financial Type'),
+        static::getFinancialTypes(),
         TRUE,
         ['class' => 'crm-select2 huge']
       );
 
       $this->add(
-        'select', // field type
-        'shop_donation_financial_type', // field name
-        E::ts('Financial Type for top up donations'), // field label
-        static::getFinancialTypes(), // list of options
+        'select',
+        'shop_donation_financial_type',
+        E::ts('Financial Type for top up donations'),
+        static::getFinancialTypes(),
         TRUE,
         ['class' => 'crm-select2 huge']
       );
 
       $this->add(
-        'checkbox', // field type
-        'shop_map_products', // field name
-        E::ts('Map Products as Price Fields'), // field label
-        FALSE, // is not required
-        []
+        'checkbox',
+        'shop_map_products',
+        E::ts('Map Products as Price Fields')
       );
     }
 
@@ -675,9 +679,12 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         }
         $this->profile->setName($values['name']);
         foreach ($this->profile->getData() as $element_name => $value) {
-          if ($element_name == 'newsletter_double_opt_in') {
+          // Store unset checkboxes.
+          if (in_array($element_name, $this->profile->check_box_fields, TRUE)) {
+            // TODO: Use bool.
             $values[$element_name] = (int) isset($values[$element_name]);
           }
+
           if (isset($values[$element_name])) {
             $this->profile->setAttribute($element_name, $values[$element_name]);
           }

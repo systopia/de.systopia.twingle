@@ -442,7 +442,9 @@ class CRM_Twingle_Submission {
     CRM_Twingle_Profile $profile
   ): void {
     // first: make sure it's not set from other workflows
-    unset($entity_data['campaign_id']);
+    if (isset($entity_data['campaign_id'])) {
+      unset($entity_data['campaign_id']);
+    }
 
     // then: check if campaign should be set it this context
     $enabled_contexts = $profile->getAttribute('campaign_targets');
@@ -452,7 +454,7 @@ class CRM_Twingle_Submission {
     }
     if (in_array($context, $enabled_contexts, TRUE)) {
       // use the submitted campaign if set
-      if (is_numeric($submission['campaign_id'])) {
+      if (is_numeric($submission['campaign_id'] ?? NULL)) {
         $entity_data['campaign_id'] = $submission['campaign_id'];
       }
       // otherwise use the profile's

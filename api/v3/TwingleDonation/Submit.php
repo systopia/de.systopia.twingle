@@ -52,6 +52,13 @@ function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
     'api.required' => 1,
     'description'  => E::ts('The date when the donation was issued, format: YmdHis.'),
   ];
+  $params['booked_at'] = [
+    'name'         => 'booked_at',
+    'title'        => E::ts('Booked at'),
+    'type'         => CRM_Utils_Type::T_STRING,
+    'api.required' => 0,
+    'description'  => E::ts('The date when the donation was booked, format: YmdHis.'),
+  ];
   $params['purpose'] = [
     'name'         => 'purpose',
     'title'        => E::ts('Purpose'),
@@ -319,7 +326,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
     // Extract custom field values using the profile's mapping of Twingle fields
     // to CiviCRM custom fields.
     $custom_fields = [];
-    if (is_array($params['custom_fields'])) {
+    if (is_array($params['custom_fields'] ?? NULL)) {
       $custom_field_mapping = $profile->getCustomFieldMapping();
 
       // Make all params available for custom field mapping
@@ -449,7 +456,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       }
 
       // Organisation lookup.
-      if (is_string($params['organization_name']) && '' !== $params['organization_name']) {
+      if (is_string($params['organization_name'] ?? NULL) && '' !== $params['organization_name']) {
         $organisation_data = [
           'organization_name' => $params['organization_name'],
         ];
@@ -796,8 +803,9 @@ function civicrm_api3_twingle_donation_Submit($params) {
         // set campaign, subject to configuration
         CRM_Twingle_Submission::setCampaign($contribution_data, 'recurring', $params, $profile);
 
+        /** @phpstan-var array<string, mixed> $contribution_recur */
         $contribution_recur = civicrm_api3('ContributionRecur', 'create', $contribution_recur_data);
-        if ($contribution_recur['is_error']) {
+        if ((bool) $contribution_recur['is_error']) {
           throw new CRM_Core_Exception(
             E::ts('Could not create recurring contribution.'),
             'api_error'
@@ -807,18 +815,24 @@ function civicrm_api3_twingle_donation_Submit($params) {
         $contribution_data['financial_type_id'] = $contribution_recur_data['financial_type_id'];
       }
 
-      // Create contribution.
+      /** @phpstan-var bool $useBookingDate */
+      $useBookingDate = $profile->getAttribute('use_booking_date') ?? FALSE;
+      $bookingDate = isset($params['booked_at'])
+        ? date_create_from_format('YmdHis', $params['booked_at'])
+        : FALSE;
+
       $contribution_data += [
         'contribution_status_id' => $profile->getAttribute(
           "pi_{$params['payment_method']}_status",
           CRM_Twingle_Submission::CONTRIBUTION_STATUS_COMPLETED
         ),
-        'receive_date' => $params['confirmed_at'],
+        'receive_date' => $useBookingDate && FALSE !== $bookingDate ? $params['booked_at'] : $params['confirmed_at'],
       ];
 
       // Assign to recurring contribution.
       if (!empty($params['parent_trx_id'])) {
         try {
+          /** @phpstan-var array<string, mixed> $parent_contribution */
           $parent_contribution = civicrm_api3('ContributionRecur', 'getsingle', [
             'trxn_id' => $profile->getTransactionID($params['parent_trx_id']),
           ]);
