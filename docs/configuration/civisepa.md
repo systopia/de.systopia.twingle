@@ -5,6 +5,12 @@ The Twingle API extension provides integration with the [
 extension. This allows for managing SEPA mandates and collections with
 *CiviSEPA* for donations being initiated via a *Twingle* form.
 
+To use the CiviSEPA integration, the Drupal / Wordpress user used by this extension must hold the following permissions, in addition to `Twingle API: Access Twingle API` which the user anyway needs:
+* `CiviContribute (Zuwendungen): Zugriff auf CiviContribute`
+* `CiviCRM: Zugriff auf CiviCRM-Backend und -API`
+
+Enable and configure the CiviSEPA integration as following:
+
 1. In CiviCRM, go to **Administer**.
 2. Choose **Twingle API configuration**.
    ![](../img/Konso.jpg)
