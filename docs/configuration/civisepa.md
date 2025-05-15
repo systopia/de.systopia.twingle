@@ -5,6 +5,18 @@ The Twingle API extension provides integration with the [
 extension. This allows for managing SEPA mandates and collections with
 *CiviSEPA* for donations being initiated via a *Twingle* form.
 
+To use the CiviSEPA integration, the CMS user used by this extension must hold the following permissions, in addition to *Twingle API: Access Twingle API* which the user anyway needs:
+* *CiviContribute: access CiviContribute*
+* *CiviCRM: access CiviCRM backend and API*
+
+If you want to combine the CiviSEPA integration with CiviRules, the CMS user may need additional permissions. For example, to be able to set some default values on custom fields for newly created contacts, the CMS user additionally must hold
+* *CiviCRM: view all contacts*
+* *CiviSEPA: View SEPA mandates*
+
+However, the CMS user don't need to hold the *CiviSEPA: Create SEPA mandates* permission.
+
+Enable and configure the CiviSEPA integration as following:
+
 1. In CiviCRM, go to **Administer**.
 2. Choose **Twingle API configuration**.
    ![](../img/Konso.jpg)
@@ -28,5 +40,5 @@ extension. This allows for managing SEPA mandates and collections with
    recurring payments are processed via Twingle, but only one-off donations,
    then this does not need to be activated. Otherwise, we strongly recommend
    setting the button here to **Yes** so that there are no discrepancies between
-   CiviCRM and Twingle. 
-   ![](../img/Sepa.jpg) 
+   CiviCRM and Twingle.
+   ![](../img/Sepa.jpg)
