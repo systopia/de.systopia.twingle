@@ -9,6 +9,12 @@ To use the CiviSEPA integration, the Drupal / Wordpress user used by this extens
 * `CiviContribute (Zuwendungen): Zugriff auf CiviContribute`
 * `CiviCRM: Zugriff auf CiviCRM-Backend und -API`
 
+If you want to combine the CiviSEPA integration with CiviRules, the Drupal / Wordpress user may need additional permissions. For example, to be able to set some default values on custom fields for newly created contacts, the Drupal / Wordpress user additionally must hold
+* `CiviCRM: Alle Kontakte betrachten`
+* `CiviSEPA: SEPA-Mandate ansehen`
+
+However, the Drupal / Wordpress user don't need to hold the `CiviSEPA: Lege SEPA-Mandate an` permission.
+
 Enable and configure the CiviSEPA integration as following:
 
 1. In CiviCRM, go to **Administer**.
