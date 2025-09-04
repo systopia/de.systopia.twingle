@@ -44,7 +44,7 @@ class CRM_Twingle_Submission {
   /**
    * List of allowed product attributes.
    */
-  const ALLOWED_PRODUCT_ATTRIBUTES = [
+  public const ALLOWED_PRODUCT_ATTRIBUTES = [
     'id',
     'name',
     'internal_id',
@@ -54,28 +54,61 @@ class CRM_Twingle_Submission {
   ];
 
   /**
-   * @param array &$params
-   *   A reference to the parameters array of the submission.
-   *
-   * @param \CRM_Twingle_Profile $profile
-   *   The Twingle profile to use for validation, defaults to the default
-   *   profile.
-   *
+   * @phpstan-var array<string, mixed>
+   */
+  protected array $params;
+
+  protected CRM_Twingle_Profile $profile;
+
+  /**
+   * @phpstan-var array<string, mixed>
+   */
+  protected array $customFieldValues;
+
+  /**
+   * @phpstan-var array<string, mixed>
+   */
+  protected array $resultValues;
+
+  /**
+   * @phpstan-param array{
+   *   project_id: string,
+   * } $params
+   */
+  public function __construct(array $params) {
+    $this->params = $params;
+    $this->profile = CRM_Twingle_Profile::getProfileForProject($params['project_id']);
+    $this->setCustomFieldValues();
+  }
+
+  public function getProfile(): CRM_Twingle_Profile {
+    return $this->profile;
+  }
+
+  public function getResultValues(): array {
+    return $this->resultValues;
+  }
+
+  public function getResultValue(string $key) {
+    return $this->resultValues[$key] ?? NULL;
+  }
+
+  public function setResultValue(string $key, $value): void {
+    $this->resultValues[$key] = $value;
+  }
+
+  /**
    * @throws \CRM_Core_Exception
    *   When invalid parameters have been submitted.
    */
-  public static function validateSubmission(&$params, $profile = NULL): void {
-    if (!isset($profile)) {
-      $profile = CRM_Twingle_Profile::createDefaultProfile();
-    }
-
+  public function validateSubmission(): void {
     // Do not process an already existing contribution with the given
     // transaction ID.
     $existing_contribution = civicrm_api3('Contribution', 'get', [
-      'trxn_id' => $profile->getTransactionID($params['trx_id']),
+      'trxn_id' => $this->profile->getTransactionID($this->params['trx_id']),
     ]);
     $existing_contribution_recur = civicrm_api3('ContributionRecur', 'get', [
-      'trxn_id' => $profile->getTransactionID($params['trx_id']),
+      'trxn_id' => $this->profile->getTransactionID($this->params['trx_id']),
     ]);
     if ($existing_contribution['count'] > 0 || $existing_contribution_recur['count'] > 0) {
       throw new CRM_Core_Exception(
@@ -85,7 +118,7 @@ class CRM_Twingle_Submission {
     }
 
     // Validate donation rhythm.
-    if (!in_array($params['donation_rhythm'], [
+    if (!in_array($this->params['donation_rhythm'], [
       'one_time',
       'halfyearly',
       'quarterly',
@@ -100,17 +133,17 @@ class CRM_Twingle_Submission {
 
     // Get the payment instrument defined within the profile, or return an error
     // if none matches (i.e. an unknown payment method was submitted).
-    $payment_instrument_id = $profile->getAttribute('pi_' . $params['payment_method'], '');
+    $payment_instrument_id = $this->profile->getAttribute('pi_' . $this->params['payment_method'], '');
     if ('' === $payment_instrument_id) {
       throw new CRM_Core_Exception(
         E::ts('Payment method could not be matched to existing payment instrument.'),
         'invalid_format'
       );
     }
-    $params['payment_instrument_id'] = $payment_instrument_id;
+    $this->params['payment_instrument_id'] = $payment_instrument_id;
 
     // Validate date for parameter "confirmed_at".
-    if (FALSE === DateTime::createFromFormat('YmdHis', $params['confirmed_at'])) {
+    if (FALSE === DateTime::createFromFormat('YmdHis', $this->params['confirmed_at'])) {
       throw new CRM_Core_Exception(
         E::ts('Invalid date for parameter "confirmed_at".'),
         'invalid_format'
@@ -118,7 +151,10 @@ class CRM_Twingle_Submission {
     }
 
     // Validate date for parameter "user_birthdate".
-    if (!empty($params['user_birthdate']) && FALSE === DateTime::createFromFormat('Ymd', $params['user_birthdate'])) {
+    if (
+      !empty($this->params['user_birthdate'])
+      && FALSE === DateTime::createFromFormat('Ymd', $this->params['user_birthdate'])
+    ) {
       throw new CRM_Core_Exception(
         E::ts('Invalid date for parameter "user_birthdate".'),
         'invalid_format'
@@ -127,23 +163,23 @@ class CRM_Twingle_Submission {
 
     // Get the gender ID defined within the profile, or return an error if none
     // matches (i.e. an unknown gender was submitted).
-    if (is_string($params['user_gender'])) {
-      $gender_id = $profile->getAttribute('gender_' . $params['user_gender']);
+    if (is_string($this->params['user_gender'])) {
+      $gender_id = $this->profile->getAttribute('gender_' . $this->params['user_gender']);
       if (!is_numeric($gender_id)) {
         throw new CRM_Core_Exception(
           E::ts('Gender could not be matched to existing gender.'),
           'invalid_format'
         );
       }
-      $params['gender_id'] = $gender_id;
+      $this->params['gender_id'] = $gender_id;
     }
 
     // Validate custom fields parameter, if given.
-    if (isset($params['custom_fields'])) {
-      if (is_string($params['custom_fields'])) {
-        $params['custom_fields'] = json_decode($params['custom_fields'], TRUE);
+    if (isset($this->params['custom_fields'])) {
+      if (is_string($this->params['custom_fields'])) {
+        $this->params['custom_fields'] = json_decode($this->params['custom_fields'], TRUE);
       }
-      if (!is_array($params['custom_fields'])) {
+      if (!is_array($this->params['custom_fields'])) {
         throw new CRM_Core_Exception(
           E::ts('Invalid format for custom fields.'),
           'invalid_format'
@@ -152,18 +188,18 @@ class CRM_Twingle_Submission {
     }
 
     // Validate products
-    if (!empty($params['products']) && $profile->isShopEnabled()) {
-      if (is_string($params['products'])) {
-        $products = json_decode($params['products'], TRUE);
-        $params['products'] = array_map(
+    if (!empty($this->params['products']) && $this->profile->isShopEnabled()) {
+      if (is_string($this->params['products'])) {
+        $products = json_decode($this->params['products'], TRUE);
+        $this->params['products'] = array_map(
           function($product) {
             return array_intersect_key($product, array_flip(self::ALLOWED_PRODUCT_ATTRIBUTES));
           },
           $products
         );
       }
-      if (!is_array($params['products'])) {
-        throw new CRM_Core_Exception(
+      if (!is_array($this->params['products'])) {
+        throw new CiviCRM_API3_Exception(
           E::ts('Invalid format for products.'),
           'invalid_format'
         );
@@ -171,10 +207,10 @@ class CRM_Twingle_Submission {
     }
 
     // Validate campaign_id, if given.
-    if (isset($params['campaign_id'])) {
+    if (isset($this->params['campaign_id'])) {
       // Check whether campaign_id is a numeric string and cast it to an integer.
-      if (is_numeric($params['campaign_id'])) {
-        $params['campaign_id'] = intval($params['campaign_id']);
+      if (is_numeric($this->params['campaign_id'])) {
+        $this->params['campaign_id'] = intval($this->params['campaign_id']);
       }
       else {
         throw new CRM_Core_Exception(
@@ -187,11 +223,11 @@ class CRM_Twingle_Submission {
         civicrm_api3(
           'Campaign',
           'getsingle',
-          ['id' => $params['campaign_id']]
+          ['id' => $this->params['campaign_id']]
         );
       }
       catch (CRM_Core_Exception $e) {
-        unset($params['campaign_id']);
+        unset($this->params['campaign_id']);
       }
     }
   }
@@ -489,17 +525,21 @@ class CRM_Twingle_Submission {
    *
    * @phpstan-return array<string, mixed>
    */
-  public static function getCustomFieldValues(array $params, CRM_Twingle_Profile $profile): array {
-    $custom_fields = [];
-    if (is_array($params['custom_fields'] ?? NULL)) {
-      $custom_field_mapping = $profile->getCustomFieldMapping();
+  public function getCustomFieldValues(): array {
+    return $this->customFieldValues;
+  }
+
+  protected function setCustomFieldValues(): void {
+    $this->customFieldValues = [];
+    if (is_array($this->params['custom_fields'] ?? NULL)) {
+      $custom_field_mapping = $this->profile->getCustomFieldMapping();
 
       // Make all params available for custom field mapping
       $allowed_params = [];
       _civicrm_api3_twingle_donation_Submit_spec($allowed_params);
-      $params['custom_fields'] += array_intersect_key($params, $custom_field_mapping, $allowed_params);
+      $this->params['custom_fields'] += array_intersect_key($this->params, $custom_field_mapping, $allowed_params);
 
-      foreach ($params['custom_fields'] as $twingle_field => $value) {
+      foreach ($this->params['custom_fields'] as $twingle_field => $value) {
         if (isset($custom_field_mapping[$twingle_field])) {
           // Get custom field definition to store values by entity the field
           // extends.
@@ -511,45 +551,44 @@ class CRM_Twingle_Submission {
             'api.CustomGroup.getsingle' => [],
           ]);
           $entity = $custom_field['api.CustomGroup.getsingle']['extends'];
-          $custom_fields[$entity][$custom_field_mapping[$twingle_field]] = $value;
+          $this->customFieldValues[$entity][$custom_field_mapping[$twingle_field]] = $value;
         }
       }
     }
-    return $custom_fields;
   }
 
-  public static function prepareAddressParams(&$params, CRM_Twingle_Profile $profile): array {
+  protected function prepareAddressParams(): array {
     foreach ([
       'user_street' => 'street_address',
       'user_postal_code' => 'postal_code',
       'user_city' => 'city',
       'user_country' => 'country',
     ] as $address_param => $address_component) {
-      if (isset($params[$address_param]) && '' !== $params[$address_param]) {
-        $params[$address_component] = $params[$address_param];
-        unset($params[$address_param]);
+      if (isset($this->params[$address_param]) && '' !== $this->params[$address_param]) {
+        $this->params[$address_component] = $this->params[$address_param];
+        unset($this->params[$address_param]);
       }
     }
 
     // Remove address data when any address component that is configured as
     // required is missing.
     // See https://github.com/systopia/de.systopia.twingle/issues/47
-    foreach ($profile->getAttribute('required_address_components', []) as $required_address_component) {
-      if (empty($params[$required_address_component])) {
+    foreach ($this->profile->getAttribute('required_address_components', []) as $required_address_component) {
+      if (empty($this->params[$required_address_component])) {
         foreach ([
           'street_address',
           'postal_code',
           'city',
           'country',
         ] as $address_param) {
-          unset($params[$address_param]);
+          unset($this->params[$address_param]);
         }
         break;
       }
     }
 
     // Add configured location type to parameters.
-    $params['location_type_id'] = (int) $profile->getAttribute('location_type_id');
+    $this->params['location_type_id'] = (int) $this->profile->getAttribute('location_type_id');
 
     // Exclude address for now when retrieving/creating the individual contact
     // as we are checking organisation address first and share it with the
@@ -562,15 +601,15 @@ class CRM_Twingle_Submission {
       'country',
       'location_type_id',
     ] as $address_component) {
-      if (!empty($params[$address_component])) {
-        $submitted_address[$address_component] = $params[$address_component];
-        unset($params[$address_component]);
+      if (!empty($this->params[$address_component])) {
+        $submitted_address[$address_component] = $this->params[$address_component];
+        unset($this->params[$address_component]);
       }
     }
     return $submitted_address;
   }
 
-  public static function prepareContactData(&$params, CRM_Twingle_Profile $profile, array $custom_fields): array {
+  protected function prepareContactData(): array {
     // Get the ID of the contact matching the given contact data, or create a
     // new contact if none exists for the given contact data.
     $contact_data = [];
@@ -585,36 +624,35 @@ class CRM_Twingle_Submission {
       'user_title' => 'formal_title',
       'debit_iban' => 'iban',
     ] as $contact_param => $contact_component) {
-      if (!empty($params[$contact_param])) {
-        $contact_data[$contact_component] = $params[$contact_param];
+      if (!empty($this->params[$contact_param])) {
+        $contact_data[$contact_component] = $this->params[$contact_param];
       }
     }
 
     // Get the prefix ID defined within the profile
     if (
-      isset($params['user_gender'])
-      && is_numeric($prefix_id = $profile->getAttribute('prefix_' . $params['user_gender']))
+      isset($this->params['user_gender'])
+      && is_numeric($prefix_id = $this->profile->getAttribute('prefix_' . $this->params['user_gender']))
     ) {
       $contact_data['prefix_id'] = $prefix_id;
     }
 
     // Add custom field values.
-    if (isset($custom_fields['Contact'])) {
-      $contact_data += $custom_fields['Contact'];
+    if (isset($this->customFieldValues['Contact'])) {
+      $contact_data += $this->customFieldValues['Contact'];
     }
-    if (isset($custom_fields['Individual'])) {
-      $contact_data += $custom_fields['Individual'];
+    if (isset($this->customFieldValues['Individual'])) {
+      $contact_data += $this->customFieldValues['Individual'];
     }
 
     return $contact_data;
   }
 
-  public static function handleContacts(
-    array $params,
-    CRM_Twingle_Profile $profile,
-    array $custom_fields,
-    array &$result_values
-  ): void {
+  public function handleContacts(): void {
+    $params = $this->params;
+    $profile = $this->profile;
+    $customFieldValues = $this->getCustomFieldValues();
+
     if ($params['is_anonymous']) {
       // Retrieve the ID of the contact to use for anonymous donations defined
       // within the profile
@@ -626,7 +664,7 @@ class CRM_Twingle_Submission {
       // Exclude address for now when retrieving/creating the individual contact
       // as we are checking organisation address first and share it with the
       // individual.
-      $submitted_address = self::prepareAddressParams($params, $profile);
+      $submitted_address = $this->prepareAddressParams($params, $profile);
 
       // Prepare parameter mapping for organisation.
       if (is_string($params['user_company']) && '' !== $params['user_company']) {
@@ -641,7 +679,7 @@ class CRM_Twingle_Submission {
 
       // Get the ID of the contact matching the given contact data, or create a
       // new contact if none exists for the given contact data.
-      $contact_data = self::prepareContactData($params, $profile, $custom_fields);
+      $contact_data = $this->prepareContactData();
 
       // Organisation lookup.
       if (is_string($params['organization_name'] ?? NULL) && '' !== $params['organization_name']) {
@@ -650,8 +688,8 @@ class CRM_Twingle_Submission {
         ];
 
         // Add custom field values.
-        if (isset($custom_fields['Organization'])) {
-          $organisation_data += $custom_fields['Organization'];
+        if (isset($customFieldValues['Organization'])) {
+          $organisation_data += $customFieldValues['Organization'];
         }
 
         if ([] !== $submitted_address) {
@@ -721,19 +759,23 @@ class CRM_Twingle_Submission {
       }
     }
 
-    $result_values['contact'] = $contact_id;
+    $this->setResultValue('contact', (int) $contact_id);
     if (isset($organisation_id)) {
-      $result_values['organization'] = $organisation_id;
+      $this->setResultValue('organization', (int) $organisation_id);
     }
   }
 
-  public static function handleGroups(array $params, CRM_Twingle_Profile $profile, array &$result_values): void {
+  public function handleGroups(): void {
+    $params = $this->params;
+    $profile = $this->profile;
+    $resultValues = &$this->resultValues;
+
     // If usage of double opt-in is selected, use MailingEventSubscribe.create
     // to add contact to newsletter groups defined in the profile
-    $result_values['newsletter_double_opt_in']
-      = (bool) $profile->getAttribute('newsletter_double_opt_in')
-      ? 'true'
-      : 'false';
+    $this->setResultValue(
+      'newsletter_double_opt_in',
+      (bool) $profile->getAttribute('newsletter_double_opt_in') ? 'true' : 'false'
+    );
     if (
       (bool) $profile->getAttribute('newsletter_double_opt_in')
       && (bool) ($params['newsletter'] ?? FALSE)
@@ -771,10 +813,10 @@ class CRM_Twingle_Submission {
           );
           $subscription = reset($result['values']);
           $subscription['group_id'] = $group_id;
-          $result_values['newsletter_subscriptions'][] = $subscription;
+          $resultValues['newsletter_subscriptions'][] = $subscription;
         }
         elseif ($is_public_group) {
-          $result_values['newsletter_group_ids'][] = $group_id;
+          $resultValues['newsletter_group_ids'][] = $group_id;
         }
       }
     }
@@ -792,7 +834,7 @@ class CRM_Twingle_Submission {
             'contact_id' => $contact_id,
           ]
         );
-        $result_values['newsletter_group_ids'][] = $group_id;
+        $resultValues['newsletter_group_ids'][] = $group_id;
       }
     }
 
@@ -807,7 +849,7 @@ class CRM_Twingle_Submission {
           'contact_id' => $contact_id,
         ]);
 
-        $result_values['postinfo'][] = $group_id;
+        $resultValues['postinfo'][] = $group_id;
       }
     }
 
@@ -823,18 +865,17 @@ class CRM_Twingle_Submission {
           'group_id' => $group_id,
           'contact_id' => $organisation_id ?? $contact_id,
         ]);
-        $result_values['donation_receipt_group_ids'][] = $group_id;
+        $resultValues['donation_receipt_group_ids'][] = $group_id;
       }
     }
   }
 
-  public static function handleTransaction(
-    int $contactId,
-    CRM_Twingle_Profile $profile,
-    array $params,
-    array $custom_fields,
-    array &$result_values
-  ): void {
+  public function handleTransaction(): void {
+    $contactId = $this->getResultValue('contact');
+    $profile = $this->profile;
+    $params = $this->params;
+    $customFieldValues = $this->getCustomFieldValues();
+
     // Create contribution or SEPA mandate. Those attributes are valid for both,
     // single and recurring contributions.
     $contribution_data = [
@@ -852,8 +893,8 @@ class CRM_Twingle_Submission {
     }
 
     // Add custom field values.
-    if (isset($custom_fields['Contribution'])) {
-      $contribution_data += $custom_fields['Contribution'];
+    if (isset($customFieldValues['Contribution'])) {
+      $contribution_data += $customFieldValues['Contribution'];
     }
 
     // set campaign, subject to configuration
@@ -870,7 +911,7 @@ class CRM_Twingle_Submission {
       // If CiviSEPA is installed and the financial type is a CiviSEPA-one,
       // create SEPA mandate (and recurring contribution, using "createfull" API
       // action).
-      self::createSepaMandate($contribution_data, $profile, $params, $custom_fields, $result_values);
+      self::createSepaMandate($contribution_data);
     }
     else {
       // Set financial type depending on donation rhythm. This applies for
@@ -889,12 +930,7 @@ class CRM_Twingle_Submission {
         $params['donation_rhythm'] != 'one_time'
         && empty($params['parent_trx_id'])
       ) {
-        self::createRecurringContribution(
-          $contribution_data,
-          $params,
-          $custom_fields,
-          $profile
-        );
+        $this->createRecurringContribution($contribution_data);
       }
 
       /** @phpstan-var bool $useBookingDate */
@@ -921,8 +957,9 @@ class CRM_Twingle_Submission {
           $contribution_data['contribution_recur_id'] = $parent_contribution['id'];
         }
         catch (CRM_Core_Exception $exception) {
-          $result_values['parent_contribution'] = E::ts(
-            'Could not find recurring contribution with given parent transaction ID.'
+          $this->setResultValue(
+            'parent_contribution',
+            E::ts('Could not find recurring contribution with given parent transaction ID.')
           );
         }
       }
@@ -937,7 +974,7 @@ class CRM_Twingle_Submission {
       }
       $contribution = reset($contribution['values']);
       /** @phpstan-var array{'id': int} $contribution */
-      $result_values['contribution'] = $contribution;
+      $this->setResultValue('contribution', $contribution);
 
       // Add notes to the contribution.
       /** @phpstan-var array<string> $contribution_note_mappings */
@@ -958,19 +995,19 @@ class CRM_Twingle_Submission {
 
       // Add products as line items to the contribution
       if (!empty($params['products']) && $profile->isShopEnabled()) {
-        $line_items = self::createLineItems($result_values, $params, $profile);
-        $result_values['contribution']['line_items'] = $line_items;
+        $line_items = self::createLineItems($this->getResultValues(), $params, $profile);
+        $resultContribution = $this->getResultValue('contribution');
+        $resultContribution['line_items'] = $line_items;
+        $this->setResultValue('contribution', $resultContribution);
       }
     }
   }
 
-  public static function createSepaMandate(
-    array $contribution_data,
-    CRM_Twingle_Profile $profile,
-    array $params,
-    array $custom_fields,
-    array &$result_values
-  ): void {
+  protected function createSepaMandate(array $contribution_data): void {
+    $profile = $this->getProfile();
+    $params = $this->params;
+    $custom_fields = $this->getCustomFieldValues();
+
     foreach ([
       'debit_iban',
       'debit_bic',
@@ -1044,37 +1081,40 @@ class CRM_Twingle_Submission {
     // Create the mandate.
     $mandate = civicrm_api3('SepaMandate', 'createfull', $mandate_data);
 
-    $result_values['sepa_mandate'] = reset($mandate['values']);
+    $this->setResultValue('sepa_mandate', reset($mandate['values']));
 
     // Add contribution data to result_values for later use
-    $contribution_id = $result_values['sepa_mandate']['entity_id'];
+    $contribution_id = $this->getResultValue('sepa_mandate')['entity_id'];
     if ($contribution_id) {
       $contribution = civicrm_api3(
         'Contribution',
         'getsingle',
         ['id' => $contribution_id]
       );
-      $result_values['contribution'] = $contribution;
+      $this->setResultValue('contribution', $contribution);
     }
     else {
-      $mandate_id = $result_values['sepa_mandate']['id'];
+      $mandate_id = $this->getResultValue('sepa_mandate')['id'];
       $message = E::LONG_NAME . ": could not find contribution for sepa mandate $mandate_id";
       throw new CiviCRM_API3_Exception($message, 'api_error');
     }
 
     // Add products as line items to the contribution
     if (!empty($params['products']) && $profile->isShopEnabled()) {
-      $line_items = self::createLineItems($result_values, $params, $profile);
-      $result_values['contribution']['line_items'] = $line_items;
+      $line_items = self::createLineItems($this->getResultValues(), $params, $profile);
+      $resultContribution = $this->getResultValue('contribution');
+      $resultContribution['line_items'] = $line_items;
+      $this->setResultValue('contribution', $resultContribution);
     }
   }
 
-  public static function createRecurringContribution(
+  protected function createRecurringContribution(
     array &$contribution_data,
-    array $params,
-    array $custom_fields,
-    CRM_Twingle_Profile $profile
   ): void {
+    $params = $this->params;
+    $custom_fields = $this->getCustomFieldValues();
+    $profile = $this->getProfile();
+
     // Create recurring contribution first.
     $contribution_recur_data =
       $contribution_data
@@ -1233,12 +1273,11 @@ class CRM_Twingle_Submission {
     return $line_items;
   }
 
-  public static function handleMembership(
-    array $params,
-    CRM_Twingle_Profile $profile,
-    int $contact_id,
-    array &$result_values
-  ): void {
+  public function handleMembership(): void {
+    $params = $this->params;
+    $profile = $this->profile;
+    $contactId = $this->getResultValue('contact');
+
     // CHECK whether a membership should be created (based on profile settings and data provided)
     if ($params['donation_rhythm'] == 'one_time') {
       // membership creation based on one-off contributions
@@ -1258,7 +1297,7 @@ class CRM_Twingle_Submission {
 
     // CREATE the membership
     $membership_data = [
-      'contact_id'         => $contact_id,
+      'contact_id'         => $contactId,
       'membership_type_id' => $membership_type_id,
     ];
     // set campaign, subject to configuration
@@ -1269,7 +1308,7 @@ class CRM_Twingle_Submission {
     }
 
     $membership = civicrm_api3('Membership', 'create', $membership_data);
-    $result_values['membership'] = $membership;
+    $this->setResultValue('membership', $membership);
 
     // call the postprocess API
     if ('' !== ($postprocess_call = $profile->getAttribute('membership_postprocess_call', ''))) {
@@ -1277,11 +1316,11 @@ class CRM_Twingle_Submission {
       [$pp_entity, $pp_action] = explode('.', $postprocess_call, 2);
       try {
         // gather the contribution IDs
-        if (isset($result_values['contribution_recur_id'])) {
-          $recurring_contribution_id = $result_values['contribution_recur_id'];
+        if (NULL !== $this->getResultValue('contribution_recur_id')) {
+          $recurring_contribution_id = $this->getResultValue('contribution_recur_id');
         }
-        elseif (isset($result_values['sepa_mandate'])) {
-          $mandate = reset($result_values['sepa_mandate']);
+        elseif (NULL !== $this->getResultValue('sepa_mandate')) {
+          $mandate = reset($this->getResultValue('sepa_mandate'));
           if ($mandate['entity_table'] == 'civicrm_contribution_recur') {
             $recurring_contribution_id = (int) $mandate['entity_id'];
           }
@@ -1290,14 +1329,14 @@ class CRM_Twingle_Submission {
         // run the call
         civicrm_api3(trim($pp_entity), trim($pp_action), [
           'membership_id' => $membership['id'],
-          'contact_id' => $contact_id,
-          'organization_id' => $result_values['organization'] ?? '',
-          'contribution_id' => $result_values['contribution']['id'] ?? '',
+          'contact_id' => $contactId,
+          'organization_id' => $this->getResultValue('organization') ?? '',
+          'contribution_id' => $this->getResultValue('contribution')['id'] ?? '',
           'recurring_contribution_id' => $recurring_contribution_id ?? '',
         ]);
 
         // refresh membership data
-        $result_values['membership'] = civicrm_api3('Membership', 'getsingle', ['id' => $membership['id']]);
+        $this->setResultValue('membership', civicrm_api3('Membership', 'getsingle', ['id' => $membership['id']]));
       }
       catch (CRM_Core_Exception $exception) {
         // TODO: more error handling?

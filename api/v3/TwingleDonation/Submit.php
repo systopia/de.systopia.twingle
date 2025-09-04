@@ -296,42 +296,15 @@ function civicrm_api3_twingle_donation_Submit($params) {
   }
 
   try {
-    // Prepare results array.
-    $resultValues = [];
+    $submission = new CRM_Twingle_Submission($params);
+    $submission->getProfile()->logAccess();
+    $submission->validateSubmission();
+    $submission->handleContacts();
+    $submission->handleGroups();
+    $submission->handleTransaction();
+    $submission->handleMembership();
 
-    // Get the profile defined for the given form ID, or the default profile
-    // if none matches.
-    $profile = CRM_Twingle_Profile::getProfileForProject($params['project_id']);
-    $profile->logAccess();
-
-    // Validate submitted parameters
-    CRM_Twingle_Submission::validateSubmission($params, $profile);
-
-    $customFieldValues = CRM_Twingle_Submission::getCustomFieldValues($params, $profile);
-
-    // Create contact(s).
-    CRM_Twingle_Submission::handleContacts(
-      $params,
-      $profile,
-      $customFieldValues,
-      $resultValues
-    );
-    $contactId = $resultValues['contact'];
-    $organizationId = $resultValues['organization'] ?? NULL;
-
-    CRM_Twingle_Submission::handleGroups($params, $profile, $resultValues);
-
-    CRM_Twingle_Submission::handleTransaction(
-      isset($organizationId) ? $organizationId : $contactId,
-      $profile,
-      $params,
-      $customFieldValues,
-      $resultValues
-    );
-
-    CRM_Twingle_Submission::handleMembership($params, $profile, $contactId, $resultValues);
-
-    $result = civicrm_api3_create_success($resultValues);
+    $result = civicrm_api3_create_success($submission->getResultValues());
   }
   catch (Exception $exception) {
     $result = civicrm_api3_create_error($exception->getMessage());
