@@ -14,7 +14,7 @@
 
 <div class="crm-block crm-form-block">
 
-  {if $op == 'create' or $op == 'edit' or $op == 'copy'}
+  {if $op === 'create' or $op === 'edit' or $op === 'copy'}
 
     <fieldset>
 
@@ -425,9 +425,9 @@
 
     </fieldset>
 
-  {elseif $op == 'delete'}
+  {elseif $op === 'delete'}
     {if $profile_name}
-      {if $profile_name == 'default'}
+      {if $profile_name === 'default'}
         <div class="status">{ts domain="de.systopia.twingle" 1=$profile_name}Are you sure you want to reset the default profile?{/ts}</div>
       {else}
         <div class="status">{ts domain="de.systopia.twingle" 1=$profile_name}Are you sure you want to delete the profile <em>%1</em>?{/ts}</div>

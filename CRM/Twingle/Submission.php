@@ -68,7 +68,7 @@ class CRM_Twingle_Submission {
   /**
    * @phpstan-var array<string, mixed>
    */
-  protected array $resultValues;
+  protected array $resultValues = [];
 
   /**
    * @phpstan-param array{
@@ -101,7 +101,9 @@ class CRM_Twingle_Submission {
    * @throws \CRM_Core_Exception
    *   When invalid parameters have been submitted.
    */
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
   public function validateSubmission(): void {
+  // phpcs:enable
     // Do not process an already existing contribution with the given
     // transaction ID.
     $existing_contribution = civicrm_api3('Contribution', 'get', [
@@ -199,7 +201,7 @@ class CRM_Twingle_Submission {
         );
       }
       if (!is_array($this->params['products'])) {
-        throw new CiviCRM_API3_Exception(
+        throw new CRM_Core_Exception(
           E::ts('Invalid format for products.'),
           'invalid_format'
         );
@@ -379,7 +381,7 @@ class CRM_Twingle_Submission {
       'is_active' => 1,
     ]);
 
-    if ($existing_relationship['count'] == 0) {
+    if ($existing_relationship['count'] === 0) {
       // There is currently no (active) relationship between these contacts.
       $new_relationship_data = [
         'relationship_type_id' => self::EMPLOYER_RELATIONSHIP_TYPE_ID,
@@ -591,7 +593,7 @@ class CRM_Twingle_Submission {
     $this->params['location_type_id'] = (int) $this->profile->getAttribute('location_type_id');
 
     // Exclude address for now when retrieving/creating the individual contact
-    // as we are checking organisation address first and share it with the
+    // as we are checking organization address first and share it with the
     // individual.
     $submitted_address = [];
     foreach ([
@@ -648,12 +650,15 @@ class CRM_Twingle_Submission {
     return $contact_data;
   }
 
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
   public function handleContacts(): void {
+  // phpcs:enable
     $params = $this->params;
     $profile = $this->profile;
     $customFieldValues = $this->getCustomFieldValues();
+    $contact_id = $this->getResultValue('contact');
 
-    if ($params['is_anonymous']) {
+    if ((bool) $params['is_anonymous']) {
       // Retrieve the ID of the contact to use for anonymous donations defined
       // within the profile
       $contact_id = civicrm_api3('Contact', 'getsingle', [
@@ -661,6 +666,11 @@ class CRM_Twingle_Submission {
       ])['id'];
     }
     else {
+      // Remove parameter "id".
+      if (isset($params['id'])) {
+        unset($params['id']);
+      }
+
       // Exclude address for now when retrieving/creating the individual contact
       // as we are checking organisation address first and share it with the
       // individual.
@@ -670,11 +680,6 @@ class CRM_Twingle_Submission {
       if (is_string($params['user_company']) && '' !== $params['user_company']) {
         $params['organization_name'] = $params['user_company'];
         unset($params['user_company']);
-      }
-
-      // Remove parameter "id".
-      if (isset($params['id'])) {
-        unset($params['id']);
       }
 
       // Get the ID of the contact matching the given contact data, or create a
@@ -734,7 +739,7 @@ class CRM_Twingle_Submission {
           && '' !== $params[$target]
           && in_array($target, $contact_note_mappings, TRUE)
         ) {
-          Note::create(FALSE)
+          \Civi\Api4\Note::create(FALSE)
             ->addValue('entity_table', 'civicrm_contact')
             ->addValue('entity_id', $contact_id)
             ->addValue('note', $params[$target])
@@ -761,14 +766,17 @@ class CRM_Twingle_Submission {
 
     $this->setResultValue('contact', (int) $contact_id);
     if (isset($organisation_id)) {
-      $this->setResultValue('organization', (int) $organisation_id);
+      $this->setResultValue('organization', $organisation_id);
     }
   }
 
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
   public function handleGroups(): void {
+  // phpcs:enable
     $params = $this->params;
     $profile = $this->profile;
     $resultValues = &$this->resultValues;
+    $contact_id = $this->getResultValue('contact');
 
     // If usage of double opt-in is selected, use MailingEventSubscribe.create
     // to add contact to newsletter groups defined in the profile
@@ -799,8 +807,8 @@ class CRM_Twingle_Submission {
             'getsingle',
             [
               'id' => (int) $group_id,
-            ]
-          )['visibility'] == 'Public Pages';
+            ],
+            )['visibility'] === 'Public Pages';
         if (!in_array($group_id, $group_memberships, FALSE) && $is_public_group) {
           $result = civicrm_api3(
             'MailingEventSubscribe',
@@ -870,7 +878,9 @@ class CRM_Twingle_Submission {
     }
   }
 
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
   public function handleTransaction(): void {
+  // phpcs:enable
     $contactId = $this->getResultValue('contact');
     $profile = $this->profile;
     $params = $this->params;
@@ -906,7 +916,7 @@ class CRM_Twingle_Submission {
 
     if (
       self::civiSepaEnabled()
-      && $contribution_data['payment_instrument_id'] == 'sepa'
+      && $contribution_data['payment_instrument_id'] === 'sepa'
     ) {
       // If CiviSEPA is installed and the financial type is a CiviSEPA-one,
       // create SEPA mandate (and recurring contribution, using "createfull" API
@@ -916,7 +926,7 @@ class CRM_Twingle_Submission {
     else {
       // Set financial type depending on donation rhythm. This applies for
       // initial recurring contributions and subsequent single contributions.
-      if ($params['donation_rhythm'] != 'one_time') {
+      if ($params['donation_rhythm'] !== 'one_time') {
         $contribution_data['financial_type_id'] = $profile->getAttribute('financial_type_id_recur');
       }
       else {
@@ -927,7 +937,7 @@ class CRM_Twingle_Submission {
       // Those will have a donation_rhythm different from "one_time" and no
       // parent_trx_id set.
       if (
-        $params['donation_rhythm'] != 'one_time'
+        $params['donation_rhythm'] !== 'one_time'
         && empty($params['parent_trx_id'])
       ) {
         $this->createRecurringContribution($contribution_data);
@@ -985,7 +995,7 @@ class CRM_Twingle_Submission {
           && isset($params[$target])
           && '' !== $params[$target]
         ) {
-          Note::create(FALSE)
+          \Civi\Api4\Note::create(FALSE)
             ->addValue('entity_table', 'civicrm_contribution')
             ->addValue('entity_id', $contribution['id'])
             ->addValue('note', $params[$target])
@@ -1003,7 +1013,9 @@ class CRM_Twingle_Submission {
     }
   }
 
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
   protected function createSepaMandate(array $contribution_data): void {
+  // phpcs:enable
     $profile = $this->getProfile();
     $params = $this->params;
     $custom_fields = $this->getCustomFieldValues();
@@ -1035,7 +1047,7 @@ class CRM_Twingle_Submission {
       // ... CiviSEPA mandate attributes, ...
       // phpcs:ignore Drupal.Formatting.SpaceUnaryOperator.PlusMinus
       + [
-        'type' => ($params['donation_rhythm'] == 'one_time' ? 'OOFF' : 'RCUR'),
+        'type' => ($params['donation_rhythm'] === 'one_time' ? 'OOFF' : 'RCUR'),
         'iban' => $params['debit_iban'],
         'bic' => $params['debit_bic'],
         'reference' => $params['debit_mandate_reference'],
@@ -1057,7 +1069,7 @@ class CRM_Twingle_Submission {
     }
 
     // Add cycle day for recurring contributions.
-    if ($params['donation_rhythm'] != 'one_time') {
+    if ($params['donation_rhythm'] !== 'one_time') {
       $mandate_data['cycle_day'] = self::getSEPACycleDay($params['confirmed_at'], $creditor_id);
       $mandate_data['financial_type_id'] = $profile->getAttribute('financial_type_id_recur');
     }
@@ -1096,7 +1108,7 @@ class CRM_Twingle_Submission {
     else {
       $mandate_id = $this->getResultValue('sepa_mandate')['id'];
       $message = E::LONG_NAME . ": could not find contribution for sepa mandate $mandate_id";
-      throw new CiviCRM_API3_Exception($message, 'api_error');
+      throw new CRM_Core_Exception($message, 'api_error');
     }
 
     // Add products as line items to the contribution
@@ -1120,6 +1132,7 @@ class CRM_Twingle_Submission {
       $contribution_data
       + [
         'contribution_status_id' => 'Pending',
+        // TODO: twingle might be sending a different date eventually or use "booking_date".
         'start_date' => $params['confirmed_at'],
       ]
       + self::getFrequencyMapping($params['donation_rhythm']);
@@ -1164,7 +1177,7 @@ class CRM_Twingle_Submission {
     $contribution_id = $values['contribution']['id'];
     if (empty($contribution_id)) {
       throw new LineItemException(
-        "Could not find contribution id for line item assignment.",
+        'Could not find contribution id for line item assignment.',
         LineItemException::ERROR_CODE_CONTRIBUTION_NOT_FOUND
       );
     }
@@ -1172,7 +1185,7 @@ class CRM_Twingle_Submission {
     foreach ($submission['products'] as $product) {
 
       $line_item_data = [
-        'entity_table' => "civicrm_contribution",
+        'entity_table' => 'civicrm_contribution',
         'contribution_id' => $contribution_id,
         'entity_id' => $contribution_id,
         'label' => $product['name'],
@@ -1189,7 +1202,7 @@ class CRM_Twingle_Submission {
       }
       catch (Exception $e) {
         Civi::log()->error(E::LONG_NAME .
-          ": An error occurred when searching for TwingleShop with the external ID " .
+          ': An error occurred when searching for TwingleShop with the external ID ' .
           $product['id'], ['exception' => $e]);
         $price_field = NULL;
       }
@@ -1197,17 +1210,27 @@ class CRM_Twingle_Submission {
       if ($price_field) {
 
         // Log warning if price is not variable and differs from the submission
-        if ($price_field->price !== Null && $price_field->price != (int) $product['price']) {
+        if ($price_field->price !== NULL && (int) $price_field->price !== (int) $product['price']) {
           Civi::log()->warning(E::LONG_NAME .
-            ": Price for product " . $product['name'] . " differs from the PriceField. " .
-            "Using the price from the submission.", ['price_field' => $price_field->price, 'submission' => $product['price']]);
+            ': Price for product ' . $product['name'] . ' differs from the PriceField. ' .
+            'Using the price from the submission.',
+            [
+              'price_field' => $price_field->price,
+              'submission' => $product['price'],
+            ]
+          );
         }
 
         // Log warning if name differs from the submission
-        if ($price_field->name != $product['name']) {
+        if ($price_field->name !== $product['name']) {
           Civi::log()->warning(E::LONG_NAME .
-            ": Name for product " . $product['name'] . " differs from the PriceField " .
-            "Using the name from the submission.", ['price_field' => $price_field->name, 'submission' => $product['name']]);
+            ': Name for product ' . $product['name'] . ' differs from the PriceField ' .
+            'Using the name from the submission.',
+            [
+              'price_field' => $price_field->name,
+              'submission' => $product['name'],
+            ]
+          );
         }
 
         // Set the financial type and price field id
@@ -1247,7 +1270,7 @@ class CRM_Twingle_Submission {
       ])['name'];
 
       $donation_line_item_data = [
-        'entity_table' => "civicrm_contribution",
+        'entity_table' => 'civicrm_contribution',
         'contribution_id' => $contribution_id,
         'entity_id' => $contribution_id,
         'label' => $donation_label,
@@ -1261,7 +1284,7 @@ class CRM_Twingle_Submission {
       $donation_line_item = civicrm_api3('LineItem', 'create', $donation_line_item_data);
 
       if (!empty($donation_line_item['is_error'])) {
-        throw new CiviCRM_API3_Exception(
+        throw new CRM_Core_Exception(
           E::ts('Could not create line item for donation'),
           'api_error'
         );
@@ -1273,13 +1296,15 @@ class CRM_Twingle_Submission {
     return $line_items;
   }
 
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
   public function handleMembership(): void {
+  // phpcs:enable
     $params = $this->params;
     $profile = $this->profile;
     $contactId = $this->getResultValue('contact');
 
     // CHECK whether a membership should be created (based on profile settings and data provided)
-    if ($params['donation_rhythm'] == 'one_time') {
+    if ($params['donation_rhythm'] === 'one_time') {
       // membership creation based on one-off contributions
       $membership_type_id = $profile->getAttribute('membership_type_id');
     }
@@ -1321,7 +1346,7 @@ class CRM_Twingle_Submission {
         }
         elseif (NULL !== $this->getResultValue('sepa_mandate')) {
           $mandate = reset($this->getResultValue('sepa_mandate'));
-          if ($mandate['entity_table'] == 'civicrm_contribution_recur') {
+          if ($mandate['entity_table'] === 'civicrm_contribution_recur') {
             $recurring_contribution_id = (int) $mandate['entity_id'];
           }
         }

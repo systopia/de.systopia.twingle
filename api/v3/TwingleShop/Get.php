@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 use CRM_Twingle_ExtensionUtil as E;
 
 /**
@@ -58,7 +60,7 @@ function _civicrm_api3_twingle_shop_Get_spec(&$spec) {
  *
  * @see civicrm_api3_create_success
  *
- * @throws CRM_Core_Exception
+ * @throws \CRM_Core_Exception
  */
 function civicrm_api3_twingle_shop_Get($params) {
   // Filter for allowed params
@@ -81,7 +83,7 @@ function civicrm_api3_twingle_shop_Get($params) {
         $query = $query . ' ' . $param['name'] . " = %$param_count AND";
         $query_params[$param_count] = [
           $params[$param['name']],
-          $param['type'] == CRM_Utils_Type::T_INT ? 'Integer' : 'String'
+          $param['type'] === CRM_Utils_Type::T_INT ? 'Integer' : 'String',
         ];
         $param_count++;
       }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Civi\Twingle\Shop\Exceptions;
 
 use Civi\Twingle\Exceptions\BaseException as BaseException;
@@ -9,6 +11,6 @@ use Civi\Twingle\Exceptions\BaseException as BaseException;
  */
 class LineItemException extends BaseException {
 
-  public const ERROR_CODE_CONTRIBUTION_NOT_FOUND = "contribution_not_found";
+  public const ERROR_CODE_CONTRIBUTION_NOT_FOUND = 'contribution_not_found';
 
 }

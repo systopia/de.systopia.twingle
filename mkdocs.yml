@@ -1,5 +1,8 @@
-site_name: Twingle API
+site_name: Twingle
+site_description: Provides an API for Twingle payments.
+site_author: SYSTOPIA
 repo_url: https://github.com/systopia/de.systopia.twingle
+
 theme:
   name: material
 
@@ -18,8 +21,7 @@ markdown_extensions:
   - attr_list
   - admonition
   - def_list
-  - pymdownx.highlight:
-      guess_lang: false
+  - codehilite
   - toc:
       permalink: true
   - pymdownx.superfences

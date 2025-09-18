@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 use Civi\Twingle\Shop\Exceptions\ProductException;
 use CRM_Twingle_ExtensionUtil as E;
 

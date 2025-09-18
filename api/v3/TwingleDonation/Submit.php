@@ -16,8 +16,6 @@
 declare(strict_types = 1);
 
 use CRM_Twingle_ExtensionUtil as E;
-use Civi\Twingle\Exceptions\BaseException;
-use Civi\Api4\Note;
 
 /**
  * TwingleDonation.Submit API specification
@@ -289,7 +287,9 @@ function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
  * @see civicrm_api3_create_success
  * @see civicrm_api3_create_error
  */
+// phpcs:disable Generic.Metrics.NestingLevel.TooHigh, Generic.Metrics.CyclomaticComplexity.MaxExceeded
 function civicrm_api3_twingle_donation_Submit($params) {
+// phpcs:enable
   // Log call if debugging is enabled within civicrm.settings.php.
   if (defined('TWINGLE_API_LOGGING') && TWINGLE_API_LOGGING) {
     Civi::log()->debug('TwingleDonation.Submit: ' . json_encode($params, JSON_PRETTY_PRINT));

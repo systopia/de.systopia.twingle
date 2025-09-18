@@ -1,8 +1,10 @@
-<?php /** @noinspection ALL */
+<?php
+
+declare(strict_types = 1);
 
 namespace Civi\Twingle\Shop;
 
-use CRM_TwingleCampaign_ExtensionUtil as E;
+use CRM_Twingle_ExtensionUtil as E;
 use Civi\Twingle\Shop\Exceptions\ApiCallError;
 
 /**
@@ -16,55 +18,50 @@ class ApiCall {
   /**
    * Twingle API url
    */
-  const BASE_URL = '.twingle.de/api';
+  public const BASE_URL = '.twingle.de/api';
 
   /**
    * The transfer protocol
    */
-  const PROTOCOL = 'https://';
+  public const PROTOCOL = 'https://';
 
   /**
    * The singleton object
-   * @var \Civi\Twingle\Shop\ApiCall $singleton
+   * @var \Civi\Twingle\Shop\ApiCall
    */
   public static ApiCall $singleton;
 
   /**
    * Your Twingle API token.
    * You can request an API token from Twingle support: <hilfe@twingle.de>
-   * @var string $apiToken
    */
-  private string $apiToken;
+  private ?string $apiToken = NULL;
 
   /**
    * The ID of your organization in the Twingle database.
    * Automatically retrieved by sending a request with the associated API token.
-   * @var int $organisationId
    */
-  public int $organisationId;
+  public ?int $organisationId = NULL;
 
   /**
    * This boolean indicates whether the connection was successful.
-   *
-   * @var bool $isConnected
    */
   public bool $isConnected;
 
   /**
    * Limit the number of items requested per API call.
-   * @var int $limit
+   * @var int
    */
   public int $limit = 40;
 
   /**
    * Header for cURL request.
-   * @var string[] $header
    */
-  private array $header;
+  private ?array $header = NULL;
 
   /**
    * The cURL wrapper
-   * @var \Civi\Twingle\Shop\CurlWrapper $curlWrapper
+   * @var \Civi\Twingle\Shop\CurlWrapper
    */
   private CurlWrapper $curlWrapper;
 
@@ -85,7 +82,7 @@ class ApiCall {
    *   Optional cURL wrapper for testing purposes
    * @return \Civi\Twingle\Shop\ApiCall
    */
-  public static function singleton(CurlWrapper $curlWrapper = null): ApiCall {
+  public static function singleton(?CurlWrapper $curlWrapper = NULL): ApiCall {
     if (empty(self::$singleton)) {
       $curlWrapper = $curlWrapper ?? new CurlWrapper();
       self::$singleton = new ApiCall($curlWrapper);
@@ -100,7 +97,7 @@ class ApiCall {
    * Try to connect to the Twingle API and retrieve the organisation ID.
    *
    * @return bool
-   *  returns TRUE if the connection was successfully established
+   *   returns TRUE if the connection was successfully established
    *
    * @throws \Civi\Twingle\Shop\Exceptions\ApiCallError
    */
@@ -110,15 +107,17 @@ class ApiCall {
 
     try {
       // Get api token from settings
-      $apiToken = \Civi::settings()->get("twingle_access_key");
+      $apiToken = \Civi::settings()->get('twingle_access_key');
       if (empty($apiToken)) {
         throw new \TypeError();
       }
       $this->apiToken = $apiToken;
-    } catch (\TypeError $e) {
+    }
+    catch (\TypeError $e) {
       throw new ApiCallError(
-        E::ts("Could not find Twingle API token"),
+        E::ts('Could not find Twingle API token'),
         ApiCallError::ERROR_CODE_API_TOKEN_MISSING,
+        $e
       );
     }
 
@@ -127,7 +126,7 @@ class ApiCall {
       'Content-Type: application/json',
     ];
 
-    $url = self::PROTOCOL . 'organisation' . self::BASE_URL . "/";
+    $url = self::PROTOCOL . 'organisation' . self::BASE_URL . '/';
     $curl = curl_init($url);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($curl, CURLOPT_HTTPHEADER, $this->header);
@@ -137,7 +136,7 @@ class ApiCall {
     if (empty($response)) {
       curl_close($curl);
       throw new ApiCallError(
-        E::ts("Call to Twingle API failed. Please check your api token."),
+        E::ts('Call to Twingle API failed. Please check your api token.'),
         ApiCallError::ERROR_CODE_CONNECTION_FAILED,
       );
     }
@@ -157,7 +156,7 @@ class ApiCall {
    *  the cURL resource
    *
    * @return bool
-   *  returns true if the response is fine
+   *   returns true if the response is fine
    *
    * @throws \Civi\Twingle\Shop\Exceptions\ApiCallError
    */
@@ -166,19 +165,19 @@ class ApiCall {
     $curl_status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
     curl_close($curl);
 
-    if ($response == FALSE) {
+    if ($response === FALSE) {
       throw new ApiCallError(
         E::ts('GET curl failed'),
         ApiCallError::ERROR_CODE_GET_REQUEST_FAILED,
       );
     }
-    if ($curl_status_code == 404) {
+    if ($curl_status_code === 404) {
       throw new ApiCallError(
         E::ts('http status code 404 (not found)'),
         ApiCallError::ERROR_CODE_404,
       );
     }
-    elseif ($curl_status_code == 500) {
+    elseif ($curl_status_code === 500) {
       throw new ApiCallError(
         E::ts('https status code 500 (internal error)'),
         ApiCallError::ERROR_CODE_500,
@@ -194,25 +193,25 @@ class ApiCall {
    * @param $entity
    *  Twingle entity
    *
-   * @param null $params
+   * @param array<string, mixed> $params
    *  Optional GET parameters
    *
    * @return array
-   *  Returns the result array of the or FALSE, if the cURL failed
+   *   Returns the result array of the API call or FALSE, if the cURL failed
    * @throws \Civi\Twingle\Shop\Exceptions\ApiCallError
    */
   public function get(
     string $entity,
-    string $entityId = NULL,
-    string $endpoint = NULL,
-    string $endpointId = NULL,
-    array $params = NULL
+    ?string $entityId = NULL,
+    ?string $endpoint = NULL,
+    ?string $endpointId = NULL,
+    ?array $params = NULL
   ): array {
 
     // Throw an error, if connection is not yet established
-    if ($this->isConnected == FALSE) {
+    if ($this->isConnected === FALSE) {
       throw new ApiCallError(
-        E::ts("Connection not yet established. Use connect() method."),
+        E::ts('Connection not yet established. Use connect() method.'),
         ApiCallError::ERROR_CODE_NOT_CONNECTED,
       );
     }
@@ -241,29 +240,5 @@ class ApiCall {
 
     return $response;
   }
-}
 
-/**
- * A simple wrapper for the cURL functions to allow for easier testing.
- */
-class CurlWrapper {
-  public function init($url) {
-    return curl_init($url);
-  }
-
-  public function setopt($ch, $option, $value) {
-    return curl_setopt($ch, $option, $value);
-  }
-
-  public function exec($ch) {
-    return curl_exec($ch);
-  }
-
-  public function getinfo($ch, $option) {
-    return curl_getinfo($ch, $option);
-  }
-
-  public function close($ch) {
-    curl_close($ch);
-  }
 }
