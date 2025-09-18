@@ -82,7 +82,7 @@ function civicrm_api3_twingle_donation_Cancel($params) {
     }
 
     // Retrieve (recurring) contribution.
-    $default_profile = CRM_Twingle_Profile::getProfile('default');
+    $default_profile = CRM_Twingle_Profile::getDefaultProfile();
     try {
       $contribution = civicrm_api3('Contribution', 'getsingle', [
         'trxn_id' => $default_profile->getTransactionID($params['trx_id']),

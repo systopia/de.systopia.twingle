@@ -74,7 +74,7 @@ function civicrm_api3_twingle_donation_endrecurring($params) {
       );
     }
 
-    $default_profile = CRM_Twingle_Profile::getProfile('default');
+    $default_profile = CRM_Twingle_Profile::getDefaultProfile();
     /** @phpstan-var array{id: int, payment_instrument_id: string} $contribution */
     $contribution = civicrm_api3('ContributionRecur', 'getsingle', [
       'trxn_id' => $default_profile->getTransactionID($params['trx_id']),

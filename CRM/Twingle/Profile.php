@@ -784,6 +784,18 @@ class CRM_Twingle_Profile {
     return $profiles;
   }
 
+  public static function getDefaultProfile(): CRM_Twingle_Profile {
+    foreach (self::getProfiles() as $profile) {
+      if ($profile->is_default()) {
+        return $profile;
+      }
+    }
+    throw new ProfileException(
+      'Could not find default profile',
+      ProfileException::ERROR_CODE_DEFAULT_PROFILE_NOT_FOUND
+    );
+  }
+
   /**
    * Get the stats (access_count, last_access) for all twingle profiles
    *
