@@ -16,7 +16,7 @@
 
   <div class="crm-submit-buttons">
     <a href="{crmURL p="civicrm/admin/settings/twingle/profile" q="op=create"}" title="{ts escape='htmlattribute' domain="de.systopia.twingle"}New profile{/ts}" class="button">
-      <span><i class="crm-i fa-plus-circle"></i> {ts domain="de.systopia.twingle"}New profile{/ts}</span>
+      <span><i class="crm-i fa-plus-circle" role="img" aria-hidden="true"></i> {ts domain="de.systopia.twingle"}New profile{/ts}</span>
     </a>
   </div>
 
