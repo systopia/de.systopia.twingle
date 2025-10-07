@@ -14,10 +14,10 @@
 <div class="crm-block crm-content-block">
   <div class="crm-submit-buttons">
 
-    <a href="{crmURL p="civicrm/admin/settings/twingle/profiles"}" title="{ts domain="de.systopia.twingle"}Profiles{/ts}" class="button">
+    <a href="{crmURL p="civicrm/admin/settings/twingle/profiles"}" title="{ts escape='htmlattribute' domain="de.systopia.twingle"}Profiles{/ts}" class="button">
       <span>{ts domain="de.systopia.twingle"}Configure profiles{/ts}</span>
     </a>
-    <a href="{crmURL p="civicrm/admin/settings/twingle/settings"}" title="{ts domain="de.systopia.twingle"}Settings{/ts}" class="button">
+    <a href="{crmURL p="civicrm/admin/settings/twingle/settings"}" title="{ts escape='htmlattribute' domain="de.systopia.twingle"}Settings{/ts}" class="button">
       <span>{ts domain="de.systopia.twingle"}Configure extension settings{/ts}</span>
     </a>
 
