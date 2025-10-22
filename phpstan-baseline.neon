@@ -1,0 +1,1446 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Call to an undefined method object\\:\\:fetch\\(\\)\\.$#"
+			count: 2
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:toArray\\(\\)\\.$#"
+			count: 2
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Cannot access offset 'amount' on array\\|int\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Cannot access offset 'count' on array\\|int\\.$#"
+			count: 3
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Cannot access offset 'description' on array\\|int\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Cannot access offset 'financial_type_id' on array\\|int\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Cannot access offset 'id' on array\\|int\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Cannot access offset 'id' on non\\-empty\\-array\\|int\\<min, \\-1\\>\\|int\\<1, max\\>\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Cannot access offset 'is_active' on array\\|int\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Cannot access offset 'is_enter_qty' on array\\|int\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Cannot access offset 'label' on array\\|int\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Cannot access offset 'price_set_id' on array\\|int\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Cannot access offset 'weight' on array\\|int\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 2
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Dead catch \\- Exception is never thrown in the try block\\.$#"
+			count: 5
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Method CRM_Twingle_BAO_TwingleProduct\\:\\:add\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Method CRM_Twingle_BAO_TwingleProduct\\:\\:checkOutdated\\(\\) has parameter \\$product_from_twingle with no type specified\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Method CRM_Twingle_BAO_TwingleProduct\\:\\:complementWithDataFromTwingle\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Method CRM_Twingle_BAO_TwingleProduct\\:\\:complementWithDataFromTwingle\\(\\) has parameter \\$product_from_twingle with no type specified\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Method CRM_Twingle_BAO_TwingleProduct\\:\\:createPriceField\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Method CRM_Twingle_BAO_TwingleProduct\\:\\:delete\\(\\) should return int\\|false but returns true\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Method CRM_Twingle_BAO_TwingleProduct\\:\\:getAttributes\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Method CRM_Twingle_BAO_TwingleProduct\\:\\:load\\(\\) has parameter \\$product_data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Method CRM_Twingle_BAO_TwingleProduct\\:\\:renameTwingleAttrs\\(\\) has parameter \\$values with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Method CRM_Twingle_BAO_TwingleProduct\\:\\:renameTwingleAttrs\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Offset 'financial_type_id' does not exist on array\\|null\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Offset 'id' does not exist on array\\|null\\.$#"
+			count: 2
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Only booleans are allowed in &&, array\\|int given on the right side\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Only booleans are allowed in a ternary operator condition, int\\|string given\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Only booleans are allowed in a ternary operator condition, int\\|string\\|null given\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Parameter \\#1 \\$id of static method CRM_Core_DAO\\:\\:findById\\(\\) expects int, int\\|string\\|null given\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Parameter \\#2 \\$timestamp of static method CRM_Utils_Time\\:\\:date\\(\\) expects int\\|null, string given\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Parameter \\#3 \\$id of static method CRM_Utils_Hook\\:\\:pre\\(\\) expects int\\|null, int\\|string\\|null given\\.$#"
+			count: 2
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Parameter \\#3 \\$objectId of static method CRM_Utils_Hook\\:\\:post\\(\\) expects int, int\\|string\\|null given\\.$#"
+			count: 2
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Property CRM_Twingle_BAO_TwingleProduct\\:\\:\\$description has no type specified\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Property CRM_Twingle_BAO_TwingleProduct\\:\\:\\$financial_type_id has no type specified\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Property CRM_Twingle_BAO_TwingleProduct\\:\\:\\$is_active has no type specified\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Property CRM_Twingle_BAO_TwingleProduct\\:\\:\\$name has no type specified\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Property CRM_Twingle_BAO_TwingleProduct\\:\\:\\$price has no type specified\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Property CRM_Twingle_BAO_TwingleProduct\\:\\:\\$project_id has no type specified\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Property CRM_Twingle_BAO_TwingleProduct\\:\\:\\$sort has no type specified\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Property CRM_Twingle_BAO_TwingleProduct\\:\\:\\$text has no type specified\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Property CRM_Twingle_BAO_TwingleProduct\\:\\:\\$tw_updated_at has no type specified\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Property CRM_Twingle_DAO_TwingleProduct\\:\\:\\$price_field_id \\(int\\|string\\) does not accept null\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleProduct.php
+
+		-
+			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:fetch\\(\\)\\.$#"
+			count: 2
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:toArray\\(\\)\\.$#"
+			count: 2
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Cannot access offset 'count' on array\\|int\\.$#"
+			count: 2
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Cannot access offset 'id' on mixed\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Cannot access offset 'identifier' on mixed\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Cannot access offset 'is_error' on array\\|int\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Cannot access offset 'name' on mixed\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Cannot access offset mixed on mixed\\.$#"
+			count: 2
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Dead catch \\- Exception is never thrown in the try block\\.$#"
+			count: 2
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Method CRM_Twingle_BAO_TwingleShop\\:\\:add\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Method CRM_Twingle_BAO_TwingleShop\\:\\:createPriceSet\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Method CRM_Twingle_BAO_TwingleShop\\:\\:deleteByConstraint\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Method CRM_Twingle_BAO_TwingleShop\\:\\:fetchDataFromTwingle\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Method CRM_Twingle_BAO_TwingleShop\\:\\:fetchDataFromTwingle\\(\\) invoked with 1 parameter, 0 required\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Method CRM_Twingle_BAO_TwingleShop\\:\\:fetchProducts\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Method CRM_Twingle_BAO_TwingleShop\\:\\:getAttributes\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Method CRM_Twingle_BAO_TwingleShop\\:\\:load\\(\\) has parameter \\$shop_data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Offset 'id' does not exist on array\\|null\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Only booleans are allowed in a negated boolean, int\\|string\\|null given\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Only booleans are allowed in a ternary operator condition, int\\|string\\|null given\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Only booleans are allowed in an if condition, int\\|string\\|null given\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Parameter \\#3 \\$id of static method CRM_Utils_Hook\\:\\:pre\\(\\) expects int\\|null, int\\|string\\|null given\\.$#"
+			count: 2
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Parameter \\#3 \\$objectId of static method CRM_Utils_Hook\\:\\:post\\(\\) expects int, int\\|string\\|null given\\.$#"
+			count: 2
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Parameter \\#4 \\$endpointId of method Civi\\\\Twingle\\\\Shop\\\\ApiCall\\:\\:get\\(\\) expects string\\|null, int\\|null given\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Property CRM_Twingle_BAO_TwingleShop\\:\\:\\$products \\(array\\) on left side of \\?\\? is not nullable\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Property CRM_Twingle_BAO_TwingleShop\\:\\:\\$products type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Property CRM_Twingle_DAO_TwingleShop\\:\\:\\$name \\(string\\) does not accept mixed\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Property CRM_Twingle_DAO_TwingleShop\\:\\:\\$numerical_project_id \\(int\\|string\\) does not accept mixed\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Property CRM_Twingle_DAO_TwingleShop\\:\\:\\$numerical_project_id \\(int\\|string\\) in isset\\(\\) is not nullable\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Property CRM_Twingle_DAO_TwingleShop\\:\\:\\$price_set_id \\(int\\|string\\|null\\) does not accept array\\|int\\.$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 188\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
+			count: 1
+			path: CRM/Twingle/BAO/TwingleShop.php
+
+		-
+			message: "#^Cannot access offset 'count' on array\\|int\\.$#"
+			count: 1
+			path: CRM/Twingle/Form/Profile.php
+
+		-
+			message: "#^Cannot access offset 'values' on array\\|int\\.$#"
+			count: 5
+			path: CRM/Twingle/Form/Profile.php
+
+		-
+			message: "#^Cannot call method is_default\\(\\) on CRM_Twingle_Profile\\|null\\.$#"
+			count: 1
+			path: CRM/Twingle/Form/Profile.php
+
+		-
+			message: "#^Cannot cast mixed to int\\.$#"
+			count: 1
+			path: CRM/Twingle/Form/Profile.php
+
+		-
+			message: "#^Method CRM_Twingle_Form_Profile\\:\\:getLocationTypes\\(\\) should return array\\<int, string\\> but returns array\\<int\\|string, string\\>\\.$#"
+			count: 1
+			path: CRM/Twingle/Form/Profile.php
+
+		-
+			message: "#^Method CRM_Twingle_Form_Profile\\:\\:getPrefixOptions\\(\\) should return array\\<int, string\\> but returns array\\<string, string\\>\\.$#"
+			count: 1
+			path: CRM/Twingle/Form/Profile.php
+
+		-
+			message: "#^Parameter \\#1 \\$id of static method CRM_Twingle_Profile\\:\\:getProfile\\(\\) expects int\\|null, mixed given\\.$#"
+			count: 1
+			path: CRM/Twingle/Form/Profile.php
+
+		-
+			message: "#^Property CRM_Twingle_Form_Profile\\:\\:\\$profile_id \\(int\\|null\\) does not accept mixed\\.$#"
+			count: 1
+			path: CRM/Twingle/Form/Profile.php
+
+		-
+			message: "#^Static property CRM_Twingle_Form_Profile\\:\\:\\$_locationTypes \\(array\\<string, string\\>\\) does not accept array\\<int\\|string, string\\>\\.$#"
+			count: 1
+			path: CRM/Twingle/Form/Profile.php
+
+		-
+			message: "#^Static property CRM_Twingle_Form_Profile\\:\\:\\$_paymentInstruments \\(array\\<string, string\\>\\) in isset\\(\\) is not nullable\\.$#"
+			count: 1
+			path: CRM/Twingle/Form/Profile.php
+
+		-
+			message: "#^Cannot access offset 'values' on array\\|int\\.$#"
+			count: 1
+			path: CRM/Twingle/Form/Settings.php
+
+		-
+			message: "#^Cannot cast mixed to int\\.$#"
+			count: 1
+			path: CRM/Twingle/Page/Profiles.php
+
+		-
+			message: "#^Parameter \\#1 \\$attribute_name of method CRM_Twingle_Profile\\:\\:getAttribute\\(\\) expects string, bool\\|string given\\.$#"
+			count: 1
+			path: CRM/Twingle/Page/Profiles.php
+
+		-
+			message: "#^Class Civi\\\\Twingle\\\\Exceptions\\\\ProfileValidationError constructor invoked with 4 parameters, 1\\-3 required\\.$#"
+			count: 2
+			path: CRM/Twingle/Profile.php
+
+		-
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 1
+			path: CRM/Twingle/Profile.php
+
+		-
+			message: "#^Method CRM_Twingle_Profile\\:\\:allowedAttributes\\(\\) should return array\\<bool\\|string\\> but returns array\\<int\\|string, array\\<string, bool\\|string\\>\\|string\\>\\.$#"
+			count: 1
+			path: CRM/Twingle/Profile.php
+
+		-
+			message: "#^Parameter \\#1 \\$id of method CRM_Twingle_Profile\\:\\:setId\\(\\) expects int, int\\|null given\\.$#"
+			count: 1
+			path: CRM/Twingle/Profile.php
+
+		-
+			message: "#^Parameter \\#1 \\$keys of function array_combine expects array\\<int\\|string\\>, array\\<bool\\|string\\> given\\.$#"
+			count: 1
+			path: CRM/Twingle/Profile.php
+
+		-
+			message: "#^Parameter \\#2 \\$data of class CRM_Twingle_Profile constructor expects array\\<string, mixed\\>, mixed given\\.$#"
+			count: 2
+			path: CRM/Twingle/Profile.php
+
+		-
+			message: "#^Parameter \\#2 \\$string of function explode expects string, mixed given\\.$#"
+			count: 1
+			path: CRM/Twingle/Profile.php
+
+		-
+			message: "#^Property CRM_Twingle_Profile\\:\\:\\$check_box_fields type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: CRM/Twingle/Profile.php
+
+		-
+			message: "#^Cannot access offset 'count' on array\\|int\\.$#"
+			count: 4
+			path: CRM/Twingle/Submission.php
+
+		-
+			message: "#^Cannot access offset 'name' on array\\|int\\.$#"
+			count: 1
+			path: CRM/Twingle/Submission.php
+
+		-
+			message: "#^Cannot access offset 'values' on array\\|int\\.$#"
+			count: 2
+			path: CRM/Twingle/Submission.php
+
+		-
+			message: "#^Cannot cast mixed to int\\.$#"
+			count: 2
+			path: CRM/Twingle/Submission.php
+
+		-
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 5
+			path: CRM/Twingle/Submission.php
+
+		-
+			message: "#^In method \"CRM_Twingle_Submission\\:\\:createLineItems\", caught \"Exception\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
+			count: 1
+			path: CRM/Twingle/Submission.php
+
+		-
+			message: "#^Method CRM_Twingle_Submission\\:\\:createLineItems\\(\\) has parameter \\$profile with no type specified\\.$#"
+			count: 1
+			path: CRM/Twingle/Submission.php
+
+		-
+			message: "#^Method CRM_Twingle_Submission\\:\\:createLineItems\\(\\) has parameter \\$submission with no type specified\\.$#"
+			count: 1
+			path: CRM/Twingle/Submission.php
+
+		-
+			message: "#^Method CRM_Twingle_Submission\\:\\:createLineItems\\(\\) has parameter \\$values with no type specified\\.$#"
+			count: 1
+			path: CRM/Twingle/Submission.php
+
+		-
+			message: "#^Method CRM_Twingle_Submission\\:\\:createLineItems\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: CRM/Twingle/Submission.php
+
+		-
+			message: "#^Method CRM_Twingle_Submission\\:\\:validateSubmission\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: CRM/Twingle/Submission.php
+
+		-
+			message: "#^Offset 'name' does not exist on array\\{entity_table\\: 'civicrm_contribution', contribution_id\\: mixed, entity_id\\: mixed, label\\: mixed, qty\\: mixed, unit_price\\: mixed, line_total\\: mixed, sequential\\: 1, \\.\\.\\.\\}\\.$#"
+			count: 1
+			path: CRM/Twingle/Submission.php
+
+		-
+			message: "#^Only booleans are allowed in an if condition, CRM_Twingle_BAO_TwingleProduct\\|null given\\.$#"
+			count: 1
+			path: CRM/Twingle/Submission.php
+
+		-
+			message: "#^PHPDoc tag @throws with type Civi\\\\Twingle\\\\Shop\\\\Exceptions\\\\LineItemException\\|CiviCRM_API3_Exception\\|CRM_Core_Exception is not subtype of Throwable$#"
+			count: 1
+			path: CRM/Twingle/Submission.php
+
+		-
+			message: "#^Parameter \\#1 \\$array of function array_intersect_key expects array, mixed given\\.$#"
+			count: 1
+			path: CRM/Twingle/Submission.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of function array_map expects array, mixed given\\.$#"
+			count: 1
+			path: CRM/Twingle/Submission.php
+
+		-
+			message: "#^Parameter \\#2 \\$haystack of function in_array expects array, string given\\.$#"
+			count: 1
+			path: CRM/Twingle/Submission.php
+
+		-
+			message: "#^Cannot access offset 'contribution_status…' on array\\|int\\.$#"
+			count: 1
+			path: CRM/Twingle/Tools.php
+
+		-
+			message: "#^Cannot access offset 'count' on array\\|int\\.$#"
+			count: 2
+			path: CRM/Twingle/Tools.php
+
+		-
+			message: "#^Cannot access offset 'payment_instrument…' on array\\|int\\.$#"
+			count: 1
+			path: CRM/Twingle/Tools.php
+
+		-
+			message: "#^Cannot access offset 'values' on array\\|int\\.$#"
+			count: 1
+			path: CRM/Twingle/Tools.php
+
+		-
+			message: "#^Cannot cast mixed to int\\.$#"
+			count: 2
+			path: CRM/Twingle/Tools.php
+
+		-
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 6
+			path: CRM/Twingle/Tools.php
+
+		-
+			message: "#^In method \"CRM_Twingle_Tools\\:\\:getMandateFor\", caught \"Exception\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
+			count: 1
+			path: CRM/Twingle/Tools.php
+
+		-
+			message: "#^In method \"CRM_Twingle_Tools\\:\\:processRecurringContributionTermination\", caught \"Exception\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
+			count: 1
+			path: CRM/Twingle/Tools.php
+
+		-
+			message: "#^Method CRM_Twingle_Tools\\:\\:isTwingleRecurringContribution\\(\\) has parameter \\$recurring_contribution with no type specified\\.$#"
+			count: 1
+			path: CRM/Twingle/Tools.php
+
+		-
+			message: "#^Method CRM_Twingle_Tools\\:\\:isTwingleRecurringContribution\\(\\) has parameter \\$recurring_contribution_id with no type specified\\.$#"
+			count: 1
+			path: CRM/Twingle/Tools.php
+
+		-
+			message: "#^Method CRM_Twingle_Tools\\:\\:processRecurringContributionTermination\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: CRM/Twingle/Tools.php
+
+		-
+			message: "#^Only booleans are allowed in a negated boolean, bool\\|null given\\.$#"
+			count: 1
+			path: CRM/Twingle/Tools.php
+
+		-
+			message: "#^Only booleans are allowed in an if condition, int given\\.$#"
+			count: 1
+			path: CRM/Twingle/Tools.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function strlen expects string, mixed given\\.$#"
+			count: 1
+			path: CRM/Twingle/Tools.php
+
+		-
+			message: "#^Parameter \\#2 \\$recurring_contribution of static method CRM_Twingle_Tools\\:\\:processRecurringContributionTermination\\(\\) expects array, array\\|int given\\.$#"
+			count: 1
+			path: CRM/Twingle/Tools.php
+
+		-
+			message: "#^Part \\$protection_mode \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
+			count: 1
+			path: CRM/Twingle/Tools.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$value\\.$#"
+			count: 1
+			path: CRM/Twingle/Upgrader.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:fetch\\(\\)\\.$#"
+			count: 1
+			path: CRM/Twingle/Upgrader.php
+
+		-
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 1
+			path: Civi/Twingle/Exceptions/BaseException.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Exceptions\\\\BaseException\\:\\:getErrorCode\\(\\) should return string but returns int\\|string\\.$#"
+			count: 1
+			path: Civi/Twingle/Exceptions/BaseException.php
+
+		-
+			message: "#^PHPDoc type int\\|string of property Civi\\\\Twingle\\\\Exceptions\\\\BaseException\\:\\:\\$code is not the same as PHPDoc type mixed of overridden property Exception\\:\\:\\$code\\.$#"
+			count: 1
+			path: Civi/Twingle/Exceptions/BaseException.php
+
+		-
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 7
+			path: Civi/Twingle/Shop/ApiCall.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\ApiCall\\:\\:check_response_and_close\\(\\) has parameter \\$curl with no type specified\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/ApiCall.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\ApiCall\\:\\:check_response_and_close\\(\\) has parameter \\$response with no type specified\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/ApiCall.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\ApiCall\\:\\:get\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/ApiCall.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\ApiCall\\:\\:get\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/ApiCall.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\ApiCall\\:\\:get\\(\\) should return array but returns mixed\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/ApiCall.php
+
+		-
+			message: "#^Parameter \\#1 \\$array of function array_column expects array, mixed given\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/ApiCall.php
+
+		-
+			message: "#^Parameter \\#1 \\$json of function json_decode expects string, bool\\|string given\\.$#"
+			count: 2
+			path: Civi/Twingle/Shop/ApiCall.php
+
+		-
+			message: "#^Part \\$this\\-\\>apiToken \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/ApiCall.php
+
+		-
+			message: "#^Property Civi\\\\Twingle\\\\Shop\\\\ApiCall\\:\\:\\$apiToken \\(string\\|null\\) does not accept mixed\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/ApiCall.php
+
+		-
+			message: "#^Property Civi\\\\Twingle\\\\Shop\\\\ApiCall\\:\\:\\$curlWrapper is never read, only written\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/ApiCall.php
+
+		-
+			message: "#^Property Civi\\\\Twingle\\\\Shop\\\\ApiCall\\:\\:\\$header type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/ApiCall.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\CurlWrapper\\:\\:close\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/CurlWrapper.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\CurlWrapper\\:\\:close\\(\\) has parameter \\$ch with no type specified\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/CurlWrapper.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\CurlWrapper\\:\\:exec\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/CurlWrapper.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\CurlWrapper\\:\\:exec\\(\\) has parameter \\$ch with no type specified\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/CurlWrapper.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\CurlWrapper\\:\\:getinfo\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/CurlWrapper.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\CurlWrapper\\:\\:getinfo\\(\\) has parameter \\$ch with no type specified\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/CurlWrapper.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\CurlWrapper\\:\\:getinfo\\(\\) has parameter \\$option with no type specified\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/CurlWrapper.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\CurlWrapper\\:\\:init\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/CurlWrapper.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\CurlWrapper\\:\\:init\\(\\) has parameter \\$url with no type specified\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/CurlWrapper.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\CurlWrapper\\:\\:setopt\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/CurlWrapper.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\CurlWrapper\\:\\:setopt\\(\\) has parameter \\$ch with no type specified\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/CurlWrapper.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\CurlWrapper\\:\\:setopt\\(\\) has parameter \\$option with no type specified\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/CurlWrapper.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\CurlWrapper\\:\\:setopt\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/CurlWrapper.php
+
+		-
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 2
+			path: Civi/Twingle/Shop/Utils/TwingleShopUtils.php
+
+		-
+			message: "#^Dead catch \\- Exception is never thrown in the try block\\.$#"
+			count: 3
+			path: Civi/Twingle/Shop/Utils/TwingleShopUtils.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\Utils\\\\TwingleShopUtils\\:\\:convert_empty_string_to_null\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/Utils/TwingleShopUtils.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\Utils\\\\TwingleShopUtils\\:\\:convert_empty_string_to_null\\(\\) has parameter \\$empty_string_to_null with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/Utils/TwingleShopUtils.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\Utils\\\\TwingleShopUtils\\:\\:convert_int_to_bool\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/Utils/TwingleShopUtils.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\Utils\\\\TwingleShopUtils\\:\\:convert_int_to_bool\\(\\) has parameter \\$int_to_bool_conversion with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/Utils/TwingleShopUtils.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\Utils\\\\TwingleShopUtils\\:\\:convert_str_to_date\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/Utils/TwingleShopUtils.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\Utils\\\\TwingleShopUtils\\:\\:convert_str_to_date\\(\\) has parameter \\$str_to_date_conversion with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/Utils/TwingleShopUtils.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\Utils\\\\TwingleShopUtils\\:\\:convert_str_to_int\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/Utils/TwingleShopUtils.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\Utils\\\\TwingleShopUtils\\:\\:convert_str_to_int\\(\\) has parameter \\$str_to_int_conversion with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/Utils/TwingleShopUtils.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\Utils\\\\TwingleShopUtils\\:\\:filter_attributes\\(\\) has parameter \\$allowed_attributes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/Utils/TwingleShopUtils.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\Utils\\\\TwingleShopUtils\\:\\:filter_attributes\\(\\) has parameter \\$can_be_zero with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/Utils/TwingleShopUtils.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\Utils\\\\TwingleShopUtils\\:\\:filter_attributes\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/Utils/TwingleShopUtils.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\Utils\\\\TwingleShopUtils\\:\\:validate_data_types\\(\\) has parameter \\$allowed_attributes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/Utils/TwingleShopUtils.php
+
+		-
+			message: "#^Method Civi\\\\Twingle\\\\Shop\\\\Utils\\\\TwingleShopUtils\\:\\:validate_data_types\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Civi/Twingle/Shop/Utils/TwingleShopUtils.php
+
+		-
+			message: "#^Cannot access offset 'id' on array\\|int\\.$#"
+			count: 4
+			path: api/v3/TwingleDonation/Cancel.php
+
+		-
+			message: "#^Cannot access offset 'payment_instrument…' on array\\|int\\.$#"
+			count: 1
+			path: api/v3/TwingleDonation/Cancel.php
+
+		-
+			message: "#^Cannot call method getTransactionID\\(\\) on CRM_Twingle_Profile\\|null\\.$#"
+			count: 2
+			path: api/v3/TwingleDonation/Cancel.php
+
+		-
+			message: "#^Cannot cast mixed to int\\.$#"
+			count: 1
+			path: api/v3/TwingleDonation/Cancel.php
+
+		-
+			message: "#^In function \"civicrm_api3_twingle_donation_Cancel\", caught \"Exception\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
+			count: 1
+			path: api/v3/TwingleDonation/Cancel.php
+
+		-
+			message: "#^Only booleans are allowed in a negated boolean, DateTime\\|false given\\.$#"
+			count: 1
+			path: api/v3/TwingleDonation/Cancel.php
+
+		-
+			message: "#^Only booleans are allowed in a negated boolean, array\\<string, mixed\\>\\|null given\\.$#"
+			count: 1
+			path: api/v3/TwingleDonation/Cancel.php
+
+		-
+			message: "#^Parameter \\#1 \\$id of static method CRM_Twingle_Profile\\:\\:getProfile\\(\\) expects int\\|null, string given\\.$#"
+			count: 1
+			path: api/v3/TwingleDonation/Cancel.php
+
+		-
+			message: "#^Parameter \\#2 \\$datetime of function date_create_from_format expects string, mixed given\\.$#"
+			count: 1
+			path: api/v3/TwingleDonation/Cancel.php
+
+		-
+			message: "#^Parameter \\#2 \\$datetime of static method DateTime\\:\\:createFromFormat\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: api/v3/TwingleDonation/Cancel.php
+
+		-
+			message: "#^Cannot access offset 'id' on array\\|int\\.$#"
+			count: 4
+			path: api/v3/TwingleDonation/Endrecurring.php
+
+		-
+			message: "#^Cannot access offset 'payment_instrument…' on array\\|int\\.$#"
+			count: 1
+			path: api/v3/TwingleDonation/Endrecurring.php
+
+		-
+			message: "#^Cannot call method getTransactionID\\(\\) on CRM_Twingle_Profile\\|null\\.$#"
+			count: 1
+			path: api/v3/TwingleDonation/Endrecurring.php
+
+		-
+			message: "#^In function \"civicrm_api3_twingle_donation_endrecurring\", caught \"Exception\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
+			count: 1
+			path: api/v3/TwingleDonation/Endrecurring.php
+
+		-
+			message: "#^Parameter \\#1 \\$id of static method CRM_Twingle_Profile\\:\\:getProfile\\(\\) expects int\\|null, string given\\.$#"
+			count: 1
+			path: api/v3/TwingleDonation/Endrecurring.php
+
+		-
+			message: "#^Parameter \\#2 \\$datetime of function date_create_from_format expects string, mixed given\\.$#"
+			count: 1
+			path: api/v3/TwingleDonation/Endrecurring.php
+
+		-
+			message: "#^Parameter \\#2 \\$datetime of static method DateTime\\:\\:createFromFormat\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: api/v3/TwingleDonation/Endrecurring.php
+
+		-
+			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: api/v3/TwingleDonation/Submit.php
+
+		-
+			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be true\\.$#"
+			count: 1
+			path: api/v3/TwingleDonation/Submit.php
+
+		-
+			message: "#^Cannot access offset 'api\\.CustomGroup…' on array\\|int\\.$#"
+			count: 1
+			path: api/v3/TwingleDonation/Submit.php
+
+		-
+			message: "#^Cannot access offset 'count' on array\\|int\\.$#"
+			count: 2
+			path: api/v3/TwingleDonation/Submit.php
+
+		-
+			message: "#^Cannot access offset 'id' on array\\|int\\.$#"
+			count: 3
+			path: api/v3/TwingleDonation/Submit.php
+
+		-
+			message: "#^Cannot access offset 'line_items' on array\\|int\\.$#"
+			count: 1
+			path: api/v3/TwingleDonation/Submit.php
+
+		-
+			message: "#^Cannot access offset 'values' on array\\|int\\.$#"
+			count: 3
+			path: api/v3/TwingleDonation/Submit.php
+
+		-
+			message: "#^Cannot access offset 'visibility' on array\\|int\\.$#"
+			count: 1
+			path: api/v3/TwingleDonation/Submit.php
+
+		-
+			message: "#^Cannot cast mixed to int\\.$#"
+			count: 3
+			path: api/v3/TwingleDonation/Submit.php
+
+		-
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 10
+			path: api/v3/TwingleDonation/Submit.php
+
+		-
+			message: "#^In function \"civicrm_api3_twingle_donation_Submit\", caught \"Exception\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
+			count: 1
+			path: api/v3/TwingleDonation/Submit.php
+
+		-
+			message: "#^Parameter \\#1 \\$project_id of static method CRM_Twingle_Profile\\:\\:getProfileForProject\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: api/v3/TwingleDonation/Submit.php
+
+		-
+			message: "#^Parameter \\#2 \\$creditor_id of static method CRM_Twingle_Submission\\:\\:getSEPACycleDay\\(\\) expects int, mixed given\\.$#"
+			count: 1
+			path: api/v3/TwingleDonation/Submit.php
+
+		-
+			message: "#^Parameter \\#2 \\$error_code of class Civi\\\\Twingle\\\\Exceptions\\\\BaseException constructor expects string, null given\\.$#"
+			count: 1
+			path: api/v3/TwingleDonation/Submit.php
+
+		-
+			message: "#^Function _civicrm_api3_twingle_product_Create_spec\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Create.php
+
+		-
+			message: "#^Function _civicrm_api3_twingle_product_Create_spec\\(\\) has parameter \\$spec with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Create.php
+
+		-
+			message: "#^Function civicrm_api3_twingle_product_Create\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Create.php
+
+		-
+			message: "#^Function civicrm_api3_twingle_product_Create\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Create.php
+
+		-
+			message: "#^PHPDoc tag @throws with type API_Exception\\|Exception is not subtype of Throwable$#"
+			count: 1
+			path: api/v3/TwingleProduct/Create.php
+
+		-
+			message: "#^Cannot access offset 'is_error' on array\\|int\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Delete.php
+
+		-
+			message: "#^Function _civicrm_api3_twingle_product_Delete_spec\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Delete.php
+
+		-
+			message: "#^Function _civicrm_api3_twingle_product_Delete_spec\\(\\) has parameter \\$spec with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Delete.php
+
+		-
+			message: "#^Function civicrm_api3_twingle_product_Delete\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Delete.php
+
+		-
+			message: "#^Function civicrm_api3_twingle_product_Delete\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Delete.php
+
+		-
+			message: "#^Only booleans are allowed in an if condition, int\\|false given\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Delete.php
+
+		-
+			message: "#^PHPDoc tag @throws with type API_Exception\\|Exception is not subtype of Throwable$#"
+			count: 1
+			path: api/v3/TwingleProduct/Delete.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:fetch\\(\\)\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Get.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:toArray\\(\\)\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Get.php
+
+		-
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 2
+			path: api/v3/TwingleProduct/Get.php
+
+		-
+			message: "#^Function _civicrm_api3_twingle_product_Get_spec\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Get.php
+
+		-
+			message: "#^Function _civicrm_api3_twingle_product_Get_spec\\(\\) has parameter \\$spec with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Get.php
+
+		-
+			message: "#^Function civicrm_api3_twingle_product_Get\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Get.php
+
+		-
+			message: "#^Function civicrm_api3_twingle_product_Get\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Get.php
+
+		-
+			message: "#^In function \"civicrm_api3_twingle_product_Get\", caught \"Exception\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
+			count: 1
+			path: api/v3/TwingleProduct/Get.php
+
+		-
+			message: "#^PHPDoc tag @throws with type API_Exception is not subtype of Throwable$#"
+			count: 1
+			path: api/v3/TwingleProduct/Get.php
+
+		-
+			message: "#^Cannot access offset 'count' on array\\|int\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Getsingle.php
+
+		-
+			message: "#^Cannot access offset 'id' on array\\|int\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Getsingle.php
+
+		-
+			message: "#^Cannot access offset 'values' on array\\|int\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Getsingle.php
+
+		-
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Getsingle.php
+
+		-
+			message: "#^Function _civicrm_api3_twingle_product_Getsingle_spec\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Getsingle.php
+
+		-
+			message: "#^Function _civicrm_api3_twingle_product_Getsingle_spec\\(\\) has parameter \\$spec with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Getsingle.php
+
+		-
+			message: "#^Function civicrm_api3_twingle_product_Getsingle\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Getsingle.php
+
+		-
+			message: "#^Function civicrm_api3_twingle_product_Getsingle\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleProduct/Getsingle.php
+
+		-
+			message: "#^PHPDoc tag @throws with type API_Exception is not subtype of Throwable$#"
+			count: 1
+			path: api/v3/TwingleProduct/Getsingle.php
+
+		-
+			message: "#^Function _civicrm_api3_twingle_shop_Create_spec\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Create.php
+
+		-
+			message: "#^Function _civicrm_api3_twingle_shop_Create_spec\\(\\) has parameter \\$spec with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Create.php
+
+		-
+			message: "#^Function civicrm_api3_twingle_shop_Create\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Create.php
+
+		-
+			message: "#^Function civicrm_api3_twingle_shop_Create\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Create.php
+
+		-
+			message: "#^PHPDoc tag @throws with type API_Exception is not subtype of Throwable$#"
+			count: 1
+			path: api/v3/TwingleShop/Create.php
+
+		-
+			message: "#^Cannot access offset 'is_error' on array\\|int\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Delete.php
+
+		-
+			message: "#^Function _civicrm_api3_twingle_shop_Delete_spec\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Delete.php
+
+		-
+			message: "#^Function _civicrm_api3_twingle_shop_Delete_spec\\(\\) has parameter \\$spec with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Delete.php
+
+		-
+			message: "#^Function civicrm_api3_twingle_shop_Delete\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Delete.php
+
+		-
+			message: "#^Function civicrm_api3_twingle_shop_Delete\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Delete.php
+
+		-
+			message: "#^PHPDoc tag @throws with type API_Exception\\|Exception is not subtype of Throwable$#"
+			count: 1
+			path: api/v3/TwingleShop/Delete.php
+
+		-
+			message: "#^Function _civicrm_api3_twingle_shop_Fetch_spec\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Fetch.php
+
+		-
+			message: "#^Function _civicrm_api3_twingle_shop_Fetch_spec\\(\\) has parameter \\$spec with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Fetch.php
+
+		-
+			message: "#^Function civicrm_api3_twingle_shop_Fetch\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Fetch.php
+
+		-
+			message: "#^Function civicrm_api3_twingle_shop_Fetch\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Fetch.php
+
+		-
+			message: "#^PHPDoc tag @throws with type API_Exception is not subtype of Throwable$#"
+			count: 1
+			path: api/v3/TwingleShop/Fetch.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:fetch\\(\\)\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Get.php
+
+		-
+			message: "#^Call to an undefined method object\\:\\:toArray\\(\\)\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Get.php
+
+		-
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 2
+			path: api/v3/TwingleShop/Get.php
+
+		-
+			message: "#^Function _civicrm_api3_twingle_shop_Get_spec\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Get.php
+
+		-
+			message: "#^Function _civicrm_api3_twingle_shop_Get_spec\\(\\) has parameter \\$spec with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Get.php
+
+		-
+			message: "#^Function civicrm_api3_twingle_shop_Get\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Get.php
+
+		-
+			message: "#^Function civicrm_api3_twingle_shop_Get\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Get.php
+
+		-
+			message: "#^In function \"civicrm_api3_twingle_shop_Get\", caught \"Exception\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
+			count: 1
+			path: api/v3/TwingleShop/Get.php
+
+		-
+			message: "#^PHPDoc tag @throws with type API_Exception is not subtype of Throwable$#"
+			count: 1
+			path: api/v3/TwingleShop/Get.php
+
+		-
+			message: "#^Cannot access offset 'count' on array\\|int\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Getsingle.php
+
+		-
+			message: "#^Cannot access offset 'id' on array\\|int\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Getsingle.php
+
+		-
+			message: "#^Cannot access offset 'values' on array\\|int\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Getsingle.php
+
+		-
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Getsingle.php
+
+		-
+			message: "#^Function _civicrm_api3_twingle_shop_Getsingle_spec\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Getsingle.php
+
+		-
+			message: "#^Function _civicrm_api3_twingle_shop_Getsingle_spec\\(\\) has parameter \\$spec with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Getsingle.php
+
+		-
+			message: "#^Function civicrm_api3_twingle_shop_Getsingle\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Getsingle.php
+
+		-
+			message: "#^Function civicrm_api3_twingle_shop_Getsingle\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: api/v3/TwingleShop/Getsingle.php
+
+		-
+			message: "#^PHPDoc tag @throws with type API_Exception is not subtype of Throwable$#"
+			count: 1
+			path: api/v3/TwingleShop/Getsingle.php
+
+		-
+			message: "#^Function twingle_civicrm_alterAPIPermissions\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: twingle.php
+
+		-
+			message: "#^Function twingle_civicrm_alterAPIPermissions\\(\\) has parameter \\$action with no type specified\\.$#"
+			count: 1
+			path: twingle.php
+
+		-
+			message: "#^Function twingle_civicrm_alterAPIPermissions\\(\\) has parameter \\$entity with no type specified\\.$#"
+			count: 1
+			path: twingle.php
+
+		-
+			message: "#^Function twingle_civicrm_alterAPIPermissions\\(\\) has parameter \\$params with no type specified\\.$#"
+			count: 1
+			path: twingle.php
+
+		-
+			message: "#^Function twingle_civicrm_alterAPIPermissions\\(\\) has parameter \\$permissions with no type specified\\.$#"
+			count: 1
+			path: twingle.php
+
+		-
+			message: "#^Function twingle_civicrm_alterLogTables\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: twingle.php
+
+		-
+			message: "#^Function twingle_civicrm_alterLogTables\\(\\) has parameter \\$logTableSpec with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: twingle.php
+
+		-
+			message: "#^Function twingle_civicrm_config\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: twingle.php
+
+		-
+			message: "#^Function twingle_civicrm_config\\(\\) has parameter \\$config with no type specified\\.$#"
+			count: 1
+			path: twingle.php
+
+		-
+			message: "#^Function twingle_civicrm_enable\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: twingle.php
+
+		-
+			message: "#^Function twingle_civicrm_install\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: twingle.php
+
+		-
+			message: "#^Function twingle_civicrm_permission\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: twingle.php
+
+		-
+			message: "#^Function twingle_civicrm_permission\\(\\) has parameter \\$permissions with no type specified\\.$#"
+			count: 1
+			path: twingle.php
+
+		-
+			message: "#^Function twingle_civicrm_pre\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: twingle.php
+
+		-
+			message: "#^Function twingle_civicrm_pre\\(\\) has parameter \\$id with no type specified\\.$#"
+			count: 1
+			path: twingle.php
+
+		-
+			message: "#^Function twingle_civicrm_pre\\(\\) has parameter \\$objectName with no type specified\\.$#"
+			count: 1
+			path: twingle.php
+
+		-
+			message: "#^Function twingle_civicrm_pre\\(\\) has parameter \\$op with no type specified\\.$#"
+			count: 1
+			path: twingle.php
+
+		-
+			message: "#^Function twingle_civicrm_pre\\(\\) has parameter \\$params with no type specified\\.$#"
+			count: 1
+			path: twingle.php
