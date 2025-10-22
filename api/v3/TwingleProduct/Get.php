@@ -94,7 +94,7 @@ function civicrm_api3_twingle_product_Get($params) {
     foreach ($possible_params as $param) {
       if (!empty($params[$param['name']])) {
         // Prefix with table name
-        $table_prefix = in_array($param['name'], $productFields) ? 'ctp.' : 'cts.';
+        $table_prefix = in_array($param['name'], $productFields, TRUE) ? 'ctp.' : 'cts.';
         $altered_params[] = [
           'name' => $table_prefix . $param['name'],
           'value' => $params[$param['name']],

@@ -209,7 +209,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
               2 => $product_data['external_id'],
               3 => $e->getMessage(),
             ]),
-          ProductException::ERROR_CODE_PRICE_FIELD_NOT_FOUND);
+          ProductException::ERROR_CODE_PRICE_FIELD_NOT_FOUND, $e);
       }
     }
 
@@ -228,7 +228,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
               2 => $product_data['external_id'],
               3 => $e->getMessage(),
             ]),
-          ProductException::ERROR_CODE_PRICE_FIELD_VALUE_NOT_FOUND);
+          ProductException::ERROR_CODE_PRICE_FIELD_VALUE_NOT_FOUND, $e);
       }
       $product_data['name'] = $product_data['name'] ?? $price_field_value['label'];
       $product_data['price'] = $custom_price ? NULL : $product_data['price'] ?? $price_field_value['amount'];
@@ -247,7 +247,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
       TwingleShopUtils::convert_empty_string_to_null($product_data, self::EMPTY_STRING_TO_NULL);
     }
     catch (\Exception $e) {
-      throw new ProductException($e->getMessage(), ProductException::ERROR_CODE_ATTRIBUTE_WRONG_DATA_TYPE);
+      throw new ProductException($e->getMessage(), ProductException::ERROR_CODE_ATTRIBUTE_WRONG_DATA_TYPE, $e);
     }
 
     // Validate data types
@@ -255,7 +255,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
       TwingleShopUtils::validate_data_types($product_data, self::ALLOWED_ATTRIBUTES);
     }
     catch (\Exception $e) {
-      throw new ProductException($e->getMessage(), ProductException::ERROR_CODE_ATTRIBUTE_WRONG_DATA_TYPE);
+      throw new ProductException($e->getMessage(), ProductException::ERROR_CODE_ATTRIBUTE_WRONG_DATA_TYPE, $e);
     }
 
     // Set attributes
@@ -284,20 +284,21 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
       if ($price_field['count'] > 0 && $mode == 'create') {
         throw new ProductException(
           E::ts('PriceField for this Twingle Product already exists.'),
-          ProductException::ERROR_CODE_PRICE_FIELD_ALREADY_EXISTS,
+          ProductException::ERROR_CODE_PRICE_FIELD_ALREADY_EXISTS
         );
       }
       elseif ($price_field['count'] == 0 && $mode == 'edit') {
         throw new ProductException(
           E::ts('PriceField for this Twingle Product does not exist and cannot be edited.'),
-          ProductException::ERROR_CODE_PRICE_FIELD_NOT_FOUND,
-              );
+          ProductException::ERROR_CODE_PRICE_FIELD_NOT_FOUND
+        );
       }
     }
     catch (CRM_Core_Exception $e) {
       throw new ProductException(
         E::ts('Could not check if PriceField for this Twingle Product already exists.'),
         ProductException::ERROR_CODE_PRICE_FIELD_NOT_FOUND,
+        $e
       );
     }
 
@@ -312,6 +313,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
       throw new ProductException(
         E::ts('Could not find PriceSet for this Twingle Product.'),
         ProductException::ERROR_CODE_PRICE_SET_NOT_FOUND,
+        $e
       );
     }
 
@@ -346,9 +348,13 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
     }
     catch (CRM_Core_Exception $e) {
       throw new ProductException(
-        E::ts('Could not create PriceField for this Twingle Product: %1',
-          [1 => $e->getMessage()]),
-        ProductException::ERROR_CODE_COULD_NOT_CREATE_PRICE_FIELD);
+        E::ts(
+          'Could not create PriceField for this Twingle Product: %1',
+          [1 => $e->getMessage()]
+        ),
+        ProductException::ERROR_CODE_COULD_NOT_CREATE_PRICE_FIELD,
+        $e
+      );
     }
 
     // Try to find existing PriceFieldValue if in edit mode
@@ -363,7 +369,9 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
         throw new ProductException(
           E::ts('Could not find PriceFieldValue for this Twingle Product: %1',
             [1 => $e->getMessage()]),
-          ProductException::ERROR_CODE_PRICE_FIELD_VALUE_NOT_FOUND);
+          ProductException::ERROR_CODE_PRICE_FIELD_VALUE_NOT_FOUND,
+          $e
+        );
       }
     }
 
@@ -391,7 +399,9 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
       throw new ProductException(
         E::ts('Could not create PriceFieldValue for this Twingle Product: %1',
           [1 => $e->getMessage()]),
-        ProductException::ERROR_CODE_COULD_NOT_CREATE_PRICE_FIELD_VALUE);
+        ProductException::ERROR_CODE_COULD_NOT_CREATE_PRICE_FIELD_VALUE,
+        $e
+      );
     }
   }
 
@@ -461,7 +471,9 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
     catch (\Civi\Core\Exception\DBQueryException $e) {
       throw new ProductException(
         E::ts('Could not find TwingleProduct in database: %1', [1 => $e->getMessage()]),
-        ShopException::ERROR_CODE_COULD_NOT_FIND_SHOP_IN_DB);
+        ShopException::ERROR_CODE_COULD_NOT_FIND_SHOP_IN_DB,
+        $e
+      );
     }
 
     // Register pre-hook
@@ -489,7 +501,9 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
       $tx->rollback();
       throw new ProductException(
         E::ts('Could not save TwingleProduct to database: %1', [1 => $e->getMessage()]),
-        ProductException::ERROR_CODE_COULD_NOT_CREATE_PRODUCT);
+        ProductException::ERROR_CODE_COULD_NOT_CREATE_PRODUCT,
+        $e
+      );
     }
     $result = self::findById($this->id);
     /** @var self $result */
@@ -558,7 +572,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
    */
   public function checkOutdated($product_from_twingle) {
     // Mark outdated products which have a newer timestamp in Twingle
-    if ($this->updated_at < intval($product_from_twingle['updated_at'])) {
+    if (intval($this->updated_at) < intval($product_from_twingle['updated_at'])) {
       // Overwrite the product with the data from Twingle
       $this->load(self::renameTwingleAttrs($product_from_twingle));
       $this->is_outdated = TRUE;
@@ -633,7 +647,9 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
     catch (CRM_Core_Exception $e) {
       throw new ProductException(
         E::ts('An Error occurred while searching for the associated PriceFieldValue: %1', [1 => $e->getMessage()]),
-        ProductException::ERROR_CODE_PRICE_FIELD_VALUE_NOT_FOUND);
+        ProductException::ERROR_CODE_PRICE_FIELD_VALUE_NOT_FOUND,
+        $e
+      );
     }
     try {
       civicrm_api3('PriceFieldValue', 'delete', ['id' => $result['id']]);
@@ -641,7 +657,9 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
     catch (CRM_Core_Exception $e) {
       throw new ProductException(
         E::ts('Could not delete associated PriceFieldValue: %1', [1 => $e->getMessage()]),
-        ProductException::ERROR_CODE_COULD_NOT_DELETE_PRICE_FIELD_VALUE);
+        ProductException::ERROR_CODE_COULD_NOT_DELETE_PRICE_FIELD_VALUE,
+        $e
+      );
     }
 
     // Try to delete PriceField
@@ -659,17 +677,22 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
         if ($result['count'] > 0) {
           throw new ProductException(
             E::ts('PriceField for this Twingle Product still exists.'),
-            ProductException::ERROR_CODE_PRICE_FIELD_STILL_EXISTS);
+            ProductException::ERROR_CODE_PRICE_FIELD_STILL_EXISTS,
+            $e
+          );
         }
       }
       catch (CRM_Core_Exception $e) {
         throw new ProductException(
           E::ts('An Error occurred while searching for the associated PriceField: %1', [1 => $e->getMessage()]),
-          ProductException::ERROR_CODE_PRICE_FIELD_NOT_FOUND);
+          ProductException::ERROR_CODE_PRICE_FIELD_NOT_FOUND,
+          $e
+        );
       }
       throw new ProductException(
         E::ts('Could not delete associated PriceField: %1', [1 => $e->getMessage()]),
-        ProductException::ERROR_CODE_COULD_NOT_DELETE_PRICE_FIELD);
+        ProductException::ERROR_CODE_COULD_NOT_DELETE_PRICE_FIELD
+      );
     }
     $this->price_field_id = NULL;
   }

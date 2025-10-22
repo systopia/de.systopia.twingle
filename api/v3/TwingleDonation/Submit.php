@@ -762,7 +762,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
       else {
         $mandate_id = $result_values['sepa_mandate']['id'];
         $message = E::LONG_NAME . ": could not find contribution for sepa mandate $mandate_id";
-        throw new CiviCRM_API3_Exception($message, 'api_error');
+        throw new CRM_Core_Exception($message, 'api_error');
       }
 
       // Add products as line items to the contribution

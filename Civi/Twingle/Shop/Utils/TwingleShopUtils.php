@@ -18,14 +18,12 @@ class TwingleShopUtils {
    *
    * @return void
    */
-  public static function filter_attributes(array &$data, array $allowed_attributes, array $can_be_zero = NULL): void {
-    $can_be_zero = $can_be_zero ?? [];
-
+  public static function filter_attributes(array &$data, array $allowed_attributes, array $can_be_zero = []): void {
     // Remove empty values if not of type int
     $data = array_filter(
       $data,
       function($value, $key) use ($can_be_zero) {
-        return !empty($value) || in_array($key, $can_be_zero);
+        return !empty($value) || in_array($key, $can_be_zero, TRUE);
       },
       ARRAY_FILTER_USE_BOTH
     );
@@ -44,7 +42,6 @@ class TwingleShopUtils {
    * @param array $str_to_int_conversion
    *
    * @return void
-   * @throws \Exception
    */
   public static function convert_str_to_int(array &$data, array $str_to_int_conversion): void {
     // Convert string to int
@@ -54,8 +51,9 @@ class TwingleShopUtils {
           $data[$attribute] = (int) $data[$attribute];
         }
         catch (\Exception $e) {
-          throw new \Exception(
-            "Could not convert attribute '$attribute' to int."
+          throw new \RuntimeException(
+            "Could not convert attribute '$attribute' to int.",
+            $e
           );
         }
       }
@@ -69,7 +67,6 @@ class TwingleShopUtils {
    * @param array $int_to_bool_conversion
    *
    * @return void
-   * @throws \Exception
    */
   public static function convert_int_to_bool(array &$data, array $int_to_bool_conversion): void {
     // Convert int to bool
@@ -79,8 +76,9 @@ class TwingleShopUtils {
           $data[$attribute] = (bool) $data[$attribute];
         }
         catch (\Exception $e) {
-          throw new \Exception(
-            "Could not convert attribute '$attribute' to bool."
+          throw new \RuntimeException(
+            "Could not convert attribute '$attribute' to bool.",
+            $e
           );
         }
       }
@@ -94,7 +92,6 @@ class TwingleShopUtils {
    * @param array $str_to_date_conversion
    *
    * @return void
-   * @throws \Exception
    */
   public static function convert_str_to_date(array &$data, array $str_to_date_conversion): void {
     // Convert string to date
@@ -104,8 +101,9 @@ class TwingleShopUtils {
           $data[$attribute] = strtotime($data[$attribute]);
         }
         catch (\Exception $e) {
-          throw new \Exception(
-            "Could not convert attribute '$attribute' to date."
+          throw new \RuntimeException(
+            "Could not convert attribute '$attribute' to date.",
+            $e
           );
         }
       }
@@ -135,7 +133,6 @@ class TwingleShopUtils {
    * @param array $allowed_attributes
    *
    * @return void
-   * @throws \Exception
    */
   public static function validate_data_types(array &$data, array $allowed_attributes): void {
     foreach ($data as $key => $value) {
@@ -151,7 +148,7 @@ class TwingleShopUtils {
       // Validate data type
       if (!\CRM_Utils_Type::validatePhpType($value, $expected_data_type)) {
         $given_type = gettype($value);
-        throw new \Exception(
+        throw new \RuntimeException(
           "Data type of attribute '$key' is $given_type, but $expected_data_type was expected."
         );
       }

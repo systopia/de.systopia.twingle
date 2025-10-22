@@ -41,7 +41,7 @@ class CRM_Twingle_Tools {
     }
 
     // check if the target status is not closed
-    if (in_array($change['contribution_status_id'], [2, 5])) {
+    if (in_array((int) $change['contribution_status_id'], [2, 5], TRUE)) {
       return;
     }
 
@@ -73,7 +73,7 @@ class CRM_Twingle_Tools {
     }
 
     // check if it's really a termination (i.e. current status is 2 or 5)
-    if (!in_array($recurring_contribution['contribution_status_id'], [2, 5])) {
+    if (!in_array((int) $recurring_contribution['contribution_status_id'], [2, 5], TRUE)) {
       return;
     }
 
@@ -211,7 +211,7 @@ class CRM_Twingle_Tools {
         $sepa_payment_instruments[] = $payment_instrument['value'];
       }
     }
-    return in_array($payment_instrument_id, $sepa_payment_instruments);
+    return in_array($payment_instrument_id, $sepa_payment_instruments, TRUE);
   }
 
   /**

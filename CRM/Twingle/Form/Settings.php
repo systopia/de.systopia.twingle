@@ -161,8 +161,8 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
 
     // Twingle Access Key is required if Shop Integration is enabled
     if (
-      CRM_Utils_Array::value('twingle_use_shop', $this->_submitValues) &&
-      !CRM_Utils_Array::value('twingle_access_key', $this->_submitValues, FALSE)
+      (bool) ($this->_submitValues['twingle_use_shop'] ?? FALSE)
+      && !(bool) ($this->_submitValues['twingle_access_key'] ?? FALSE)
     ) {
       $this->_errors['twingle_access_key'] = E::ts('An Access Key is required to enable Twingle Shop Integration');
     }

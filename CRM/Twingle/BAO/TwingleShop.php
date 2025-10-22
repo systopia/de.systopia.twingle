@@ -81,8 +81,6 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
    *   Array with shop data
    *
    * @return void
-   *
-   * @throws ShopException
    */
   public function load(array $shop_data): void {
     // Filter for allowed attributes
@@ -93,7 +91,7 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
       TwingleShopUtils::convert_str_to_int($shop_data, self::STR_TO_INT_CONVERSION);
     }
     catch (Exception $e) {
-      throw new ShopException($e->getMessage(), ShopException::ERROR_CODE_ATTRIBUTE_WRONG_DATA_TYPE);
+      throw new ShopException($e->getMessage(), ShopException::ERROR_CODE_ATTRIBUTE_WRONG_DATA_TYPE, $e);
     }
 
     // Validate data types
@@ -101,7 +99,7 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
       TwingleShopUtils::validate_data_types($shop_data, self::ALLOWED_ATTRIBUTES);
     }
     catch (Exception $e) {
-      throw new ShopException($e->getMessage(), ShopException::ERROR_CODE_ATTRIBUTE_WRONG_DATA_TYPE);
+      throw new ShopException($e->getMessage(), ShopException::ERROR_CODE_ATTRIBUTE_WRONG_DATA_TYPE, $e);
     }
 
     // Set attributes
@@ -147,7 +145,7 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
     catch (\Civi\Core\Exception\DBQueryException $e) {
       throw new ShopException(
         E::ts('Could not find TwingleShop in database: %1', [1 => $e->getMessage()]),
-        ShopException::ERROR_CODE_COULD_NOT_FIND_SHOP_IN_DB);
+        ShopException::ERROR_CODE_COULD_NOT_FIND_SHOP_IN_DB, $e);
     }
 
     // Register pre-hook
@@ -206,7 +204,7 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
     catch (\CRM_Core_Exception $e) {
       throw new ShopException(
         E::ts('Could not delete associated PriceSet: %1', [1 => $e->getMessage()]),
-        ShopException::ERROR_CODE_COULD_NOT_DELETE_PRICE_SET);
+        ShopException::ERROR_CODE_COULD_NOT_DELETE_PRICE_SET, $e);
     }
 
     // Register post-hook
@@ -332,13 +330,13 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
       if ($price_set['count'] > 0 && $mode == 'create') {
         throw new ShopException(
           E::ts('PriceSet for this Twingle Shop already exists.'),
-          ShopException::ERROR_CODE_PRICE_SET_ALREADY_EXISTS,
+          ShopException::ERROR_CODE_PRICE_SET_ALREADY_EXISTS
         );
       }
       elseif ($price_set['count'] == 0 && $mode == 'edit') {
         throw new ShopException(
           E::ts('PriceSet for this Twingle Shop does not exist and cannot be edited.'),
-          ShopException::ERROR_CODE_PRICE_SET_NOT_FOUND,
+          ShopException::ERROR_CODE_PRICE_SET_NOT_FOUND
         );
       }
     }
@@ -346,6 +344,7 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
       throw new ShopException(
         E::ts('Could not check if PriceSet for this TwingleShop already exists.'),
         ShopException::ERROR_CODE_PRICE_SET_NOT_FOUND,
+        $e
           );
     }
 
@@ -370,7 +369,8 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
       throw new ShopException(
         E::ts('Could not create PriceSet for this TwingleShop.'),
         ShopException::ERROR_CODE_COULD_NOT_CREATE_PRICE_SET,
-          );
+        $e
+      );
     }
   }
 
@@ -406,7 +406,7 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
     if (!isset($this->numerical_project_id)) {
       throw new ShopException(
         E::ts('This Twingle Project is not a shop.'),
-        ShopException::ERROR_CODE_NOT_A_SHOP,
+        ShopException::ERROR_CODE_NOT_A_SHOP
       );
     }
   }
@@ -438,6 +438,7 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
         E::ts('Could not retrieve Twingle projects from API.
           Please check your API credentials.'),
         ShopException::ERROR_CODE_COULD_NOT_GET_PROJECTS,
+        $e
       );
     }
   }
@@ -455,7 +456,8 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
     catch (\Civi\Core\Exception\DBQueryException $e) {
       throw new ProductException(
         E::ts('Could not retrieve associated products: %1', [1 => $e->getMessage()]),
-        ProductException::ERROR_CODE_COULD_NOT_GET_PRODUCTS
+        ProductException::ERROR_CODE_COULD_NOT_GET_PRODUCTS,
+        $e
       );
     }
     try {
@@ -467,6 +469,7 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
       throw new ProductException(
         E::ts('Could not delete associated products: %1', [1 => $e->getMessage()]),
         ProductException::ERROR_CODE_COULD_NOT_DELETE_PRICE_SET,
+        $e
       );
     }
   }

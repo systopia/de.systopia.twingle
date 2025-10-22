@@ -214,8 +214,8 @@ class CRM_Twingle_Profile {
    * @return bool
    */
   public function isShopEnabled(): bool {
-    return Civi::settings()->get('twingle_use_shop') &&
-      $this->data['enable_shop_integration'];
+    return (bool) Civi::settings()->get('twingle_use_shop') &&
+      (bool) $this->data['enable_shop_integration'];
   }
 
   /**

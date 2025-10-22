@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Civi\Twingle\Shop;
 
-use CRM_TwingleCampaign_ExtensionUtil as E;
+use CRM_Twingle_ExtensionUtil as E;
 use Civi\Twingle\Shop\Exceptions\ApiCallError;
 
 /**
@@ -34,21 +34,17 @@ class ApiCall {
   /**
    * Your Twingle API token.
    * You can request an API token from Twingle support: <hilfe@twingle.de>
-   * @var string
    */
-  private string $apiToken;
+  private ?string $apiToken = NULL;
 
   /**
    * The ID of your organization in the Twingle database.
    * Automatically retrieved by sending a request with the associated API token.
-   * @var int
    */
-  public int $organisationId;
+  public ?int $organisationId = NULL;
 
   /**
    * This boolean indicates whether the connection was successful.
-   *
-   * @var bool
    */
   public bool $isConnected;
 
@@ -60,9 +56,8 @@ class ApiCall {
 
   /**
    * Header for cURL request.
-   * @var string[]
    */
-  private array $header;
+  private ?array $header = NULL;
 
   /**
    * The cURL wrapper
@@ -122,7 +117,8 @@ class ApiCall {
       throw new ApiCallError(
         E::ts('Could not find Twingle API token'),
         ApiCallError::ERROR_CODE_API_TOKEN_MISSING,
-          );
+        $e
+      );
     }
 
     $this->header = [

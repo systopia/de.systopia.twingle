@@ -40,8 +40,8 @@ class BaseException extends \Exception {
    * @param string $error_code
    *  A meaningful error code
    */
-  public function __construct(string $message = '', string $error_code = '') {
-    parent::__construct($message, 1);
+  public function __construct(string $message = '', string $error_code = '', \Throwable $previous = NULL) {
+    parent::__construct($message, 1, $previous);
     $this->log_message = !empty($message) ? E::LONG_NAME . ': ' . $message : '';
     $this->code = $error_code;
   }
