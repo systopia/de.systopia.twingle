@@ -1,6 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
+// phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
 require_once 'twingle.civix.php';
+// phpcs:enable
+
 use CRM_Twingle_ExtensionUtil as E;
 
 /**
@@ -83,9 +88,9 @@ function twingle_civicrm_permission(&$permissions) {
  */
 function twingle_civicrm_alterAPIPermissions($entity, $action, &$params, &$permissions) {
   // Restrict API calls to the permission.
-  $permissions['twingle_donation']['submit'] = array('access Twingle API');
-  $permissions['twingle_donation']['cancel']  = array('access Twingle API');
-  $permissions['twingle_donation']['endrecurring']  = array('access Twingle API');
+  $permissions['twingle_donation']['submit'] = ['access Twingle API'];
+  $permissions['twingle_donation']['cancel']  = ['access Twingle API'];
+  $permissions['twingle_donation']['endrecurring']  = ['access Twingle API'];
 }
 
 /**
@@ -93,8 +98,7 @@ function twingle_civicrm_alterAPIPermissions($entity, $action, &$params, &$permi
  *
  * @param array $logTableSpec
  */
-function twingle_civicrm_alterLogTables(&$logTableSpec)
-{
+function twingle_civicrm_alterLogTables(&$logTableSpec) {
   if (isset($logTableSpec['civicrm_twingle_profile'])) {
     $logTableSpec['civicrm_twingle_profile']['exceptions'] = ['last_access', 'access_counter'];
   }
@@ -107,22 +111,22 @@ function twingle_civicrm_alterLogTables(&$logTableSpec)
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_preProcess
  *
-
- // */
+ *
+ * // */
 
 /**
  * Implements hook_civicrm_navigationMenu().
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_navigationMenu
  *
-function twingle_civicrm_navigationMenu(&$menu) {
-  _twingle_civix_insert_navigation_menu($menu, NULL, array(
-    'label' => E::ts('The Page'),
-    'name' => 'the_page',
-    'url' => 'civicrm/the-page',
-    'permission' => 'access CiviReport,access CiviContribute',
-    'operator' => 'OR',
-    'separator' => 0,
-  ));
-  _twingle_civix_navigationMenu($menu);
+ * function twingle_civicrm_navigationMenu(&$menu) {
+ * _twingle_civix_insert_navigation_menu($menu, NULL, array(
+ * 'label' => E::ts('The Page'),
+ * 'name' => 'the_page',
+ * 'url' => 'civicrm/the-page',
+ * 'permission' => 'access CiviReport,access CiviContribute',
+ * 'operator' => 'OR',
+ * 'separator' => 0,
+ * ));
+ * _twingle_civix_navigationMenu($menu);
 } // */

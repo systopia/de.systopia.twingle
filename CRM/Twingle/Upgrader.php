@@ -151,4 +151,5 @@ class CRM_Twingle_Upgrader extends CRM_Extension_Upgrader_Base {
     $this->executeSqlFile('sql/civicrm_twingle_shop.sql');
     return TRUE;
   }
+
 }

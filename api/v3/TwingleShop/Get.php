@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 use CRM_Twingle_ExtensionUtil as E;
 
 /**
@@ -81,7 +83,7 @@ function civicrm_api3_twingle_shop_Get($params) {
         $query = $query . ' ' . $param['name'] . " = %$param_count AND";
         $query_params[$param_count] = [
           $params[$param['name']],
-          $param['type'] == CRM_Utils_Type::T_INT ? 'Integer' : 'String'
+          $param['type'] == CRM_Utils_Type::T_INT ? 'Integer' : 'String',
         ];
         $param_count++;
       }

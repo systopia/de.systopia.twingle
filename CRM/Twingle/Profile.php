@@ -44,7 +44,7 @@ class CRM_Twingle_Profile {
   protected $data;
 
   /**
-   * @var array $check_box_fields
+   * @var array
    *   List of check box fields
    */
   public $check_box_fields = [
@@ -271,7 +271,9 @@ class CRM_Twingle_Profile {
    * @throws \Civi\Core\Exception\DBQueryException
    *   When the profile could not be successfully validated.
    */
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
   public function validate(): void {
+  // phpcs:enable
 
     // Name cannot be empty
     if ('' === $this->getName()) {
@@ -813,4 +815,5 @@ class CRM_Twingle_Profile {
     }
     return $stats;
   }
+
 }

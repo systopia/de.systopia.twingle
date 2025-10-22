@@ -30,7 +30,7 @@ use CRM_Twingle_ExtensionUtil as E;
  */
 // phpcs:disable Generic.Files.LineLength.TooLong
 class api_v3_TwingleDonation_SubmitTest extends \PHPUnit\Framework\TestCase implements HeadlessInterface, TransactionalInterface {
-// phpcs: enable
+  // phpcs: enable
 
   use \Civi\Test\Api3TestTrait;
 

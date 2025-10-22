@@ -287,7 +287,9 @@ function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
  * @see civicrm_api3_create_success
  * @see civicrm_api3_create_error
  */
+// phpcs:disable Generic.Metrics.NestingLevel.TooHigh, Generic.Metrics.CyclomaticComplexity.MaxExceeded
 function civicrm_api3_twingle_donation_Submit($params) {
+// phpcs:enable
   // Log call if debugging is enabled within civicrm.settings.php.
   if (defined('TWINGLE_API_LOGGING') && TWINGLE_API_LOGGING) {
     Civi::log()->debug('TwingleDonation.Submit: ' . json_encode($params, JSON_PRETTY_PRINT));
@@ -756,7 +758,8 @@ function civicrm_api3_twingle_donation_Submit($params) {
           ['id' => $contribution_id]
         );
         $result_values['contribution'] = $contribution;
-      } else {
+      }
+      else {
         $mandate_id = $result_values['sepa_mandate']['id'];
         $message = E::LONG_NAME . ": could not find contribution for sepa mandate $mandate_id";
         throw new CiviCRM_API3_Exception($message, 'api_error');

@@ -1,18 +1,13 @@
 <?php
 
+declare(strict_types = 1);
+
 use Civi\Api4\PriceField;
 use Civi\Api4\PriceFieldValue;
 use Civi\Twingle\Shop\Exceptions\ProductException;
 use Civi\Twingle\Shop\Exceptions\ShopException;
 use CRM_Twingle_ExtensionUtil as E;
-use function Civi\Twingle\Shop\Utils\convert_int_to_bool;
-use function Civi\Twingle\Shop\Utils\convert_str_to_date;
-use function Civi\Twingle\Shop\Utils\convert_str_to_int;
-use function Civi\Twingle\Shop\Utils\convert_empty_string_to_null;
-use function Civi\Twingle\Shop\Utils\filter_attributes;
-use function Civi\Twingle\Shop\Utils\validate_data_types;
-
-require_once E::path() . '/Civi/Twingle/Shop/Utils/TwingleShopUtils.php';
+use Civi\Twingle\Shop\Utils\TwingleShopUtils;
 
 /**
  * TwingleProduct BAO class.
@@ -70,46 +65,46 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
    * (For filtering purposes)
    */
   protected const CAN_BE_ZERO = [
-    "price",
-    "sort",
+    'price',
+    'sort',
   ];
 
   /**
    * Attributes that need to be converted to int.
    */
   protected const STR_TO_INT_CONVERSION = [
-    "id",
-    "twingle_shop_id",
-    "financial_type_id",
-    "price_field_id",
-    "project_id",
-    "external_id",
-    "tw_updated_at",
-    "tw_created_at",
-    "price",
-    "sort",
+    'id',
+    'twingle_shop_id',
+    'financial_type_id',
+    'price_field_id',
+    'project_id',
+    'external_id',
+    'tw_updated_at',
+    'tw_created_at',
+    'price',
+    'sort',
   ];
 
   /**
    * Attributes that need to be converted to boolean.
    */
   protected const INT_TO_BOOL_CONVERSION = [
-    "is_active",
+    'is_active',
   ];
 
   /**
    * String to date conversion.
    */
   protected const STR_TO_DATE_CONVERSION = [
-    "created_at",
-    "updated_at",
+    'created_at',
+    'updated_at',
   ];
 
   /**
    * Empty string to null conversion.
    */
   protected const EMPTY_STRING_TO_NULL = [
-    "price",
+    'price',
   ];
 
   /**
@@ -117,23 +112,24 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
    * Attributes that we currently don't support are commented out.
    */
   protected const ALLOWED_ATTRIBUTES = [
-    "id" => CRM_Utils_Type::T_INT,
-    "external_id" => CRM_Utils_Type::T_INT,
-    "name" => CRM_Utils_Type::T_STRING,
-    "is_active" => CRM_Utils_Type::T_BOOLEAN,
-    "description" => CRM_Utils_Type::T_STRING,
-    "price" => CRM_Utils_Type::T_INT,
-    "created_at" => CRM_Utils_Type::T_INT,
-    "tw_created_at" => CRM_Utils_Type::T_INT,
-    "updated_at" => CRM_Utils_Type::T_INT,
-    "tw_updated_at" => CRM_Utils_Type::T_INT,
-    "is_orphaned" => CRM_Utils_Type::T_BOOLEAN,
-    "is_outdated" => CRM_Utils_Type::T_BOOLEAN,
-    "project_id" => CRM_Utils_Type::T_INT,
-    "sort" => CRM_Utils_Type::T_INT,
-    "financial_type_id" => CRM_Utils_Type::T_INT,
-    "twingle_shop_id" => CRM_Utils_Type::T_INT,
-    "price_field_id" => CRM_Utils_Type::T_INT,
+    'id' => CRM_Utils_Type::T_INT,
+    'external_id' => CRM_Utils_Type::T_INT,
+    'name' => CRM_Utils_Type::T_STRING,
+    'is_active' => CRM_Utils_Type::T_BOOLEAN,
+    'description' => CRM_Utils_Type::T_STRING,
+    'price' => CRM_Utils_Type::T_INT,
+    'created_at' => CRM_Utils_Type::T_INT,
+    'tw_created_at' => CRM_Utils_Type::T_INT,
+    'updated_at' => CRM_Utils_Type::T_INT,
+    'tw_updated_at' => CRM_Utils_Type::T_INT,
+    'is_orphaned' => CRM_Utils_Type::T_BOOLEAN,
+    'is_outdated' => CRM_Utils_Type::T_BOOLEAN,
+    'project_id' => CRM_Utils_Type::T_INT,
+    'sort' => CRM_Utils_Type::T_INT,
+    'financial_type_id' => CRM_Utils_Type::T_INT,
+    'twingle_shop_id' => CRM_Utils_Type::T_INT,
+    'price_field_id' => CRM_Utils_Type::T_INT,
+    // phpcs:disable Squiz.PHP.CommentedOutCode.Found
     # "text" => \CRM_Utils_Type::T_STRING,
     # "images" => \CRM_Utils_Type::T_STRING,
     # "categories" = \CRM_Utils_Type::T_STRING,
@@ -143,6 +139,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
     # "max_count" => \CRM_Utils_Type::T_INT,
     # "has_textinput" => \CRM_Utils_Type::T_BOOLEAN,
     # "count" => \CRM_Utils_Type::T_INT,
+    // phpcs:enable
   ];
 
   /**
@@ -184,16 +181,18 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
    * @throws ProductException
    * @throws \Exception
    */
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh, Drupal.WhiteSpace.ScopeIndent.IncorrectExact
   public function load(array $product_data): void {
+  // phpcs:enable
     // Filter for allowed attributes
-    filter_attributes(
+    TwingleShopUtils::filter_attributes(
       $product_data,
       self::ALLOWED_ATTRIBUTES,
       self::CAN_BE_ZERO,
     );
 
     // Does this product allow to enter a custom price?
-    $custom_price = array_key_exists('price', $product_data) && $product_data['price'] === Null;
+    $custom_price = array_key_exists('price', $product_data) && $product_data['price'] === NULL;
     if (!$custom_price && isset($product_data['price_field_id'])) {
       try {
         $price_field = civicrm_api3('PriceField', 'getsingle', [
@@ -232,8 +231,9 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
           ProductException::ERROR_CODE_PRICE_FIELD_VALUE_NOT_FOUND);
       }
       $product_data['name'] = $product_data['name'] ?? $price_field_value['label'];
-      $product_data['price'] = $custom_price ? Null : $product_data['price'] ?? $price_field_value['amount'];
-      $product_data['financial_type_id'] = $product_data['financial_type_id'] ?? $price_field_value['financial_type_id'];
+      $product_data['price'] = $custom_price ? NULL : $product_data['price'] ?? $price_field_value['amount'];
+      $product_data['financial_type_id'] = $product_data['financial_type_id']
+        ?? $price_field_value['financial_type_id'];
       $product_data['is_active'] = $product_data['is_active'] ?? $price_field_value['is_active'];
       $product_data['sort'] = $product_data['sort'] ?? $price_field_value['weight'];
       $product_data['description'] = $product_data['description'] ?? $price_field_value['description'];
@@ -241,10 +241,10 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
 
     // Change data types
     try {
-      convert_str_to_int($product_data, self::STR_TO_INT_CONVERSION);
-      convert_int_to_bool($product_data, self::INT_TO_BOOL_CONVERSION);
-      convert_str_to_date($product_data, self::STR_TO_DATE_CONVERSION);
-      convert_empty_string_to_null($product_data, self::EMPTY_STRING_TO_NULL);
+      TwingleShopUtils::convert_str_to_int($product_data, self::STR_TO_INT_CONVERSION);
+      TwingleShopUtils::convert_int_to_bool($product_data, self::INT_TO_BOOL_CONVERSION);
+      TwingleShopUtils::convert_str_to_date($product_data, self::STR_TO_DATE_CONVERSION);
+      TwingleShopUtils::convert_empty_string_to_null($product_data, self::EMPTY_STRING_TO_NULL);
     }
     catch (\Exception $e) {
       throw new ProductException($e->getMessage(), ProductException::ERROR_CODE_ATTRIBUTE_WRONG_DATA_TYPE);
@@ -252,7 +252,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
 
     // Validate data types
     try {
-      validate_data_types($product_data, self::ALLOWED_ATTRIBUTES);
+      TwingleShopUtils::validate_data_types($product_data, self::ALLOWED_ATTRIBUTES);
     }
     catch (\Exception $e) {
       throw new ProductException($e->getMessage(), ProductException::ERROR_CODE_ATTRIBUTE_WRONG_DATA_TYPE);
@@ -267,11 +267,11 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
   /**
    * Creates a price field to represents this product in CiviCRM.
    *
-   * @param string $mode
-   *  'create' or 'edit'
    * @throws \Civi\Twingle\Shop\Exceptions\ProductException
    */
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh, Drupal.WhiteSpace.ScopeIndent.IncorrectExact
   public function createPriceField() {
+  // phpcs: enable
     // Define mode for PriceField
     $mode = $this->price_field_id ? 'edit' : 'create';
     $action = $mode == 'create' ? 'create' : 'update';
@@ -286,11 +286,12 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
           E::ts('PriceField for this Twingle Product already exists.'),
           ProductException::ERROR_CODE_PRICE_FIELD_ALREADY_EXISTS,
         );
-      } elseif ($price_field['count'] == 0 && $mode == 'edit') {
+      }
+      elseif ($price_field['count'] == 0 && $mode == 'edit') {
         throw new ProductException(
           E::ts('PriceField for this Twingle Product does not exist and cannot be edited.'),
           ProductException::ERROR_CODE_PRICE_FIELD_NOT_FOUND,
-        );
+              );
       }
     }
     catch (CRM_Core_Exception $e) {
@@ -322,13 +323,13 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
       'is_active' => $this->is_active,
       'weight' => $this->sort,
       'html_type' => 'Text',
-      'is_required' => false,
+      'is_required' => FALSE,
     ];
 
     // If the product has no fixed price, allow the user to enter a custom price
-    if ($this->price === Null) {
-      $price_field_data['is_enter_qty'] = true;
-      $price_field_data['is_display_amounts'] = false;
+    if ($this->price === NULL) {
+      $price_field_data['is_enter_qty'] = TRUE;
+      $price_field_data['is_display_amounts'] = FALSE;
     }
 
     // Add id if in edit mode
@@ -371,7 +372,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
       'price_field_id' => $this->price_field_id,
       'financial_type_id' => $this->financial_type_id,
       'label' => $this->name,
-      'amount' => $this->price === Null ? 1 : $this->price,
+      'amount' => $this->price === NULL ? 1 : $this->price,
       'is_active' => $this->is_active,
       'description' => $this->description,
     ];
@@ -405,7 +406,8 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
     return array_intersect_key(
         get_object_vars($this),
         $this::ALLOWED_ATTRIBUTES
-      ) // Add financial type id of this product if it exists
+    // Add financial type id of this product if it exists
+      )
       + ['financial_type_id' => $this->getFinancialTypeId()];
   }
 
@@ -416,13 +418,13 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
    *   External id of the product (by Twingle)
    *
    * @return CRM_Twingle_BAO_TwingleProduct|null
-    *   TwingleProduct object or NULL if not found
+   *   TwingleProduct object or NULL if not found
    *
    * @throws \Civi\Twingle\Shop\Exceptions\ProductException
    * @throws \Civi\Core\Exception\DBQueryException
    */
   public static function findByExternalId($external_id) {
-    $dao = CRM_Twingle_BAO_TwingleShop::executeQuery("SELECT * FROM civicrm_twingle_product WHERE external_id = %1",
+    $dao = CRM_Twingle_BAO_TwingleShop::executeQuery('SELECT * FROM civicrm_twingle_product WHERE external_id = %1',
       [1 => [$external_id, 'String']]);
     if ($dao->fetch()) {
       $product = new self();
@@ -450,7 +452,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
 
     // Try to lookup object in database
     try {
-      $dao = CRM_Twingle_BAO_TwingleShop::executeQuery("SELECT * FROM civicrm_twingle_product WHERE external_id = %1",
+      $dao = CRM_Twingle_BAO_TwingleShop::executeQuery('SELECT * FROM civicrm_twingle_product WHERE external_id = %1',
         [1 => [$this->external_id, 'String']]);
       if ($dao->fetch()) {
         $this->copyValues(array_merge($dao->toArray(), $this->getAttributes()));
@@ -514,7 +516,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
    * @throws \CRM_Core_Exception
    * @throws \Civi\Twingle\Shop\Exceptions\ProductException
    */
-  function delete($useWhere = FALSE) {
+  public function delete($useWhere = FALSE) {
     // Register post-hook
     $twingle_product_values = $this->getAttributes();
     \CRM_Utils_Hook::pre('delete', 'TwingleProduct', $this->id, $twingle_product_values);
@@ -529,7 +531,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
     // Free global arrays associated with this object
     $this->free();
 
-    return true;
+    return TRUE;
   }
 
   /**
@@ -572,8 +574,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
    * @return bool
    */
   public function equals($product_to_compare_with) {
-    return
-      $this->name === $product_to_compare_with->name &&
+    return $this->name === $product_to_compare_with->name &&
       $this->description === $product_to_compare_with->description &&
       $this->text === $product_to_compare_with->text &&
       $this->price === $product_to_compare_with->price &&

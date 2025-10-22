@@ -44,7 +44,7 @@ class CRM_Twingle_Submission {
   /**
    * List of allowed product attributes.
    */
-  const ALLOWED_PRODUCT_ATTRIBUTES = [
+  public const ALLOWED_PRODUCT_ATTRIBUTES = [
     'id',
     'name',
     'internal_id',
@@ -64,7 +64,9 @@ class CRM_Twingle_Submission {
    * @throws \CRM_Core_Exception
    *   When invalid parameters have been submitted.
    */
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
   public static function validateSubmission(&$params, $profile = NULL): void {
+  // phpcs:enable
     if (!isset($profile)) {
       $profile = CRM_Twingle_Profile::createDefaultProfile();
     }
@@ -142,7 +144,7 @@ class CRM_Twingle_Submission {
         $products = json_decode($params['products'], TRUE);
         $params['products'] = array_map(function ($product) {
             return array_intersect_key($product, array_flip(self::ALLOWED_PRODUCT_ATTRIBUTES));
-          }, $products);
+        }, $products);
       }
       if (!is_array($params['products'])) {
         throw new CiviCRM_API3_Exception(
@@ -483,7 +485,7 @@ class CRM_Twingle_Submission {
     $contribution_id = $values['contribution']['id'];
     if (empty($contribution_id)) {
       throw new LineItemException(
-        "Could not find contribution id for line item assignment.",
+        'Could not find contribution id for line item assignment.',
         LineItemException::ERROR_CODE_CONTRIBUTION_NOT_FOUND
       );
     }
@@ -491,7 +493,7 @@ class CRM_Twingle_Submission {
     foreach ($submission['products'] as $product) {
 
       $line_item_data = [
-        'entity_table' => "civicrm_contribution",
+        'entity_table' => 'civicrm_contribution',
         'contribution_id' => $contribution_id,
         'entity_id' => $contribution_id,
         'label' => $product['name'],
@@ -508,7 +510,7 @@ class CRM_Twingle_Submission {
       }
       catch (Exception $e) {
         Civi::log()->error(E::LONG_NAME .
-          ": An error occurred when searching for TwingleShop with the external ID " .
+          ': An error occurred when searching for TwingleShop with the external ID ' .
           $product['id'], ['exception' => $e]);
         $price_field = NULL;
       }
@@ -516,17 +518,27 @@ class CRM_Twingle_Submission {
       if ($price_field) {
 
         // Log warning if price is not variable and differs from the submission
-        if ($price_field->price !== Null && $price_field->price != (int) $product['price']) {
+        if ($price_field->price !== NULL && $price_field->price != (int) $product['price']) {
           Civi::log()->warning(E::LONG_NAME .
-            ": Price for product " . $product['name'] . " differs from the PriceField. " .
-            "Using the price from the submission.", ['price_field' => $price_field->price, 'submission' => $product['price']]);
+            ': Price for product ' . $product['name'] . ' differs from the PriceField. ' .
+            'Using the price from the submission.',
+            [
+              'price_field' => $price_field->price,
+              'submission' => $product['price'],
+            ]
+          );
         }
 
         // Log warning if name differs from the submission
         if ($price_field->name != $product['name']) {
           Civi::log()->warning(E::LONG_NAME .
-            ": Name for product " . $product['name'] . " differs from the PriceField " .
-            "Using the name from the submission.", ['price_field' => $price_field->name, 'submission' => $product['name']]);
+            ': Name for product ' . $product['name'] . ' differs from the PriceField ' .
+            'Using the name from the submission.',
+            [
+              'price_field' => $price_field->name,
+              'submission' => $product['name'],
+            ]
+          );
         }
 
         // Set the financial type and price field id
@@ -566,7 +578,7 @@ class CRM_Twingle_Submission {
       ])['name'];
 
       $donation_line_item_data = [
-        'entity_table' => "civicrm_contribution",
+        'entity_table' => 'civicrm_contribution',
         'contribution_id' => $contribution_id,
         'entity_id' => $contribution_id,
         'label' => $donation_label,
@@ -581,7 +593,7 @@ class CRM_Twingle_Submission {
 
       if (!empty($donation_line_item['is_error'])) {
         throw new CiviCRM_API3_Exception(
-          E::ts("Could not create line item for donation"),
+          E::ts('Could not create line item for donation'),
           'api_error'
         );
       }
@@ -591,4 +603,5 @@ class CRM_Twingle_Submission {
 
     return $line_items;
   }
+
 }

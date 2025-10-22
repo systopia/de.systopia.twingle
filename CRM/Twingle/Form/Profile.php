@@ -167,7 +167,9 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   /**
    * Builds the form structure.
    */
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.MaxExceeded, Drupal.WhiteSpace.ScopeIndent.IncorrectExact
   public function buildQuickForm(): void {
+  // phpcs: enable
     $profile_name = (isset($this->profile) ? $this->profile->getName() : NULL);
 
     switch ($this->_op) {
@@ -650,6 +652,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
           $required = FALSE;
         }
         if (!isset($profile_data[$key]) && $required) {
+          // phpcs:disable Generic.Files.LineLength.TooLong
           CRM_Core_Session::setStatus(
             E::ts(
               'The required configuration option "%1" has no value. Saving the profile might set this option to a possibly unwanted default value.',
@@ -658,6 +661,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
             E::ts('Error'),
             'error'
           );
+          // phpcs:enable
         }
       }
     }
@@ -1037,4 +1041,5 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     }
     return static::$_campaigns;
   }
+
 }

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 use CRM_Twingle_ExtensionUtil as E;
 
 /**
@@ -34,7 +37,7 @@ function civicrm_api3_twingle_shop_Getsingle($params) {
   // Check whether any parameters are set
   if (empty($params)) {
     return civicrm_api3_create_error(
-      "At least one parameter must be set",
+      'At least one parameter must be set',
       ['error_code' => 'missing_parameter', 'params' => $params]
     );
   }
