@@ -4,22 +4,28 @@ parameters:
 		- Civi
 		- CRM
 		- tests
+		- twingle.php
 	excludePaths:
 		analyse:
-			- CRM/*/DAO/*
+			- CRM/Twingle/DAO/*
 			- tests/phpunit/bootstrap.php
 	scanFiles:
 		- twingle.civix.php
 		- tools/phpunit/vendor/bin/.phpunit/phpunit/src/Framework/TestCase.php
 	scanDirectories:
 		- tools/phpunit/vendor/bin/.phpunit/phpunit/src/Framework
+		- mixin
 	bootstrapFiles:
 		- tools/phpunit/vendor/bin/.phpunit/phpunit/vendor/autoload.php
-		- vendor/autoload.php
 		- phpstanBootstrap.php
 	level: 9
 	universalObjectCratesClasses:
 		- Civi\Core\Event\GenericHookEvent
+		- CRM_Core_Config
+		- CRM_Core_DAO
+	earlyTerminatingMethodCalls:
+		CRM_Queue_Runner:
+		  - runAllViaWeb
 	checkTooWideReturnTypesInProtectedAndPublicMethods: true
 	checkUninitializedProperties: true
 	checkMissingCallableSignature: true
@@ -34,9 +40,4 @@ parameters:
 	ignoreErrors:
 		# Note paths are prefixed with "*/" to work with inspections in PHPStorm because of:
 		# https://youtrack.jetbrains.com/issue/WI-63891/PHPStan-ignoreErrors-configuration-isnt-working-with-inspections
-
-		# Example
-		#- # Accessing results of API requests
-			#message: "#^Offset '[^']+' does not exist on array[^\\|]+\\|null.$#"
-			#path: */tests/phpunit/**/*Test.php
 	tmpDir: .phpstan

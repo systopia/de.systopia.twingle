@@ -7,6 +7,7 @@
     <file>Civi</file>
     <file>CRM</file>
     <file>tests</file>
+    <file>twingle.php</file>
 
     <exclude-pattern>/CRM/[^/]+/DAO/.*\.php$</exclude-pattern>
 
