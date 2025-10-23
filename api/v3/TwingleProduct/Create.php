@@ -109,7 +109,7 @@ function _civicrm_api3_twingle_product_Create_spec(&$spec) {
  *
  * @see civicrm_api3_create_success
  *
- * @throws API_Exception
+ * @throws CRM_Core_Exception
  * @throws \Exception
  */
 function civicrm_api3_twingle_product_Create($params): array {

@@ -145,7 +145,7 @@ class CRM_Twingle_Submission {
           }, $products);
       }
       if (!is_array($params['products'])) {
-        throw new CiviCRM_API3_Exception(
+        throw new CRM_Core_Exception(
           E::ts('Invalid format for products.'),
           'invalid_format'
         );
@@ -472,7 +472,7 @@ class CRM_Twingle_Submission {
    * @param $profile
    *   The twingle profile used
    *
-   * @throws \CiviCRM_API3_Exception
+   * @throws \CRM_Core_Exception
    * @throws \CRM_Core_Exception
    * @throws \Civi\Twingle\Shop\Exceptions\LineItemException
    */
@@ -546,7 +546,7 @@ class CRM_Twingle_Submission {
 
       if (!empty($line_item['is_error'])) {
         $line_item_name = $line_item_data['name'];
-        throw new CiviCRM_API3_Exception(
+        throw new CRM_Core_Exception(
           E::ts("Could not create line item for product '%1'", [1 => $line_item_name]),
           'api_error'
         );
@@ -580,7 +580,7 @@ class CRM_Twingle_Submission {
       $donation_line_item = civicrm_api3('LineItem', 'create', $donation_line_item_data);
 
       if (!empty($donation_line_item['is_error'])) {
-        throw new CiviCRM_API3_Exception(
+        throw new CRM_Core_Exception(
           E::ts("Could not create line item for donation"),
           'api_error'
         );

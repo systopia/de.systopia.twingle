@@ -63,7 +63,7 @@ function _civicrm_api3_twingle_product_Get_spec(&$spec) {
  * @return array
  *   API result descriptor
  *
- * @throws API_Exception
+ * @throws CRM_Core_Exception
  * @see civicrm_api3_create_success
  *
  */
