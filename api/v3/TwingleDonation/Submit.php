@@ -570,7 +570,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
             [
               'id' => (int) $group_id,
             ]
-          )['visibility'] == 'Public Pages';
+          )['visibility'] === 'Public Pages';
         if (!in_array($group_id, $group_memberships, FALSE) && $is_public_group) {
           $result = civicrm_api3(
             'MailingEventSubscribe',
@@ -669,7 +669,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
 
     if (
       CRM_Twingle_Submission::civiSepaEnabled()
-      && $contribution_data['payment_instrument_id'] == 'sepa'
+      && $contribution_data['payment_instrument_id'] === 'sepa'
     ) {
       // If CiviSEPA is installed and the financial type is a CiviSEPA-one,
       // create SEPA mandate (and recurring contribution, using "createfull" API
@@ -701,7 +701,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
         // ... CiviSEPA mandate attributes, ...
         // phpcs:ignore Drupal.Formatting.SpaceUnaryOperator.PlusMinus
         + [
-          'type' => ($params['donation_rhythm'] == 'one_time' ? 'OOFF' : 'RCUR'),
+          'type' => ($params['donation_rhythm'] === 'one_time' ? 'OOFF' : 'RCUR'),
           'iban' => $params['debit_iban'],
           'bic' => $params['debit_bic'],
           'reference' => $params['debit_mandate_reference'],
@@ -888,7 +888,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
     // MEMBERSHIP CREATION
 
     // CHECK whether a membership should be created (based on profile settings and data provided)
-    if ($params['donation_rhythm'] == 'one_time') {
+    if ($params['donation_rhythm'] === 'one_time') {
       // membership creation based on one-off contributions
       $membership_type_id = $profile->getAttribute('membership_type_id');
     }
@@ -932,7 +932,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
           }
           elseif (isset($result_values['sepa_mandate'])) {
             $mandate = reset($result_values['sepa_mandate']);
-            if ($mandate['entity_table'] == 'civicrm_contribution_recur') {
+            if ($mandate['entity_table'] === 'civicrm_contribution_recur') {
               $recurring_contribution_id = (int) $mandate['entity_id'];
             }
           }

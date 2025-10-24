@@ -26,7 +26,7 @@ use CRM_Twingle_ExtensionUtil as E;
  * This is a generic test class implemented with PHPUnit.
  *
  * @group headless
- * @covers ::\civicrm_api3_twingle_donation_Submit()
+ * @covers ::civicrm_api3_twingle_donation_Submit()
  */
 // phpcs:disable Generic.Files.LineLength.TooLong
 class api_v3_TwingleDonation_SubmitTest extends \PHPUnit\Framework\TestCase implements HeadlessInterface, TransactionalInterface {

@@ -37,7 +37,6 @@ function _civicrm_api3_twingle_product_Delete_spec(&$spec) {
  * @return array
  *   API result descriptor
  *
- * @throws API_Exception*@throws \Exception
  * @throws \Exception
  * @see civicrm_api3_create_success
  *

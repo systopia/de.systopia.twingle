@@ -16,25 +16,25 @@ use CRM_Twingle_ExtensionUtil as E;
  * @throws \Civi\Twingle\Shop\Exceptions\ShopException
  */
 function twingle_civicrm_pre($op, $objectName, $id, &$params) {
-  if ($objectName == 'ContributionRecur' && $op == 'edit') {
+  if ($objectName === 'ContributionRecur' && $op === 'edit') {
     CRM_Twingle_Tools::checkRecurringContributionChange((int) $id, $params);
   }
 
   // Create/delete PriceField and PriceFieldValue for TwingleProduct
-  elseif ($objectName == 'TwingleProduct') {
+  elseif ($objectName === 'TwingleProduct') {
     $twingle_product = new CRM_Twingle_BAO_TwingleProduct();
     $twingle_product->load($params);
-    if ($op == 'create' || $op == 'edit') {
+    if ($op === 'create' || $op === 'edit') {
       $twingle_product->createPriceField();
     }
-    elseif ($op == 'delete') {
+    elseif ($op === 'delete') {
       $twingle_product->deletePriceField();
     }
     $params = $twingle_product->getAttributes();
   }
 
   // Create PriceSet for TwingleShop
-  elseif ($objectName == 'TwingleShop' && ($op == 'create' || $op == 'edit')) {
+  elseif ($objectName === 'TwingleShop' && ($op === 'create' || $op === 'edit')) {
     $twingle_shop = new CRM_Twingle_BAO_TwingleShop();
     $twingle_shop->load($params);
     $twingle_shop->createPriceSet();

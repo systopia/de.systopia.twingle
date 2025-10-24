@@ -47,7 +47,7 @@ function civicrm_api3_twingle_shop_Getsingle($params) {
   $count = $returnValues['count'];
 
   // Check whether only a single TwingleShop is found
-  if ($count != 1) {
+  if ($count !== 1) {
     return civicrm_api3_create_error(
       "Expected one TwingleShop but found $count",
       ['error_code' => 'not_found', 'params' => $params]
