@@ -291,6 +291,10 @@ msgid "Financial type (recurring)"
 msgstr ""
 
 #: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php
+msgid "Use booking date if available"
+msgstr ""
+
+#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php
 msgid "Gender option for submitted value \"male\""
 msgstr ""
 
@@ -659,6 +663,10 @@ msgid "never"
 msgstr ""
 
 #: CRM/Twingle/Submission.php
+msgid "Contribution with the given transaction ID already exists."
+msgstr ""
+
+#: CRM/Twingle/Submission.php
 msgid "Invalid donation rhythm."
 msgstr ""
 
@@ -699,11 +707,43 @@ msgid "Could not calculate SEPA cycle day from configuration."
 msgstr ""
 
 #: CRM/Twingle/Submission.php
+msgid "Organisation contact could not be found or created."
+msgstr ""
+
+#: CRM/Twingle/Submission.php
+msgid "Individual contact could not be found or created."
+msgstr ""
+
+#: CRM/Twingle/Submission.php
+msgid "Could not find recurring contribution with given parent transaction ID."
+msgstr ""
+
+#: CRM/Twingle/Submission.php
+msgid "Could not create contribution"
+msgstr ""
+
+#: CRM/Twingle/Submission.php
+msgid "Missing attribute %1 for SEPA mandate"
+msgstr ""
+
+#: CRM/Twingle/Submission.php
+msgid "SEPA creditor is not configured for profile \"%1\"."
+msgstr ""
+
+#: CRM/Twingle/Submission.php
+msgid "Could not create recurring contribution."
+msgstr ""
+
+#: CRM/Twingle/Submission.php
 msgid "Could not create line item for product '%1'"
 msgstr ""
 
 #: CRM/Twingle/Submission.php
 msgid "Could not create line item for donation"
+msgstr ""
+
+#: CRM/Twingle/Submission.php
+msgid "Twingle membership postprocessing call has failed, see log for more information"
 msgstr ""
 
 #: CRM/Twingle/Tools.php
@@ -812,6 +852,14 @@ msgstr ""
 
 #: api/v3/TwingleDonation/Submit.php
 msgid "The date when the donation was issued, format: YmdHis."
+msgstr ""
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "Booked at"
+msgstr ""
+
+#: api/v3/TwingleDonation/Submit.php
+msgid "The date when the donation was booked, format: YmdHis."
 msgstr ""
 
 #: api/v3/TwingleDonation/Submit.php
@@ -1044,42 +1092,6 @@ msgstr ""
 
 #: api/v3/TwingleDonation/Submit.php
 msgid "Additional remarks for the donation."
-msgstr ""
-
-#: api/v3/TwingleDonation/Submit.php
-msgid "Contribution with the given transaction ID already exists."
-msgstr ""
-
-#: api/v3/TwingleDonation/Submit.php
-msgid "Organisation contact could not be found or created."
-msgstr ""
-
-#: api/v3/TwingleDonation/Submit.php
-msgid "Individual contact could not be found or created."
-msgstr ""
-
-#: api/v3/TwingleDonation/Submit.php
-msgid "Missing attribute %1 for SEPA mandate"
-msgstr ""
-
-#: api/v3/TwingleDonation/Submit.php
-msgid "SEPA creditor is not configured for profile \"%1\"."
-msgstr ""
-
-#: api/v3/TwingleDonation/Submit.php
-msgid "Could not create recurring contribution."
-msgstr ""
-
-#: api/v3/TwingleDonation/Submit.php
-msgid "Could not find recurring contribution with given parent transaction ID."
-msgstr ""
-
-#: api/v3/TwingleDonation/Submit.php
-msgid "Could not create contribution"
-msgstr ""
-
-#: api/v3/TwingleDonation/Submit.php
-msgid "Twingle membership postprocessing call has failed, see log for more information"
 msgstr ""
 
 #: api/v3/TwingleProduct/Create.php api/v3/TwingleProduct/Delete.php api/v3/TwingleProduct/Get.php
