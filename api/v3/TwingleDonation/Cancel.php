@@ -61,7 +61,12 @@ function _civicrm_api3_twingle_donation_Cancel_spec(&$params) {
 /**
  * TwingleDonation.Cancel API
  *
- * @param array<string, mixed> $params
+ * @phpstan-param array{
+ *   cancelled_at: string,
+ *   project_id: string,
+ *   trx_id: string,
+ *   cancel_reason: string,
+ * } $params
  * @return array<string, mixed> API result descriptor
  * @see civicrm_api3_create_success
  * @see civicrm_api3_create_error
