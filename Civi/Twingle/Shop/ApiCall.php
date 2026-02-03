@@ -134,7 +134,6 @@ class ApiCall {
     $response = json_decode(curl_exec($curl), TRUE);
 
     if (empty($response)) {
-      curl_close($curl);
       throw new ApiCallError(
         E::ts('Call to Twingle API failed. Please check your api token.'),
         ApiCallError::ERROR_CODE_CONNECTION_FAILED,
@@ -163,7 +162,6 @@ class ApiCall {
   protected static function check_response_and_close($response, $curl) {
 
     $curl_status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    curl_close($curl);
 
     if ($response === FALSE) {
       throw new ApiCallError(

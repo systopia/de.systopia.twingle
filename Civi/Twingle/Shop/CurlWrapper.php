@@ -25,8 +25,6 @@ class CurlWrapper {
     return curl_getinfo($ch, $option);
   }
 
-  public function close($ch) {
-    curl_close($ch);
-  }
+  public function close($ch) {}
 
 }
