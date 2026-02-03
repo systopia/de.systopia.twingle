@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 use CRM_Twingle_ExtensionUtil as E;
 
 /**
@@ -35,7 +37,6 @@ function _civicrm_api3_twingle_product_Delete_spec(&$spec) {
  * @return array
  *   API result descriptor
  *
- * @throws CRM_Core_Exception*@throws \Exception
  * @throws \Exception
  * @see civicrm_api3_create_success
  *

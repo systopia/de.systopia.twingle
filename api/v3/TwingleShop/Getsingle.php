@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types = 1);
+
 use CRM_Twingle_ExtensionUtil as E;
 
 /**
@@ -23,7 +26,7 @@ function _civicrm_api3_twingle_shop_Getsingle_spec(&$spec) {
  *
  * @see civicrm_api3_create_success
  *
- * @throws CRM_Core_Exception
+ * @throws \CRM_Core_Exception
  */
 function civicrm_api3_twingle_shop_Getsingle($params) {
   // Filter for allowed params
@@ -34,7 +37,7 @@ function civicrm_api3_twingle_shop_Getsingle($params) {
   // Check whether any parameters are set
   if (empty($params)) {
     return civicrm_api3_create_error(
-      "At least one parameter must be set",
+      'At least one parameter must be set',
       ['error_code' => 'missing_parameter', 'params' => $params]
     );
   }
@@ -44,7 +47,7 @@ function civicrm_api3_twingle_shop_Getsingle($params) {
   $count = $returnValues['count'];
 
   // Check whether only a single TwingleShop is found
-  if ($count != 1) {
+  if ($count !== 1) {
     return civicrm_api3_create_error(
       "Expected one TwingleShop but found $count",
       ['error_code' => 'not_found', 'params' => $params]

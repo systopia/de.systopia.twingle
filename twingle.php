@@ -1,6 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
+// phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
 require_once 'twingle.civix.php';
+// phpcs:enable
+
 use CRM_Twingle_ExtensionUtil as E;
 
 /**
@@ -11,25 +16,25 @@ use CRM_Twingle_ExtensionUtil as E;
  * @throws \Civi\Twingle\Shop\Exceptions\ShopException
  */
 function twingle_civicrm_pre($op, $objectName, $id, &$params) {
-  if ($objectName == 'ContributionRecur' && $op == 'edit') {
+  if ($objectName === 'ContributionRecur' && $op === 'edit') {
     CRM_Twingle_Tools::checkRecurringContributionChange((int) $id, $params);
   }
 
   // Create/delete PriceField and PriceFieldValue for TwingleProduct
-  elseif ($objectName == 'TwingleProduct') {
+  elseif ($objectName === 'TwingleProduct') {
     $twingle_product = new CRM_Twingle_BAO_TwingleProduct();
     $twingle_product->load($params);
-    if ($op == 'create' || $op == 'edit') {
+    if ($op === 'create' || $op === 'edit') {
       $twingle_product->createPriceField();
     }
-    elseif ($op == 'delete') {
+    elseif ($op === 'delete') {
       $twingle_product->deletePriceField();
     }
     $params = $twingle_product->getAttributes();
   }
 
   // Create PriceSet for TwingleShop
-  elseif ($objectName == 'TwingleShop' && ($op == 'create' || $op == 'edit')) {
+  elseif ($objectName === 'TwingleShop' && ($op === 'create' || $op === 'edit')) {
     $twingle_shop = new CRM_Twingle_BAO_TwingleShop();
     $twingle_shop->load($params);
     $twingle_shop->createPriceSet();
@@ -83,9 +88,9 @@ function twingle_civicrm_permission(&$permissions) {
  */
 function twingle_civicrm_alterAPIPermissions($entity, $action, &$params, &$permissions) {
   // Restrict API calls to the permission.
-  $permissions['twingle_donation']['submit'] = array('access Twingle API');
-  $permissions['twingle_donation']['cancel']  = array('access Twingle API');
-  $permissions['twingle_donation']['endrecurring']  = array('access Twingle API');
+  $permissions['twingle_donation']['submit'] = ['access Twingle API'];
+  $permissions['twingle_donation']['cancel']  = ['access Twingle API'];
+  $permissions['twingle_donation']['endrecurring']  = ['access Twingle API'];
 }
 
 /**
@@ -93,36 +98,8 @@ function twingle_civicrm_alterAPIPermissions($entity, $action, &$params, &$permi
  *
  * @param array $logTableSpec
  */
-function twingle_civicrm_alterLogTables(&$logTableSpec)
-{
+function twingle_civicrm_alterLogTables(&$logTableSpec) {
   if (isset($logTableSpec['civicrm_twingle_profile'])) {
     $logTableSpec['civicrm_twingle_profile']['exceptions'] = ['last_access', 'access_counter'];
   }
 }
-
-// --- Functions below this ship commented out. Uncomment as required. ---
-
-/**
- * Implements hook_civicrm_preProcess().
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_preProcess
- *
-
- // */
-
-/**
- * Implements hook_civicrm_navigationMenu().
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_navigationMenu
- *
-function twingle_civicrm_navigationMenu(&$menu) {
-  _twingle_civix_insert_navigation_menu($menu, NULL, array(
-    'label' => E::ts('The Page'),
-    'name' => 'the_page',
-    'url' => 'civicrm/the-page',
-    'permission' => 'access CiviReport,access CiviContribute',
-    'operator' => 'OR',
-    'separator' => 0,
-  ));
-  _twingle_civix_navigationMenu($menu);
-} // */

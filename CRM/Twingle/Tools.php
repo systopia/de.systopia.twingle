@@ -41,7 +41,7 @@ class CRM_Twingle_Tools {
     }
 
     // check if the target status is not closed
-    if (in_array($change['contribution_status_id'], [2, 5])) {
+    if (in_array((int) $change['contribution_status_id'], [2, 5], TRUE)) {
       return;
     }
 
@@ -73,7 +73,7 @@ class CRM_Twingle_Tools {
     }
 
     // check if it's really a termination (i.e. current status is 2 or 5)
-    if (!in_array($recurring_contribution['contribution_status_id'], [2, 5])) {
+    if (!in_array((int) $recurring_contribution['contribution_status_id'], [2, 5], TRUE)) {
       return;
     }
 
@@ -104,7 +104,7 @@ class CRM_Twingle_Tools {
 
     // check if it's a Twingle contribution by checking the prefix
     // fixme: better ways (e.g. tags) should be used to mark twingle contributions
-    return (substr($recurring_contribution['trxn_id'], 0, strlen($prefix)) == $prefix);
+    return (substr($recurring_contribution['trxn_id'], 0, strlen($prefix)) === $prefix);
   }
 
   /**
@@ -211,7 +211,7 @@ class CRM_Twingle_Tools {
         $sepa_payment_instruments[] = $payment_instrument['value'];
       }
     }
-    return in_array($payment_instrument_id, $sepa_payment_instruments);
+    return in_array($payment_instrument_id, $sepa_payment_instruments, TRUE);
   }
 
   /**
@@ -229,7 +229,7 @@ class CRM_Twingle_Tools {
           'entity_table' => 'civicrm_contribution_recur',
           'type'         => 'RCUR',
         ]);
-        if ($rcur_mandate['count'] == 1) {
+        if ($rcur_mandate['count'] === 1) {
           return reset($rcur_mandate['values']);
         }
 
@@ -240,7 +240,7 @@ class CRM_Twingle_Tools {
           'entity_table' => 'civicrm_contribution',
           'type'         => 'OOFF',
         ]);
-        if ($ooff_mandate['count'] == 1) {
+        if ($ooff_mandate['count'] === 1) {
           return reset($ooff_mandate['values']);
         }
       }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 use CRM_Twingle_ExtensionUtil as E;
 use Civi\Twingle\Shop\Exceptions\ApiCallError;
 use Civi\Twingle\Shop\Exceptions\ProductException;
@@ -65,7 +67,7 @@ function civicrm_api3_twingle_shop_Fetch($params) {
     catch (ShopException | ApiCallError | ProductException $e) {
       // If this project identifier doesn't belong to a project of type
       // 'shop', just skip it
-      if ($e->getErrorCode() == ShopException::ERROR_CODE_NOT_A_SHOP) {
+      if ($e->getErrorCode() === ShopException::ERROR_CODE_NOT_A_SHOP) {
         $returnValues[$projectId] = "project is not of type 'shop'";
         continue;
       }

@@ -44,7 +44,7 @@ class CRM_Twingle_Submission {
   /**
    * List of allowed product attributes.
    */
-  const ALLOWED_PRODUCT_ATTRIBUTES = [
+  public const ALLOWED_PRODUCT_ATTRIBUTES = [
     'id',
     'name',
     'internal_id',
@@ -54,23 +54,73 @@ class CRM_Twingle_Submission {
   ];
 
   /**
-   * @param array &$params
-   *   A reference to the parameters array of the submission.
-   *
-   * @param \CRM_Twingle_Profile $profile
-   *   The Twingle profile to use for validation, defaults to the default
-   *   profile.
-   *
+   * @phpstan-var array<string, mixed>
+   */
+  protected array $params;
+
+  protected CRM_Twingle_Profile $profile;
+
+  /**
+   * @phpstan-var array<string, mixed>
+   */
+  protected array $customFieldValues;
+
+  /**
+   * @phpstan-var array<string, mixed>
+   */
+  protected array $resultValues = [];
+
+  /**
+   * @phpstan-param array{
+   *   project_id: string,
+   * } $params
+   */
+  public function __construct(array $params) {
+    $this->params = $params;
+    $this->profile = CRM_Twingle_Profile::getProfileForProject($params['project_id']);
+    $this->setCustomFieldValues();
+  }
+
+  public function getProfile(): CRM_Twingle_Profile {
+    return $this->profile;
+  }
+
+  public function getResultValues(): array {
+    return $this->resultValues;
+  }
+
+  public function getResultValue(string $key) {
+    return $this->resultValues[$key] ?? NULL;
+  }
+
+  public function setResultValue(string $key, $value): void {
+    $this->resultValues[$key] = $value;
+  }
+
+  /**
    * @throws \CRM_Core_Exception
    *   When invalid parameters have been submitted.
    */
-  public static function validateSubmission(&$params, $profile = NULL): void {
-    if (!isset($profile)) {
-      $profile = CRM_Twingle_Profile::createDefaultProfile();
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
+  public function validateSubmission(): void {
+  // phpcs:enable
+    // Do not process an already existing contribution with the given
+    // transaction ID.
+    $existing_contribution = civicrm_api3('Contribution', 'get', [
+      'trxn_id' => $this->profile->getTransactionID($this->params['trx_id']),
+    ]);
+    $existing_contribution_recur = civicrm_api3('ContributionRecur', 'get', [
+      'trxn_id' => $this->profile->getTransactionID($this->params['trx_id']),
+    ]);
+    if ($existing_contribution['count'] > 0 || $existing_contribution_recur['count'] > 0) {
+      throw new CRM_Core_Exception(
+        E::ts('Contribution with the given transaction ID already exists.'),
+        'api_error'
+      );
     }
 
     // Validate donation rhythm.
-    if (!in_array($params['donation_rhythm'], [
+    if (!in_array($this->params['donation_rhythm'], [
       'one_time',
       'halfyearly',
       'quarterly',
@@ -85,17 +135,17 @@ class CRM_Twingle_Submission {
 
     // Get the payment instrument defined within the profile, or return an error
     // if none matches (i.e. an unknown payment method was submitted).
-    $payment_instrument_id = $profile->getAttribute('pi_' . $params['payment_method'], '');
+    $payment_instrument_id = $this->profile->getAttribute('pi_' . $this->params['payment_method'], '');
     if ('' === $payment_instrument_id) {
       throw new CRM_Core_Exception(
         E::ts('Payment method could not be matched to existing payment instrument.'),
         'invalid_format'
       );
     }
-    $params['payment_instrument_id'] = $payment_instrument_id;
+    $this->params['payment_instrument_id'] = $payment_instrument_id;
 
     // Validate date for parameter "confirmed_at".
-    if (FALSE === DateTime::createFromFormat('YmdHis', $params['confirmed_at'])) {
+    if (FALSE === DateTime::createFromFormat('YmdHis', $this->params['confirmed_at'])) {
       throw new CRM_Core_Exception(
         E::ts('Invalid date for parameter "confirmed_at".'),
         'invalid_format'
@@ -103,7 +153,10 @@ class CRM_Twingle_Submission {
     }
 
     // Validate date for parameter "user_birthdate".
-    if (!empty($params['user_birthdate']) && FALSE === DateTime::createFromFormat('Ymd', $params['user_birthdate'])) {
+    if (
+      !empty($this->params['user_birthdate'])
+      && FALSE === DateTime::createFromFormat('Ymd', $this->params['user_birthdate'])
+    ) {
       throw new CRM_Core_Exception(
         E::ts('Invalid date for parameter "user_birthdate".'),
         'invalid_format'
@@ -112,23 +165,23 @@ class CRM_Twingle_Submission {
 
     // Get the gender ID defined within the profile, or return an error if none
     // matches (i.e. an unknown gender was submitted).
-    if (is_string($params['user_gender'])) {
-      $gender_id = $profile->getAttribute('gender_' . $params['user_gender']);
+    if (is_string($this->params['user_gender'])) {
+      $gender_id = $this->profile->getAttribute('gender_' . $this->params['user_gender']);
       if (!is_numeric($gender_id)) {
         throw new CRM_Core_Exception(
           E::ts('Gender could not be matched to existing gender.'),
           'invalid_format'
         );
       }
-      $params['gender_id'] = $gender_id;
+      $this->params['gender_id'] = $gender_id;
     }
 
     // Validate custom fields parameter, if given.
-    if (isset($params['custom_fields'])) {
-      if (is_string($params['custom_fields'])) {
-        $params['custom_fields'] = json_decode($params['custom_fields'], TRUE);
+    if (isset($this->params['custom_fields'])) {
+      if (is_string($this->params['custom_fields'])) {
+        $this->params['custom_fields'] = json_decode($this->params['custom_fields'], TRUE);
       }
-      if (!is_array($params['custom_fields'])) {
+      if (!is_array($this->params['custom_fields'])) {
         throw new CRM_Core_Exception(
           E::ts('Invalid format for custom fields.'),
           'invalid_format'
@@ -137,14 +190,17 @@ class CRM_Twingle_Submission {
     }
 
     // Validate products
-    if (!empty($params['products']) && $profile->isShopEnabled()) {
-      if (is_string($params['products'])) {
-        $products = json_decode($params['products'], TRUE);
-        $params['products'] = array_map(function ($product) {
+    if (!empty($this->params['products']) && $this->profile->isShopEnabled()) {
+      if (is_string($this->params['products'])) {
+        $products = json_decode($this->params['products'], TRUE);
+        $this->params['products'] = array_map(
+          function($product) {
             return array_intersect_key($product, array_flip(self::ALLOWED_PRODUCT_ATTRIBUTES));
-          }, $products);
+          },
+          $products
+        );
       }
-      if (!is_array($params['products'])) {
+      if (!is_array($this->params['products'])) {
         throw new CRM_Core_Exception(
           E::ts('Invalid format for products.'),
           'invalid_format'
@@ -153,10 +209,10 @@ class CRM_Twingle_Submission {
     }
 
     // Validate campaign_id, if given.
-    if (isset($params['campaign_id'])) {
+    if (isset($this->params['campaign_id'])) {
       // Check whether campaign_id is a numeric string and cast it to an integer.
-      if (is_numeric($params['campaign_id'])) {
-        $params['campaign_id'] = intval($params['campaign_id']);
+      if (is_numeric($this->params['campaign_id'])) {
+        $this->params['campaign_id'] = intval($this->params['campaign_id']);
       }
       else {
         throw new CRM_Core_Exception(
@@ -169,11 +225,11 @@ class CRM_Twingle_Submission {
         civicrm_api3(
           'Campaign',
           'getsingle',
-          ['id' => $params['campaign_id']]
+          ['id' => $this->params['campaign_id']]
         );
       }
       catch (CRM_Core_Exception $e) {
-        unset($params['campaign_id']);
+        unset($this->params['campaign_id']);
       }
     }
   }
@@ -325,7 +381,7 @@ class CRM_Twingle_Submission {
       'is_active' => 1,
     ]);
 
-    if ($existing_relationship['count'] == 0) {
+    if ($existing_relationship['count'] === 0) {
       // There is currently no (active) relationship between these contacts.
       $new_relationship_data = [
         'relationship_type_id' => self::EMPLOYER_RELATIONSHIP_TYPE_ID,
@@ -465,6 +521,644 @@ class CRM_Twingle_Submission {
   }
 
   /**
+   * Extract custom field values using the profile's mapping of Twingle fields to CiviCRM custom fields.
+   *
+   * @phpstan-param array{custom_fields: array<string, mixed>} $params
+   *
+   * @phpstan-return array<string, mixed>
+   */
+  public function getCustomFieldValues(): array {
+    return $this->customFieldValues;
+  }
+
+  protected function setCustomFieldValues(): void {
+    $this->customFieldValues = [];
+    if (is_array($this->params['custom_fields'] ?? NULL)) {
+      $custom_field_mapping = $this->profile->getCustomFieldMapping();
+
+      // Make all params available for custom field mapping
+      $allowed_params = [];
+      _civicrm_api3_twingle_donation_Submit_spec($allowed_params);
+      $this->params['custom_fields'] += array_intersect_key($this->params, $custom_field_mapping, $allowed_params);
+
+      foreach ($this->params['custom_fields'] as $twingle_field => $value) {
+        if (isset($custom_field_mapping[$twingle_field])) {
+          // Get custom field definition to store values by entity the field
+          // extends.
+          $custom_field_id = substr($custom_field_mapping[$twingle_field], strlen('custom_'));
+          /** @phpstan-var array{"api.CustomGroup.getsingle": array<string, mixed>} $custom_field */
+          $custom_field = civicrm_api3('CustomField', 'getsingle', [
+            'id' => $custom_field_id,
+            // Chain a CustomGroup.getsingle API call.
+            'api.CustomGroup.getsingle' => [],
+          ]);
+          $entity = $custom_field['api.CustomGroup.getsingle']['extends'];
+          $this->customFieldValues[$entity][$custom_field_mapping[$twingle_field]] = $value;
+        }
+      }
+    }
+  }
+
+  protected function prepareAddressParams(): array {
+    foreach ([
+      'user_street' => 'street_address',
+      'user_postal_code' => 'postal_code',
+      'user_city' => 'city',
+      'user_country' => 'country',
+    ] as $address_param => $address_component) {
+      if (isset($this->params[$address_param]) && '' !== $this->params[$address_param]) {
+        $this->params[$address_component] = $this->params[$address_param];
+        unset($this->params[$address_param]);
+      }
+    }
+
+    // Remove address data when any address component that is configured as
+    // required is missing.
+    // See https://github.com/systopia/de.systopia.twingle/issues/47
+    foreach ($this->profile->getAttribute('required_address_components', []) as $required_address_component) {
+      if (empty($this->params[$required_address_component])) {
+        foreach ([
+          'street_address',
+          'postal_code',
+          'city',
+          'country',
+        ] as $address_param) {
+          unset($this->params[$address_param]);
+        }
+        break;
+      }
+    }
+
+    // Add configured location type to parameters.
+    $this->params['location_type_id'] = (int) $this->profile->getAttribute('location_type_id');
+
+    // Exclude address for now when retrieving/creating the individual contact
+    // as we are checking organization address first and share it with the
+    // individual.
+    $submitted_address = [];
+    foreach ([
+      'street_address',
+      'postal_code',
+      'city',
+      'country',
+      'location_type_id',
+    ] as $address_component) {
+      if (!empty($this->params[$address_component])) {
+        $submitted_address[$address_component] = $this->params[$address_component];
+        unset($this->params[$address_component]);
+      }
+    }
+    return $submitted_address;
+  }
+
+  protected function prepareContactData(): array {
+    // Get the ID of the contact matching the given contact data, or create a
+    // new contact if none exists for the given contact data.
+    $contact_data = [];
+    foreach ([
+      'user_firstname' => 'first_name',
+      'user_lastname' => 'last_name',
+      'gender_id' => 'gender_id',
+      'user_birthdate' => 'birth_date',
+      'user_email' => 'email',
+      'user_telephone' => 'phone',
+      'user_language' => 'preferred_language',
+      'user_title' => 'formal_title',
+      'debit_iban' => 'iban',
+    ] as $contact_param => $contact_component) {
+      if (!empty($this->params[$contact_param])) {
+        $contact_data[$contact_component] = $this->params[$contact_param];
+      }
+    }
+
+    // Get the prefix ID defined within the profile
+    if (
+      isset($this->params['user_gender'])
+      && is_numeric($prefix_id = $this->profile->getAttribute('prefix_' . $this->params['user_gender']))
+    ) {
+      $contact_data['prefix_id'] = $prefix_id;
+    }
+
+    // Add custom field values.
+    if (isset($this->customFieldValues['Contact'])) {
+      $contact_data += $this->customFieldValues['Contact'];
+    }
+    if (isset($this->customFieldValues['Individual'])) {
+      $contact_data += $this->customFieldValues['Individual'];
+    }
+
+    return $contact_data;
+  }
+
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
+  public function handleContacts(): void {
+  // phpcs:enable
+    $params = $this->params;
+    $profile = $this->profile;
+    $customFieldValues = $this->getCustomFieldValues();
+    $contact_id = $this->getResultValue('contact');
+
+    if ((bool) $params['is_anonymous']) {
+      // Retrieve the ID of the contact to use for anonymous donations defined
+      // within the profile
+      $contact_id = civicrm_api3('Contact', 'getsingle', [
+        'id' => $profile->getAttribute('anonymous_contact_id'),
+      ])['id'];
+    }
+    else {
+      // Remove parameter "id".
+      if (isset($params['id'])) {
+        unset($params['id']);
+      }
+
+      // Exclude address for now when retrieving/creating the individual contact
+      // as we are checking organisation address first and share it with the
+      // individual.
+      $submitted_address = $this->prepareAddressParams($params, $profile);
+
+      // Prepare parameter mapping for organisation.
+      if (is_string($params['user_company']) && '' !== $params['user_company']) {
+        $params['organization_name'] = $params['user_company'];
+        unset($params['user_company']);
+      }
+
+      // Get the ID of the contact matching the given contact data, or create a
+      // new contact if none exists for the given contact data.
+      $contact_data = $this->prepareContactData();
+
+      // Organisation lookup.
+      if (is_string($params['organization_name'] ?? NULL) && '' !== $params['organization_name']) {
+        $organisation_data = [
+          'organization_name' => $params['organization_name'],
+        ];
+
+        // Add custom field values.
+        if (isset($customFieldValues['Organization'])) {
+          $organisation_data += $customFieldValues['Organization'];
+        }
+
+        if ([] !== $submitted_address) {
+          $organisation_data += $submitted_address;
+          // Use configured location type for organisation address.
+          $organisation_data['location_type_id'] = (int) $profile->getAttribute('location_type_id_organisation');
+        }
+        if (!is_int($organisation_id = self::getContact(
+          'Organization',
+          $organisation_data,
+          $profile,
+          $params
+        ))) {
+          throw new CRM_Core_Exception(
+            E::ts('Organisation contact could not be found or created.'),
+            'api_error'
+          );
+        }
+      }
+      elseif ([] !== $submitted_address) {
+        $contact_data += $submitted_address;
+      }
+
+      if (!is_int($contact_id = self::getContact(
+        'Individual',
+        $contact_data,
+        $profile,
+        $params
+      ))) {
+        throw new CRM_Core_Exception(
+          E::ts('Individual contact could not be found or created.'),
+          'api_error'
+        );
+      }
+
+      // Create contact notes.
+      /** @phpstan-var array<string> $contact_note_mappings */
+      $contact_note_mappings = $profile->getAttribute('map_as_contact_notes', []);
+      foreach (['user_extrafield'] as $target) {
+        if (
+          isset($params[$target])
+          && '' !== $params[$target]
+          && in_array($target, $contact_note_mappings, TRUE)
+        ) {
+          \Civi\Api4\Note::create(FALSE)
+            ->addValue('entity_table', 'civicrm_contact')
+            ->addValue('entity_id', $contact_id)
+            ->addValue('note', $params[$target])
+            ->execute();
+        }
+      }
+
+      // Share organisation address with individual contact, using configured
+      // location type for organisation address.
+      $address_shared = (
+        isset($organisation_id)
+        && self::shareWorkAddress(
+          $contact_id,
+          $organisation_id,
+          (int) $profile->getAttribute('location_type_id_organisation')
+        )
+      );
+
+      // Create employer relationship between organization and individual.
+      if (isset($organisation_id)) {
+        self::updateEmployerRelation($contact_id, $organisation_id);
+      }
+    }
+
+    $this->setResultValue('contact', (int) $contact_id);
+    if (isset($organisation_id)) {
+      $this->setResultValue('organization', $organisation_id);
+    }
+  }
+
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
+  public function handleGroups(): void {
+  // phpcs:enable
+    $params = $this->params;
+    $profile = $this->profile;
+    $resultValues = &$this->resultValues;
+    $contact_id = $this->getResultValue('contact');
+
+    // If usage of double opt-in is selected, use MailingEventSubscribe.create
+    // to add contact to newsletter groups defined in the profile
+    $this->setResultValue(
+      'newsletter_double_opt_in',
+      (bool) $profile->getAttribute('newsletter_double_opt_in') ? 'true' : 'false'
+    );
+    if (
+      (bool) $profile->getAttribute('newsletter_double_opt_in')
+      && (bool) ($params['newsletter'] ?? FALSE)
+      && is_array($groups = $profile->getAttribute('newsletter_groups'))
+    ) {
+      // TODO: Ensure the values being integers.
+      $group_memberships = array_column(
+        civicrm_api3(
+          'GroupContact',
+          'get',
+          [
+            'sequential' => 1,
+            'contact_id' => $contact_id,
+          ]
+        )['values'],
+        'group_id'
+      );
+      foreach ($groups as $group_id) {
+        $is_public_group = civicrm_api3(
+            'Group',
+            'getsingle',
+            [
+              'id' => (int) $group_id,
+            ],
+            )['visibility'] === 'Public Pages';
+        if (!in_array($group_id, $group_memberships, FALSE) && $is_public_group) {
+          $result = civicrm_api3(
+            'MailingEventSubscribe',
+            'create',
+            [
+              'email' => $params['user_email'],
+              'group_id' => (int) $group_id,
+              'contact_id' => $contact_id,
+            ]
+          );
+          $subscription = reset($result['values']);
+          $subscription['group_id'] = $group_id;
+          $resultValues['newsletter_subscriptions'][] = $subscription;
+        }
+        elseif ($is_public_group) {
+          $resultValues['newsletter_group_ids'][] = $group_id;
+        }
+      }
+    }
+    // If requested, add contact to newsletter groups defined in the profile.
+    elseif (
+      (bool) ($params['newsletter'] ?? FALSE)
+      && is_array($groups = $profile->getAttribute('newsletter_groups'))
+    ) {
+      foreach ($groups as $group_id) {
+        civicrm_api3(
+          'GroupContact',
+          'create',
+          [
+            'group_id' => $group_id,
+            'contact_id' => $contact_id,
+          ]
+        );
+        $resultValues['newsletter_group_ids'][] = $group_id;
+      }
+    }
+
+    // If requested, add contact to postinfo groups defined in the profile.
+    if (
+      (bool) ($params['postinfo'] ?? FALSE)
+      && is_array($groups = $profile->getAttribute('postinfo_groups'))
+    ) {
+      foreach ($groups as $group_id) {
+        civicrm_api3('GroupContact', 'create', [
+          'group_id' => $group_id,
+          'contact_id' => $contact_id,
+        ]);
+
+        $resultValues['postinfo'][] = $group_id;
+      }
+    }
+
+    // If requested, add contact to donation_receipt groups defined in the
+    // profile. If an organisation is provided, add it to the groups instead.
+    // (see issue #83)
+    if (
+      (bool) ($params['donation_receipt'] ?? FALSE)
+      && is_array($groups = $profile->getAttribute('donation_receipt_groups'))
+    ) {
+      foreach ($groups as $group_id) {
+        civicrm_api3('GroupContact', 'create', [
+          'group_id' => $group_id,
+          'contact_id' => $organisation_id ?? $contact_id,
+        ]);
+        $resultValues['donation_receipt_group_ids'][] = $group_id;
+      }
+    }
+  }
+
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
+  public function handleTransaction(): void {
+  // phpcs:enable
+    $contactId = $this->getResultValue('contact');
+    $profile = $this->profile;
+    $params = $this->params;
+    $customFieldValues = $this->getCustomFieldValues();
+
+    // Create contribution or SEPA mandate. Those attributes are valid for both,
+    // single and recurring contributions.
+    $contribution_data = [
+      'contact_id' => ($contactId),
+      'currency' => $params['currency'],
+      'trxn_id' => $profile->getTransactionID($params['trx_id']),
+      'payment_instrument_id' => $params['payment_instrument_id'],
+      'amount' => $params['amount'] / 100,
+      'total_amount' => $params['amount'] / 100,
+    ];
+
+    // If the submission contains products, do not auto-create a line item
+    if (!empty($params['products']) && $profile->isShopEnabled()) {
+      $contribution_data['skipLineItem'] = 1;
+    }
+
+    // Add custom field values.
+    if (isset($customFieldValues['Contribution'])) {
+      $contribution_data += $customFieldValues['Contribution'];
+    }
+
+    // set campaign, subject to configuration
+    self::setCampaign($contribution_data, 'contribution', $params, $profile);
+
+    if (NULL !== ($contribution_source = $profile->getAttribute('contribution_source'))) {
+      $contribution_data['source'] = $contribution_source;
+    }
+
+    if (
+      self::civiSepaEnabled()
+      && $contribution_data['payment_instrument_id'] === 'sepa'
+    ) {
+      // If CiviSEPA is installed and the financial type is a CiviSEPA-one,
+      // create SEPA mandate (and recurring contribution, using "createfull" API
+      // action).
+      self::createSepaMandate($contribution_data);
+    }
+    else {
+      // Set financial type depending on donation rhythm. This applies for
+      // initial recurring contributions and subsequent single contributions.
+      if ($params['donation_rhythm'] !== 'one_time') {
+        $contribution_data['financial_type_id'] = $profile->getAttribute('financial_type_id_recur');
+      }
+      else {
+        $contribution_data['financial_type_id'] = $profile->getAttribute('financial_type_id');
+      }
+
+      // Create (recurring) contribution.
+      // Those will have a donation_rhythm different from "one_time" and no
+      // parent_trx_id set.
+      if (
+        $params['donation_rhythm'] !== 'one_time'
+        && empty($params['parent_trx_id'])
+      ) {
+        $this->createRecurringContribution($contribution_data);
+      }
+
+      /** @phpstan-var bool $useBookingDate */
+      $useBookingDate = $profile->getAttribute('use_booking_date') ?? FALSE;
+      $bookingDate = isset($params['booked_at'])
+        ? date_create_from_format('YmdHis', $params['booked_at'])
+        : FALSE;
+
+      $contribution_data += [
+        'contribution_status_id' => $profile->getAttribute(
+          "pi_{$params['payment_method']}_status",
+          CRM_Twingle_Submission::CONTRIBUTION_STATUS_COMPLETED
+        ),
+        'receive_date' => $useBookingDate && FALSE !== $bookingDate ? $params['booked_at'] : $params['confirmed_at'],
+      ];
+
+      // Assign to recurring contribution.
+      if (!empty($params['parent_trx_id'])) {
+        try {
+          /** @phpstan-var array<string, mixed> $parent_contribution */
+          $parent_contribution = civicrm_api3('ContributionRecur', 'getsingle', [
+            'trxn_id' => $profile->getTransactionID($params['parent_trx_id']),
+          ]);
+          $contribution_data['contribution_recur_id'] = $parent_contribution['id'];
+        }
+        catch (CRM_Core_Exception $exception) {
+          $this->setResultValue(
+            'parent_contribution',
+            E::ts('Could not find recurring contribution with given parent transaction ID.')
+          );
+        }
+      }
+
+      $contribution = civicrm_api3('Contribution', 'create', $contribution_data);
+      /** @phpstan-var array{'values': array<int, array<mixed>>, 'is_error'?: string} $contribution */
+      if ((bool) ($contribution['is_error'] ?? FALSE)) {
+        throw new CRM_Core_Exception(
+          E::ts('Could not create contribution'),
+          'api_error'
+        );
+      }
+      $contribution = reset($contribution['values']);
+      /** @phpstan-var array{'id': int} $contribution */
+      $this->setResultValue('contribution', $contribution);
+
+      // Add notes to the contribution.
+      /** @phpstan-var array<string> $contribution_note_mappings */
+      $contribution_note_mappings = $profile->getAttribute('map_as_contribution_notes', []);
+      foreach (['purpose', 'remarks'] as $target) {
+        if (
+          in_array($target, $contribution_note_mappings, TRUE)
+          && isset($params[$target])
+          && '' !== $params[$target]
+        ) {
+          \Civi\Api4\Note::create(FALSE)
+            ->addValue('entity_table', 'civicrm_contribution')
+            ->addValue('entity_id', $contribution['id'])
+            ->addValue('note', $params[$target])
+            ->execute();
+        }
+      }
+
+      // Add products as line items to the contribution
+      if (!empty($params['products']) && $profile->isShopEnabled()) {
+        $line_items = self::createLineItems($this->getResultValues(), $params, $profile);
+        $resultContribution = $this->getResultValue('contribution');
+        $resultContribution['line_items'] = $line_items;
+        $this->setResultValue('contribution', $resultContribution);
+      }
+    }
+  }
+
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
+  protected function createSepaMandate(array $contribution_data): void {
+  // phpcs:enable
+    $profile = $this->getProfile();
+    $params = $this->params;
+    $custom_fields = $this->getCustomFieldValues();
+
+    foreach ([
+      'debit_iban',
+      'debit_bic',
+    ] as $sepa_attribute) {
+      if (!isset($params[$sepa_attribute])) {
+        throw new CRM_Core_Exception(
+          E::ts('Missing attribute %1 for SEPA mandate', [
+            1 => $sepa_attribute,
+          ]),
+          'invalid_format'
+        );
+      }
+    }
+
+    $creditor_id = $profile->getAttribute('sepa_creditor_id');
+    if (!isset($creditor_id) || '' === $creditor_id) {
+      throw new BaseException(
+        E::ts('SEPA creditor is not configured for profile "%1".', [1 => $profile->getName()])
+      );
+    }
+
+    // Compose mandate data from contribution data, ...
+    $mandate_data =
+      $contribution_data
+      // ... CiviSEPA mandate attributes, ...
+      // phpcs:ignore Drupal.Formatting.SpaceUnaryOperator.PlusMinus
+      + [
+        'type' => ($params['donation_rhythm'] === 'one_time' ? 'OOFF' : 'RCUR'),
+        'iban' => $params['debit_iban'],
+        'bic' => $params['debit_bic'],
+        'reference' => $params['debit_mandate_reference'],
+        // Signature date
+        'date' => $params['confirmed_at'],
+        // Earliest collection date.
+        'start_date' => $params['confirmed_at'],
+        'creditor_id' => $creditor_id,
+      ]
+      // ... and frequency unit and interval from a static mapping.
+      // phpcs:ignore Drupal.Formatting.SpaceUnaryOperator.PlusMinus
+      + self::getFrequencyMapping($params['donation_rhythm']);
+    // Add custom field values.
+    if (isset($custom_fields['ContributionRecur'])) {
+      $mandate_data += $custom_fields['ContributionRecur'];
+    }
+    if (NULL !== ($mandate_source = $profile->getAttribute('contribution_source'))) {
+      $mandate_data['source'] = $mandate_source;
+    }
+
+    // Add cycle day for recurring contributions.
+    if ($params['donation_rhythm'] !== 'one_time') {
+      $mandate_data['cycle_day'] = self::getSEPACycleDay($params['confirmed_at'], $creditor_id);
+      $mandate_data['financial_type_id'] = $profile->getAttribute('financial_type_id_recur');
+    }
+    else {
+      $mandate_data['financial_type_id'] = $profile->getAttribute('financial_type_id');
+    }
+
+    // Let CiviSEPA set the correct payment instrument depending on the
+    // mandate type.
+    unset($mandate_data['payment_instrument_id']);
+
+    // If requested, let CiviSEPA generate the mandate reference
+    $use_own_mandate_reference = Civi::settings()->get('twingle_dont_use_reference');
+    if ((bool) $use_own_mandate_reference) {
+      unset($mandate_data['reference']);
+    }
+
+    // set campaign, subject to configuration
+    self::setCampaign($mandate_data, 'mandate', $params, $profile);
+
+    // Create the mandate.
+    $mandate = civicrm_api3('SepaMandate', 'createfull', $mandate_data);
+
+    $this->setResultValue('sepa_mandate', reset($mandate['values']));
+
+    // Add contribution data to result_values for later use
+    $contribution_id = $this->getResultValue('sepa_mandate')['entity_id'];
+    if ($contribution_id) {
+      $contribution = civicrm_api3(
+        'Contribution',
+        'getsingle',
+        ['id' => $contribution_id]
+      );
+      $this->setResultValue('contribution', $contribution);
+    }
+    else {
+      $mandate_id = $this->getResultValue('sepa_mandate')['id'];
+      $message = E::LONG_NAME . ": could not find contribution for sepa mandate $mandate_id";
+      throw new CRM_Core_Exception($message, 'api_error');
+    }
+
+    // Add products as line items to the contribution
+    if (!empty($params['products']) && $profile->isShopEnabled()) {
+      $line_items = self::createLineItems($this->getResultValues(), $params, $profile);
+      $resultContribution = $this->getResultValue('contribution');
+      $resultContribution['line_items'] = $line_items;
+      $this->setResultValue('contribution', $resultContribution);
+    }
+  }
+
+  protected function createRecurringContribution(
+    array &$contribution_data,
+  ): void {
+    $params = $this->params;
+    $custom_fields = $this->getCustomFieldValues();
+    $profile = $this->getProfile();
+
+    // Create recurring contribution first.
+    $contribution_recur_data =
+      $contribution_data
+      + [
+        'contribution_status_id' => 'Pending',
+        // TODO: twingle might be sending a different date eventually or use "booking_date".
+        'start_date' => $params['confirmed_at'],
+      ]
+      + self::getFrequencyMapping($params['donation_rhythm']);
+
+    // Add custom field values.
+    if (isset($custom_fields['ContributionRecur'])) {
+      $contribution_recur_data += $custom_fields['ContributionRecur'];
+      $contribution_data += $custom_fields['ContributionRecur'];
+    }
+
+    // set campaign, subject to configuration
+    self::setCampaign($contribution_data, 'recurring', $params, $profile);
+
+    /** @phpstan-var array<string, mixed> $contribution_recur */
+    $contribution_recur = civicrm_api3('ContributionRecur', 'create', $contribution_recur_data);
+    if ((bool) $contribution_recur['is_error']) {
+      throw new CRM_Core_Exception(
+        E::ts('Could not create recurring contribution.'),
+        'api_error'
+      );
+    }
+    $contribution_data['contribution_recur_id'] = $contribution_recur['id'];
+    $contribution_data['financial_type_id'] = $contribution_recur_data['financial_type_id'];
+  }
+
+  /**
    * @param $values
    *   Processed data
    * @param $submission
@@ -483,7 +1177,7 @@ class CRM_Twingle_Submission {
     $contribution_id = $values['contribution']['id'];
     if (empty($contribution_id)) {
       throw new LineItemException(
-        "Could not find contribution id for line item assignment.",
+        'Could not find contribution id for line item assignment.',
         LineItemException::ERROR_CODE_CONTRIBUTION_NOT_FOUND
       );
     }
@@ -491,7 +1185,7 @@ class CRM_Twingle_Submission {
     foreach ($submission['products'] as $product) {
 
       $line_item_data = [
-        'entity_table' => "civicrm_contribution",
+        'entity_table' => 'civicrm_contribution',
         'contribution_id' => $contribution_id,
         'entity_id' => $contribution_id,
         'label' => $product['name'],
@@ -508,7 +1202,7 @@ class CRM_Twingle_Submission {
       }
       catch (Exception $e) {
         Civi::log()->error(E::LONG_NAME .
-          ": An error occurred when searching for TwingleShop with the external ID " .
+          ': An error occurred when searching for TwingleShop with the external ID ' .
           $product['id'], ['exception' => $e]);
         $price_field = NULL;
       }
@@ -516,17 +1210,27 @@ class CRM_Twingle_Submission {
       if ($price_field) {
 
         // Log warning if price is not variable and differs from the submission
-        if ($price_field->price !== Null && $price_field->price != (int) $product['price']) {
+        if ($price_field->price !== NULL && (int) $price_field->price !== (int) $product['price']) {
           Civi::log()->warning(E::LONG_NAME .
-            ": Price for product " . $product['name'] . " differs from the PriceField. " .
-            "Using the price from the submission.", ['price_field' => $price_field->price, 'submission' => $product['price']]);
+            ': Price for product ' . $product['name'] . ' differs from the PriceField. ' .
+            'Using the price from the submission.',
+            [
+              'price_field' => $price_field->price,
+              'submission' => $product['price'],
+            ]
+          );
         }
 
         // Log warning if name differs from the submission
-        if ($price_field->name != $product['name']) {
+        if ($price_field->name !== $product['name']) {
           Civi::log()->warning(E::LONG_NAME .
-            ": Name for product " . $product['name'] . " differs from the PriceField " .
-            "Using the name from the submission.", ['price_field' => $price_field->name, 'submission' => $product['name']]);
+            ': Name for product ' . $product['name'] . ' differs from the PriceField ' .
+            'Using the name from the submission.',
+            [
+              'price_field' => $price_field->name,
+              'submission' => $product['name'],
+            ]
+          );
         }
 
         // Set the financial type and price field id
@@ -566,7 +1270,7 @@ class CRM_Twingle_Submission {
       ])['name'];
 
       $donation_line_item_data = [
-        'entity_table' => "civicrm_contribution",
+        'entity_table' => 'civicrm_contribution',
         'contribution_id' => $contribution_id,
         'entity_id' => $contribution_id,
         'label' => $donation_label,
@@ -581,7 +1285,7 @@ class CRM_Twingle_Submission {
 
       if (!empty($donation_line_item['is_error'])) {
         throw new CRM_Core_Exception(
-          E::ts("Could not create line item for donation"),
+          E::ts('Could not create line item for donation'),
           'api_error'
         );
       }
@@ -591,4 +1295,91 @@ class CRM_Twingle_Submission {
 
     return $line_items;
   }
+
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
+  public function handleMembership(): void {
+  // phpcs:enable
+    $params = $this->params;
+    $profile = $this->profile;
+    $contactId = $this->getResultValue('contact');
+
+    // CHECK whether a membership should be created (based on profile settings and data provided)
+    if ($params['donation_rhythm'] === 'one_time') {
+      // membership creation based on one-off contributions
+      $membership_type_id = $profile->getAttribute('membership_type_id');
+    }
+    else {
+      // membership creation based on recurring contributions
+      if (empty($params['parent_trx_id'])) {
+        // this is the initial payment
+        $membership_type_id = $profile->getAttribute('membership_type_id_recur');
+      }
+    }
+
+    if (!isset($membership_type_id)) {
+      return;
+    }
+
+    // CREATE the membership
+    $membership_data = [
+      'contact_id'         => $contactId,
+      'membership_type_id' => $membership_type_id,
+    ];
+    // set campaign, subject to configuration
+    self::setCampaign($membership_data, 'membership', $params, $profile);
+    // set source
+    if (!empty($membership_source = $profile->getAttribute('contribution_source'))) {
+      $membership_data['source'] = $membership_source;
+    }
+
+    $membership = civicrm_api3('Membership', 'create', $membership_data);
+    $this->setResultValue('membership', $membership);
+
+    // call the postprocess API
+    if ('' !== ($postprocess_call = $profile->getAttribute('membership_postprocess_call', ''))) {
+      /** @var string $postprocess_call */
+      [$pp_entity, $pp_action] = explode('.', $postprocess_call, 2);
+      try {
+        // gather the contribution IDs
+        if (NULL !== $this->getResultValue('contribution_recur_id')) {
+          $recurring_contribution_id = $this->getResultValue('contribution_recur_id');
+        }
+        elseif (NULL !== $this->getResultValue('sepa_mandate')) {
+          $mandate = reset($this->getResultValue('sepa_mandate'));
+          if ($mandate['entity_table'] === 'civicrm_contribution_recur') {
+            $recurring_contribution_id = (int) $mandate['entity_id'];
+          }
+        }
+
+        // run the call
+        civicrm_api3(trim($pp_entity), trim($pp_action), [
+          'membership_id' => $membership['id'],
+          'contact_id' => $contactId,
+          'organization_id' => $this->getResultValue('organization') ?? '',
+          'contribution_id' => $this->getResultValue('contribution')['id'] ?? '',
+          'recurring_contribution_id' => $recurring_contribution_id ?? '',
+        ]);
+
+        // refresh membership data
+        $this->setResultValue('membership', civicrm_api3('Membership', 'getsingle', ['id' => $membership['id']]));
+      }
+      catch (CRM_Core_Exception $exception) {
+        // TODO: more error handling?
+        Civi::log()->warning(
+          sprintf(
+            'Twingle membership postprocessing call %s.%s has failed: %s',
+            $pp_entity,
+            $pp_action,
+            $exception->getMessage()
+          )
+        );
+        throw new BaseException(
+          E::ts('Twingle membership postprocessing call has failed, see log for more information'),
+          NULL,
+          $exception
+        );
+      }
+    }
+  }
+
 }

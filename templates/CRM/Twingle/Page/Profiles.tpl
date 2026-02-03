@@ -57,7 +57,7 @@
           <td>
             <a href="{crmURL p="civicrm/admin/settings/twingle/profile" q="op=edit&id=$profile_id"}" title="{ts escape='htmlattribute' domain="de.systopia.twingle" 1=$profile.name}Edit profile %1{/ts}" class="action-item crm-hover-button">{ts domain="de.systopia.twingle"}Edit{/ts}</a>
             <a href="{crmURL p="civicrm/admin/settings/twingle/profile" q="op=copy&source_id=$profile_id"}" title="{ts escape='htmlattribute' domain="de.systopia.twingle" 1=$profile.name}Copy profile %1{/ts}" class="action-item crm-hover-button">{ts domain="de.systopia.twingle"}Copy{/ts}</a>
-            {if $profile_name == 'default'}
+            {if $profile_name === 'default'}
               <a href="{crmURL p="civicrm/admin/settings/twingle/profile" q="op=delete&id=$profile_id"}" title="{ts escape='htmlattribute' domain="de.systopia.twingle" 1=$profile.name}Reset profile %1{/ts}" class="action-item crm-hover-button">{ts domain="de.systopia.twingle"}Reset{/ts}</a>
             {else}
               <a href="{crmURL p="civicrm/admin/settings/twingle/profile" q="op=delete&id=$profile_id"}" title="{ts escape='htmlattribute' domain="de.systopia.twingle" 1=$profile.name}Delete profile %1{/ts}" class="action-item crm-hover-button">{ts domain="de.systopia.twingle"}Delete{/ts}</a>

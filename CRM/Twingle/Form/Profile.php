@@ -147,7 +147,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     $this->_op = is_string($op) ? $op : 'create';
 
     // Verify that a profile with the given id exists.
-    if ($this->_op != 'copy' && $this->_op != 'create') {
+    if ($this->_op !== 'copy' && $this->_op !== 'create') {
       $this->profile_id = CRM_Utils_Request::retrieve('id', 'Int', $this);
       $this->profile = CRM_Twingle_Profile::getProfile($this->profile_id);
       if (!isset($this->profile)) {
@@ -167,7 +167,9 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
   /**
    * Builds the form structure.
    */
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.MaxExceeded, Drupal.WhiteSpace.ScopeIndent.IncorrectExact
   public function buildQuickForm(): void {
+  // phpcs: enable
     $profile_name = (isset($this->profile) ? $this->profile->getName() : NULL);
 
     switch ($this->_op) {
@@ -177,7 +179,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
           $this->addButtons([
             [
               'type' => 'submit',
-              'name' => ($this->profile->getName() == 'default' ? E::ts('Reset') : E::ts('Delete')),
+              'name' => ($this->profile->getName() === 'default' ? E::ts('Reset') : E::ts('Delete')),
               'isDefault' => TRUE,
             ],
           ]);
@@ -202,7 +204,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
             $this->profile->validate();
           }
           catch (ProfileValidationError $exception) {
-            if ($exception->getErrorCode() == ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_FAILED) {
+            if ($exception->getErrorCode() === ProfileValidationError::ERROR_CODE_PROFILE_VALIDATION_FAILED) {
               Civi::log()->error($exception->getLogMessage());
               CRM_Core_Session::setStatus(E::ts('The profile is invalid and cannot be copied.'), E::ts('Error'));
               CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/settings/twingle/profiles', 'reset=1'));
@@ -210,7 +212,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
             }
           }
           catch (ProfileException $exception) {
-            if ($exception->getErrorCode() == ProfileException::ERROR_CODE_PROFILE_NOT_FOUND) {
+            if ($exception->getErrorCode() === ProfileException::ERROR_CODE_PROFILE_NOT_FOUND) {
               Civi::log()->error($exception->getLogMessage());
               CRM_Core_Session::setStatus(E::ts('The profile to be copied could not be found.'), E::ts('Error'));
               CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/settings/twingle/profiles', 'reset=1'));
@@ -260,7 +262,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       'text',
       'name',
       E::ts('Profile name'),
-      ['class' => 'huge'] + ($is_default && $this->_op == 'edit' ? ['readonly'] : []),
+      ['class' => 'huge'] + ($is_default && $this->_op === 'edit' ? ['readonly'] : []),
       !$is_default
     );
 
@@ -651,10 +653,12 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         }
         if (!isset($profile_data[$key]) && $required) {
           CRM_Core_Session::setStatus(
+            // phpcs:disable Generic.Files.LineLength.TooLong
             E::ts(
               'The required configuration option "%1" has no value. Saving the profile might set this option to a possibly unwanted default value.',
               [1 => $metadata['label'] ?? $key]
             ),
+            // phpcs:enable
             E::ts('Error'),
             'error'
           );
@@ -691,7 +695,7 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
         }
         $this->profile->saveProfile();
       }
-      elseif ($this->_op == 'delete') {
+      elseif ($this->_op === 'delete') {
         $this->profile->deleteProfile();
       }
     }
@@ -1037,4 +1041,5 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
     }
     return static::$_campaigns;
   }
+
 }

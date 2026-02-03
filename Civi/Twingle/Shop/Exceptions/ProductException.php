@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Civi\Twingle\Shop\Exceptions;
 
 use Civi\Twingle\Exceptions\BaseException as BaseException;
@@ -8,7 +10,6 @@ use Civi\Twingle\Exceptions\BaseException as BaseException;
  * A simple custom exception that indicates a problem within the
  * CRM_Twingle_Product class
  */
-
 class ProductException extends BaseException {
   public const ERROR_CODE_ATTRIBUTE_WRONG_DATA_TYPE = 'attribute_wrong_data_type';
   public const ERROR_CODE_PRICE_FIELD_ALREADY_EXISTS = 'price_field_already_exists';
@@ -23,4 +24,5 @@ class ProductException extends BaseException {
   public const ERROR_CODE_COULD_NOT_CREATE_PRODUCT = 'product_creation_failed';
   public const ERROR_CODE_COULD_NOT_GET_PRODUCTS = 'product_retrieval_failed';
   public const ERROR_CODE_COULD_NOT_DELETE_PRICE_SET = 'price_set_deletion_failed';
+
 }

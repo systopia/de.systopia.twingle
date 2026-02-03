@@ -115,7 +115,7 @@
      *  whether activity creation is selected
      */
     function twingle_protect_recurring_change() {
-      if (cj('#twingle_protect_recurring').val() == '2') {
+      if (cj('#twingle_protect_recurring').val() === '2') {
         cj('tr.crm-twingle-form-block-recurring-protection-activity').show();
       }
       else {

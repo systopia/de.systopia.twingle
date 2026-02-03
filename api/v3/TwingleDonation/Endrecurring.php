@@ -75,6 +75,7 @@ function civicrm_api3_twingle_donation_endrecurring($params) {
     }
 
     $default_profile = CRM_Twingle_Profile::getProfile('default');
+    /** @phpstan-var array{id: int, payment_instrument_id: string} $contribution */
     $contribution = civicrm_api3('ContributionRecur', 'getsingle', [
       'trxn_id' => $default_profile->getTransactionID($params['trx_id']),
     ]);
@@ -108,7 +109,7 @@ function civicrm_api3_twingle_donation_endrecurring($params) {
       }
 
       // verify that the mandate has not been terminated in the past
-      if ($mandate['status'] != 'FRST' && $mandate['status'] != 'RCUR') {
+      if ($mandate['status'] !== 'FRST' && $mandate['status'] !== 'RCUR') {
         throw new CRM_Core_Exception(
             E::ts('SEPA Mandate [%1] already terminated.', [1 => $mandate_id]),
             'api_error'

@@ -145,7 +145,7 @@ function _twingle_civix_insert_navigation_menu(&$menu, $path, $item) {
     $path = explode('/', $path);
     $first = array_shift($path);
     foreach ($menu as $key => &$entry) {
-      if ($entry['attributes']['name'] == $first) {
+      if ($entry['attributes']['name'] === $first) {
         if (!isset($entry['child'])) {
           $entry['child'] = [];
         }

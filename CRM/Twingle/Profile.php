@@ -44,7 +44,7 @@ class CRM_Twingle_Profile {
   protected $data;
 
   /**
-   * @var array $check_box_fields
+   * @var array
    *   List of check box fields
    */
   public $check_box_fields = [
@@ -214,8 +214,8 @@ class CRM_Twingle_Profile {
    * @return bool
    */
   public function isShopEnabled(): bool {
-    return Civi::settings()->get('twingle_use_shop') &&
-      $this->data['enable_shop_integration'];
+    return (bool) Civi::settings()->get('twingle_use_shop') &&
+      (bool) $this->data['enable_shop_integration'];
   }
 
   /**
@@ -271,7 +271,9 @@ class CRM_Twingle_Profile {
    * @throws \Civi\Core\Exception\DBQueryException
    *   When the profile could not be successfully validated.
    */
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
   public function validate(): void {
+  // phpcs:enable
 
     // Name cannot be empty
     if ('' === $this->getName()) {
@@ -295,7 +297,7 @@ class CRM_Twingle_Profile {
     $profile_name_duplicates = array_filter(
       CRM_Twingle_Profile::getProfiles(),
       function($profile) {
-        return $profile->getName() == $this->getName() && $this->getId() != $profile->getId();
+        return $profile->getName() === $this->getName() && $this->getId() !== $profile->getId();
       });
     if ([] !== $profile_name_duplicates) {
       throw new ProfileValidationError(
@@ -308,7 +310,7 @@ class CRM_Twingle_Profile {
     // Check if project_id is already used in other profile
     $profiles = $this::getProfiles();
     foreach ($profiles as $profile) {
-      if ($profile->getId() == $this->getId() || $profile->is_default()) {
+      if ($profile->getId() === $this->getId() || $profile->is_default()) {
         continue;
       };
       $project_ids = $this->getProjectIds();
@@ -445,7 +447,7 @@ class CRM_Twingle_Profile {
    */
   public function deleteProfile(): void {
     // Do only reset default profile
-    if ($this->getName() == 'default') {
+    if ($this->getName() === 'default') {
       try {
         $default_profile = CRM_Twingle_Profile::createDefaultProfile();
         $default_profile->setId($this->getId());
@@ -737,7 +739,7 @@ class CRM_Twingle_Profile {
    * @throws \Civi\Core\Exception\DBQueryException
    * @throws \Civi\Twingle\Exceptions\ProfileException
    */
-  public static function getProfile(int $id = NULL) {
+  public static function getProfile(?int $id = NULL) {
     if (isset($id)) {
       /**
        * @var CRM_Core_DAO $profile_data
@@ -813,4 +815,5 @@ class CRM_Twingle_Profile {
     }
     return $stats;
   }
+
 }

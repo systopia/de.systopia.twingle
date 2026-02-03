@@ -146,7 +146,7 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
 
     // if activity creation is active, make sure the fields are set
     $protection_mode = $this->_submitValues['twingle_protect_recurring'] ?? NULL;
-    if ($protection_mode == CRM_Twingle_Config::RCUR_PROTECTION_ACTIVITY) {
+    if ($protection_mode === CRM_Twingle_Config::RCUR_PROTECTION_ACTIVITY) {
       foreach ([
         'twingle_protect_recurring_activity_type',
         'twingle_protect_recurring_activity_subject',
@@ -161,13 +161,13 @@ class CRM_Twingle_Form_Settings extends CRM_Core_Form {
 
     // Twingle Access Key is required if Shop Integration is enabled
     if (
-      CRM_Utils_Array::value('twingle_use_shop', $this->_submitValues) &&
-      !CRM_Utils_Array::value('twingle_access_key', $this->_submitValues, FALSE)
+      (bool) ($this->_submitValues['twingle_use_shop'] ?? FALSE)
+      && !(bool) ($this->_submitValues['twingle_access_key'] ?? FALSE)
     ) {
       $this->_errors['twingle_access_key'] = E::ts('An Access Key is required to enable Twingle Shop Integration');
     }
 
-    return (0 == count($this->_errors));
+    return (0 === count($this->_errors));
   }
 
   /**
