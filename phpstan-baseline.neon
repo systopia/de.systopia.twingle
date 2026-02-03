@@ -1252,12 +1252,6 @@ parameters:
 			path: api/v3/TwingleDonation/Cancel.php
 
 		-
-			message: '#^Cannot call method getTransactionID\(\) on CRM_Twingle_Profile\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/v3/TwingleDonation/Cancel.php
-
-		-
 			message: '#^Cannot cast mixed to int\.$#'
 			identifier: cast.int
 			count: 1
@@ -1287,30 +1281,6 @@ parameters:
 			path: api/v3/TwingleDonation/Cancel.php
 
 		-
-			message: '#^Parameter \#1 \$id of static method CRM_Twingle_Profile\:\:getProfile\(\) expects int\|null, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/v3/TwingleDonation/Cancel.php
-
-		-
-			message: '#^Parameter \#2 \$datetime of function date_create_from_format expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/v3/TwingleDonation/Cancel.php
-
-		-
-			message: '#^Parameter \#2 \$datetime of static method DateTime\:\:createFromFormat\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/v3/TwingleDonation/Cancel.php
-
-		-
-			message: '#^Cannot call method getTransactionID\(\) on CRM_Twingle_Profile\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/v3/TwingleDonation/Endrecurring.php
-
-		-
 			message: '#^Function json_encode invoked with 2 parameters, 1 required\.$#'
 			identifier: arguments.count
 			count: 1
@@ -1318,24 +1288,6 @@ parameters:
 
 		-
 			message: '#^In function "civicrm_api3_twingle_donation_endrecurring", caught "Exception" must be rethrown\. Either catch a more specific exception, add a "throw" clause in the "catch" block to propagate the exception or add a "// @ignoreException" comment\.$#'
-			count: 1
-			path: api/v3/TwingleDonation/Endrecurring.php
-
-		-
-			message: '#^Parameter \#1 \$id of static method CRM_Twingle_Profile\:\:getProfile\(\) expects int\|null, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/v3/TwingleDonation/Endrecurring.php
-
-		-
-			message: '#^Parameter \#2 \$datetime of function date_create_from_format expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/v3/TwingleDonation/Endrecurring.php
-
-		-
-			message: '#^Parameter \#2 \$datetime of static method DateTime\:\:createFromFormat\(\) expects string, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: api/v3/TwingleDonation/Endrecurring.php
 

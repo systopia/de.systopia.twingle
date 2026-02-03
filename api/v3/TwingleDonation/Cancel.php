@@ -61,7 +61,12 @@ function _civicrm_api3_twingle_donation_Cancel_spec(&$params) {
 /**
  * TwingleDonation.Cancel API
  *
- * @param array<string, mixed> $params
+ * @phpstan-param array{
+ *   cancelled_at: string,
+ *   project_id: string,
+ *   trx_id: string,
+ *   cancel_reason: string,
+ * } $params
  * @return array<string, mixed> API result descriptor
  * @see civicrm_api3_create_success
  * @see civicrm_api3_create_error
@@ -82,16 +87,16 @@ function civicrm_api3_twingle_donation_Cancel($params) {
     }
 
     // Retrieve (recurring) contribution.
-    $default_profile = CRM_Twingle_Profile::getProfile('default');
+    $profile = CRM_Twingle_Profile::getProfileForProject($params['project_id']);
     try {
       $contribution = civicrm_api3('Contribution', 'getsingle', [
-        'trxn_id' => $default_profile->getTransactionID($params['trx_id']),
+        'trxn_id' => $profile->getTransactionID($params['trx_id']),
       ]);
       $contribution_type = 'Contribution';
     }
     catch (CRM_Core_Exception $exception) {
       $contribution = civicrm_api3('ContributionRecur', 'getsingle', [
-        'trxn_id' => $default_profile->getTransactionID($params['trx_id']),
+        'trxn_id' => $profile->getTransactionID($params['trx_id']),
       ]);
       $contribution_type = 'ContributionRecur';
     }
