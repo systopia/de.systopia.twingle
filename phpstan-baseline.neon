@@ -1258,12 +1258,6 @@ parameters:
 			path: api/v3/TwingleDonation/Cancel.php
 
 		-
-			message: '#^Function json_encode invoked with 2 parameters, 1 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: api/v3/TwingleDonation/Cancel.php
-
-		-
 			message: '#^In function "civicrm_api3_twingle_donation_Cancel", caught "Exception" must be rethrown\. Either catch a more specific exception, add a "throw" clause in the "catch" block to propagate the exception or add a "// @ignoreException" comment\.$#'
 			count: 1
 			path: api/v3/TwingleDonation/Cancel.php
@@ -1281,21 +1275,9 @@ parameters:
 			path: api/v3/TwingleDonation/Cancel.php
 
 		-
-			message: '#^Function json_encode invoked with 2 parameters, 1 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: api/v3/TwingleDonation/Endrecurring.php
-
-		-
 			message: '#^In function "civicrm_api3_twingle_donation_endrecurring", caught "Exception" must be rethrown\. Either catch a more specific exception, add a "throw" clause in the "catch" block to propagate the exception or add a "// @ignoreException" comment\.$#'
 			count: 1
 			path: api/v3/TwingleDonation/Endrecurring.php
-
-		-
-			message: '#^Function json_encode invoked with 2 parameters, 1 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: api/v3/TwingleDonation/Submit.php
 
 		-
 			message: '#^In function "civicrm_api3_twingle_donation_Submit", caught "Exception" must be rethrown\. Either catch a more specific exception, add a "throw" clause in the "catch" block to propagate the exception or add a "// @ignoreException" comment\.$#'

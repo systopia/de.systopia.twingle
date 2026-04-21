@@ -87,7 +87,11 @@ class api_v3_TwingleDonation_SubmitTest extends TestCase implements HeadlessInte
     /** @var array{values: array{contribution: array{id: int|string, receive_date: string}}} $result */
     $result = civicrm_api3('TwingleDonation', 'submit', self::SUBMISSION);
     // Assert that booking date has been used as contribution date when configured (profile default).
-    self::assertEquals(self::BOOKING_DATE, $result['values']['contribution']['receive_date']);
+    // The returned format is different depending on the CiviCRM version.
+    self::assertEquals(
+      new \DateTime(self::BOOKING_DATE),
+      new \DateTime($result['values']['contribution']['receive_date'])
+    );
 
     // TODO: Test date selection with a submission without a booking date.
 
@@ -102,7 +106,11 @@ class api_v3_TwingleDonation_SubmitTest extends TestCase implements HeadlessInte
     /** @var array{values: array{contribution: array{id: int|string, receive_date: string}}} $result */
     $result = civicrm_api3('TwingleDonation', 'submit', self::SUBMISSION);
     // Assert that confirmation date has been used as contribution date when configured.
-    self::assertEquals(self::CONFIRMATION_DATE, $result['values']['contribution']['receive_date']);
+    // The returned format is different depending on the CiviCRM version.
+    self::assertEquals(
+      new \DateTime(self::CONFIRMATION_DATE),
+      new \DateTime($result['values']['contribution']['receive_date'])
+    );
   }
 
 }
