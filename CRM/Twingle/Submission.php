@@ -1297,7 +1297,8 @@ class CRM_Twingle_Submission {
         'unit_price' => $donation_sum,
         'line_total' => $donation_sum,
         'financial_type_id' => $donation_financial_type_id,
-        'price_field_id' => 1,  # Hard-code to 1 which is the default for "contribution_amount"
+        // Hard-code to 1 which is the default for "contribution_amount"
+        'price_field_id' => 1,
         'sequential' => 1,
       ];
 
