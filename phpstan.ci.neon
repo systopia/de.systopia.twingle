@@ -3,11 +3,12 @@ includes:
 
 parameters:
 	scanDirectories:
-		- vendor/civicrm/civicrm-core/api/
-		- vendor/civicrm/civicrm-core/Civi/
-		- vendor/civicrm/civicrm-core/CRM/
-		- vendor/civicrm/civicrm-core/ext/civi_contribute/
-		- vendor/civicrm/civicrm-packages/
+		- vendor/civicrm/civicrm-core/api
+		- vendor/civicrm/civicrm-core/CRM
+		- vendor/civicrm/civicrm-core/ext/civi_contribute
+		- vendor/civicrm/civicrm-packages/HTML
+	scanFiles:
+		- vendor/civicrm/civicrm-packages/DB/DataObject.php
 	bootstrapFiles:
 		- vendor/autoload.php
 	# Because we test with different versions in CI we may have unmatched errors.
