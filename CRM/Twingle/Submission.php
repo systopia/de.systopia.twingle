@@ -98,8 +98,8 @@ class CRM_Twingle_Submission {
   }
 
   /**
-   *  Twingle's internal ID for additional donations.
-   *  It's always -22, as stated here: https://github.com/systopia/de.systopia.twingle/issues/102#issuecomment-3337387888
+   * Twingle's internal ID for additional donations.
+   * It's always -22, as stated here: https://github.com/systopia/de.systopia.twingle/issues/102#issuecomment-3337387888
    */
   private const TWINGLE_ADDITIONAL_DONATION_ID = -22;
 
