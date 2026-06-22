@@ -238,7 +238,7 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
     // Fetch products from Twingle API
     $products_from_twingle = $this->twingleApi->get(
       'project',
-      $this->numerical_project_id,
+      (string) $this->numerical_project_id,
       'products',
     );
 
@@ -425,7 +425,7 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
         'project',
         NULL,
         'by-organisation',
-        $organisationId,
+        (string) $organisationId,
       );
       $shops = array_filter(
         $projects,
