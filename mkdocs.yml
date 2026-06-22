@@ -14,6 +14,7 @@ nav:
       - Extended Contact Manager (XCM) extension: configuration/xcm.md
       - CiviSEPA integration: configuration/civisepa.md
       - Twingle Profiles: configuration/profiles.md
+      - Logging: configuration/logging.md
       - Configuring the Twingle Account on the Twingle website: configuration/account.md
   - API documentation: api.md
 
