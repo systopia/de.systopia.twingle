@@ -106,6 +106,11 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
     foreach ($shop_data as $key => $value) {
       $this->$key = $value;
     }
+
+    // Truncate overlong names instead of letting the DB reject the INSERT
+    if (is_string($this->name)) {
+      $this->name = mb_substr($this->name, 0, (int) self::fields()['name']['maxlength']);
+    }
   }
 
   /**

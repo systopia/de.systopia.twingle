@@ -63,7 +63,7 @@
     <name>name</name>
     <type>varchar</type>
     <unique>false</unique>
-    <length>64</length>
+    <length>255</length>
     <required>true</required>
     <comment>name of the shop</comment>
     <html>

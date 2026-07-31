@@ -152,4 +152,22 @@ class CRM_Twingle_Upgrader extends CRM_Extension_Upgrader_Base {
     return TRUE;
   }
 
+  /**
+   * Widen civicrm_twingle_shop.name, as Twingle project names may exceed 64
+   * characters.
+   *
+   * @return TRUE on success
+   */
+  public function upgrade_5190(): bool {
+    $this->ctx->log->info('Widening column "name" in table "civicrm_twingle_shop".');
+    CRM_Core_DAO::executeQuery(
+      'ALTER TABLE civicrm_twingle_shop MODIFY COLUMN `name` varchar(255) NOT NULL COMMENT \'name of the shop\''
+    );
+    // With logging enabled, log_civicrm_twingle_shop needs the same change
+    if ((bool) Civi::settings()->get('logging')) {
+      (new CRM_Logging_Schema())->fixSchemaDifferencesFor('civicrm_twingle_shop');
+    }
+    return TRUE;
+  }
+
 }
