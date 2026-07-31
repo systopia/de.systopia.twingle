@@ -200,9 +200,9 @@ class ApiCall {
    */
   public function get(
     string $entity,
-    ?string $entityId = NULL,
+    int|string|null $entityId = NULL,
     ?string $endpoint = NULL,
-    ?string $endpointId = NULL,
+    int|string|null $endpointId = NULL,
     ?array $params = NULL
   ): array {
 
