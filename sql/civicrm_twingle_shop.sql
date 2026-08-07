@@ -39,7 +39,7 @@ CREATE TABLE `civicrm_twingle_shop` (
                                       `project_identifier` varchar(32) NOT NULL COMMENT 'Twingle Project Identifier',
                                       `numerical_project_id` int unsigned NOT NULL COMMENT 'Numerical Twingle Project Identifier',
                                       `price_set_id` int unsigned COMMENT 'FK to Price Set',
-                                      `name` varchar(64) NOT NULL COMMENT 'name of the shop',
+                                      `name` varchar(255) NOT NULL COMMENT 'name of the shop',
                                       PRIMARY KEY (`id`),
                                       CONSTRAINT FK_civicrm_twingle_shop_price_set_id FOREIGN KEY (`price_set_id`) REFERENCES `civicrm_price_set`(`id`) ON DELETE CASCADE
 )

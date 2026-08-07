@@ -71,7 +71,7 @@ class CRM_Twingle_DAO_TwingleShop extends CRM_Core_DAO {
    * name of the shop
    *
    * @var string
-   *   (SQL type: varchar(64))
+   *   (SQL type: varchar(255))
    *   Note that values will be retrieved from the database as a string.
    */
   public $name;
@@ -211,7 +211,7 @@ class CRM_Twingle_DAO_TwingleShop extends CRM_Core_DAO {
           'title' => E::ts('Name'),
           'description' => E::ts('name of the shop'),
           'required' => TRUE,
-          'maxlength' => 64,
+          'maxlength' => 255,
           'size' => \CRM_Utils_Type::BIG,
           'usage' => [
             'import' => FALSE,
