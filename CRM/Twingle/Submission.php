@@ -1095,28 +1095,30 @@ class CRM_Twingle_Submission {
 
     $this->setResultValue('sepa_mandate', reset($mandate['values']));
 
-    // Add contribution data to result_values for later use
-    $contribution_id = $this->getResultValue('sepa_mandate')['entity_id'];
-    if ($contribution_id) {
-      $contribution = civicrm_api3(
-        'Contribution',
-        'getsingle',
-        ['id' => $contribution_id]
-      );
-      $this->setResultValue('contribution', $contribution);
-    }
-    else {
-      $mandate_id = $this->getResultValue('sepa_mandate')['id'];
-      $message = E::LONG_NAME . ": could not find contribution for sepa mandate $mandate_id";
-      throw new CRM_Core_Exception($message, 'api_error');
-    }
+    if ($mandate_data['type'] === 'OOFF') {
+      // Add contribution data to result_values for later use
+      $contribution_id = $this->getResultValue('sepa_mandate')['entity_id'];
+      if ($contribution_id) {
+        $contribution = civicrm_api3(
+          'Contribution',
+          'getsingle',
+          ['id' => $contribution_id]
+        );
+        $this->setResultValue('contribution', $contribution);
+      }
+      else {
+        $mandate_id = $this->getResultValue('sepa_mandate')['id'];
+        $message = E::LONG_NAME . ": could not find contribution for sepa mandate $mandate_id";
+        throw new CRM_Core_Exception($message, 'api_error');
+      }
 
-    // Add products as line items to the contribution
-    if (!empty($params['products']) && $profile->isShopEnabled()) {
-      $line_items = self::createLineItems($this->getResultValues(), $params, $profile);
-      $resultContribution = $this->getResultValue('contribution');
-      $resultContribution['line_items'] = $line_items;
-      $this->setResultValue('contribution', $resultContribution);
+      // Add products as line items to the contribution
+      if (!empty($params['products']) && $profile->isShopEnabled()) {
+        $line_items = self::createLineItems($this->getResultValues(), $params, $profile);
+        $resultContribution = $this->getResultValue('contribution');
+        $resultContribution['line_items'] = $line_items;
+        $this->setResultValue('contribution', $resultContribution);
+      }
     }
   }
 
