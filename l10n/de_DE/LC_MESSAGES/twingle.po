@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.7\n"
 
 #: CRM/Twingle/BAO/TwingleProduct.php
 msgid ""
@@ -504,9 +504,12 @@ msgstr "Standard-Zuwendungsart"
 
 #: CRM/Twingle/Form/Profile.php
 msgid "Financial Type for top up donations"
-msgstr "Zuwendungsart für zusätzliche Spenden"
+msgstr "Zuwendungsart für Zusatzbetrag (Top-up)"
 
-#: CRM/Twingle/Form/Profile.php templates/CRM/Twingle/Form/Profile.tpl
+#: CRM/Twingle/Form/Profile.php
+msgid "Financial Type for additional donations"
+msgstr "Zuwendungsart für Zusatzspende"
+
 msgid "Map Products as Price Fields"
 msgstr "Produkte Preisfeldern zuordnen"
 
@@ -1577,9 +1580,9 @@ msgid ""
 msgstr ""
 "Einige Organisationen haben bestimmte Vorschriften bzgl. der Erstellung von "
 "Mitgliedschaften. Da die Twingle-API nur ein \"reines\" "
-"Mitgliedschaftsobjekt erstellt, können Sie einen API-Aufruf (als 'Entität."
-"Aktion') angeben, um neu erstellt Mitgliedschaften an die Anforderungen "
-"Ihrer Organisation anzupassen."
+"Mitgliedschaftsobjekt erstellt, können Sie einen API-Aufruf (als "
+"'Entität.Aktion') angeben, um neu erstellt Mitgliedschaften an die "
+"Anforderungen Ihrer Organisation anzupassen."
 
 #: templates/CRM/Twingle/Form/Profile.hlp
 msgid ""
@@ -1668,8 +1671,8 @@ msgstr ""
 "    <p>Verwenden Sie immer die Notation <code>custom_[id]</code> für "
 "benutzerdefinierte Felder in CiviCRM.</p>\n"
 "    <p>Unterstützt werden Felder, die Twingle im Parameter "
-"<code>custom_fields</code> bereitstellt, sowie für alle anderen Parameter (z."
-"&nbsp;B. <code>user_extrafield</code>)</p>\n"
+"<code>custom_fields</code> bereitstellt, sowie für alle anderen Parameter "
+"(z.&nbsp;B. <code>user_extrafield</code>)</p>\n"
 "    <p>Es werden nur benutzerdefinierte CiviCRM-Felder der folgenden "
 "Entitäten unterstützt:</p>\n"
 "    <ul>\n"

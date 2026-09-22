@@ -564,6 +564,15 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       );
 
       $this->add(
+        'select',
+        'shop_additional_donation_financial_type',
+        E::ts('Financial Type for additional donations'),
+        static::getFinancialTypes(),
+        TRUE,
+        ['class' => 'crm-select2 huge']
+      );
+
+      $this->add(
         'checkbox',
         'shop_map_products',
         E::ts('Map Products as Price Fields')
