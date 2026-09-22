@@ -1243,6 +1243,9 @@ class CRM_Twingle_Submission {
       else {
         $financial_type_id = $profile->getAttribute('shop_financial_type', 1);
         $line_item_data['financial_type_id'] = $financial_type_id;
+        // Without a price field reference, core's Order BAO crashes with
+        // setPriceSetID(NULL) on any later update of the contribution.
+        $line_item_data += self::getDefaultPriceFieldData();
       }
 
       // Create the line item
@@ -1280,6 +1283,7 @@ class CRM_Twingle_Submission {
         'financial_type_id' => $donation_financial_type_id,
         'sequential' => 1,
       ];
+      $donation_line_item_data += self::getDefaultPriceFieldData();
 
       $donation_line_item = civicrm_api3('LineItem', 'create', $donation_line_item_data);
 
@@ -1294,6 +1298,31 @@ class CRM_Twingle_Submission {
     }
 
     return $line_items;
+  }
+
+  /**
+   * Get CiviCRM's default contribution price field, i.e. the one used by core
+   * for contributions without a dedicated price set.
+   *
+   * @phpstan-return array{price_field_id: int, price_field_value_id: int}|array{}
+   *   The price field data, or an empty array if the lookup failed.
+   */
+  protected static function getDefaultPriceFieldData(): array {
+    // Cached across calls via Civi::$statics in getDefaultPriceSet().
+    $default_price_set = CRM_Price_BAO_PriceSet::getDefaultPriceSet('contribution');
+    $price_field = is_array($default_price_set) ? reset($default_price_set) : NULL;
+    $price_field_id = is_array($price_field) ? ($price_field['priceFieldID'] ?? NULL) : NULL;
+    $price_field_value_id = is_array($price_field) ? ($price_field['priceFieldValueID'] ?? NULL) : NULL;
+    if (!is_numeric($price_field_id) || !is_numeric($price_field_value_id)) {
+      Civi::log()->error(E::LONG_NAME .
+        ': Could not determine the default contribution price field, ' .
+        'creating line item without price field reference.');
+      return [];
+    }
+    return [
+      'price_field_id' => (int) $price_field_id,
+      'price_field_value_id' => (int) $price_field_value_id,
+    ];
   }
 
   // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
