@@ -396,6 +396,11 @@
           </tr>
 
           <tr class="crm-section twingle-shop-element">
+            <td class="label">{$form.shop_additional_donation_financial_type.label}</td>
+            <td class="content">{$form.shop_additional_donation_financial_type.html}</td>
+          </tr>
+
+          <tr class="crm-section twingle-shop-element">
             <td class="label">{$form.shop_map_products.label}
               <a
                 onclick='
