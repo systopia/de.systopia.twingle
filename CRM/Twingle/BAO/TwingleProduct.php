@@ -541,7 +541,14 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
     parent::delete($useWhere);
 
     // Register post-hook
-    \CRM_Utils_Hook::post('delete', 'TwingleProduct', $this->id, $instance);
+    if (is_numeric($this->id)) {
+      \CRM_Utils_Hook::post(
+        'delete',
+        'TwingleProduct',
+        (int) $this->id,
+        $instance
+      );
+    }
 
     // Free global arrays associated with this object
     $this->free();

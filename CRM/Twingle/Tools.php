@@ -218,7 +218,12 @@ class CRM_Twingle_Tools {
    * Get a CiviSEPA mandate for the given contribution ID
    *
    * @param int $contribution_id contribution ID *or* recurring contribution ID
-   * @return array<string, mixed>|null mandate or null
+   * @return array{
+   *   id: int,
+   *   entity_id: int,
+   *   entity_table: string,
+   *   status: string,
+   *   }|null mandate or null
    */
   public static function getMandateFor(int $contribution_id): ?array {
     if ($contribution_id) {
