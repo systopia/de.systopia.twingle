@@ -66,6 +66,7 @@ function _civicrm_api3_twingle_donation_endrecurring_spec(&$params) {
 function civicrm_api3_twingle_donation_endrecurring($params) {
   // Log call if debugging is enabled within civicrm.settings.php.
   if (defined('TWINGLE_API_LOGGING') && TWINGLE_API_LOGGING) {
+    // @phpstan-ignore arguments.count
     Civi::log()->debug('TwingleDonation.Endrecurring: ' . json_encode($params, JSON_PRETTY_PRINT));
   }
 
@@ -99,7 +100,7 @@ function civicrm_api3_twingle_donation_endrecurring($params) {
         );
       }
 
-      $mandate_id = $mandate['id'];
+      $mandate_id = (int) $mandate['id'];
       $end_date = date_create_from_format('YmdHis', $params['ended_at']);
       if (FALSE !== $end_date) {
         // Mandates can not be terminated in the past:

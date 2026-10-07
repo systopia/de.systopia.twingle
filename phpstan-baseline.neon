@@ -193,12 +193,6 @@ parameters:
 			path: CRM/Twingle/BAO/TwingleProduct.php
 
 		-
-			message: '#^Parameter \#3 \$objectId of static method CRM_Utils_Hook\:\:post\(\) expects int, int\|string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: CRM/Twingle/BAO/TwingleProduct.php
-
-		-
 			message: '#^Parameter \#4 \$objectRef of static method CRM_Utils_Hook\:\:post\(\) expects object\|null, array given\.$#'
 			identifier: argument.type
 			count: 1
@@ -409,18 +403,6 @@ parameters:
 			path: CRM/Twingle/BAO/TwingleShop.php
 
 		-
-			message: '#^Parameter \#3 \$objectId of static method CRM_Utils_Hook\:\:post\(\) expects int, int\|string\|null given\.$#'
-			identifier: argument.type
-			count: 2
-			path: CRM/Twingle/BAO/TwingleShop.php
-
-		-
-			message: '#^Parameter \#4 \$endpointId of method Civi\\Twingle\\Shop\\ApiCall\:\:get\(\) expects string\|null, int\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: CRM/Twingle/BAO/TwingleShop.php
-
-		-
 			message: '#^Property CRM_Twingle_BAO_TwingleShop\:\:\$products \(array\) on left side of \?\? is not nullable\.$#'
 			identifier: nullCoalesce.property
 			count: 1
@@ -591,18 +573,6 @@ parameters:
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
-			count: 1
-			path: CRM/Twingle/Submission.php
-
-		-
-			message: '#^Binary operation "\+\=" between array and mixed results in an error\.$#'
-			identifier: assignOp.invalid
-			count: 2
-			path: CRM/Twingle/Submission.php
-
-		-
-			message: '#^Binary operation "\+\=" between array\<''birth_date''\|''email''\|''first_name''\|''formal_title''\|''gender_id''\|''iban''\|''last_name''\|''phone''\|''preferred_language''\|''prefix_id'', mixed\> and mixed results in an error\.$#'
-			identifier: assignOp.invalid
 			count: 1
 			path: CRM/Twingle/Submission.php
 
@@ -847,12 +817,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$error_code of class Civi\\Twingle\\Exceptions\\BaseException constructor expects string, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: CRM/Twingle/Submission.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of function in_array expects array, string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: CRM/Twingle/Submission.php
@@ -1252,24 +1216,12 @@ parameters:
 			path: api/v3/TwingleDonation/Cancel.php
 
 		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 1
-			path: api/v3/TwingleDonation/Cancel.php
-
-		-
 			message: '#^In function "civicrm_api3_twingle_donation_Cancel", caught "Exception" must be rethrown\. Either catch a more specific exception, add a "throw" clause in the "catch" block to propagate the exception or add a "// @ignoreException" comment\.$#'
 			count: 1
 			path: api/v3/TwingleDonation/Cancel.php
 
 		-
 			message: '#^Only booleans are allowed in a negated boolean, DateTime\|false given\.$#'
-			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: api/v3/TwingleDonation/Cancel.php
-
-		-
-			message: '#^Only booleans are allowed in a negated boolean, array\<string, mixed\>\|null given\.$#'
 			identifier: booleanNot.exprNotBoolean
 			count: 1
 			path: api/v3/TwingleDonation/Cancel.php

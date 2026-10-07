@@ -74,6 +74,7 @@ function _civicrm_api3_twingle_donation_Cancel_spec(&$params) {
 function civicrm_api3_twingle_donation_Cancel($params) {
   // Log call if debugging is enabled within civicrm.settings.php.
   if (defined('TWINGLE_API_LOGGING') && TWINGLE_API_LOGGING) {
+    // @phpstan-ignore arguments.count
     Civi::log()->debug('TwingleDonation.Cancel: ' . json_encode($params, JSON_PRETTY_PRINT));
   }
 
@@ -107,7 +108,7 @@ function civicrm_api3_twingle_donation_Cancel($params) {
     ) {
       // End SEPA mandate if applicable.
       $mandate = CRM_Twingle_Tools::getMandateFor((int) $contribution['id']);
-      if (!$mandate) {
+      if (NULL === $mandate) {
         throw new CRM_Core_Exception(
             E::ts('SEPA Mandate for contribution [%1 not found.', [1 => $contribution['id']]),
             'api_error'

@@ -292,6 +292,7 @@ function civicrm_api3_twingle_donation_Submit($params) {
 // phpcs:enable
   // Log call if debugging is enabled within civicrm.settings.php.
   if (defined('TWINGLE_API_LOGGING') && TWINGLE_API_LOGGING) {
+    // @phpstan-ignore arguments.count
     Civi::log()->debug('TwingleDonation.Submit: ' . json_encode($params, JSON_PRETTY_PRINT));
   }
 

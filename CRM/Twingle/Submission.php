@@ -641,9 +641,11 @@ class CRM_Twingle_Submission {
 
     // Add custom field values.
     if (isset($this->customFieldValues['Contact'])) {
+      // @phpstan-ignore assignOp.invalid
       $contact_data += $this->customFieldValues['Contact'];
     }
     if (isset($this->customFieldValues['Individual'])) {
+      // @phpstan-ignore assignOp.invalid
       $contact_data += $this->customFieldValues['Individual'];
     }
 
@@ -1140,6 +1142,7 @@ class CRM_Twingle_Submission {
     // Add custom field values.
     if (isset($custom_fields['ContributionRecur'])) {
       $contribution_recur_data += $custom_fields['ContributionRecur'];
+      // @phpstan-ignore assignOp.invalid
       $contribution_data += $custom_fields['ContributionRecur'];
     }
 

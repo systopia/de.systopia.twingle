@@ -162,7 +162,14 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
     $result = $this->save();
 
     // Register post-hook
-    \CRM_Utils_Hook::post($mode, 'TwingleShop', $this->id, $instance);
+    if (is_numeric($this->id)) {
+      \CRM_Utils_Hook::post(
+        $mode,
+        'TwingleShop',
+        (int) $this->id,
+        $instance
+      );
+    }
 
     return $result->toArray();
   }
@@ -215,7 +222,14 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
     }
 
     // Register post-hook
-    \CRM_Utils_Hook::post('delete', 'TwingleShop', $this->id, $instance);
+    if (is_numeric($this->id)) {
+      \CRM_Utils_Hook::post(
+        'delete',
+        'TwingleShop',
+        (int) $this->id,
+        $instance
+      );
+    }
 
     // Free global arrays associated with this object
     $this->free();
@@ -251,6 +265,7 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
     if ($this->id) {
       $products_from_db = $this->getProducts();
 
+      /** @phpstan-var array<int|string, array<string, mixed>> $products_from_twingle */
       $products_from_twingle = array_reduce($products_from_twingle, function($carry, $product) {
         $carry[$product['id']] = $product;
         return $carry;
@@ -275,6 +290,7 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
     }
 
     // Create array with external_id as key
+    /** @phpstan-var array<int|string, array<string, mixed>> $products */
     $products = array_reduce($this->products ?? [], function($carry, $product) {
       $carry[$product->external_id] = $product;
       return $carry;
