@@ -1385,9 +1385,12 @@ class CRM_Twingle_Submission {
       return;
     }
 
-    // CREATE the membership
+    // CREATE the membership, for the organisation if configured and provided.
+    $membership_contact_id = (bool) $profile->getAttribute('membership_for_organisation')
+      ? $this->getResultValue('organization') ?? $contactId
+      : $contactId;
     $membership_data = [
-      'contact_id'         => $contactId,
+      'contact_id'         => $membership_contact_id,
       'membership_type_id' => $membership_type_id,
     ];
     // set campaign, subject to configuration
