@@ -291,6 +291,27 @@
           <td class="label">{$form.membership_type_id_recur.label}</td>
           <td class="content">{$form.membership_type_id_recur.html}</td>
         </tr>
+        <tr class="crm-section">
+          <td class="label">
+            {$form.membership_for_organisation.label}
+            <a
+              onclick='
+                CRM.help(
+                  "{ts escape='htmlattribute' domain="de.systopia.twingle"}Create membership for the organisation{/ts}",
+                  {literal}{
+                    "id": "id-membership_for_organisation",
+                    "file": "CRM\/Twingle\/Form\/Profile"
+                  }{/literal}
+                );
+                return false;
+              '
+              href="#"
+              title="{ts escape='htmlattribute' domain="de.systopia.twingle"}Help{/ts}"
+              class="helpicon"
+            ></a>
+          </td>
+          <td class="content">{$form.membership_for_organisation.html}</td>
+        </tr>
         <tr class="crm-section twingle-postprocess-call">
           <td class="label">
             {$form.membership_postprocess_call.label}
