@@ -6,6 +6,7 @@ parameters:
 		- vendor/civicrm/civicrm-core/api
 		- vendor/civicrm/civicrm-core/CRM
 		- vendor/civicrm/civicrm-core/ext/civi_contribute
+		- vendor/civicrm/civicrm-core/ext/civi_member
 		- vendor/civicrm/civicrm-packages/HTML
 	scanFiles:
 		- vendor/civicrm/civicrm-packages/DB/DataObject.php

@@ -291,6 +291,13 @@
           <td class="label">{$form.membership_type_id_recur.label}</td>
           <td class="content">{$form.membership_type_id_recur.html}</td>
         </tr>
+        <tr class="crm-section">
+          <td class="label">
+            {$form.membership_for_organisation.label}
+            {help id="id-membership_for_organisation" title=$form.membership_for_organisation.textLabel}
+          </td>
+          <td class="content">{$form.membership_for_organisation.html}</td>
+        </tr>
         <tr class="crm-section twingle-postprocess-call">
           <td class="label">
             {$form.membership_postprocess_call.label}
