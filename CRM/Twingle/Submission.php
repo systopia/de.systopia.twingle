@@ -297,7 +297,7 @@ class CRM_Twingle_Submission {
     }
 
     // Prepare values: language.
-    if (is_string($contact_data['preferred_language']) && '' !== $contact_data['preferred_language']) {
+    if (is_string($contact_data['preferred_language'] ?? NULL) && '' !== $contact_data['preferred_language']) {
       $mapping = CRM_Core_I18n_PseudoConstant::longForShortMapping();
       // Override the default mapping for German.
       $mapping['de'] = 'de_DE';
@@ -873,7 +873,7 @@ class CRM_Twingle_Submission {
       foreach ($groups as $group_id) {
         civicrm_api3('GroupContact', 'create', [
           'group_id' => $group_id,
-          'contact_id' => $organisation_id ?? $contact_id,
+          'contact_id' => $this->getResultValue('organization') ?? $contact_id,
         ]);
         $resultValues['donation_receipt_group_ids'][] = $group_id;
       }
@@ -889,9 +889,10 @@ class CRM_Twingle_Submission {
     $customFieldValues = $this->getCustomFieldValues();
 
     // Create contribution or SEPA mandate. Those attributes are valid for both,
-    // single and recurring contributions.
+    // single and recurring contributions. If an organisation is provided, it is
+    // the contributor.
     $contribution_data = [
-      'contact_id' => ($contactId),
+      'contact_id' => $this->getResultValue('organization') ?? $contactId,
       'currency' => $params['currency'],
       'trxn_id' => $profile->getTransactionID($params['trx_id']),
       'payment_instrument_id' => $params['payment_instrument_id'],

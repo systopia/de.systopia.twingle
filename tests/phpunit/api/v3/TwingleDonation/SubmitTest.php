@@ -20,6 +20,8 @@ use Civi\Test\CiviEnvBuilder;
 use Civi\Test\HeadlessInterface;
 use Civi\Test\TransactionalInterface;
 use Civi\Api4\Contribution;
+use Civi\Api4\Group;
+use Civi\Api4\GroupContact;
 use CRM_Twingle_ExtensionUtil as E;
 
 /**
@@ -110,6 +112,67 @@ class api_v3_TwingleDonation_SubmitTest extends TestCase implements HeadlessInte
     self::assertEquals(
       new \DateTime(self::CONFIRMATION_DATE),
       new \DateTime($result['values']['contribution']['receive_date'])
+    );
+  }
+
+  /**
+   * Test that a submission with a company records the contribution on the
+   * organisation and adds the organisation to the donation receipt groups.
+   */
+  public function testCompanySubmission(): void {
+    $group_id = (int) Group::create(FALSE)
+      ->addValue('title', 'Donation receipts')
+      ->execute()
+      ->single()['id'];
+    $profile = \CRM_Twingle_Profile::getProfileForProject(self::PROJECT_ID);
+    $profile->setAttribute('donation_receipt_groups', [$group_id]);
+    $profile->saveProfile();
+
+    /** @var array{values: array{contact: int, organization: int, contribution: array{id: int|string}}} $result */
+    $result = civicrm_api3('TwingleDonation', 'submit', [
+      'user_firstname' => 'Erika',
+      'user_lastname' => 'Mustermann',
+      'user_company' => 'Example GmbH',
+      'donation_receipt' => 1,
+    ] + self::SUBMISSION);
+
+    $organisation_id = $result['values']['organization'];
+    self::assertNotEquals($result['values']['contact'], $organisation_id);
+    self::assertSame(
+      $organisation_id,
+      Contribution::get(FALSE)
+        ->addSelect('contact_id')
+        ->addWhere('id', '=', $result['values']['contribution']['id'])
+        ->execute()
+        ->single()['contact_id']
+    );
+    self::assertSame(
+      [$organisation_id],
+      GroupContact::get(FALSE)
+        ->addSelect('contact_id')
+        ->addWhere('group_id', '=', $group_id)
+        ->addWhere('status', '=', 'Added')
+        ->execute()
+        ->column('contact_id')
+    );
+  }
+
+  /**
+   * Test that a submission without a company records the contribution on the
+   * individual.
+   */
+  public function testIndividualSubmission(): void {
+    /** @var array{values: array{contact: int, contribution: array{id: int|string}}} $result */
+    $result = civicrm_api3('TwingleDonation', 'submit', self::SUBMISSION);
+
+    self::assertArrayNotHasKey('organization', $result['values']);
+    self::assertSame(
+      $result['values']['contact'],
+      Contribution::get(FALSE)
+        ->addSelect('contact_id')
+        ->addWhere('id', '=', $result['values']['contribution']['id'])
+        ->execute()
+        ->single()['contact_id']
     );
   }
 
