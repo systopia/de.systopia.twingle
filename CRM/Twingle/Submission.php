@@ -104,13 +104,6 @@ class CRM_Twingle_Submission {
   private const TWINGLE_ADDITIONAL_DONATION_ID = -22;
 
   /**
-   * @param array &$params
-   *   A reference to the parameters array of the submission.
-   *
-   * @param \CRM_Twingle_Profile $profile
-   *   The Twingle profile to use for validation, defaults to the default
-   *   profile.
-   *
    * @throws \CRM_Core_Exception
    *   When invalid parameters have been submitted.
    */
