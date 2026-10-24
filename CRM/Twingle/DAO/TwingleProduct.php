@@ -14,6 +14,7 @@
  * @property string $twingle_shop_id
  * @property string $created_at
  * @property string $updated_at
+ * @property string $vat_rate
  */
 class CRM_Twingle_DAO_TwingleProduct extends CRM_Twingle_DAO_Base {
 

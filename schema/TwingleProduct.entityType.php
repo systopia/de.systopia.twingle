@@ -35,7 +35,7 @@ return [
       'required' => TRUE,
       'description' => E::ts('FK to Price Field'),
       'entity_reference' => [
-        'entity' => 'Contact',
+        'entity' => 'PriceField',
         'key' => 'id',
         'on_delete' => 'CASCADE',
       ],
@@ -56,6 +56,7 @@ return [
       'sql_type' => 'datetime',
       'input_type' => 'Select Date',
       'required' => TRUE,
+      'default' => 'CURRENT_TIMESTAMP',
       'description' => E::ts('Timestamp of when the product was created in the database'),
     ],
     'updated_at' => [
@@ -64,6 +65,12 @@ return [
       'input_type' => 'Select Date',
       'required' => TRUE,
       'description' => E::ts('Timestamp of when the product was last updated in the database'),
+    ],
+    'vat_rate' => [
+      'title' => E::ts('Vat Rate (%)'),
+      'sql_type' => 'decimal(5,2)',
+      'input_type' => 'Text',
+      'description' => E::ts('VAT rate in percent'),
     ],
   ],
 ];

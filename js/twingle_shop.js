@@ -155,6 +155,7 @@ class Product {
     this.name = productData.name;
     this.isActive = productData.is_active;
     this.price = productData.price;
+    this.vatRate = productData.vat_rate;
     this.sort = productData.sort;
     this.description = productData.description;
     this.projectId = productData.project_id;
@@ -170,7 +171,7 @@ class Product {
 
   /**
    * Dumps the product data.
-   * @returns {{id, name, is_active, price, sort, description, project_id, external_id, financial_type_id, tw_updated_at, twingle_shop_id: *}}
+   * @returns {{id, name, is_active, price, vat_rate, sort, description, project_id, external_id, financial_type_id, tw_updated_at, twingle_shop_id: *}}
    */
   dumpData() {
     return {
@@ -178,6 +179,7 @@ class Product {
       'name': this.name,
       'is_active': this.isActive,
       'price': this.price,
+      'vat_rate': this.vatRate,
       'sort': this.sort,
       'description': this.description,
       'project_id': this.projectId,
