@@ -755,7 +755,7 @@ class CRM_Twingle_Submission {
       }
 
       // Create contact notes.
-      CRM_Twingle_Submission::createContactNotes($contact_id, $params, $profile);
+      self::createContactNotes($contact_id, $params, $profile);
 
       // Share organisation address with individual contact, using configured
       // location type for organisation address.
@@ -1003,7 +1003,7 @@ class CRM_Twingle_Submission {
       $this->setResultValue('contribution', $contribution);
 
       // Add notes to the contribution.
-      CRM_Twingle_Submission::createContributionNotes((int) $contribution['id'], $params, $profile);
+      self::createContributionNotes((int) $contribution['id'], $params, $profile);
 
       // Add products as line items to the contribution
       if (!empty($params['products']) && $profile->isShopEnabled()) {
@@ -1016,6 +1016,12 @@ class CRM_Twingle_Submission {
   }
 
   // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
+
+  /**
+   * @throws \CRM_Core_Exception
+   * @throws \Civi\Twingle\Exceptions\BaseException
+   * @throws \Civi\Twingle\Shop\Exceptions\LineItemException
+   */
   protected function createSepaMandate(array $contribution_data): void {
   // phpcs:enable
     $profile = $this->getProfile();
@@ -1115,7 +1121,7 @@ class CRM_Twingle_Submission {
       }
 
       // Add notes to the contribution.
-      CRM_Twingle_Submission::createContributionNotes($contribution_id, $params, $profile);
+      self::createContributionNotes($contribution_id, $params, $profile);
 
       // Add products as line items to the contribution
       if (!empty($params['products']) && $profile->isShopEnabled()) {
