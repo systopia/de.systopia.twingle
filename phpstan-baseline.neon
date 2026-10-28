@@ -798,12 +798,6 @@ parameters:
 			path: CRM/Twingle/Submission.php
 
 		-
-			message: '#^Parameter \#2 \$creditor_id of static method CRM_Twingle_Submission\:\:getSEPACycleDay\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: CRM/Twingle/Submission.php
-
-		-
 			message: '#^Parameter \#2 \$datetime of function date_create_from_format expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
