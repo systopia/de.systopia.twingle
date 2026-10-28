@@ -20,6 +20,10 @@ use Civi\Test\CiviEnvBuilder;
 use Civi\Test\HeadlessInterface;
 use Civi\Test\TransactionalInterface;
 use Civi\Api4\Contribution;
+use Civi\Api4\Group;
+use Civi\Api4\GroupContact;
+use Civi\Api4\Membership;
+use Civi\Api4\MembershipType;
 use CRM_Twingle_ExtensionUtil as E;
 
 /**
@@ -110,6 +114,166 @@ class api_v3_TwingleDonation_SubmitTest extends TestCase implements HeadlessInte
     self::assertEquals(
       new \DateTime(self::CONFIRMATION_DATE),
       new \DateTime($result['values']['contribution']['receive_date'])
+    );
+  }
+
+  /**
+   * Test that a submission with a company records the contribution on the
+   * organisation and adds the organisation to the donation receipt groups.
+   */
+  public function testCompanySubmission(): void {
+    $group_id = (int) Group::create(FALSE)
+      ->addValue('title', 'Donation receipts')
+      ->execute()
+      ->single()['id'];
+    $profile = \CRM_Twingle_Profile::getProfileForProject(self::PROJECT_ID);
+    $profile->setAttribute('donation_receipt_groups', [$group_id]);
+    $profile->saveProfile();
+
+    /** @var array{values: array{contact: int, organization: int, contribution: array{id: int|string}}} $result */
+    $result = civicrm_api3('TwingleDonation', 'submit', [
+      'user_firstname' => 'Erika',
+      'user_lastname' => 'Mustermann',
+      'user_company' => 'Example GmbH',
+      'donation_receipt' => 1,
+    ] + self::SUBMISSION);
+
+    $organisation_id = $result['values']['organization'];
+    self::assertNotEquals($result['values']['contact'], $organisation_id);
+    self::assertSame(
+      $organisation_id,
+      Contribution::get(FALSE)
+        ->addSelect('contact_id')
+        ->addWhere('id', '=', $result['values']['contribution']['id'])
+        ->execute()
+        ->single()['contact_id']
+    );
+    self::assertSame(
+      [$organisation_id],
+      GroupContact::get(FALSE)
+        ->addSelect('contact_id')
+        ->addWhere('group_id', '=', $group_id)
+        ->addWhere('status', '=', 'Added')
+        ->execute()
+        ->column('contact_id')
+    );
+  }
+
+  /**
+   * Test that an instalment is recorded on the contact of its recurring
+   * contribution, whatever company the instalment names, and that this contact
+   * joins the donation receipt groups.
+   */
+  public function testInstalmentOnTheContactOfTheRecurringContribution(): void {
+    $group_id = (int) Group::create(FALSE)
+      ->addValue('title', 'Donation receipts')
+      ->execute()
+      ->single()['id'];
+    $profile = \CRM_Twingle_Profile::getProfileForProject(self::PROJECT_ID);
+    $profile->setAttribute('donation_receipt_groups', [$group_id]);
+    $profile->saveProfile();
+
+    $recurring = [
+      'donation_rhythm' => 'monthly',
+      'user_firstname' => 'Erika',
+      'user_lastname' => 'Mustermann',
+    ] + self::SUBMISSION;
+    /** @var array{values: array{contact: int, contribution: array{id: int|string}}} $first */
+    $first = civicrm_api3('TwingleDonation', 'submit', $recurring);
+    /** @var array{values: array{organization: int, contribution: array{id: int|string}}} $instalment */
+    $instalment = civicrm_api3('TwingleDonation', 'submit', [
+      'trx_id' => 'GL947LD',
+      'parent_trx_id' => self::SUBMISSION['trx_id'],
+      'user_company' => 'Example GmbH',
+      'donation_receipt' => 1,
+    ] + $recurring);
+
+    $recur_id = Contribution::get(FALSE)
+      ->addSelect('contribution_recur_id')
+      ->addWhere('id', '=', $first['values']['contribution']['id'])
+      ->execute()
+      ->single()['contribution_recur_id'];
+    $contribution = Contribution::get(FALSE)
+      ->addSelect('contact_id', 'contribution_recur_id')
+      ->addWhere('id', '=', $instalment['values']['contribution']['id'])
+      ->execute()
+      ->single();
+    self::assertArrayHasKey('organization', $instalment['values']);
+    self::assertNotNull($recur_id);
+    self::assertSame($recur_id, $contribution['contribution_recur_id']);
+    self::assertSame($first['values']['contact'], $contribution['contact_id']);
+    self::assertSame(
+      [$first['values']['contact']],
+      GroupContact::get(FALSE)
+        ->addSelect('contact_id')
+        ->addWhere('group_id', '=', $group_id)
+        ->addWhere('status', '=', 'Added')
+        ->execute()
+        ->column('contact_id')
+    );
+  }
+
+  /**
+   * Test that a company submission creates the membership for the individual
+   * by default and for the organisation when the profile says so.
+   */
+  public function testCompanyMembership(): void {
+    $membership_type_id = (int) MembershipType::create(FALSE)
+      ->addValue('name', 'Supporter')
+      ->addValue('member_of_contact_id', 1)
+      ->addValue('financial_type_id', 1)
+      ->addValue('duration_unit', 'year')
+      ->addValue('duration_interval', 1)
+      ->addValue('period_type', 'rolling')
+      ->execute()
+      ->single()['id'];
+    $profile = \CRM_Twingle_Profile::getProfileForProject(self::PROJECT_ID);
+    $profile->setAttribute('membership_type_id', $membership_type_id);
+    $profile->saveProfile();
+    $submission = [
+      'user_firstname' => 'Erika',
+      'user_lastname' => 'Mustermann',
+      'user_company' => 'Example GmbH',
+    ] + self::SUBMISSION;
+
+    /** @var array{values: array{contact: int, organization: int, membership: array{id: int|string}}} $result */
+    $result = civicrm_api3('TwingleDonation', 'submit', $submission);
+    self::assertSame($result['values']['contact'], self::getMembershipContactId($result['values']['membership']['id']));
+
+    $profile->setAttribute('membership_for_organisation', TRUE);
+    $profile->saveProfile();
+    /** @var array{values: array{contact: int, organization: int, membership: array{id: int|string}}} $result */
+    $result = civicrm_api3('TwingleDonation', 'submit', ['trx_id' => 'GL947LD'] + $submission);
+    self::assertSame(
+      $result['values']['organization'],
+      self::getMembershipContactId($result['values']['membership']['id'])
+    );
+  }
+
+  private static function getMembershipContactId(int|string $membership_id): int {
+    return Membership::get(FALSE)
+      ->addSelect('contact_id')
+      ->addWhere('id', '=', $membership_id)
+      ->execute()
+      ->single()['contact_id'];
+  }
+
+  /**
+   * Test that a submission without a company records the contribution on the
+   * individual.
+   */
+  public function testIndividualSubmission(): void {
+    /** @var array{values: array{contact: int, contribution: array{id: int|string}}} $result */
+    $result = civicrm_api3('TwingleDonation', 'submit', self::SUBMISSION);
+
+    self::assertArrayNotHasKey('organization', $result['values']);
+    self::assertSame(
+      $result['values']['contact'],
+      Contribution::get(FALSE)
+        ->addSelect('contact_id')
+        ->addWhere('id', '=', $result['values']['contribution']['id'])
+        ->execute()
+        ->single()['contact_id']
     );
   }
 

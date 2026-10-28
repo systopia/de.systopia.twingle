@@ -472,6 +472,11 @@ class CRM_Twingle_Form_Profile extends CRM_Core_Form {
       ['class' => 'crm-select2 huge']
     );
     $this->add(
+      'checkbox',
+      'membership_for_organisation',
+      E::ts('Create membership for the organisation')
+    );
+    $this->add(
         'text',
         'membership_postprocess_call',
         E::ts('API Call for Membership Postprocessing')

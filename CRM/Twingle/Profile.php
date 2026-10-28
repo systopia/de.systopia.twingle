@@ -50,6 +50,7 @@ class CRM_Twingle_Profile {
   public $check_box_fields = [
     'newsletter_double_opt_in',
     'use_booking_date',
+    'membership_for_organisation',
     'enable_shop_integration',
     'shop_map_products',
   ];
@@ -554,6 +555,7 @@ class CRM_Twingle_Profile {
         'custom_field_mapping' => ['required' => FALSE],
         'membership_type_id' => ['required' => FALSE],
         'membership_type_id_recur' => ['required' => FALSE],
+        'membership_for_organisation' => ['required' => FALSE],
         'membership_postprocess_call' => ['required' => FALSE],
         'newsletter_double_opt_in' => ['required' => FALSE],
         'required_address_components' => ['required' => FALSE],
@@ -673,6 +675,7 @@ class CRM_Twingle_Profile {
       'custom_field_mapping' => NULL,
       'membership_type_id' => NULL,
       'membership_type_id_recur' => NULL,
+      'membership_for_organisation' => FALSE,
       'newsletter_double_opt_in' => NULL,
       'required_address_components' => [
         'street_address',
