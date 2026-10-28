@@ -19,6 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Civi\Test\CiviEnvBuilder;
 use Civi\Test\HeadlessInterface;
 use Civi\Test\TransactionalInterface;
+use Civi\Api4\Contact;
 use Civi\Api4\Contribution;
 use Civi\Api4\Group;
 use Civi\Api4\GroupContact;
@@ -154,6 +155,77 @@ class api_v3_TwingleDonation_SubmitTest extends TestCase implements HeadlessInte
         ->addWhere('status', '=', 'Added')
         ->execute()
         ->column('contact_id')
+    );
+  }
+
+  /**
+   * Test that a company named like the donor is a private donation: no
+   * organisation and no employer, the contribution on the individual.
+   *
+   * @dataProvider donorNames
+   */
+  public function testCompanyNamedLikeTheDonor(string $company): void {
+    $organisations = Contact::get(FALSE)->addWhere('contact_type', '=', 'Organization');
+    $count = $organisations->execute()->count();
+
+    /** @var array{values: array{contact: int, contribution: array{id: int|string}}} $result */
+    $result = civicrm_api3('TwingleDonation', 'submit', [
+      'user_firstname' => 'Erika',
+      'user_lastname' => 'Mustermann',
+      'user_company' => $company,
+    ] + self::SUBMISSION);
+
+    self::assertArrayNotHasKey('organization', $result['values']);
+    self::assertCount($count, $organisations->execute());
+    self::assertNull(
+      Contact::get(FALSE)
+        ->addSelect('employer_id')
+        ->addWhere('id', '=', $result['values']['contact'])
+        ->execute()
+        ->single()['employer_id']
+    );
+    self::assertSame(
+      $result['values']['contact'],
+      Contribution::get(FALSE)
+        ->addSelect('contact_id')
+        ->addWhere('id', '=', $result['values']['contribution']['id'])
+        ->execute()
+        ->single()['contact_id']
+    );
+  }
+
+  /**
+   * @return array<string, array{string}>
+   */
+  public static function donorNames(): array {
+    return [
+      'first name first' => ['Erika Mustermann'],
+      'last name first' => ['Mustermann Erika'],
+      'last name, first name' => ['Mustermann, Erika'],
+      'other case and spacing' => [' erika  MUSTERMANN '],
+      'no space after the comma' => ['Mustermann,Erika'],
+      'non-breaking spaces' => ["\u{00A0}Erika\u{00A0}Mustermann\u{00A0}"],
+    ];
+  }
+
+  /**
+   * Test that a company merely containing the donor's name is an organisation.
+   */
+  public function testCompanyContainingTheDonorName(): void {
+    /** @var array{values: array{organization: int, contribution: array{id: int|string}}} $result */
+    $result = civicrm_api3('TwingleDonation', 'submit', [
+      'user_firstname' => 'Erika',
+      'user_lastname' => 'Mustermann',
+      'user_company' => 'Mustermann GmbH',
+    ] + self::SUBMISSION);
+
+    self::assertSame(
+      $result['values']['organization'],
+      Contribution::get(FALSE)
+        ->addSelect('contact_id')
+        ->addWhere('id', '=', $result['values']['contribution']['id'])
+        ->execute()
+        ->single()['contact_id']
     );
   }
 

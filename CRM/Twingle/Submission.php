@@ -320,6 +320,30 @@ class CRM_Twingle_Submission {
   }
 
   /**
+   * Whether a company name is the donor's own name, as "Erika Mustermann",
+   * "Mustermann Erika" or "Mustermann, Erika", ignoring case and spacing, also
+   * around the comma.
+   *
+   * @param array<string, mixed> $params
+   *   Submission data
+   */
+  private static function isDonorName(string $company, array $params): bool {
+    $first = $params['user_firstname'] ?? NULL;
+    $last = $params['user_lastname'] ?? NULL;
+    if (!is_string($first) || !is_string($last) || '' === trim($first) || '' === trim($last)) {
+      return FALSE;
+    }
+    $normalise = fn(string $name): string => mb_strtolower(
+      trim((string) preg_replace(['/\s+/u', '/ ?, ?/'], [' ', ', '], $name))
+    );
+    return in_array(
+      $normalise($company),
+      array_map($normalise, ["$first $last", "$last $first", "$last, $first"]),
+      TRUE
+    );
+  }
+
+  /**
    * Shares an organisation's work address, unless the contact already has one.
    *
    * @param int $contact_id
@@ -686,8 +710,13 @@ class CRM_Twingle_Submission {
       // individual.
       $submitted_address = $this->prepareAddressParams($params, $profile);
 
-      // Prepare parameter mapping for organisation.
-      if (is_string($params['user_company']) && '' !== $params['user_company']) {
+      // Prepare parameter mapping for organisation. A company named like the
+      // donor is no organisation, the donation is a private one.
+      if (
+        is_string($params['user_company'])
+        && '' !== $params['user_company']
+        && !self::isDonorName($params['user_company'], $params)
+      ) {
         $params['organization_name'] = $params['user_company'];
         unset($params['user_company']);
       }
