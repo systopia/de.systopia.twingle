@@ -1062,6 +1062,10 @@ class CRM_Twingle_Submission {
       // ... and frequency unit and interval from a static mapping.
       // phpcs:ignore Drupal.Formatting.SpaceUnaryOperator.PlusMinus
       + self::getFrequencyMapping($params['donation_rhythm']);
+    // Without an account holder, CiviSEPA uses the contact's display name.
+    if (isset($params['debit_account_holder']) && '' !== $params['debit_account_holder']) {
+      $mandate_data['account_holder'] = $params['debit_account_holder'];
+    }
     // Add custom field values.
     if (isset($custom_fields['ContributionRecur'])) {
       $mandate_data += $custom_fields['ContributionRecur'];
