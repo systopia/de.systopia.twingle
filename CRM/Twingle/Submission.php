@@ -71,6 +71,14 @@ class CRM_Twingle_Submission {
   protected array $resultValues = [];
 
   /**
+   * The recurring contribution of an instalment, NULL until looked up, FALSE
+   * when there is none.
+   *
+   * @phpstan-var array<string, mixed>|false|null
+   */
+  protected array|false|null $parentContribution = NULL;
+
+  /**
    * @phpstan-param array{
    *   project_id: string,
    * } $params
@@ -772,6 +780,36 @@ class CRM_Twingle_Submission {
     }
   }
 
+  /**
+   * The recurring contribution a non-SEPA instalment belongs to, if found.
+   *
+   * @phpstan-return array<string, mixed>|null
+   */
+  protected function getParentContribution(): ?array {
+    if (NULL === $this->parentContribution) {
+      $this->parentContribution = FALSE;
+      if (
+        !empty($this->params['parent_trx_id'])
+        && !(self::civiSepaEnabled() && $this->params['payment_instrument_id'] === 'sepa')
+      ) {
+        try {
+          /** @phpstan-var array<string, mixed> $parent_contribution */
+          $parent_contribution = civicrm_api3('ContributionRecur', 'getsingle', [
+            'trxn_id' => $this->profile->getTransactionID($this->params['parent_trx_id']),
+          ]);
+          $this->parentContribution = $parent_contribution;
+        }
+        catch (CRM_Core_Exception $exception) {
+          $this->setResultValue(
+            'parent_contribution',
+            E::ts('Could not find recurring contribution with given parent transaction ID.')
+          );
+        }
+      }
+    }
+    return FALSE === $this->parentContribution ? NULL : $this->parentContribution;
+  }
+
   // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
   public function handleGroups(): void {
   // phpcs:enable
@@ -863,17 +901,20 @@ class CRM_Twingle_Submission {
       }
     }
 
-    // If requested, add contact to donation_receipt groups defined in the
-    // profile. If an organisation is provided, add it to the groups instead.
-    // (see issue #83)
+    // If requested, add the contributor to donation_receipt groups defined in
+    // the profile: the contact of the recurring contribution for an instalment,
+    // else the organisation if provided (see issue #83), else the contact.
     if (
       (bool) ($params['donation_receipt'] ?? FALSE)
       && is_array($groups = $profile->getAttribute('donation_receipt_groups'))
     ) {
+      $contributor_id = $this->getParentContribution()['contact_id']
+        ?? $this->getResultValue('organization')
+        ?? $contact_id;
       foreach ($groups as $group_id) {
         civicrm_api3('GroupContact', 'create', [
           'group_id' => $group_id,
-          'contact_id' => $this->getResultValue('organization') ?? $contact_id,
+          'contact_id' => $contributor_id,
         ]);
         $resultValues['donation_receipt_group_ids'][] = $group_id;
       }
@@ -960,21 +1001,10 @@ class CRM_Twingle_Submission {
         'receive_date' => $useBookingDate && FALSE !== $bookingDate ? $params['booked_at'] : $params['confirmed_at'],
       ];
 
-      // Assign to recurring contribution.
-      if (!empty($params['parent_trx_id'])) {
-        try {
-          /** @phpstan-var array<string, mixed> $parent_contribution */
-          $parent_contribution = civicrm_api3('ContributionRecur', 'getsingle', [
-            'trxn_id' => $profile->getTransactionID($params['parent_trx_id']),
-          ]);
-          $contribution_data['contribution_recur_id'] = $parent_contribution['id'];
-        }
-        catch (CRM_Core_Exception $exception) {
-          $this->setResultValue(
-            'parent_contribution',
-            E::ts('Could not find recurring contribution with given parent transaction ID.')
-          );
-        }
+      // Assign to recurring contribution, on the contact it belongs to.
+      if (NULL !== ($parent_contribution = $this->getParentContribution())) {
+        $contribution_data['contribution_recur_id'] = $parent_contribution['id'];
+        $contribution_data['contact_id'] = $parent_contribution['contact_id'];
       }
 
       $contribution = civicrm_api3('Contribution', 'create', $contribution_data);

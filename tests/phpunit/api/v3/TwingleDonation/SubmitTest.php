@@ -158,6 +158,60 @@ class api_v3_TwingleDonation_SubmitTest extends TestCase implements HeadlessInte
   }
 
   /**
+   * Test that an instalment is recorded on the contact of its recurring
+   * contribution, whatever company the instalment names, and that this contact
+   * joins the donation receipt groups.
+   */
+  public function testInstalmentOnTheContactOfTheRecurringContribution(): void {
+    $group_id = (int) Group::create(FALSE)
+      ->addValue('title', 'Donation receipts')
+      ->execute()
+      ->single()['id'];
+    $profile = \CRM_Twingle_Profile::getProfileForProject(self::PROJECT_ID);
+    $profile->setAttribute('donation_receipt_groups', [$group_id]);
+    $profile->saveProfile();
+
+    $recurring = [
+      'donation_rhythm' => 'monthly',
+      'user_firstname' => 'Erika',
+      'user_lastname' => 'Mustermann',
+    ] + self::SUBMISSION;
+    /** @var array{values: array{contact: int, contribution: array{id: int|string}}} $first */
+    $first = civicrm_api3('TwingleDonation', 'submit', $recurring);
+    /** @var array{values: array{organization: int, contribution: array{id: int|string}}} $instalment */
+    $instalment = civicrm_api3('TwingleDonation', 'submit', [
+      'trx_id' => 'GL947LD',
+      'parent_trx_id' => self::SUBMISSION['trx_id'],
+      'user_company' => 'Example GmbH',
+      'donation_receipt' => 1,
+    ] + $recurring);
+
+    $recur_id = Contribution::get(FALSE)
+      ->addSelect('contribution_recur_id')
+      ->addWhere('id', '=', $first['values']['contribution']['id'])
+      ->execute()
+      ->single()['contribution_recur_id'];
+    $contribution = Contribution::get(FALSE)
+      ->addSelect('contact_id', 'contribution_recur_id')
+      ->addWhere('id', '=', $instalment['values']['contribution']['id'])
+      ->execute()
+      ->single();
+    self::assertArrayHasKey('organization', $instalment['values']);
+    self::assertNotNull($recur_id);
+    self::assertSame($recur_id, $contribution['contribution_recur_id']);
+    self::assertSame($first['values']['contact'], $contribution['contact_id']);
+    self::assertSame(
+      [$first['values']['contact']],
+      GroupContact::get(FALSE)
+        ->addSelect('contact_id')
+        ->addWhere('group_id', '=', $group_id)
+        ->addWhere('status', '=', 'Added')
+        ->execute()
+        ->column('contact_id')
+    );
+  }
+
+  /**
    * Test that a submission without a company records the contribution on the
    * individual.
    */
