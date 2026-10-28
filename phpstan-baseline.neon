@@ -834,12 +834,6 @@ parameters:
 			path: CRM/Twingle/Submission.php
 
 		-
-			message: '#^Variable \$organisation_id on left side of \?\? is never defined\.$#'
-			identifier: nullCoalesce.variable
-			count: 1
-			path: CRM/Twingle/Submission.php
-
-		-
 			message: '#^Cannot access offset ''contribution_status_id'' on array\|int\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
