@@ -71,6 +71,14 @@ class CRM_Twingle_Submission {
   protected array $resultValues = [];
 
   /**
+   * The recurring contribution of an instalment, NULL until looked up, FALSE
+   * when there is none.
+   *
+   * @phpstan-var array<string, mixed>|false|null
+   */
+  protected array|false|null $parentContribution = NULL;
+
+  /**
    * @phpstan-param array{
    *   project_id: string,
    * } $params
@@ -297,7 +305,7 @@ class CRM_Twingle_Submission {
     }
 
     // Prepare values: language.
-    if (is_string($contact_data['preferred_language']) && '' !== $contact_data['preferred_language']) {
+    if (is_string($contact_data['preferred_language'] ?? NULL) && '' !== $contact_data['preferred_language']) {
       $mapping = CRM_Core_I18n_PseudoConstant::longForShortMapping();
       // Override the default mapping for German.
       $mapping['de'] = 'de_DE';
@@ -309,6 +317,30 @@ class CRM_Twingle_Submission {
     $contact = civicrm_api3('Contact', 'getorcreate', $contact_data);
 
     return isset($contact['id']) ? (int) $contact['id'] : NULL;
+  }
+
+  /**
+   * Whether a company name is the donor's own name, as "Erika Mustermann",
+   * "Mustermann Erika" or "Mustermann, Erika", ignoring case and spacing, also
+   * around the comma.
+   *
+   * @param array<string, mixed> $params
+   *   Submission data
+   */
+  private static function isDonorName(string $company, array $params): bool {
+    $first = $params['user_firstname'] ?? NULL;
+    $last = $params['user_lastname'] ?? NULL;
+    if (!is_string($first) || !is_string($last) || '' === trim($first) || '' === trim($last)) {
+      return FALSE;
+    }
+    $normalise = fn(string $name): string => mb_strtolower(
+      trim((string) preg_replace(['/\s+/u', '/ ?, ?/'], [' ', ', '], $name))
+    );
+    return in_array(
+      $normalise($company),
+      array_map($normalise, ["$first $last", "$last $first", "$last, $first"]),
+      TRUE
+    );
   }
 
   /**
@@ -678,8 +710,13 @@ class CRM_Twingle_Submission {
       // individual.
       $submitted_address = $this->prepareAddressParams($params, $profile);
 
-      // Prepare parameter mapping for organisation.
-      if (is_string($params['user_company']) && '' !== $params['user_company']) {
+      // Prepare parameter mapping for organisation. A company named like the
+      // donor is no organisation, the donation is a private one.
+      if (
+        is_string($params['user_company'])
+        && '' !== $params['user_company']
+        && !self::isDonorName($params['user_company'], $params)
+      ) {
         $params['organization_name'] = $params['user_company'];
         unset($params['user_company']);
       }
@@ -770,6 +807,36 @@ class CRM_Twingle_Submission {
     if (isset($organisation_id)) {
       $this->setResultValue('organization', $organisation_id);
     }
+  }
+
+  /**
+   * The recurring contribution a non-SEPA instalment belongs to, if found.
+   *
+   * @phpstan-return array<string, mixed>|null
+   */
+  protected function getParentContribution(): ?array {
+    if (NULL === $this->parentContribution) {
+      $this->parentContribution = FALSE;
+      if (
+        !empty($this->params['parent_trx_id'])
+        && !(self::civiSepaEnabled() && $this->params['payment_instrument_id'] === 'sepa')
+      ) {
+        try {
+          /** @phpstan-var array<string, mixed> $parent_contribution */
+          $parent_contribution = civicrm_api3('ContributionRecur', 'getsingle', [
+            'trxn_id' => $this->profile->getTransactionID($this->params['parent_trx_id']),
+          ]);
+          $this->parentContribution = $parent_contribution;
+        }
+        catch (CRM_Core_Exception $exception) {
+          $this->setResultValue(
+            'parent_contribution',
+            E::ts('Could not find recurring contribution with given parent transaction ID.')
+          );
+        }
+      }
+    }
+    return FALSE === $this->parentContribution ? NULL : $this->parentContribution;
   }
 
   // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
@@ -863,17 +930,20 @@ class CRM_Twingle_Submission {
       }
     }
 
-    // If requested, add contact to donation_receipt groups defined in the
-    // profile. If an organisation is provided, add it to the groups instead.
-    // (see issue #83)
+    // If requested, add the contributor to donation_receipt groups defined in
+    // the profile: the contact of the recurring contribution for an instalment,
+    // else the organisation if provided (see issue #83), else the contact.
     if (
       (bool) ($params['donation_receipt'] ?? FALSE)
       && is_array($groups = $profile->getAttribute('donation_receipt_groups'))
     ) {
+      $contributor_id = $this->getParentContribution()['contact_id']
+        ?? $this->getResultValue('organization')
+        ?? $contact_id;
       foreach ($groups as $group_id) {
         civicrm_api3('GroupContact', 'create', [
           'group_id' => $group_id,
-          'contact_id' => $organisation_id ?? $contact_id,
+          'contact_id' => $contributor_id,
         ]);
         $resultValues['donation_receipt_group_ids'][] = $group_id;
       }
@@ -889,9 +959,10 @@ class CRM_Twingle_Submission {
     $customFieldValues = $this->getCustomFieldValues();
 
     // Create contribution or SEPA mandate. Those attributes are valid for both,
-    // single and recurring contributions.
+    // single and recurring contributions. If an organisation is provided, it is
+    // the contributor.
     $contribution_data = [
-      'contact_id' => ($contactId),
+      'contact_id' => $this->getResultValue('organization') ?? $contactId,
       'currency' => $params['currency'],
       'trxn_id' => $profile->getTransactionID($params['trx_id']),
       'payment_instrument_id' => $params['payment_instrument_id'],
@@ -959,21 +1030,10 @@ class CRM_Twingle_Submission {
         'receive_date' => $useBookingDate && FALSE !== $bookingDate ? $params['booked_at'] : $params['confirmed_at'],
       ];
 
-      // Assign to recurring contribution.
-      if (!empty($params['parent_trx_id'])) {
-        try {
-          /** @phpstan-var array<string, mixed> $parent_contribution */
-          $parent_contribution = civicrm_api3('ContributionRecur', 'getsingle', [
-            'trxn_id' => $profile->getTransactionID($params['parent_trx_id']),
-          ]);
-          $contribution_data['contribution_recur_id'] = $parent_contribution['id'];
-        }
-        catch (CRM_Core_Exception $exception) {
-          $this->setResultValue(
-            'parent_contribution',
-            E::ts('Could not find recurring contribution with given parent transaction ID.')
-          );
-        }
+      // Assign to recurring contribution, on the contact it belongs to.
+      if (NULL !== ($parent_contribution = $this->getParentContribution())) {
+        $contribution_data['contribution_recur_id'] = $parent_contribution['id'];
+        $contribution_data['contact_id'] = $parent_contribution['contact_id'];
       }
 
       $contribution = civicrm_api3('Contribution', 'create', $contribution_data);
