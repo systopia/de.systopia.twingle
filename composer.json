@@ -24,6 +24,9 @@
         "civicrm/civicrm-packages": ">=5.76",
         "systopia/de.systopia.xcm": "^1.15"
     },
+    "require-dev": {
+        "project60/org.project60.sepa": "^1.14"
+    },
     "autoload": {
         "classmap": ["ComposerHelper.php"]
     },
