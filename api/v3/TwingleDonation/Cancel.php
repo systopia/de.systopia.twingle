@@ -42,6 +42,13 @@ function _civicrm_api3_twingle_donation_Cancel_spec(&$params) {
     'api.required' => 1,
     'description' => E::ts('The unique transaction ID of the donation'),
   ];
+  $params['person_id'] = [
+    'name' => 'person_id',
+    'title' => E::ts('Person ID'),
+    'type' => CRM_Utils_Type::T_STRING,
+    'api.required' => 0,
+    'description' => E::ts('Unique Person ID'),
+  ];
   $params['cancelled_at'] = [
     'name'         => 'cancelled_at',
     'title'        => E::ts('Cancelled at'),
@@ -66,15 +73,17 @@ function _civicrm_api3_twingle_donation_Cancel_spec(&$params) {
  *   project_id: string,
  *   trx_id: string,
  *   cancel_reason: string,
+ *   person_id?: string,
  * } $params
  * @return array<string, mixed> API result descriptor
  * @see civicrm_api3_create_success
  * @see civicrm_api3_create_error
  */
+// phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
 function civicrm_api3_twingle_donation_Cancel($params) {
+// phpcs:enable
   // Log call if debugging is enabled within civicrm.settings.php.
   if (defined('TWINGLE_API_LOGGING') && TWINGLE_API_LOGGING) {
-    // @phpstan-ignore arguments.count
     Civi::log()->debug('TwingleDonation.Cancel: ' . json_encode($params, JSON_PRETTY_PRINT));
   }
 
@@ -100,6 +109,32 @@ function civicrm_api3_twingle_donation_Cancel($params) {
         'trxn_id' => $profile->getTransactionID($params['trx_id']),
       ]);
       $contribution_type = 'ContributionRecur';
+    }
+
+    // Persist Person ID via IdentityTracker if provided.
+    if (
+      isset($params['person_id'], $contribution['contact_id'])
+      && $params['person_id'] !== ''
+      && (int) $contribution['contact_id'] !== 0
+    ) {
+      try {
+        civicrm_api3('Contact', 'addidentity', [
+          'contact_id' => (int) $contribution['contact_id'],
+          'identifier_type' => 'person_id',
+          'identifier' => $params['person_id'],
+        ]);
+      }
+      catch (CRM_Core_Exception $exception) {
+        Civi::log()->warning(
+          sprintf(
+            '%s: Failed to persist person_id for contact %d: %s',
+            E::LONG_NAME,
+            (int) $contribution['contact_id'],
+            $exception->getMessage()
+          ),
+          ['exception' => $exception]
+        );
+      }
     }
 
     if (

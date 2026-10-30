@@ -630,6 +630,7 @@ class CRM_Twingle_Submission {
       'user_language' => 'preferred_language',
       'user_title' => 'formal_title',
       'debit_iban' => 'iban',
+      'person_id' => 'person_id',
     ] as $contact_param => $contact_component) {
       if (!empty($this->params[$contact_param])) {
         $contact_data[$contact_component] = $this->params[$contact_param];
@@ -768,6 +769,28 @@ class CRM_Twingle_Submission {
       // Create employer relationship between organization and individual.
       if (isset($organisation_id)) {
         self::updateEmployerRelation($contact_id, $organisation_id);
+      }
+
+      // Persist Person ID via IdentityTracker if provided.
+      if (isset($params['person_id']) && $params['person_id'] !== '') {
+        try {
+          civicrm_api3('Contact', 'addidentity', [
+            'contact_id' => $contact_id,
+            'identifier_type' => 'person_id',
+            'identifier' => $params['person_id'],
+          ]);
+        }
+        catch (CRM_Core_Exception $exception) {
+          Civi::log()->warning(
+            sprintf(
+              '%s: Failed to persist person_id for contact %d: %s',
+              E::LONG_NAME,
+              $contact_id,
+              $exception->getMessage()
+            ),
+            ['exception' => $exception]
+          );
+        }
       }
     }
 

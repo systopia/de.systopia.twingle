@@ -43,6 +43,13 @@ function _civicrm_api3_twingle_donation_Submit_spec(&$params) {
     'api.required' => 1,
     'description' => E::ts('The unique transaction ID of the donation'),
   ];
+  $params['person_id'] = [
+    'name' => 'person_id',
+    'title' => E::ts('Person ID'),
+    'type' => CRM_Utils_Type::T_STRING,
+    'api.required' => 0,
+    'description' => E::ts('Unique Person ID'),
+  ];
   $params['confirmed_at'] = [
     'name'         => 'confirmed_at',
     'title'        => E::ts('Confirmed at'),
@@ -292,7 +299,6 @@ function civicrm_api3_twingle_donation_Submit($params) {
 // phpcs:enable
   // Log call if debugging is enabled within civicrm.settings.php.
   if (defined('TWINGLE_API_LOGGING') && TWINGLE_API_LOGGING) {
-    // @phpstan-ignore arguments.count
     Civi::log()->debug('TwingleDonation.Submit: ' . json_encode($params, JSON_PRETTY_PRINT));
   }
 

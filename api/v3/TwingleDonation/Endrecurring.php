@@ -42,6 +42,13 @@ function _civicrm_api3_twingle_donation_endrecurring_spec(&$params) {
     'api.required' => 1,
     'description' => E::ts('The unique transaction ID of the donation'),
   ];
+  $params['person_id'] = [
+    'name' => 'person_id',
+    'title' => E::ts('Person ID'),
+    'type' => CRM_Utils_Type::T_STRING,
+    'api.required' => 0,
+    'description' => E::ts('Unique Person ID'),
+  ];
   $params['ended_at'] = [
     'name'         => 'ended_at',
     'title'        => E::ts('Ended at'),
@@ -58,15 +65,17 @@ function _civicrm_api3_twingle_donation_endrecurring_spec(&$params) {
  *    ended_at: string,
  *    project_id: string,
  *    trx_id: string,
+ *    person_id?: string,
  *  } $params
  * @return array<string, mixed> API result descriptor
  * @see civicrm_api3_create_success
  * @see civicrm_api3_create_error
  */
+// phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
 function civicrm_api3_twingle_donation_endrecurring($params) {
+// phpcs:enable
   // Log call if debugging is enabled within civicrm.settings.php.
   if (defined('TWINGLE_API_LOGGING') && TWINGLE_API_LOGGING) {
-    // @phpstan-ignore arguments.count
     Civi::log()->debug('TwingleDonation.Endrecurring: ' . json_encode($params, JSON_PRETTY_PRINT));
   }
 
@@ -80,10 +89,36 @@ function civicrm_api3_twingle_donation_endrecurring($params) {
     }
 
     $profile = CRM_Twingle_Profile::getProfileForProject($params['project_id']);
-    /** @phpstan-var array{id: int, payment_instrument_id: string} $contribution */
+    /** @phpstan-var array{id: int, contact_id: int, payment_instrument_id: string} $contribution */
     $contribution = civicrm_api3('ContributionRecur', 'getsingle', [
       'trxn_id' => $profile->getTransactionID($params['trx_id']),
     ]);
+
+    // Persist Person ID via IdentityTracker if provided.
+    if (
+      isset($params['person_id'], $contribution['contact_id'])
+      && $params['person_id'] !== ''
+      && (int) $contribution['contact_id'] !== 0
+    ) {
+      try {
+        civicrm_api3('Contact', 'addidentity', [
+          'contact_id' => (int) $contribution['contact_id'],
+          'identifier_type' => 'person_id',
+          'identifier' => $params['person_id'],
+        ]);
+      }
+      catch (CRM_Core_Exception $exception) {
+        Civi::log()->warning(
+          sprintf(
+            '%s: Failed to persist person_id for contact %d: %s',
+            E::LONG_NAME,
+            (int) $contribution['contact_id'],
+            $exception->getMessage()
+          ),
+          ['exception' => $exception]
+        );
+      }
+    }
 
     // End SEPA mandate (which ends the associated recurring contribution) or
     // recurring contributions.
