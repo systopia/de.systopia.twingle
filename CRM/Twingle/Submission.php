@@ -1164,6 +1164,7 @@ class CRM_Twingle_Submission {
     $contribution_data['financial_type_id'] = $contribution_recur_data['financial_type_id'];
   }
 
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
   /**
    * @param $values
    *   Processed data
@@ -1172,7 +1173,6 @@ class CRM_Twingle_Submission {
    * @param $profile
    *   The twingle profile used
    *
-   * @throws \CRM_Core_Exception
    * @throws \CRM_Core_Exception
    * @throws \Civi\Twingle\Shop\Exceptions\LineItemException
    */
