@@ -14,10 +14,9 @@
 
 declare(strict_types = 1);
 
-use PHPUnit\Framework\TestCase;
-use Civi\Test\CiviEnvBuilder;
-use Civi\Test\HeadlessInterface;
-use Civi\Test\TransactionalInterface;
+use Civi\Api4\SepaCreditor;
+use Civi\Api4\SepaMandate;
+use Civi\Twingle\AbstractTwingleHeadlessTestCase;
 
 /**
  * TwingleDonation.Submit with CiviSEPA.
@@ -25,33 +24,26 @@ use Civi\Test\TransactionalInterface;
  * @group headless
  * @covers ::civicrm_api3_twingle_donation_Submit
  */
-class api_v3_TwingleDonation_SubmitSepaTest extends TestCase implements HeadlessInterface, TransactionalInterface {
+class api_v3_TwingleDonation_SubmitSepaTest extends AbstractTwingleHeadlessTestCase {
 
   private const PROJECT_ID = 'tw583f49b20c7bf';
-
-  /**
-   * {@inheritDoc}
-   */
-  public function setUpHeadless(): CiviEnvBuilder {
-    return \Civi\Test::headless()
-      ->install(['de.systopia.xcm', 'org.project60.sepa'])
-      ->installMe(__DIR__)
-      ->apply();
-  }
 
   /**
    * The account holder Twingle submits ends up on the SEPA mandate.
    */
   public function testMandateAccountHolder(): void {
     \Civi::settings()->set('twingle_use_sepa', TRUE);
-    $creditor_id = civicrm_api3('SepaCreditor', 'getvalue', ['return' => 'id']);
-    self::assertIsNumeric($creditor_id);
-    civicrm_api3('SepaCreditor', 'create', [
-      'id' => $creditor_id,
-      'creditor_type' => 'SEPA',
-      'category' => NULL,
-      'pi_ooff' => CRM_Sepa_Logic_PaymentInstruments::getClassicSepaPaymentInstruments()['OOFF'],
-    ]);
+    $creditor_id = SepaCreditor::get(FALSE)
+      ->addSelect('id')
+      ->execute()
+      ->single()['id'];
+    self::assertIsInt($creditor_id);
+    SepaCreditor::update(FALSE)
+      ->addWhere('id', '=', $creditor_id)
+      ->addValue('creditor_type', 'SEPA')
+      ->addValue('category', NULL)
+      ->addValue('pi_ooff', CRM_Sepa_Logic_PaymentInstruments::getClassicSepaPaymentInstruments()['OOFF'])
+      ->execute();
     $profile = CRM_Twingle_Profile::getProfileForProject(self::PROJECT_ID);
     $profile->setAttribute('pi_debit_automatic', 'sepa');
     $profile->setAttribute('sepa_creditor_id', (string) $creditor_id);
@@ -90,10 +82,11 @@ class api_v3_TwingleDonation_SubmitSepaTest extends TestCase implements Headless
       'user_extrafield' => NULL,
     ]);
 
-    self::assertSame('Example Ltd.', civicrm_api3('SepaMandate', 'getvalue', [
-      'id' => $result['values']['sepa_mandate']['id'],
-      'return' => 'account_holder',
-    ]));
+    self::assertSame('Example Ltd.', SepaMandate::get(FALSE)
+      ->addSelect('account_holder')
+      ->addWhere('id', '=', $result['values']['sepa_mandate']['id'])
+      ->execute()
+      ->single()['account_holder']);
   }
 
 }
