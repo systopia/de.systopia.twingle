@@ -98,6 +98,12 @@ class CRM_Twingle_Submission {
   }
 
   /**
+   * Twingle's internal ID for additional donations.
+   * It's always -22, as stated here: https://github.com/systopia/de.systopia.twingle/issues/102#issuecomment-3337387888
+   */
+  private const TWINGLE_ADDITIONAL_DONATION_ID = -22;
+
+  /**
    * @throws \CRM_Core_Exception
    *   When invalid parameters have been submitted.
    */
@@ -1163,6 +1169,7 @@ class CRM_Twingle_Submission {
     $contribution_data['financial_type_id'] = $contribution_recur_data['financial_type_id'];
   }
 
+  // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
   /**
    * @param $values
    *   Processed data
@@ -1171,7 +1178,6 @@ class CRM_Twingle_Submission {
    * @param $profile
    *   The twingle profile used
    *
-   * @throws \CRM_Core_Exception
    * @throws \CRM_Core_Exception
    * @throws \Civi\Twingle\Shop\Exceptions\LineItemException
    */
@@ -1244,6 +1250,12 @@ class CRM_Twingle_Submission {
         $line_item_data['price_field_id'] = $price_field->price_field_id;
         $line_item_data['description'] = $price_field->description;
       }
+      // Identify additional donations by their ID.
+      elseif ($product['id'] === self::TWINGLE_ADDITIONAL_DONATION_ID) {
+        $additional_donation_financial_type_id = $profile->getAttribute('shop_additional_donation_financial_type', 1);
+        $line_item_data['financial_type_id'] = $additional_donation_financial_type_id;
+        $line_item_data['price_field_id'] = 1;  # Hard-code to 1 which is the default for "contribution_amount"
+      }
       // If not found, use the shops default financial type
       else {
         $financial_type_id = $profile->getAttribute('shop_financial_type', 1);
@@ -1286,6 +1298,8 @@ class CRM_Twingle_Submission {
         'unit_price' => $donation_sum,
         'line_total' => $donation_sum,
         'financial_type_id' => $donation_financial_type_id,
+        // Hard-code to 1 which is the default for "contribution_amount"
+        'price_field_id' => 1,
         'sequential' => 1,
       ];
       $donation_line_item_data += self::getDefaultPriceFieldData();

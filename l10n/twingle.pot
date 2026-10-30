@@ -454,7 +454,10 @@ msgstr ""
 msgid "Financial Type for top up donations"
 msgstr ""
 
-#: CRM/Twingle/Form/Profile.php templates/CRM/Twingle/Form/Profile.tpl
+#: CRM/Twingle/Form/Profile.php
+msgid "Financial Type for additional donations"
+msgstr ""
+
 msgid "Map Products as Price Fields"
 msgstr ""
 
