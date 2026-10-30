@@ -58,6 +58,11 @@ Please adapt the settings to your individual requirements or environnement.
 
 ![](../img/XCMReg.jpg)
 
+### Matching via Person ID
+
+If the **Identity Tracker** (`de.systopia.identitytracker`) extension is installed, you can add the matching rule **Twingle: Person ID** (`CRM_Xcm_Matcher_PersonIdMatcher`) to your XCM profile's assignment rules.
+When Twingle passes a `person_id`, XCM will use this rule to identify existing contacts that were previously associated with this Person ID.
+
 #### Identified contacts section
 
 ![](../img/XCMIde.jpg)

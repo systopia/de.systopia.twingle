@@ -297,11 +297,16 @@ class CRM_Twingle_Submission {
     }
 
     // Prepare values: language.
-    if (is_string($contact_data['preferred_language']) && '' !== $contact_data['preferred_language']) {
+    if (
+      isset($contact_data['preferred_language'])
+      && is_string($contact_data['preferred_language'])
+      && '' !== $contact_data['preferred_language']
+    ) {
       $mapping = CRM_Core_I18n_PseudoConstant::longForShortMapping();
       // Override the default mapping for German.
       $mapping['de'] = 'de_DE';
-      $contact_data['preferred_language'] = $mapping[$contact_data['preferred_language']];
+      $contact_data['preferred_language'] = $mapping[$contact_data['preferred_language']]
+        ?? $contact_data['preferred_language'];
     }
 
     // Pass to XCM.
@@ -625,6 +630,7 @@ class CRM_Twingle_Submission {
       'user_language' => 'preferred_language',
       'user_title' => 'formal_title',
       'debit_iban' => 'iban',
+      'person_id' => 'person_id',
     ] as $contact_param => $contact_component) {
       if (!empty($this->params[$contact_param])) {
         $contact_data[$contact_component] = $this->params[$contact_param];
@@ -764,6 +770,28 @@ class CRM_Twingle_Submission {
       if (isset($organisation_id)) {
         self::updateEmployerRelation($contact_id, $organisation_id);
       }
+
+      // Persist Person ID via IdentityTracker if provided.
+      if (isset($params['person_id']) && $params['person_id'] !== '') {
+        try {
+          civicrm_api3('Contact', 'addidentity', [
+            'contact_id' => $contact_id,
+            'identifier_type' => 'person_id',
+            'identifier' => $params['person_id'],
+          ]);
+        }
+        catch (CRM_Core_Exception $exception) {
+          Civi::log()->warning(
+            sprintf(
+              '%s: Failed to persist person_id for contact %d: %s',
+              E::LONG_NAME,
+              $contact_id,
+              $exception->getMessage()
+            ),
+            ['exception' => $exception]
+          );
+        }
+      }
     }
 
     $this->setResultValue('contact', (int) $contact_id);
@@ -779,6 +807,7 @@ class CRM_Twingle_Submission {
     $profile = $this->profile;
     $resultValues = &$this->resultValues;
     $contact_id = $this->getResultValue('contact');
+    $organisation_id = $this->getResultValue('organization');
 
     // If usage of double opt-in is selected, use MailingEventSubscribe.create
     // to add contact to newsletter groups defined in the profile
@@ -923,7 +952,7 @@ class CRM_Twingle_Submission {
       // If CiviSEPA is installed and the financial type is a CiviSEPA-one,
       // create SEPA mandate (and recurring contribution, using "createfull" API
       // action).
-      self::createSepaMandate($contribution_data);
+      $this->createSepaMandate($contribution_data);
     }
     else {
       // Set financial type depending on donation rhythm. This applies for
@@ -1379,7 +1408,7 @@ class CRM_Twingle_Submission {
           $recurring_contribution_id = $this->getResultValue('contribution_recur_id');
         }
         elseif (NULL !== $this->getResultValue('sepa_mandate')) {
-          $mandate = reset($this->getResultValue('sepa_mandate'));
+          $mandate = $this->getResultValue('sepa_mandate');
           if ($mandate['entity_table'] === 'civicrm_contribution_recur') {
             $recurring_contribution_id = (int) $mandate['entity_id'];
           }
@@ -1409,7 +1438,7 @@ class CRM_Twingle_Submission {
         );
         throw new BaseException(
           E::ts('Twingle membership postprocessing call has failed, see log for more information'),
-          NULL,
+          (string) $exception->getErrorCode(),
           $exception
         );
       }

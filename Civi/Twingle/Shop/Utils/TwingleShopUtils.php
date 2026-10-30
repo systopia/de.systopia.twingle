@@ -53,7 +53,7 @@ class TwingleShopUtils {
         catch (\Exception $e) {
           throw new \RuntimeException(
             "Could not convert attribute '$attribute' to int.",
-            $e
+            $e->getCode(), $e
           );
         }
       }
@@ -78,7 +78,7 @@ class TwingleShopUtils {
         catch (\Exception $e) {
           throw new \RuntimeException(
             "Could not convert attribute '$attribute' to bool.",
-            $e
+            $e->getCode(), $e
           );
         }
       }
@@ -103,7 +103,7 @@ class TwingleShopUtils {
         catch (\Exception $e) {
           throw new \RuntimeException(
             "Could not convert attribute '$attribute' to date.",
-            $e
+            $e->getCode(), $e
           );
         }
       }

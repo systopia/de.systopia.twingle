@@ -768,12 +768,6 @@ parameters:
 			path: CRM/Twingle/Submission.php
 
 		-
-			message: '#^Parameter \#1 \$array of function reset is passed by reference, so it expects variables only\.$#'
-			identifier: argument.byRef
-			count: 1
-			path: CRM/Twingle/Submission.php
-
-		-
 			message: '#^Parameter \#1 \$donation_rhythm of static method CRM_Twingle_Submission\:\:getFrequencyMapping\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -816,12 +810,6 @@ parameters:
 			path: CRM/Twingle/Submission.php
 
 		-
-			message: '#^Parameter \#2 \$error_code of class Civi\\Twingle\\Exceptions\\BaseException constructor expects string, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: CRM/Twingle/Submission.php
-
-		-
 			message: '#^Part \$params\[''payment_method''\] \(mixed\) of encapsed string cannot be cast to string\.$#'
 			identifier: encapsedStringPart.nonString
 			count: 1
@@ -831,12 +819,6 @@ parameters:
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
 			count: 2
-			path: CRM/Twingle/Submission.php
-
-		-
-			message: '#^Variable \$organisation_id on left side of \?\? is never defined\.$#'
-			identifier: nullCoalesce.variable
-			count: 1
 			path: CRM/Twingle/Submission.php
 
 		-
