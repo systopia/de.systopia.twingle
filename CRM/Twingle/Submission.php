@@ -1379,7 +1379,7 @@ class CRM_Twingle_Submission {
           $recurring_contribution_id = $this->getResultValue('contribution_recur_id');
         }
         elseif (NULL !== $this->getResultValue('sepa_mandate')) {
-          $mandate = reset($this->getResultValue('sepa_mandate'));
+          $mandate = $this->getResultValue('sepa_mandate');
           if ($mandate['entity_table'] === 'civicrm_contribution_recur') {
             $recurring_contribution_id = (int) $mandate['entity_id'];
           }
