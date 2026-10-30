@@ -18,6 +18,7 @@ declare(strict_types = 1);
 use CRM_Twingle_ExtensionUtil as E;
 use Civi\Twingle\Exceptions\BaseException;
 use Civi\Twingle\Shop\Exceptions\LineItemException;
+use Civi\Api4\Note;
 
 class CRM_Twingle_Submission {
 
@@ -51,6 +52,23 @@ class CRM_Twingle_Submission {
     'price',
     'count',
     'total_value',
+  ];
+
+  /**
+   * List of fields in the Twingle submission that can be used to create a
+   * contribution note.
+   */
+  public const CONTRIBUTION_NOTE_TARGETS =  [
+    'purpose',
+    'remarks',
+  ];
+
+  /**
+   * List of fields in the Twingle submission that can be used to create a
+   * contact note.
+   */
+  public const CONTACT_NOTE_TARGETS =  [
+    'user_extrafield',
   ];
 
   /**
@@ -653,6 +671,10 @@ class CRM_Twingle_Submission {
   }
 
   // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function handleContacts(): void {
   // phpcs:enable
     $params = $this->params;
@@ -733,21 +755,7 @@ class CRM_Twingle_Submission {
       }
 
       // Create contact notes.
-      /** @phpstan-var array<string> $contact_note_mappings */
-      $contact_note_mappings = $profile->getAttribute('map_as_contact_notes', []);
-      foreach (['user_extrafield'] as $target) {
-        if (
-          isset($params[$target])
-          && '' !== $params[$target]
-          && in_array($target, $contact_note_mappings, TRUE)
-        ) {
-          \Civi\Api4\Note::create(FALSE)
-            ->addValue('entity_table', 'civicrm_contact')
-            ->addValue('entity_id', $contact_id)
-            ->addValue('note', $params[$target])
-            ->execute();
-        }
-      }
+      self::createContactNotes($contact_id, $params, $profile);
 
       // Share organisation address with individual contact, using configured
       // location type for organisation address.
@@ -881,6 +889,12 @@ class CRM_Twingle_Submission {
   }
 
   // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
+
+  /**
+   * @throws \CRM_Core_Exception
+   * @throws \Civi\Twingle\Exceptions\BaseException
+   * @throws \Civi\Twingle\Shop\Exceptions\LineItemException
+   */
   public function handleTransaction(): void {
   // phpcs:enable
     $contactId = $this->getResultValue('contact');
@@ -989,21 +1003,7 @@ class CRM_Twingle_Submission {
       $this->setResultValue('contribution', $contribution);
 
       // Add notes to the contribution.
-      /** @phpstan-var array<string> $contribution_note_mappings */
-      $contribution_note_mappings = $profile->getAttribute('map_as_contribution_notes', []);
-      foreach (['purpose', 'remarks'] as $target) {
-        if (
-          in_array($target, $contribution_note_mappings, TRUE)
-          && isset($params[$target])
-          && '' !== $params[$target]
-        ) {
-          \Civi\Api4\Note::create(FALSE)
-            ->addValue('entity_table', 'civicrm_contribution')
-            ->addValue('entity_id', $contribution['id'])
-            ->addValue('note', $params[$target])
-            ->execute();
-        }
-      }
+      self::createContributionNotes((int) $contribution['id'], $params, $profile);
 
       // Add products as line items to the contribution
       if (!empty($params['products']) && $profile->isShopEnabled()) {
@@ -1016,6 +1016,12 @@ class CRM_Twingle_Submission {
   }
 
   // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
+
+  /**
+   * @throws \CRM_Core_Exception
+   * @throws \Civi\Twingle\Exceptions\BaseException
+   * @throws \Civi\Twingle\Shop\Exceptions\LineItemException
+   */
   protected function createSepaMandate(array $contribution_data): void {
   // phpcs:enable
     $profile = $this->getProfile();
@@ -1099,7 +1105,7 @@ class CRM_Twingle_Submission {
 
     if ($mandate_data['type'] === 'OOFF') {
       // Add contribution data to result_values for later use
-      $contribution_id = $this->getResultValue('sepa_mandate')['entity_id'];
+      $contribution_id = (int) $this->getResultValue('sepa_mandate')['entity_id'];
       if ($contribution_id) {
         $contribution = civicrm_api3(
           'Contribution',
@@ -1113,6 +1119,9 @@ class CRM_Twingle_Submission {
         $message = E::LONG_NAME . ": could not find contribution for sepa mandate $mandate_id";
         throw new CRM_Core_Exception($message, 'api_error');
       }
+
+      // Add notes to the contribution.
+      self::createContributionNotes($contribution_id, $params, $profile);
 
       // Add products as line items to the contribution
       if (!empty($params['products']) && $profile->isShopEnabled()) {
@@ -1172,7 +1181,6 @@ class CRM_Twingle_Submission {
    *   The twingle profile used
    *
    * @throws \CRM_Core_Exception
-   * @throws \CRM_Core_Exception
    * @throws \Civi\Twingle\Shop\Exceptions\LineItemException
    */
   public static function createLineItems($values, $submission, $profile): array {
@@ -1187,122 +1195,241 @@ class CRM_Twingle_Submission {
       );
     }
 
+    /** @phpstan-var array{id: int, name: string, price: int|float, count: int, total_value: int|float} $product */
     foreach ($submission['products'] as $product) {
-
-      $line_item_data = [
-        'entity_table' => 'civicrm_contribution',
-        'contribution_id' => $contribution_id,
-        'entity_id' => $contribution_id,
-        'label' => $product['name'],
-        'qty' => $product['count'],
-        'unit_price' => $product['price'],
-        'line_total' => $product['total_value'],
-        'sequential' => 1,
-      ];
-
-      // Try to find the TwingleProduct with its corresponding PriceField
-      // for this product
-      try {
-        $price_field = CRM_Twingle_BAO_TwingleProduct::findByExternalId($product['id']);
-      }
-      catch (Exception $e) {
-        Civi::log()->error(E::LONG_NAME .
-          ': An error occurred when searching for TwingleShop with the external ID ' .
-          $product['id'], ['exception' => $e]);
-        $price_field = NULL;
-      }
-      // If found, use the financial type and price field id from the price field
-      if ($price_field) {
-
-        // Log warning if price is not variable and differs from the submission
-        if ($price_field->price !== NULL && (int) $price_field->price !== (int) $product['price']) {
-          Civi::log()->warning(E::LONG_NAME .
-            ': Price for product ' . $product['name'] . ' differs from the PriceField. ' .
-            'Using the price from the submission.',
-            [
-              'price_field' => $price_field->price,
-              'submission' => $product['price'],
-            ]
-          );
-        }
-
-        // Log warning if name differs from the submission
-        if ($price_field->name !== $product['name']) {
-          Civi::log()->warning(E::LONG_NAME .
-            ': Name for product ' . $product['name'] . ' differs from the PriceField ' .
-            'Using the name from the submission.',
-            [
-              'price_field' => $price_field->name,
-              'submission' => $product['name'],
-            ]
-          );
-        }
-
-        // Set the financial type and price field id
-        $line_item_data['financial_type_id'] = $price_field->financial_type_id;
-        $line_item_data['price_field_value_id'] = $price_field->getPriceFieldValueId();
-        $line_item_data['price_field_id'] = $price_field->price_field_id;
-        $line_item_data['description'] = $price_field->description;
-      }
-      // If not found, use the shops default financial type
-      else {
-        $financial_type_id = $profile->getAttribute('shop_financial_type', 1);
-        $line_item_data['financial_type_id'] = $financial_type_id;
-        // Without a price field reference, core's Order BAO crashes with
-        // setPriceSetID(NULL) on any later update of the contribution.
-        $line_item_data += self::getDefaultPriceFieldData();
-      }
-
-      // Create the line item
-      $line_item = civicrm_api3('LineItem', 'create', $line_item_data);
-
-      if (!empty($line_item['is_error'])) {
-        $line_item_name = $line_item_data['name'];
-        throw new CRM_Core_Exception(
-          E::ts("Could not create line item for product '%1'", [1 => $line_item_name]),
-          'api_error'
-        );
-      }
-      $line_items[] = array_pop($line_item['values']);
-
+      $line_items[] = self::createLineItem(
+        self::buildProductLineItemData($product, (int) $contribution_id, $profile),
+        E::ts("Could not create line item for product '%1'", [1 => $product['name']])
+      );
       $sum_line_items += $product['total_value'];
     }
 
     // Create line item for donation part
     $donation_sum = (float) $values['contribution']['total_amount'] - $sum_line_items;
     if ($donation_sum > 0) {
-      $donation_financial_type_id = $profile->getAttribute('shop_donation_financial_type', 1);
-      $donation_label = civicrm_api3('FinancialType', 'getsingle', [
-        'return' => ['name'],
-        'id' => $donation_financial_type_id,
-      ])['name'];
-
-      $donation_line_item_data = [
-        'entity_table' => 'civicrm_contribution',
-        'contribution_id' => $contribution_id,
-        'entity_id' => $contribution_id,
-        'label' => $donation_label,
-        'qty' => 1,
-        'unit_price' => $donation_sum,
-        'line_total' => $donation_sum,
-        'financial_type_id' => $donation_financial_type_id,
-        'sequential' => 1,
-      ];
-      $donation_line_item_data += self::getDefaultPriceFieldData();
-
-      $donation_line_item = civicrm_api3('LineItem', 'create', $donation_line_item_data);
-
-      if (!empty($donation_line_item['is_error'])) {
-        throw new CRM_Core_Exception(
-          E::ts('Could not create line item for donation'),
-          'api_error'
-        );
-      }
-
-      $line_items[] = array_pop($donation_line_item['values']);
+      $line_items[] = self::createLineItem(
+        self::buildDonationLineItemData($donation_sum, (int) $contribution_id, $profile),
+        E::ts('Could not create line item for donation')
+      );
     }
 
     return $line_items;
+  }
+
+  /**
+   * Build the line item data for a single product of a shop submission.
+   *
+   * @phpstan-param array{id: int, name: string, price: int|float, count: int, total_value: int|float} $product
+   *   The product data from the submission
+   *
+   * @param int $contribution_id
+   *   The ID of the contribution the line item belongs to
+   * @param \CRM_Twingle_Profile $profile
+   *   The twingle profile used
+   *
+   * @phpstan-return array<string, mixed>
+   * @throws \CRM_Core_Exception
+   */
+  protected static function buildProductLineItemData(
+    array $product,
+    int $contribution_id,
+    CRM_Twingle_Profile $profile
+  ): array {
+    $line_item_data = [
+      'entity_table' => 'civicrm_contribution',
+      'contribution_id' => $contribution_id,
+      'entity_id' => $contribution_id,
+      'label' => $product['name'],
+      'qty' => $product['count'],
+      'unit_price' => $product['price'],
+      'line_total' => $product['total_value'],
+      'sequential' => 1,
+    ];
+
+    // Try to find the TwingleProduct with its corresponding PriceField
+    // for this product
+    try {
+      $price_field = CRM_Twingle_BAO_TwingleProduct::findByExternalId($product['id']);
+    }
+    catch (Exception $e) {
+      Civi::log()->error(E::LONG_NAME .
+        ': An error occurred when searching for TwingleShop with the external ID ' .
+        $product['id'], ['exception' => $e]);
+      $price_field = NULL;
+    }
+    // If found, use the financial type and price field id from the price field
+    if ($price_field) {
+      self::logPriceFieldDeviations($price_field, $product);
+
+      // Set the financial type and price field id
+      $line_item_data['financial_type_id'] = $price_field->financial_type_id;
+      $line_item_data['price_field_value_id'] = $price_field->getPriceFieldValueId();
+      $line_item_data['price_field_id'] = $price_field->price_field_id;
+      $line_item_data['description'] = $price_field->description;
+    }
+    // If not found, use the shops default financial type
+    else {
+      $financial_type_id = $profile->getAttribute('shop_financial_type', 1);
+      $line_item_data['financial_type_id'] = $financial_type_id;
+      // Without a price field reference, core's Order BAO crashes with
+      // setPriceSetID(NULL) on any later update of the contribution.
+      $line_item_data += self::getDefaultPriceFieldData();
+    }
+
+    return $line_item_data;
+  }
+
+  /**
+   * Log warnings if price or name of the submitted product differ from the
+   * corresponding PriceField.
+   *
+   * @param \CRM_Twingle_BAO_TwingleProduct $price_field
+   * @phpstan-param array{id: int, name: string, price: int|float, count: int, total_value: int|float} $product
+   *   The product data from the submission
+   */
+  protected static function logPriceFieldDeviations(CRM_Twingle_BAO_TwingleProduct $price_field, array $product): void {
+    // Log warning if price is not variable and differs from the submission
+    if ($price_field->price !== NULL && (int) $price_field->price !== (int) $product['price']) {
+      Civi::log()->warning(E::LONG_NAME .
+        ': Price for product ' . $product['name'] . ' differs from the PriceField. ' .
+        'Using the price from the submission.',
+        [
+          'price_field' => $price_field->price,
+          'submission' => $product['price'],
+        ]
+      );
+    }
+
+    // Log warning if name differs from the submission
+    if ($price_field->name !== $product['name']) {
+      Civi::log()->warning(E::LONG_NAME .
+        ': Name for product ' . $product['name'] . ' differs from the PriceField ' .
+        'Using the name from the submission.',
+        [
+          'price_field' => $price_field->name,
+          'submission' => $product['name'],
+        ]
+      );
+    }
+  }
+
+  /**
+   * Build the line item data for the donation part of a shop submission.
+   *
+   * @param float $donation_sum
+   *   The amount not covered by product line items
+   * @param int $contribution_id
+   *   The ID of the contribution the line item belongs to
+   * @param \CRM_Twingle_Profile $profile
+   *   The Twingle profile used
+   *
+   * @phpstan-return array<string, mixed>
+   *
+   * @throws \CRM_Core_Exception
+   */
+  protected static function buildDonationLineItemData(
+    float $donation_sum,
+    int $contribution_id,
+    CRM_Twingle_Profile $profile
+  ): array {
+    $donation_financial_type_id = $profile->getAttribute('shop_donation_financial_type', 1);
+    $donation_label = civicrm_api3('FinancialType', 'getsingle', [
+      'return' => ['name'],
+      'id' => $donation_financial_type_id,
+    ])['name'];
+
+    $donation_line_item_data = [
+      'entity_table' => 'civicrm_contribution',
+      'contribution_id' => $contribution_id,
+      'entity_id' => $contribution_id,
+      'label' => $donation_label,
+      'qty' => 1,
+      'unit_price' => $donation_sum,
+      'line_total' => $donation_sum,
+      'financial_type_id' => $donation_financial_type_id,
+      'sequential' => 1,
+    ];
+    $donation_line_item_data += self::getDefaultPriceFieldData();
+
+    return $donation_line_item_data;
+  }
+
+  /**
+   * Create a line item via API.
+   *
+   * @phpstan-param array<string, mixed> $line_item_data
+   *   The line item parameters
+   * @param string $error_message
+   *   The exception message in case the line item could not be created
+   *
+   * @phpstan-return array<string, mixed>
+   *   The created line item
+   *
+   * @throws \CRM_Core_Exception
+   */
+  protected static function createLineItem(array $line_item_data, string $error_message): array {
+    /** @phpstan-var array{is_error: int, values: non-empty-array<int, array<string, mixed>>} $line_item */
+    $line_item = civicrm_api3('LineItem', 'create', $line_item_data);
+
+    if ((bool) $line_item['is_error']) {
+      throw new CRM_Core_Exception($error_message, 'api_error');
+    }
+
+    return array_pop($line_item['values']);
+  }
+
+  /**
+   * Create contact notes.
+   *
+   * @param int $contact_id
+   * @param array<string, mixed> $params
+   * @param \CRM_Twingle_Profile $profile
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public static function createContactNotes(int $contact_id, array $params, CRM_Twingle_Profile $profile): void {
+    /** @phpstan-var array<string> $contact_note_mappings */
+    $contact_note_mappings = $profile->getAttribute('map_as_contact_notes', []);
+    foreach (self::CONTACT_NOTE_TARGETS as $target) {
+      if (
+        isset($params[$target])
+        && '' !== $params[$target]
+        && in_array($target, $contact_note_mappings, TRUE)
+      ) {
+        Note::create(FALSE)
+          ->addValue('entity_table', 'civicrm_contact')
+          ->addValue('entity_id', $contact_id)
+          ->addValue('note', $params[$target])
+          ->execute();
+      }
+    }
+  }
+
+  /**
+   * Create contribution notes.
+   *
+   * @param int $contribution_id
+   * @param array<string, mixed> $params
+   * @param \CRM_Twingle_Profile $profile
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public static function createContributionNotes(int $contribution_id, array $params, CRM_Twingle_Profile $profile): void {
+    /** @phpstan-var array<string> $contribution_note_mappings */
+    $contribution_note_mappings = $profile->getAttribute('map_as_contribution_notes', []);
+    foreach (self::CONTRIBUTION_NOTE_TARGETS as $target) {
+      if (
+        in_array($target, $contribution_note_mappings, TRUE)
+        && isset($params[$target])
+        && '' !== $params[$target]
+      ) {
+        Note::create(FALSE)
+          ->addValue('entity_table', 'civicrm_contribution')
+          ->addValue('entity_id', $contribution_id)
+          ->addValue('note', $params[$target])
+          ->execute();
+      }
+    }
   }
 
   /**
@@ -1415,5 +1542,4 @@ class CRM_Twingle_Submission {
       }
     }
   }
-
 }
