@@ -1114,12 +1114,6 @@ parameters:
 			path: Civi/Twingle/Shop/Utils/TwingleShopUtils.php
 
 		-
-			message: '#^Dead catch \- Exception is never thrown in the try block\.$#'
-			identifier: catch.neverThrown
-			count: 3
-			path: Civi/Twingle/Shop/Utils/TwingleShopUtils.php
-
-		-
 			message: '#^Method Civi\\Twingle\\Shop\\Utils\\TwingleShopUtils\:\:convert_empty_string_to_null\(\) has parameter \$data with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1

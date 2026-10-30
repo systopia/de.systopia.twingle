@@ -47,15 +47,7 @@ class TwingleShopUtils {
     // Convert string to int
     foreach ($str_to_int_conversion as $attribute) {
       if (isset($data[$attribute]) && $data[$attribute] !== '') {
-        try {
-          $data[$attribute] = (int) $data[$attribute];
-        }
-        catch (\Exception $e) {
-          throw new \RuntimeException(
-            "Could not convert attribute '$attribute' to int.",
-            $e
-          );
-        }
+        $data[$attribute] = (int) $data[$attribute];
       }
     }
   }
@@ -72,15 +64,7 @@ class TwingleShopUtils {
     // Convert int to bool
     foreach ($int_to_bool_conversion as $attribute) {
       if (isset($data[$attribute])) {
-        try {
-          $data[$attribute] = (bool) $data[$attribute];
-        }
-        catch (\Exception $e) {
-          throw new \RuntimeException(
-            "Could not convert attribute '$attribute' to bool.",
-            $e
-          );
-        }
+        $data[$attribute] = (bool) $data[$attribute];
       }
     }
   }
@@ -97,15 +81,7 @@ class TwingleShopUtils {
     // Convert string to date
     foreach ($str_to_date_conversion as $attribute) {
       if (isset($data[$attribute]) && is_string($data[$attribute])) {
-        try {
-          $data[$attribute] = strtotime($data[$attribute]);
-        }
-        catch (\Exception $e) {
-          throw new \RuntimeException(
-            "Could not convert attribute '$attribute' to date.",
-            $e
-          );
-        }
+        $data[$attribute] = strtotime($data[$attribute]);
       }
     }
   }
