@@ -297,11 +297,16 @@ class CRM_Twingle_Submission {
     }
 
     // Prepare values: language.
-    if (is_string($contact_data['preferred_language']) && '' !== $contact_data['preferred_language']) {
+    if (
+      isset($contact_data['preferred_language'])
+      && is_string($contact_data['preferred_language'])
+      && '' !== $contact_data['preferred_language']
+    ) {
       $mapping = CRM_Core_I18n_PseudoConstant::longForShortMapping();
       // Override the default mapping for German.
       $mapping['de'] = 'de_DE';
-      $contact_data['preferred_language'] = $mapping[$contact_data['preferred_language']];
+      $contact_data['preferred_language'] = $mapping[$contact_data['preferred_language']]
+        ?? $contact_data['preferred_language'];
     }
 
     // Pass to XCM.
@@ -779,6 +784,7 @@ class CRM_Twingle_Submission {
     $profile = $this->profile;
     $resultValues = &$this->resultValues;
     $contact_id = $this->getResultValue('contact');
+    $organisation_id = $this->getResultValue('organization');
 
     // If usage of double opt-in is selected, use MailingEventSubscribe.create
     // to add contact to newsletter groups defined in the profile
@@ -923,7 +929,7 @@ class CRM_Twingle_Submission {
       // If CiviSEPA is installed and the financial type is a CiviSEPA-one,
       // create SEPA mandate (and recurring contribution, using "createfull" API
       // action).
-      self::createSepaMandate($contribution_data);
+      $this->createSepaMandate($contribution_data);
     }
     else {
       // Set financial type depending on donation rhythm. This applies for
@@ -1379,7 +1385,7 @@ class CRM_Twingle_Submission {
           $recurring_contribution_id = $this->getResultValue('contribution_recur_id');
         }
         elseif (NULL !== $this->getResultValue('sepa_mandate')) {
-          $mandate = reset($this->getResultValue('sepa_mandate'));
+          $mandate = $this->getResultValue('sepa_mandate');
           if ($mandate['entity_table'] === 'civicrm_contribution_recur') {
             $recurring_contribution_id = (int) $mandate['entity_id'];
           }
@@ -1409,7 +1415,7 @@ class CRM_Twingle_Submission {
         );
         throw new BaseException(
           E::ts('Twingle membership postprocessing call has failed, see log for more information'),
-          NULL,
+          (string) $exception->getErrorCode(),
           $exception
         );
       }
