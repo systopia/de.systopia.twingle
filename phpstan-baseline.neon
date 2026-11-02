@@ -798,12 +798,6 @@ parameters:
 			path: CRM/Twingle/Submission.php
 
 		-
-			message: '#^Parameter \#2 \$creditor_id of static method CRM_Twingle_Submission\:\:getSEPACycleDay\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: CRM/Twingle/Submission.php
-
-		-
 			message: '#^Parameter \#2 \$datetime of function date_create_from_format expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -1117,12 +1111,6 @@ parameters:
 			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
 			identifier: empty.notAllowed
 			count: 2
-			path: Civi/Twingle/Shop/Utils/TwingleShopUtils.php
-
-		-
-			message: '#^Dead catch \- Exception is never thrown in the try block\.$#'
-			identifier: catch.neverThrown
-			count: 3
 			path: Civi/Twingle/Shop/Utils/TwingleShopUtils.php
 
 		-

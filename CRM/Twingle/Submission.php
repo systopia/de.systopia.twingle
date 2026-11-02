@@ -459,17 +459,20 @@ class CRM_Twingle_Submission {
    * @return int
    *   The next possible day of this or the next month to start collecting.
    */
-  public static function getSEPACycleDay($start_date, $creditor_id): int {
+  public static function getSEPACycleDay(string $start_date, int $creditor_id): int {
     $buffer_days = (int) CRM_Sepa_Logic_Settings::getSetting('pp_buffer_days');
     $frst_notice_days = (int) CRM_Sepa_Logic_Settings::getSetting('batching.FRST.notice', $creditor_id);
     if (FALSE === ($earliest_rcur_date = strtotime("$start_date + $frst_notice_days days + $buffer_days days"))) {
       throw new BaseException(E::ts('Could not calculate SEPA cycle day from configuration.'));
     }
 
-    // Find the next cycle day
-    $cycle_days = CRM_Sepa_Logic_Settings::getListSetting('cycledays', range(1, 28), $creditor_id);
+    // Find the next cycle day. The setting yields strings, its default integers.
+    $cycle_days = array_map(
+      'intval',
+      CRM_Sepa_Logic_Settings::getListSetting('cycledays', range(1, 28), $creditor_id)
+    );
     $earliest_cycle_day = $earliest_rcur_date;
-    while (!in_array(date('j', $earliest_cycle_day), $cycle_days, TRUE)) {
+    while (!in_array((int) date('j', $earliest_cycle_day), $cycle_days, TRUE)) {
       $earliest_cycle_day = strtotime('+ 1 day', $earliest_cycle_day);
     }
 
@@ -1036,12 +1039,14 @@ class CRM_Twingle_Submission {
       }
     }
 
+    // The profile form stores the creditor ID as a string.
     $creditor_id = $profile->getAttribute('sepa_creditor_id');
-    if (!isset($creditor_id) || '' === $creditor_id) {
+    if (!is_numeric($creditor_id)) {
       throw new BaseException(
         E::ts('SEPA creditor is not configured for profile "%1".', [1 => $profile->getName()])
       );
     }
+    $creditor_id = (int) $creditor_id;
 
     // Compose mandate data from contribution data, ...
     $mandate_data =

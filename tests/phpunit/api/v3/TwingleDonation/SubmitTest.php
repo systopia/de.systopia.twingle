@@ -15,11 +15,7 @@
 
 declare(strict_types = 1);
 
-use PHPUnit\Framework\TestCase;
-use Civi\Test\CiviEnvBuilder;
-use Civi\Test\HeadlessInterface;
-use Civi\Test\TransactionalInterface;
-use Civi\Api4\Contribution;
+use Civi\Twingle\AbstractTwingleHeadlessTestCase;
 use CRM_Twingle_ExtensionUtil as E;
 
 /**
@@ -29,7 +25,7 @@ use CRM_Twingle_ExtensionUtil as E;
  * @group headless
  * @covers ::civicrm_api3_twingle_donation_Submit
  */
-class api_v3_TwingleDonation_SubmitTest extends TestCase implements HeadlessInterface, TransactionalInterface {
+class api_v3_TwingleDonation_SubmitTest extends AbstractTwingleHeadlessTestCase {
 
   use \Civi\Test\Api3TestTrait;
 
@@ -71,16 +67,6 @@ class api_v3_TwingleDonation_SubmitTest extends TestCase implements HeadlessInte
   ];
 
   /**
-   * {@inheritDoc}
-   */
-  public function setUpHeadless(): CiviEnvBuilder {
-    return \Civi\Test::headless()
-      ->install(['de.systopia.xcm'])
-      ->installMe(__DIR__)
-      ->apply();
-  }
-
-  /**
    * Test contribution date selection.
    */
   public function testContributionDate(): void {
@@ -95,16 +81,13 @@ class api_v3_TwingleDonation_SubmitTest extends TestCase implements HeadlessInte
 
     // TODO: Test date selection with a submission without a booking date.
 
-    // Delete contribution and set profile to not use booking date.
-    Contribution::delete(FALSE)
-      ->addWhere('id', '=', $result['values']['contribution']['id'])
-      ->execute();
+    // Set profile to not use booking date and submit a new transaction.
     $profile = \CRM_Twingle_Profile::getProfileForProject(self::PROJECT_ID);
     $profile->setAttribute('use_booking_date', FALSE);
     $profile->saveProfile();
 
     /** @var array{values: array{contribution: array{id: int|string, receive_date: string}}} $result */
-    $result = civicrm_api3('TwingleDonation', 'submit', self::SUBMISSION);
+    $result = civicrm_api3('TwingleDonation', 'submit', ['trx_id' => 'GL947LD'] + self::SUBMISSION);
     // Assert that confirmation date has been used as contribution date when configured.
     // The returned format is different depending on the CiviCRM version.
     self::assertEquals(

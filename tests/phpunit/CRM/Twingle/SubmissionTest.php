@@ -14,10 +14,7 @@
 
 declare(strict_types = 1);
 
-use PHPUnit\Framework\TestCase;
-use Civi\Test\CiviEnvBuilder;
-use Civi\Test\HeadlessInterface;
-use Civi\Test\TransactionalInterface;
+use Civi\Twingle\AbstractTwingleHeadlessTestCase;
 
 /**
  * Tests for CRM_Twingle_Submission.
@@ -25,17 +22,21 @@ use Civi\Test\TransactionalInterface;
  * @group headless
  * @covers \CRM_Twingle_Submission
  */
-class CRM_Twingle_SubmissionTest extends TestCase implements HeadlessInterface, TransactionalInterface {
+class CRM_Twingle_SubmissionTest extends AbstractTwingleHeadlessTestCase {
 
   use \Civi\Test\Api3TestTrait;
 
   /**
-   * {@inheritDoc}
+   * Without configured cycle days CiviSEPA allows every day from 1 to 28: the
+   * earliest collection day itself, or the 1st of the next month after the 28th.
    */
-  public function setUpHeadless(): CiviEnvBuilder {
-    return \Civi\Test::headless()
-      ->installMe(__DIR__)
-      ->apply();
+  public function testSEPACycleDayWithoutConfiguredCycleDays(): void {
+    CRM_Sepa_Logic_Settings::setSetting(0, 'pp_buffer_days');
+    CRM_Sepa_Logic_Settings::setSetting(0, 'batching.FRST.notice');
+
+    self::assertSame(3, CRM_Twingle_Submission::getSEPACycleDay('20260603120000', 1));
+    self::assertSame(28, CRM_Twingle_Submission::getSEPACycleDay('20260628120000', 1));
+    self::assertSame(1, CRM_Twingle_Submission::getSEPACycleDay('20260629120000', 1));
   }
 
   /**
