@@ -163,7 +163,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
    * and types.
    *
    * @param array<string, mixed> $values
-   *  Array with product data from Twingle API
+   *   Array with product data from Twingle API
    *
    * @return array<string, mixed>
    */
@@ -219,7 +219,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
    * Load product data.
    *
    * @param array $product_data
-   *  Array with product data
+   *   Array with product data
    *
    * @return void
    *
@@ -532,7 +532,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
    * Add Twingle Product
    *
    * @param string $mode
-   *  'create' or 'edit'
+   *   'create' or 'edit'
    * @return array
    * @throws \Civi\Twingle\Shop\Exceptions\ProductException
    * @throws \Exception

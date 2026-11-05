@@ -133,7 +133,7 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
    * Add Twingle Shop
    *
    * @param string $mode
-   *  'create' or 'edit'
+   *   'create' or 'edit'
    * @return array
    * @throws \Civi\Twingle\Shop\Exceptions\ShopException
    */
@@ -337,7 +337,7 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
    * Creates Twingle Shop as a price set in CiviCRM.
    *
    * @param string $mode
-   *  'create' or 'edit'
+   *   'create' or 'edit'
    * @throws \Civi\Twingle\Shop\Exceptions\ShopException
    */
   public function createPriceSet($mode = 'create') {

@@ -16,11 +16,11 @@ class TwingleShopUtils {
    * Filter for allowed attributes.
    *
    * @param array $data
-   *  Data to filter.
+   *   Data to filter.
    * @param array $allowed_attributes
-   *  Allowed attributes.
+   *   Allowed attributes.
    * @param array $can_be_zero
-   *  Attributes that can be zero.
+   *   Attributes that can be zero.
    *
    * @return void
    */
@@ -86,9 +86,9 @@ class TwingleShopUtils {
    * totals (see CRM_Price_BAO_LineItem::getTaxAmountForLineItem()).
    *
    * @param float $gross_amount
-   *  Amount including tax.
+   *   Amount including tax.
    * @param float $tax_rate
-   *  Tax rate in percent.
+   *   Tax rate in percent.
    *
    * @return float
    */
@@ -100,9 +100,9 @@ class TwingleShopUtils {
    * Calculate the net amount of a gross amount.
    *
    * @param float $gross_amount
-   *  Amount including tax.
+   *   Amount including tax.
    * @param float $tax_rate
-   *  Tax rate in percent.
+   *   Tax rate in percent.
    *
    * @return float
    */
@@ -119,12 +119,12 @@ class TwingleShopUtils {
    * 5.99 EUR instead of 6.00 EUR).
    *
    * @param float $gross_price
-   *  Price including tax.
+   *   Price including tax.
    * @param float $tax_rate
-   *  Tax rate in percent.
+   *   Tax rate in percent.
    *
    * @return float
-   *  The net price with the precision of a price field amount.
+   *   The net price with the precision of a price field amount.
    */
   public static function calculate_net_price(float $gross_price, float $tax_rate): float {
     return round($gross_price / (1 + $tax_rate / 100), self::PRICE_PRECISION);
