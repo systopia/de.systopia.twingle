@@ -2,6 +2,8 @@
 
 declare(strict_types = 1);
 
+use Civi\Twingle\AbstractTwingleProductTestCase;
+
 /**
  * Tests for detecting outdated Twingle products.
  *
@@ -12,7 +14,7 @@ declare(strict_types = 1);
  * @covers \CRM_Twingle_BAO_TwingleProduct::createPriceField
  * @covers \CRM_Twingle_BAO_TwingleProduct::load
  */
-class CRM_Twingle_ProductOutdatedTest extends CRM_Twingle_TwingleProductTestCase {
+class CRM_Twingle_ProductOutdatedTest extends AbstractTwingleProductTestCase {
 
   public function testProductWithVatIsUpToDate(): void {
     $product = $this->createProduct($this->mockProductFromTwingle(3.0, 0.07));

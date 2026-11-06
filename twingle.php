@@ -99,9 +99,9 @@ function twingle_civicrm_alterAPIPermissions($entity, $action, &$params, &$permi
  * Warns about Twingle products which have to be updated to store their VAT
  * rate and net price.
  *
- * @param array<\CRM_Utils_Check_Message> $messages
- * @param array<string>|null $statusNames
- * @param bool $includeDisabled
+ * @phpstan-param array<\CRM_Utils_Check_Message> $messages
+ * @phpstan-param array<string>|null $statusNames
+ * @phpstan-param bool $includeDisabled
  *
  * @throws \Civi\Core\Exception\DBQueryException
  */
@@ -124,11 +124,15 @@ function twingle_civicrm_check(&$messages, $statusNames = [], $includeDisabled =
     array_keys($counts),
     $counts
   );
+  // phpcs:ignore Generic.Files.LineLength.TooLong
+  $intro = E::ts('Some Twingle Shop products have been created before their VAT rate was stored, so their price fields still contain the price including VAT. Please open the Twingle profiles using these shops and update the products, so that their price fields contain the net price.');
+  // phpcs:ignore Generic.Files.LineLength.TooLong
+  $vat_hint = E::ts('If you have specified a VAT rate for products in the TwingleMANAGER, you also have to configure the same VAT rate for the financial types of these products in CiviCRM, i.e. assign a financial account with this tax rate as "Sales Tax Account". Otherwise, no VAT will be recorded for these products.');
   $messages[] = new CRM_Utils_Check_Message(
     $check_name,
-    '<p>' . E::ts('Some Twingle Shop products have been created before their VAT rate was stored, so their price fields still contain the price including VAT. Please open the Twingle profiles using these shops and update the products, so that their price fields contain the net price.') . '</p>'
+    '<p>' . $intro . '</p>'
     . '<ul>' . implode('', $shops) . '</ul>'
-    . '<p>' . E::ts('If you have specified a VAT rate for products in the TwingleMANAGER, you also have to configure the same VAT rate for the financial types of these products in CiviCRM, i.e. assign a financial account with this tax rate as "Sales Tax Account". Otherwise, no VAT will be recorded for these products.') . '</p>'
+    . '<p>' . $vat_hint . '</p>'
     . '<p><a href="' . CRM_Utils_System::url('civicrm/admin/settings/twingle/profiles', 'reset=1') . '">'
     . E::ts('Go to Twingle profiles') . '</a> | '
     . '<a href="https://docs.civicrm.org/twingle/en/latest/configuration/shop/#vat" target="_blank">'

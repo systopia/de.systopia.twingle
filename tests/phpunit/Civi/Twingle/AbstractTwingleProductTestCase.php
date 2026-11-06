@@ -2,6 +2,8 @@
 
 declare(strict_types = 1);
 
+namespace Civi\Twingle;
+
 use PHPUnit\Framework\TestCase;
 use Civi\Test\CiviEnvBuilder;
 use Civi\Test\HeadlessInterface;
@@ -12,7 +14,7 @@ use Civi\Test\TransactionalInterface;
  *
  * Shop and products are created through the API like the profile form does.
  */
-abstract class CRM_Twingle_TwingleProductTestCase extends TestCase implements HeadlessInterface, TransactionalInterface {
+abstract class AbstractTwingleProductTestCase extends TestCase implements HeadlessInterface, TransactionalInterface {
 
   protected const EXTERNAL_ID = 2534;
 
@@ -36,10 +38,10 @@ abstract class CRM_Twingle_TwingleProductTestCase extends TestCase implements He
   protected function setUp(): void {
     parent::setUp();
     // Creating the price fields requires permissions
-    CRM_Core_Config::singleton()->userPermissionClass->permissions = ['all CiviCRM permissions and ACLs'];
+    \CRM_Core_Config::singleton()->userPermissionClass->permissions = ['all CiviCRM permissions and ACLs'];
 
     /** @phpstan-var array{id: int|string} $result */
-    $result = civicrm_api3('TwingleShop', 'create', [
+    $result = \civicrm_api3('TwingleShop', 'create', [
       'project_identifier' => 'tw123',
       'numerical_project_id' => self::PROJECT_ID,
       'name' => self::SHOP_NAME,
@@ -76,16 +78,16 @@ abstract class CRM_Twingle_TwingleProductTestCase extends TestCase implements He
    *
    * @phpstan-param array<string, mixed> $product_from_twingle
    */
-  protected function createProduct(array $product_from_twingle): CRM_Twingle_BAO_TwingleProduct {
-    $this->saveProduct(CRM_Twingle_BAO_TwingleProduct::transformTwingleAttrs($product_from_twingle));
+  protected function createProduct(array $product_from_twingle): \CRM_Twingle_BAO_TwingleProduct {
+    $this->saveProduct(\CRM_Twingle_BAO_TwingleProduct::transformTwingleAttrs($product_from_twingle));
     return $this->findProduct();
   }
 
   /**
    * Create a product without VAT rate.
    */
-  protected function createProductWithoutVatRate(float $price = 3.0): CRM_Twingle_BAO_TwingleProduct {
-    $values = CRM_Twingle_BAO_TwingleProduct::transformTwingleAttrs($this->mockProductFromTwingle($price));
+  protected function createProductWithoutVatRate(float $price = 3.0): \CRM_Twingle_BAO_TwingleProduct {
+    $values = \CRM_Twingle_BAO_TwingleProduct::transformTwingleAttrs($this->mockProductFromTwingle($price));
     unset($values['vat_rate']);
     $this->saveProduct($values);
     $product = $this->findProduct();
@@ -99,7 +101,7 @@ abstract class CRM_Twingle_TwingleProductTestCase extends TestCase implements He
    * @phpstan-return array<string, mixed>
    *   The values of the updated product.
    */
-  protected function updateProduct(CRM_Twingle_BAO_TwingleProduct $product): array {
+  protected function updateProduct(\CRM_Twingle_BAO_TwingleProduct $product): array {
     return $this->saveProduct(get_object_vars($product));
   }
 
@@ -115,7 +117,7 @@ abstract class CRM_Twingle_TwingleProductTestCase extends TestCase implements He
       'twingle_shop_id' => $this->shopId,
     ];
     /** @phpstan-var array{values: array<string, mixed>} $result */
-    $result = civicrm_api3('TwingleProduct', 'create', array_intersect_key($values, array_flip([
+    $result = \civicrm_api3('TwingleProduct', 'create', array_intersect_key($values, array_flip([
       'id',
       'name',
       'is_active',
@@ -131,14 +133,14 @@ abstract class CRM_Twingle_TwingleProductTestCase extends TestCase implements He
     return $result['values'];
   }
 
-  protected function findProduct(): CRM_Twingle_BAO_TwingleProduct {
-    $product = CRM_Twingle_BAO_TwingleProduct::findByExternalId(self::EXTERNAL_ID);
+  protected function findProduct(): \CRM_Twingle_BAO_TwingleProduct {
+    $product = \CRM_Twingle_BAO_TwingleProduct::findByExternalId(self::EXTERNAL_ID);
     self::assertNotNull($product);
     return $product;
   }
 
   protected function getFinancialTypeId(): int {
-    return (int) CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'financial_type_id', 'Donation');
+    return (int) \CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'financial_type_id', 'Donation');
   }
 
 }

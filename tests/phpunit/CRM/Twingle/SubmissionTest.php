@@ -166,11 +166,14 @@ class CRM_Twingle_SubmissionTest extends AbstractTwingleHeadlessTestCase {
     // booked and assigned to the payment.
     $financial_items = $this->getFinancialItems($line_items);
     self::assertCount(3, $financial_items);
+    $income_account_id = $this->getFinancialAccountId($financial_type_id, 'Income Account is');
+    $tax_account_id = $this->getFinancialAccountId($financial_type_id, 'Sales Tax Account is');
+    $donation_account_id = $this->getFinancialAccountId(1, 'Income Account is');
     self::assertEquals(
       [
-        [$line_items[0]['id'], 18.69, $this->getFinancialAccountId($financial_type_id, 'Income Account is'), 'Paid', 18.69],
-        [$line_items[0]['id'], 1.31, $this->getFinancialAccountId($financial_type_id, 'Sales Tax Account is'), 'Paid', 1.31],
-        [$line_items[1]['id'], 5.0, $this->getFinancialAccountId(1, 'Income Account is'), 'Paid', 5.0],
+        [$line_items[0]['id'], 18.69, $income_account_id, 'Paid', 18.69],
+        [$line_items[0]['id'], 1.31, $tax_account_id, 'Paid', 1.31],
+        [$line_items[1]['id'], 5.0, $donation_account_id, 'Paid', 5.0],
       ],
       $financial_items
     );
@@ -326,11 +329,14 @@ class CRM_Twingle_SubmissionTest extends AbstractTwingleHeadlessTestCase {
       ->single();
     self::assertSame('Completed', $contribution['contribution_status_id:name']);
 
+    $income_account_id = $this->getFinancialAccountId($financial_type_id, 'Income Account is');
+    $tax_account_id = $this->getFinancialAccountId($financial_type_id, 'Sales Tax Account is');
+    $donation_account_id = $this->getFinancialAccountId(1, 'Income Account is');
     self::assertEquals(
       [
-        [$line_items[0]['id'], 18.69, $this->getFinancialAccountId($financial_type_id, 'Income Account is'), 'Paid', 18.69],
-        [$line_items[0]['id'], 1.31, $this->getFinancialAccountId($financial_type_id, 'Sales Tax Account is'), 'Paid', 1.31],
-        [$line_items[1]['id'], 5.0, $this->getFinancialAccountId(1, 'Income Account is'), 'Paid', 5.0],
+        [$line_items[0]['id'], 18.69, $income_account_id, 'Paid', 18.69],
+        [$line_items[0]['id'], 1.31, $tax_account_id, 'Paid', 1.31],
+        [$line_items[1]['id'], 5.0, $donation_account_id, 'Paid', 5.0],
       ],
       $this->getFinancialItems($line_items)
     );
@@ -368,7 +374,11 @@ class CRM_Twingle_SubmissionTest extends AbstractTwingleHeadlessTestCase {
         (int) $row['entity_id'],
         (float) $row['amount'],
         (int) $row['financial_account_id'],
-        (string) CRM_Core_PseudoConstant::getName('CRM_Financial_DAO_FinancialItem', 'status_id', (int) $row['status_id']),
+        (string) CRM_Core_PseudoConstant::getName(
+          'CRM_Financial_DAO_FinancialItem',
+          'status_id',
+          (int) $row['status_id']
+        ),
         is_numeric($row['assigned_amount']) ? (float) $row['assigned_amount'] : NULL,
       ];
     }

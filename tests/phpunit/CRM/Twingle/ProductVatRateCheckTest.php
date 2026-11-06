@@ -2,6 +2,8 @@
 
 declare(strict_types = 1);
 
+use Civi\Twingle\AbstractTwingleProductTestCase;
+
 /**
  * Tests for the system check about products without VAT rate.
  *
@@ -9,7 +11,7 @@ declare(strict_types = 1);
  * @covers ::twingle_civicrm_check
  * @covers \CRM_Twingle_BAO_TwingleProduct::countProductsWithoutVatRate
  */
-class CRM_Twingle_ProductVatRateCheckTest extends CRM_Twingle_TwingleProductTestCase {
+class CRM_Twingle_ProductVatRateCheckTest extends AbstractTwingleProductTestCase {
 
   public function testWarnsAboutProductsWithoutVatRate(): void {
     Civi::settings()->set('twingle_use_shop', TRUE);
