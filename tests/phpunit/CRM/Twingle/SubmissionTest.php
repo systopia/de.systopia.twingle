@@ -245,18 +245,18 @@ class CRM_Twingle_SubmissionTest extends AbstractTwingleHeadlessTestCase {
 
     $expected = [[8.40, 1.60], [12.61, 2.39], [12.61, 2.39], [10.0, 0.0]];
     foreach ($line_items as $i => $line_item) {
-      /** @phpstan-var array<string, mixed> $line_item */
+      /** @phpstan-var array{line_total: numeric-string, tax_amount: numeric-string} $line_item */
       $line_item = $this->callAPISuccessGetSingle('LineItem', ['id' => $line_item['id']]);
       self::assertEquals($expected[$i], [(float) $line_item['line_total'], (float) $line_item['tax_amount']]);
     }
 
-    /** @phpstan-var array{tax_amount: string} $contribution */
-    $contribution = \Civi\Api4\Contribution::get(FALSE)
+    /** @phpstan-var array{tax_amount: numeric-string} $saved_contribution */
+    $saved_contribution = \Civi\Api4\Contribution::get(FALSE)
       ->addSelect('tax_amount')
       ->addWhere('id', '=', $contribution['id'])
       ->execute()
       ->single();
-    self::assertEquals(6.39, (float) $contribution['tax_amount']);
+    self::assertEquals(6.39, (float) $saved_contribution['tax_amount']);
     self::assertEquals(50.0, CRM_Price_BAO_LineItem::getLineTotal((int) $contribution['id']));
     self::assertEquals(0.0, CRM_Contribute_BAO_Contribution::getContributionBalance((int) $contribution['id']));
   }

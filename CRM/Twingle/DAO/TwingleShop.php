@@ -8,10 +8,10 @@
  *
  * This stub provides compatibility. It is not intended to be modified in a
  * substantive way. Property annotations may be added, but are not required.
- * @property string $id
+ * @property int|string|null $id
  * @property string $project_identifier
- * @property string $numerical_project_id
- * @property string $price_set_id
+ * @property int|string $numerical_project_id
+ * @property int|string|null $price_set_id
  * @property string $name
  */
 class CRM_Twingle_DAO_TwingleShop extends CRM_Twingle_DAO_Base {
