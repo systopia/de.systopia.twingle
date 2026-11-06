@@ -592,7 +592,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
     }
     // Reload the product along with the price from its price field, which is
     // not stored in the product table
-    $result = self::findByExternalId($this->external_id);
+    $result = self::findByExternalId((int) $this->external_id);
     if ($result === NULL) {
       $tx->rollback();
       throw new ProductException(
