@@ -14,6 +14,7 @@ parameters:
 			- tests/phpunit/bootstrap.php
 	scanFiles:
 		- twingle.civix.php
+		- tools/phpstan/stubs/CRM_Twingle_DAO_Base.php
 		- tools/phpunit/vendor/bin/.phpunit/phpunit/src/Framework/TestCase.php
 	scanDirectories:
 		- tools/phpunit/vendor/bin/.phpunit/phpunit/src/Framework
