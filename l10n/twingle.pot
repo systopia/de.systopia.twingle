@@ -1,9 +1,18 @@
+# Copyright CiviCRM LLC (c) 2004-2015
+# This file is distributed under the same license as the CiviCRM package.
+# If you contribute heavily to a translation and deem your work copyrightable,
+# make sure you license it to CiviCRM LLC under Academic Free License 3.0.
+
 #: CRM/Twingle/BAO/TwingleProduct.php
-msgid "Could not find PriceField for Twingle Product ['id': %1, 'external_id': %2]: %3"
+msgid ""
+"Could not find PriceField for Twingle Product ['id': %1, 'external_id': %2]: "
+"%3"
 msgstr ""
 
 #: CRM/Twingle/BAO/TwingleProduct.php
-msgid "Could not find PriceFieldValue for Twingle Product ['id': %1, 'external_id': %2]: %3"
+msgid ""
+"Could not find PriceFieldValue for Twingle Product ['id': %1, 'external_id': "
+"%2]: %3"
 msgstr ""
 
 #: CRM/Twingle/BAO/TwingleProduct.php
@@ -11,7 +20,8 @@ msgid "PriceField for this Twingle Product already exists."
 msgstr ""
 
 #: CRM/Twingle/BAO/TwingleProduct.php
-msgid "PriceField for this Twingle Product does not exist and cannot be edited."
+msgid ""
+"PriceField for this Twingle Product does not exist and cannot be edited."
 msgstr ""
 
 #: CRM/Twingle/BAO/TwingleProduct.php
@@ -43,7 +53,8 @@ msgid "Could not save TwingleProduct to database: %1"
 msgstr ""
 
 #: CRM/Twingle/BAO/TwingleProduct.php
-msgid "An Error occurred while searching for the associated PriceFieldValue: %1"
+msgid ""
+"An Error occurred while searching for the associated PriceFieldValue: %1"
 msgstr ""
 
 #: CRM/Twingle/BAO/TwingleProduct.php
@@ -95,7 +106,9 @@ msgid "This Twingle Project is not a shop."
 msgstr ""
 
 #: CRM/Twingle/BAO/TwingleShop.php
-msgid "Could not retrieve Twingle projects from API.\n          Please check your API credentials."
+msgid ""
+"Could not retrieve Twingle projects from API.\n"
+"          Please check your API credentials."
 msgstr ""
 
 #: CRM/Twingle/BAO/TwingleShop.php
@@ -118,106 +131,6 @@ msgstr ""
 msgid "Create Activity"
 msgstr ""
 
-#: CRM/Twingle/DAO/TwingleProduct.php
-msgid "Twingle Products"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleProduct.php
-msgid "Twingle Product"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleProduct.php CRM/Twingle/DAO/TwingleShop.php
-msgid "ID"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleProduct.php
-msgid "Unique TwingleProduct ID"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleProduct.php
-msgid "External ID"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleProduct.php
-msgid "The ID of this product in the Twingle database"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleProduct.php api/v3/TwingleProduct/Get.php
-msgid "Price Field ID"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleProduct.php
-msgid "FK to Price Field"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleProduct.php api/v3/TwingleProduct/Create.php
-msgid "Twingle Shop ID"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleProduct.php
-msgid "FK to Twingle Shop"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleProduct.php
-msgid "Created At"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleProduct.php
-msgid "Timestamp of when the product was created in the database"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleProduct.php
-msgid "Updated At"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleProduct.php
-msgid "Timestamp of when the product was last updated in the database"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleShop.php
-msgid "Twingle Shops"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleShop.php
-msgid "Twingle Shop"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleShop.php
-msgid "Unique TwingleShop ID"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleShop.php api/v3/TwingleProduct/Get.php api/v3/TwingleShop/Create.php api/v3/TwingleShop/Delete.php api/v3/TwingleShop/Get.php
-msgid "Project Identifier"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleShop.php
-msgid "Twingle Project Identifier"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleShop.php
-msgid "Numerical Project ID"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleShop.php
-msgid "Numerical Twingle Project Identifier"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleShop.php api/v3/TwingleShop/Get.php
-msgid "Price Set ID"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleShop.php
-msgid "FK to Price Set"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleShop.php api/v3/TwingleShop/Get.php
-msgid "Name"
-msgstr ""
-
-#: CRM/Twingle/DAO/TwingleShop.php
-msgid "name of the shop"
-msgstr ""
-
 #: CRM/Twingle/Form/Profile.php
 msgid "Profile with ID \"%1\" not found"
 msgstr ""
@@ -230,7 +143,8 @@ msgstr ""
 msgid "Reset"
 msgstr ""
 
-#: CRM/Twingle/Form/Profile.php js/twingle_shop.js templates/CRM/Twingle/Page/Profiles.tpl
+#: CRM/Twingle/Form/Profile.php js/twingle_shop.js
+#: templates/CRM/Twingle/Page/Profiles.tpl
 msgid "Delete"
 msgstr ""
 
@@ -266,7 +180,8 @@ msgstr ""
 msgid "Profile name"
 msgstr ""
 
-#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php templates/CRM/Twingle/Form/Profile.tpl
+#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php
+#: templates/CRM/Twingle/Form/Profile.tpl
 msgid "Project IDs"
 msgstr ""
 
@@ -274,19 +189,23 @@ msgstr ""
 msgid "Contact Matcher (XCM) Profile"
 msgstr ""
 
-#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php templates/CRM/Twingle/Form/Profile.tpl
+#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php
+#: templates/CRM/Twingle/Form/Profile.tpl
 msgid "Location type"
 msgstr ""
 
-#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php templates/CRM/Twingle/Form/Profile.tpl
+#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php
+#: templates/CRM/Twingle/Form/Profile.tpl
 msgid "Location type for organisations"
 msgstr ""
 
-#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php templates/CRM/Twingle/Form/Profile.tpl
+#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php
+#: templates/CRM/Twingle/Form/Profile.tpl
 msgid "Financial type"
 msgstr ""
 
-#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php templates/CRM/Twingle/Form/Profile.tpl
+#: CRM/Twingle/Form/Profile.php CRM/Twingle/Profile.php
+#: templates/CRM/Twingle/Form/Profile.tpl
 msgid "Financial type (recurring)"
 msgstr ""
 
@@ -470,7 +389,9 @@ msgid "Warning"
 msgstr ""
 
 #: CRM/Twingle/Form/Profile.php
-msgid "The required configuration option \"%1\" has no value. Saving the profile might set this option to a possibly unwanted default value."
+msgid ""
+"The required configuration option \"%1\" has no value. Saving the profile "
+"might set this option to a possibly unwanted default value."
 msgstr ""
 
 #: CRM/Twingle/Form/Profile.php
@@ -545,7 +466,8 @@ msgstr ""
 msgid "-select-"
 msgstr ""
 
-#: CRM/Twingle/Page/Profiles.php managed/Navigation__twingle_configuration.mgd.php
+#: CRM/Twingle/Page/Profiles.php
+#: managed/Navigation__twingle_configuration.mgd.php
 msgid "Twingle API Profiles"
 msgstr ""
 
@@ -558,7 +480,9 @@ msgid "Profile name cannot be empty."
 msgstr ""
 
 #: CRM/Twingle/Profile.php
-msgid "Only alphanumeric characters, space and the underscore (_) are allowed for profile names."
+msgid ""
+"Only alphanumeric characters, space and the underscore (_) are allowed for "
+"profile names."
 msgstr ""
 
 #: CRM/Twingle/Profile.php
@@ -578,7 +502,9 @@ msgid "Custom field custom_%1 does not exist."
 msgstr ""
 
 #: CRM/Twingle/Profile.php
-msgid "Custom field custom_%1 is not in a CustomGroup that extends one of the supported CiviCRM entities."
+msgid ""
+"Custom field custom_%1 is not in a CustomGroup that extends one of the "
+"supported CiviCRM entities."
 msgstr ""
 
 #: CRM/Twingle/Profile.php
@@ -746,15 +672,30 @@ msgid "Could not create line item for donation"
 msgstr ""
 
 #: CRM/Twingle/Submission.php
-msgid "Twingle membership postprocessing call has failed, see log for more information"
+msgid ""
+"Twingle membership postprocessing call has failed, see log for more "
+"information"
 msgstr ""
 
 #: CRM/Twingle/Tools.php
-msgid "This is a Twingle recurring contribution. It should be terminated through the Twingle interface, otherwise it will still be collected."
+msgid ""
+"This is a Twingle recurring contribution. It should be terminated through "
+"the Twingle interface, otherwise it will still be collected."
 msgstr ""
 
 #: CRM/Twingle/Tools.php
-msgid "Recurring contribution [%1] (Transaction ID '%2') was terminated by a user. You need to end the corresponding record in Twingle as well, or it will still be collected."
+msgid ""
+"Recurring contribution [%1] (Transaction ID '%2') was terminated by a user. "
+"You need to end the corresponding record in Twingle as well, or it will "
+"still be collected."
+msgstr ""
+
+#: CRM/Twingle/Upgrader.php schema/TwingleProduct.entityType.php
+msgid "Vat Rate (%)"
+msgstr ""
+
+#: CRM/Twingle/Upgrader.php schema/TwingleProduct.entityType.php
+msgid "VAT rate in percent"
 msgstr ""
 
 #: Civi/Twingle/Shop/ApiCall.php
@@ -781,19 +722,23 @@ msgstr ""
 msgid "Connection not yet established. Use connect() method."
 msgstr ""
 
-#: api/v3/TwingleDonation/Cancel.php api/v3/TwingleDonation/Endrecurring.php api/v3/TwingleDonation/Submit.php
+#: api/v3/TwingleDonation/Cancel.php api/v3/TwingleDonation/Endrecurring.php
+#: api/v3/TwingleDonation/Submit.php
 msgid "Project ID"
 msgstr ""
 
-#: api/v3/TwingleDonation/Cancel.php api/v3/TwingleDonation/Endrecurring.php api/v3/TwingleDonation/Submit.php
+#: api/v3/TwingleDonation/Cancel.php api/v3/TwingleDonation/Endrecurring.php
+#: api/v3/TwingleDonation/Submit.php
 msgid "The Twingle project ID."
 msgstr ""
 
-#: api/v3/TwingleDonation/Cancel.php api/v3/TwingleDonation/Endrecurring.php api/v3/TwingleDonation/Submit.php
+#: api/v3/TwingleDonation/Cancel.php api/v3/TwingleDonation/Endrecurring.php
+#: api/v3/TwingleDonation/Submit.php
 msgid "Transaction ID"
 msgstr ""
 
-#: api/v3/TwingleDonation/Cancel.php api/v3/TwingleDonation/Endrecurring.php api/v3/TwingleDonation/Submit.php
+#: api/v3/TwingleDonation/Cancel.php api/v3/TwingleDonation/Endrecurring.php
+#: api/v3/TwingleDonation/Submit.php
 msgid "The unique transaction ID of the donation"
 msgstr ""
 
@@ -890,7 +835,9 @@ msgid "Newsletter"
 msgstr ""
 
 #: api/v3/TwingleDonation/Submit.php
-msgid "Whether to subscribe the contact to the newsletter group defined in the profile."
+msgid ""
+"Whether to subscribe the contact to the newsletter group defined in the "
+"profile."
 msgstr ""
 
 #: api/v3/TwingleDonation/Submit.php
@@ -898,7 +845,9 @@ msgid "Postal mailing"
 msgstr ""
 
 #: api/v3/TwingleDonation/Submit.php
-msgid "Whether to subscribe the contact to the postal mailing group defined in the profile."
+msgid ""
+"Whether to subscribe the contact to the postal mailing group defined in the "
+"profile."
 msgstr ""
 
 #: api/v3/TwingleDonation/Submit.php
@@ -930,7 +879,8 @@ msgid "SEPA IBAN"
 msgstr ""
 
 #: api/v3/TwingleDonation/Submit.php
-msgid "The IBAN for SEPA Direct Debit payments, conforming with ISO 13616-1:2007."
+msgid ""
+"The IBAN for SEPA Direct Debit payments, conforming with ISO 13616-1:2007."
 msgstr ""
 
 #: api/v3/TwingleDonation/Submit.php
@@ -1058,7 +1008,8 @@ msgid "Language"
 msgstr ""
 
 #: api/v3/TwingleDonation/Submit.php
-msgid "The preferred language of the contact. A 2-digit ISO-639-1 language code."
+msgid ""
+"The preferred language of the contact. A 2-digit ISO-639-1 language code."
 msgstr ""
 
 #: api/v3/TwingleDonation/Submit.php
@@ -1082,7 +1033,9 @@ msgid "Custom fields"
 msgstr ""
 
 #: api/v3/TwingleDonation/Submit.php
-msgid "Additional information for either the contact or the (recurring) contribution."
+msgid ""
+"Additional information for either the contact or the (recurring) "
+"contribution."
 msgstr ""
 
 #: api/v3/TwingleDonation/Submit.php
@@ -1097,7 +1050,8 @@ msgstr ""
 msgid "Additional remarks for the donation."
 msgstr ""
 
-#: api/v3/TwingleProduct/Create.php api/v3/TwingleProduct/Delete.php api/v3/TwingleProduct/Get.php
+#: api/v3/TwingleProduct/Create.php api/v3/TwingleProduct/Delete.php
+#: api/v3/TwingleProduct/Get.php
 msgid "TwingleProduct ID"
 msgstr ""
 
@@ -1111,6 +1065,10 @@ msgstr ""
 
 #: api/v3/TwingleProduct/Create.php
 msgid "External product ID in Twingle database"
+msgstr ""
+
+#: api/v3/TwingleProduct/Create.php schema/TwingleProduct.entityType.php
+msgid "Twingle Shop ID"
 msgstr ""
 
 #: api/v3/TwingleProduct/Create.php
@@ -1147,6 +1105,14 @@ msgstr ""
 
 #: api/v3/TwingleProduct/Create.php
 msgid "Price of the product"
+msgstr ""
+
+#: api/v3/TwingleProduct/Create.php
+msgid "VAT Rate (%)"
+msgstr ""
+
+#: api/v3/TwingleProduct/Create.php
+msgid "VAT rate in percent which is included in the Twingle price"
 msgstr ""
 
 #: api/v3/TwingleProduct/Create.php
@@ -1197,23 +1163,37 @@ msgstr ""
 msgid "TwingleProduct could not be deleted."
 msgstr ""
 
+#: api/v3/TwingleProduct/Get.php schema/TwingleProduct.entityType.php
+msgid "Price Field ID"
+msgstr ""
+
 #: api/v3/TwingleProduct/Get.php
 msgid "FK to civicrm_price_field"
 msgstr ""
 
-#: api/v3/TwingleProduct/Get.php api/v3/TwingleShop/Delete.php api/v3/TwingleShop/Get.php
+#: api/v3/TwingleProduct/Get.php api/v3/TwingleShop/Delete.php
+#: api/v3/TwingleShop/Get.php
 msgid "TwingleShop ID"
 msgstr ""
 
-#: api/v3/TwingleProduct/Get.php api/v3/TwingleShop/Delete.php api/v3/TwingleShop/Get.php
+#: api/v3/TwingleProduct/Get.php api/v3/TwingleShop/Delete.php
+#: api/v3/TwingleShop/Get.php
 msgid "The TwingleShop ID in CiviCRM"
 msgstr ""
 
-#: api/v3/TwingleProduct/Get.php api/v3/TwingleShop/Create.php api/v3/TwingleShop/Delete.php api/v3/TwingleShop/Get.php
+#: api/v3/TwingleProduct/Get.php api/v3/TwingleShop/Create.php
+#: api/v3/TwingleShop/Delete.php api/v3/TwingleShop/Get.php
+#: schema/TwingleShop.entityType.php
+msgid "Project Identifier"
+msgstr ""
+
+#: api/v3/TwingleProduct/Get.php api/v3/TwingleShop/Create.php
+#: api/v3/TwingleShop/Delete.php api/v3/TwingleShop/Get.php
 msgid "Twingle project identifier"
 msgstr ""
 
-#: api/v3/TwingleProduct/Get.php api/v3/TwingleShop/Create.php api/v3/TwingleShop/Get.php
+#: api/v3/TwingleProduct/Get.php api/v3/TwingleShop/Create.php
+#: api/v3/TwingleShop/Get.php
 msgid "Numerical Project Identifier"
 msgstr ""
 
@@ -1253,8 +1233,16 @@ msgstr ""
 msgid "Comma separated list of Twingle project identifiers."
 msgstr ""
 
+#: api/v3/TwingleShop/Get.php schema/TwingleShop.entityType.php
+msgid "Name"
+msgstr ""
+
 #: api/v3/TwingleShop/Get.php
 msgid "Name of the TwingleShop"
+msgstr ""
+
+#: api/v3/TwingleShop/Get.php schema/TwingleShop.entityType.php
+msgid "Price Set ID"
 msgstr ""
 
 #: api/v3/TwingleShop/Get.php
@@ -1282,11 +1270,28 @@ msgid "Could not create Price Field for this product"
 msgstr ""
 
 #: js/twingle_shop.js
+msgid "The Price Field was updated successfully."
+msgstr ""
+
+#: js/twingle_shop.js
+msgid "The Price Field was created successfully."
+msgstr ""
+
+#: js/twingle_shop.js
+msgid "Price Field updated"
+msgstr ""
+
+#: js/twingle_shop.js
+msgid "Price Field created"
+msgstr ""
+
+#: js/twingle_shop.js
 msgid "Delete Price Field"
 msgstr ""
 
 #: js/twingle_shop.js
-msgid "Are you sure you want to delete the price field associated with this product?"
+msgid ""
+"Are you sure you want to delete the price field associated with this product?"
 msgstr ""
 
 #: js/twingle_shop.js
@@ -1338,15 +1343,13 @@ msgid "The Price Set was created successfully."
 msgstr ""
 
 #: js/twingle_shop.js
-msgid "Price Field created"
-msgstr ""
-
-#: js/twingle_shop.js
 msgid "Could not create TwingleShop"
 msgstr ""
 
 #: js/twingle_shop.js
-msgid "Are you sure you want to delete the price set associated with this Twingle Shop?"
+msgid ""
+"Are you sure you want to delete the price set associated with this Twingle "
+"Shop?"
 msgstr ""
 
 #: js/twingle_shop.js
@@ -1373,12 +1376,107 @@ msgstr ""
 msgid "Twingle API Settings"
 msgstr ""
 
-#: templates/CRM/Twingle/Form/Profile.hlp
-msgid "Select which location type to use for addresses for individuals, either when no organisation name is specified, or an organisation address can not be shared with the individual contact."
+#: schema/TwingleProduct.entityType.php
+msgid "Twingle Product"
+msgstr ""
+
+#: schema/TwingleProduct.entityType.php
+msgid "Twingle Products"
+msgstr ""
+
+#: schema/TwingleProduct.entityType.php
+msgid "This table contains the Twingle Product data."
+msgstr ""
+
+#: schema/TwingleProduct.entityType.php schema/TwingleShop.entityType.php
+msgid "ID"
+msgstr ""
+
+#: schema/TwingleProduct.entityType.php
+msgid "Unique TwingleProduct ID"
+msgstr ""
+
+#: schema/TwingleProduct.entityType.php
+msgid "External ID"
+msgstr ""
+
+#: schema/TwingleProduct.entityType.php
+msgid "The ID of this product in the Twingle database"
+msgstr ""
+
+#: schema/TwingleProduct.entityType.php
+msgid "FK to Price Field"
+msgstr ""
+
+#: schema/TwingleProduct.entityType.php
+msgid "FK to Twingle Shop"
+msgstr ""
+
+#: schema/TwingleProduct.entityType.php
+msgid "Created At"
+msgstr ""
+
+#: schema/TwingleProduct.entityType.php
+msgid "Timestamp of when the product was created in the database"
+msgstr ""
+
+#: schema/TwingleProduct.entityType.php
+msgid "Updated At"
+msgstr ""
+
+#: schema/TwingleProduct.entityType.php
+msgid "Timestamp of when the product was last updated in the database"
+msgstr ""
+
+#: schema/TwingleShop.entityType.php
+msgid "Twingle Shop"
+msgstr ""
+
+#: schema/TwingleShop.entityType.php
+msgid "Twingle Shops"
+msgstr ""
+
+#: schema/TwingleShop.entityType.php
+msgid ""
+"This table contains the Twingle Shop data. Each Twingle Shop is linked to a "
+"corresponding Price Set."
+msgstr ""
+
+#: schema/TwingleShop.entityType.php
+msgid "Unique TwingleShop ID"
+msgstr ""
+
+#: schema/TwingleShop.entityType.php
+msgid "Twingle Project Identifier"
+msgstr ""
+
+#: schema/TwingleShop.entityType.php
+msgid "Numerical Project ID"
+msgstr ""
+
+#: schema/TwingleShop.entityType.php
+msgid "Numerical Twingle Project Identifier"
+msgstr ""
+
+#: schema/TwingleShop.entityType.php
+msgid "FK to Price Set"
+msgstr ""
+
+#: schema/TwingleShop.entityType.php
+msgid "name of the shop"
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Profile.hlp
-msgid "Put your project's Twingle ID in here, to activate this profile for that project."
+msgid ""
+"Select which location type to use for addresses for individuals, either when "
+"no organisation name is specified, or an organisation address can not be "
+"shared with the individual contact."
+msgstr ""
+
+#: templates/CRM/Twingle/Form/Profile.hlp
+msgid ""
+"Put your project's Twingle ID in here, to activate this profile for that "
+"project."
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Profile.hlp
@@ -1386,15 +1484,20 @@ msgid "You can also provide multiple project IDs separated by a comma."
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Profile.hlp
-msgid "The Contact Matcher (XCM) manages the identification or creation of the related contact."
+msgid ""
+"The Contact Matcher (XCM) manages the identification or creation of the "
+"related contact."
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Profile.hlp
-msgid "We recommend creating a new XCM profile only to be used with the Twingle API."
+msgid ""
+"We recommend creating a new XCM profile only to be used with the Twingle API."
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Profile.hlp
-msgid "Select which location type to use for addresses for organisations and shared organisation addresses for individual contacts."
+msgid ""
+"Select which location type to use for addresses for organisations and shared "
+"organisation addresses for individual contacts."
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Profile.hlp
@@ -1406,55 +1509,123 @@ msgid "Select which financial type to use for recurring contributions."
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Profile.hlp
-msgid "Select whether to use CiviCRM's Double-Opt-In feature for subscribing to mailing lists. Note that this only works for public mailing lists. Any non-public mailing list selected above will be ignored when this setting is enabled."
+msgid ""
+"Select whether to use CiviCRM's Double-Opt-In feature for subscribing to "
+"mailing lists. Note that this only works for public mailing lists. Any non-"
+"public mailing list selected above will be ignored when this setting is "
+"enabled."
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Profile.hlp
-msgid "Also, do not forget to disable Twingle's own Double Opt-In option in the Twingle Manager to avoid subscribers receiving multiple confirmation e-mails. Only one or the other option should be enabled."
+msgid ""
+"Also, do not forget to disable Twingle's own Double Opt-In option in the "
+"Twingle Manager to avoid subscribers receiving multiple confirmation e-"
+"mails. Only one or the other option should be enabled."
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Profile.hlp
-msgid "Some organisations have specific conventions on how a membership should be created. Since the Twingle-API can only create a \"bare bone\" membership object, you can enter a API Call (as 'Entity.Action') to adjust any newly created membership to your organisation's needs."
+msgid ""
+"Some organisations have specific conventions on how a membership should be "
+"created. Since the Twingle-API can only create a \"bare bone\" membership "
+"object, you can enter a API Call (as 'Entity.Action') to adjust any newly "
+"created membership to your organisation's needs."
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Profile.hlp
-msgid "The API call would receive the following parameters:<ul>\n        <li><code>membership_id</code>: The ID of the newly created membership</li>\n        <li><code>contact_id</code>: The ID of the contact involved</li>\n        <li><code>organization_id</code>: The ID of the contact's organisation, potentially empty</li>\n        <li><code>contribution_id</code>: The ID contribution received, potentially empty</li>\n        <li><code>recurring_contribution_id</code>: The ID of the recurring contribution. If empty, this was only a one-off donation.</li>\n    </ul>"
+msgid ""
+"The API call would receive the following parameters:<ul>\n"
+"        <li><code>membership_id</code>: The ID of the newly created "
+"membership</li>\n"
+"        <li><code>contact_id</code>: The ID of the contact involved</li>\n"
+"        <li><code>organization_id</code>: The ID of the contact's "
+"organisation, potentially empty</li>\n"
+"        <li><code>contribution_id</code>: The ID contribution received, "
+"potentially empty</li>\n"
+"        <li><code>recurring_contribution_id</code>: The ID of the recurring "
+"contribution. If empty, this was only a one-off donation.</li>\n"
+"    </ul>"
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Profile.hlp
-msgid "Select the address components that must be present to create or update an address for the contact."
+msgid ""
+"Select the address components that must be present to create or update an "
+"address for the contact."
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Profile.hlp
-msgid "Depending on your XCM settings, the transferred address might replace an existing one."
+msgid ""
+"Depending on your XCM settings, the transferred address might replace an "
+"existing one."
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Profile.hlp
-msgid "Since in some cases Twingle send the country of the user as the only address parameter, depending on your XCM configuration, not declaring other address components as required might lead to the current user address being overwritten with an address containing the country only."
+msgid ""
+"Since in some cases Twingle send the country of the user as the only address "
+"parameter, depending on your XCM configuration, not declaring other address "
+"components as required might lead to the current user address being "
+"overwritten with an address containing the country only."
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Profile.hlp
-msgid "<p>Map Twingle custom fields to CiviCRM fields using the following format (each assignment in a separate line):</p>\n    <pre>twingle_field_1=custom_123<br />twingle_field_2=custom_789</pre>\n    <p>Always use the <code>custom_[id]</code> notation for CiviCRM custom fields.</p>\n    <p>This works for fields that Twingle themselves provide in the <code>custom_fields</code> parameter, and for any other parameter (e.g. <code>user_extrafield</code>)</p>\n    <p>Only custom fields extending one of the following CiviCRM entities are allowed:</p>\n    <ul>\n      <li><strong>Contact</strong> &ndash; Will be set on the Individual contact</li>\n      <li><strong>Individual</strong> &ndash; Will be set on the Individual contact</li>\n      <li><strong>Organization</strong> &ndash; Will be set on the Organization contact, if an organisation name was submitted</li>\n      <li><strong>Contribution</strong> &ndash; Will be set on the contribution</li>\n      <li><strong>ContributionRecur</strong> &ndash; Will be set on the recurring contribution and deriving single contributions</li>\n    </ul>"
+msgid ""
+"<p>Map Twingle custom fields to CiviCRM fields using the following format "
+"(each assignment in a separate line):</p>\n"
+"    <pre>twingle_field_1=custom_123<br />twingle_field_2=custom_789</pre>\n"
+"    <p>Always use the <code>custom_[id]</code> notation for CiviCRM custom "
+"fields.</p>\n"
+"    <p>This works for fields that Twingle themselves provide in the "
+"<code>custom_fields</code> parameter, and for any other parameter (e.g. "
+"<code>user_extrafield</code>)</p>\n"
+"    <p>Only custom fields extending one of the following CiviCRM entities "
+"are allowed:</p>\n"
+"    <ul>\n"
+"      <li><strong>Contact</strong> &ndash; Will be set on the Individual "
+"contact</li>\n"
+"      <li><strong>Individual</strong> &ndash; Will be set on the Individual "
+"contact</li>\n"
+"      <li><strong>Organization</strong> &ndash; Will be set on the "
+"Organization contact, if an organisation name was submitted</li>\n"
+"      <li><strong>Contribution</strong> &ndash; Will be set on the "
+"contribution</li>\n"
+"      <li><strong>ContributionRecur</strong> &ndash; Will be set on the "
+"recurring contribution and deriving single contributions</li>\n"
+"    </ul>"
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Profile.hlp
-msgid "<p>Create a contribution note for each field specified in this selection.</p>\n    <p><i>Tip: You can enable or disable this fields in the TwingleMANAGER.</i></p>"
+msgid ""
+"<p>Create a contribution note for each field specified in this selection.</"
+"p>\n"
+"    <p><i>Tip: You can enable or disable this fields in the TwingleMANAGER.</"
+"i></p>"
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Profile.hlp
-msgid "<p>Create a contact note for each field specified in this selection.</p>\n    <p><i>Tip: You can enable or disable this fields in the TwingleMANAGER.</i></p>"
+msgid ""
+"<p>Create a contact note for each field specified in this selection.</p>\n"
+"    <p><i>Tip: You can enable or disable this fields in the TwingleMANAGER.</"
+"i></p>"
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Profile.hlp
-msgid "Enable the processing of orders via Twingle Shop for this profile. The ordered products will then appear as line items in the contribution."
+msgid ""
+"Enable the processing of orders via Twingle Shop for this profile. The "
+"ordered products will then appear as line items in the contribution."
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Profile.hlp
-msgid "If this option is enabled, all Twingle Shop products corresponding to the specified project IDs will be retrieved from Twingle and mapped as price sets and price fields. Each Twingle Shop is mapped as a price set with its products as price fields."
+msgid ""
+"If this option is enabled, all Twingle Shop products corresponding to the "
+"specified project IDs will be retrieved from Twingle and mapped as price "
+"sets and price fields. Each Twingle Shop is mapped as a price set with its "
+"products as price fields."
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Profile.hlp
-msgid "This allows you to manually create contributions with the same line items for phone orders, for example, as would be the case for orders placed through the Twingle Shop."
+msgid ""
+"This allows you to manually create contributions with the same line items "
+"for phone orders, for example, as would be the case for orders placed "
+"through the Twingle Shop."
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Profile.tpl
@@ -1497,7 +1668,8 @@ msgstr ""
 msgid "Membership Postprocessing"
 msgstr ""
 
-#: templates/CRM/Twingle/Form/Profile.tpl templates/CRM/Twingle/Page/Profiles.tpl
+#: templates/CRM/Twingle/Form/Profile.tpl
+#: templates/CRM/Twingle/Page/Profiles.tpl
 msgid "Shop Integration"
 msgstr ""
 
@@ -1514,23 +1686,36 @@ msgid "Profile name not given or invalid."
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Settings.hlp
-msgid "When the %1 is enabled and one of its payment instruments is assigned to a Twingle payment method (practically the <em>debit_manual</em> payment method), submitting a Twingle donation through the API will create a SEPA mandate with the given data."
+msgid ""
+"When the %1 is enabled and one of its payment instruments is assigned to a "
+"Twingle payment method (practically the <em>debit_manual</em> payment "
+"method), submitting a Twingle donation through the API will create a SEPA "
+"mandate with the given data."
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Settings.hlp
-msgid "When the %1 is enabled, you can activate this to use your own references instead of the ones submitted by Twingle."
+msgid ""
+"When the %1 is enabled, you can activate this to use your own references "
+"instead of the ones submitted by Twingle."
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Settings.hlp
-msgid "Will protect all recurring contributions created by Twingle from termination, since this does NOT terminate the Twingle collection process"
+msgid ""
+"Will protect all recurring contributions created by Twingle from "
+"termination, since this does NOT terminate the Twingle collection process"
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Settings.hlp
-msgid "You can use this setting to add a prefix to the Twingle transaction ID, in order to avoid collisions with other transaction ids."
+msgid ""
+"You can use this setting to add a prefix to the Twingle transaction ID, in "
+"order to avoid collisions with other transaction ids."
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Settings.hlp
-msgid "If you enable Twingle Shop integration, you can configure Twingle API profiles to include products ordered through Twingle Shop as line items in the created contribution."
+msgid ""
+"If you enable Twingle Shop integration, you can configure Twingle API "
+"profiles to include products ordered through Twingle Shop as line items in "
+"the created contribution."
 msgstr ""
 
 #: templates/CRM/Twingle/Form/Settings.hlp
@@ -1613,3 +1798,30 @@ msgstr ""
 msgid "Allows access to the Twingle API actions."
 msgstr ""
 
+#: twingle.php
+msgid ""
+"Some Twingle Shop products have been created before their VAT rate was "
+"stored, so their price fields still contain the price including VAT. Please "
+"open the Twingle profiles using these shops and update the products, so that "
+"their price fields contain the net price."
+msgstr ""
+
+#: twingle.php
+msgid ""
+"If you have specified a VAT rate for products in the TwingleMANAGER, you "
+"also have to configure the same VAT rate for the financial types of these "
+"products in CiviCRM, i.e. assign a financial account with this tax rate as "
+"\"Sales Tax Account\". Otherwise, no VAT will be recorded for these products."
+msgstr ""
+
+#: twingle.php
+msgid "Go to Twingle profiles"
+msgstr ""
+
+#: twingle.php
+msgid "Documentation on VAT for Twingle Shop products"
+msgstr ""
+
+#: twingle.php
+msgid "Twingle Shop products need to be updated"
+msgstr ""

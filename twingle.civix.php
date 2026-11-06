@@ -75,9 +75,45 @@ class CRM_Twingle_ExtensionUtil {
     return self::CLASS_PREFIX . '_' . str_replace('\\', '_', $suffix);
   }
 
+  /**
+   * @return \CiviMix\Schema\SchemaHelperInterface
+   */
+  public static function schema() {
+    if (!isset($GLOBALS['CiviMixSchema'])) {
+      pathload()->loadPackage('civimix-schema@5', TRUE);
+    }
+    return $GLOBALS['CiviMixSchema']->getHelper(static::LONG_NAME);
+  }
+
 }
 
 use CRM_Twingle_ExtensionUtil as E;
+
+pathload()->addSearchDir(__DIR__ . '/mixin/lib');
+spl_autoload_register('_twingle_civix_class_loader', TRUE, TRUE);
+
+function _twingle_civix_class_loader($class) {
+  if ($class === 'CRM_Twingle_DAO_Base') {
+    if (version_compare(CRM_Utils_System::version(), '5.74.beta', '>=')) {
+      class_alias('CRM_Core_DAO_Base', 'CRM_Twingle_DAO_Base');
+      // ^^ Materialize concrete names -- encourage IDE's to pick up on this association.
+    }
+    else {
+      $realClass = 'CiviMix\\Schema\\Twingle\\DAO';
+      class_alias($realClass, $class);
+      // ^^ Abstract names -- discourage IDE's from picking up on this association.
+    }
+    return;
+  }
+
+  // This allows us to tap-in to the installation process (without incurring real file-reads on typical requests).
+  if (strpos($class, 'CiviMix\\Schema\\Twingle\\') === 0) {
+    // civimix-schema@5 is designed for backported use in download/activation workflows,
+    // where new revisions may become dynamically available.
+    pathload()->loadPackage('civimix-schema@5', TRUE);
+    CiviMix\Schema\loadClass($class);
+  }
+}
 
 /**
  * (Delegated) Implements hook_civicrm_config().
@@ -145,7 +181,7 @@ function _twingle_civix_insert_navigation_menu(&$menu, $path, $item) {
     $path = explode('/', $path);
     $first = array_shift($path);
     foreach ($menu as $key => &$entry) {
-      if ($entry['attributes']['name'] === $first) {
+      if ($entry['attributes']['name'] == $first) {
         if (!isset($entry['child'])) {
           $entry['child'] = [];
         }

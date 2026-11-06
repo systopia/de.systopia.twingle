@@ -23,8 +23,15 @@
   margin: 10px 15px 0 0 !important;
 }
 
-.twingle-shop-cell-button {
+.crm-container .twingle-shop-cell-button {
   margin: 3px 5px 3px 5px;
+}
+
+/* Themes do not necessarily style disabled buttons differently. */
+.crm-container .twingle-shop-cell-button:disabled,
+.crm-container .twingle-shop-table-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .strikethrough {

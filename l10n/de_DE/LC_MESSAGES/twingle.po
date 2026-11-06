@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.7\n"
+"X-Generator: Poedit 3.10\n"
 
 #: CRM/Twingle/BAO/TwingleProduct.php
 msgid ""
@@ -160,108 +160,6 @@ msgstr "Ausnahme auslösen"
 #: CRM/Twingle/Config.php
 msgid "Create Activity"
 msgstr "Aktivität erstellen"
-
-#: CRM/Twingle/DAO/TwingleProduct.php
-msgid "Twingle Products"
-msgstr "Twingle-Produkte"
-
-#: CRM/Twingle/DAO/TwingleProduct.php
-msgid "Twingle Product"
-msgstr "Twingle-Produkt"
-
-#: CRM/Twingle/DAO/TwingleProduct.php CRM/Twingle/DAO/TwingleShop.php
-msgid "ID"
-msgstr "ID"
-
-#: CRM/Twingle/DAO/TwingleProduct.php
-msgid "Unique TwingleProduct ID"
-msgstr "Eindeutige TwingleProduct-ID"
-
-#: CRM/Twingle/DAO/TwingleProduct.php
-msgid "External ID"
-msgstr "Externe ID"
-
-#: CRM/Twingle/DAO/TwingleProduct.php
-msgid "The ID of this product in the Twingle database"
-msgstr "Die ID dieses Produkts in der Twingle-Datenbank"
-
-#: CRM/Twingle/DAO/TwingleProduct.php api/v3/TwingleProduct/Get.php
-msgid "Price Field ID"
-msgstr "Preisfeld-ID"
-
-#: CRM/Twingle/DAO/TwingleProduct.php
-msgid "FK to Price Field"
-msgstr "Fremdschlüssel zu Preisfeld"
-
-#: CRM/Twingle/DAO/TwingleProduct.php api/v3/TwingleProduct/Create.php
-msgid "Twingle Shop ID"
-msgstr "Twingle-Shop-ID"
-
-#: CRM/Twingle/DAO/TwingleProduct.php
-msgid "FK to Twingle Shop"
-msgstr "Fremdschlüssel zu Twingle-Shop"
-
-#: CRM/Twingle/DAO/TwingleProduct.php
-msgid "Created At"
-msgstr "Erstellt am"
-
-#: CRM/Twingle/DAO/TwingleProduct.php
-msgid "Timestamp of when the product was created in the database"
-msgstr "Zeitstempel der Erstellung des Produkts in der Datenbank"
-
-#: CRM/Twingle/DAO/TwingleProduct.php
-msgid "Updated At"
-msgstr "Aktualisiert am"
-
-#: CRM/Twingle/DAO/TwingleProduct.php
-msgid "Timestamp of when the product was last updated in the database"
-msgstr "Zeitstempel der letzten Aktualisierung des Produkts in der Datenbank"
-
-#: CRM/Twingle/DAO/TwingleShop.php
-msgid "Twingle Shops"
-msgstr "Twingle-Shops"
-
-#: CRM/Twingle/DAO/TwingleShop.php
-msgid "Twingle Shop"
-msgstr "Twingle-Shops"
-
-#: CRM/Twingle/DAO/TwingleShop.php
-msgid "Unique TwingleShop ID"
-msgstr "Eindeutige Twingle-Shop-ID"
-
-#: CRM/Twingle/DAO/TwingleShop.php api/v3/TwingleProduct/Get.php
-#: api/v3/TwingleShop/Create.php api/v3/TwingleShop/Delete.php
-#: api/v3/TwingleShop/Get.php
-msgid "Project Identifier"
-msgstr "Projekt-Identifikator"
-
-#: CRM/Twingle/DAO/TwingleShop.php
-msgid "Twingle Project Identifier"
-msgstr "Twingle-Projekt-Identifikator"
-
-#: CRM/Twingle/DAO/TwingleShop.php
-msgid "Numerical Project ID"
-msgstr "Numerische Projekt-ID"
-
-#: CRM/Twingle/DAO/TwingleShop.php
-msgid "Numerical Twingle Project Identifier"
-msgstr "Numerischer Twingle-Projekt-Identifikator"
-
-#: CRM/Twingle/DAO/TwingleShop.php api/v3/TwingleShop/Get.php
-msgid "Price Set ID"
-msgstr "Preisschema-ID"
-
-#: CRM/Twingle/DAO/TwingleShop.php
-msgid "FK to Price Set"
-msgstr "Fremdschlüssel zu Preisschema"
-
-#: CRM/Twingle/DAO/TwingleShop.php api/v3/TwingleShop/Get.php
-msgid "Name"
-msgstr "Name"
-
-#: CRM/Twingle/DAO/TwingleShop.php
-msgid "name of the shop"
-msgstr "Name des Shops"
 
 #: CRM/Twingle/Form/Profile.php
 msgid "Profile with ID \"%1\" not found"
@@ -844,6 +742,14 @@ msgstr ""
 "Benutzer beendet. Es ist erforderlich, den zugehörigen Datensatz auch in "
 "Twingle zu beenden, da die Zuwendung ansonsten weiter eingezogen wird."
 
+#: CRM/Twingle/Upgrader.php schema/TwingleProduct.entityType.php
+msgid "Vat Rate (%)"
+msgstr "MwSt.-Satz (%)"
+
+#: CRM/Twingle/Upgrader.php schema/TwingleProduct.entityType.php
+msgid "VAT rate in percent"
+msgstr "Mehrwertsteuersatz in Prozent"
+
 #: Civi/Twingle/Shop/ApiCall.php
 msgid "Could not find Twingle API token"
 msgstr "Twingle-API-Token konnte nicht gefunden werden"
@@ -1224,9 +1130,13 @@ msgstr "Twingle-ID"
 msgid "External product ID in Twingle database"
 msgstr "Externe Produkt-ID in der Twingle-Datenbank"
 
+#: api/v3/TwingleProduct/Create.php schema/TwingleProduct.entityType.php
+msgid "Twingle Shop ID"
+msgstr "Twingle-Shop-ID"
+
 #: api/v3/TwingleProduct/Create.php
 msgid "ID of the corresponding Twingle Shop"
-msgstr "ID des zugehlrigen Twingle-Shops"
+msgstr "ID des zugehörigen Twingle-Shops"
 
 #: api/v3/TwingleProduct/Create.php
 msgid "Product Name"
@@ -1259,6 +1169,14 @@ msgstr "Produkt-Preis"
 #: api/v3/TwingleProduct/Create.php
 msgid "Price of the product"
 msgstr "Preis des Produkts"
+
+#: api/v3/TwingleProduct/Create.php
+msgid "VAT Rate (%)"
+msgstr "MwSt.-Satz (%)"
+
+#: api/v3/TwingleProduct/Create.php
+msgid "VAT rate in percent which is included in the Twingle price"
+msgstr "Im Twingle-Preis enthaltener Mehrwertsteuersatz in Prozent"
 
 #: api/v3/TwingleProduct/Create.php
 msgid "Sort"
@@ -1308,6 +1226,10 @@ msgstr "Twingles ID des Produkts"
 msgid "TwingleProduct could not be deleted."
 msgstr "TwingleProduct konnte nicht gelöscht werden."
 
+#: api/v3/TwingleProduct/Get.php schema/TwingleProduct.entityType.php
+msgid "Price Field ID"
+msgstr "Preisfeld-ID"
+
 #: api/v3/TwingleProduct/Get.php
 msgid "FK to civicrm_price_field"
 msgstr "Fremdschlüssel zu civicrm_price_field"
@@ -1321,6 +1243,12 @@ msgstr "TwingleShop-ID"
 #: api/v3/TwingleShop/Get.php
 msgid "The TwingleShop ID in CiviCRM"
 msgstr "Die TwingleShop-ID in CiviCRM"
+
+#: api/v3/TwingleProduct/Get.php api/v3/TwingleShop/Create.php
+#: api/v3/TwingleShop/Delete.php api/v3/TwingleShop/Get.php
+#: schema/TwingleShop.entityType.php
+msgid "Project Identifier"
+msgstr "Projekt-Identifikator"
 
 #: api/v3/TwingleProduct/Get.php api/v3/TwingleShop/Create.php
 #: api/v3/TwingleShop/Delete.php api/v3/TwingleShop/Get.php
@@ -1368,9 +1296,17 @@ msgstr "Projekt-Identifikatoren"
 msgid "Comma separated list of Twingle project identifiers."
 msgstr "Kommaseparierte Liste von Twingle-Projekt-Identifikatoren."
 
+#: api/v3/TwingleShop/Get.php schema/TwingleShop.entityType.php
+msgid "Name"
+msgstr "Name"
+
 #: api/v3/TwingleShop/Get.php
 msgid "Name of the TwingleShop"
 msgstr "Name des TwingleShop"
+
+#: api/v3/TwingleShop/Get.php schema/TwingleShop.entityType.php
+msgid "Price Set ID"
+msgstr "Preisschema-ID"
 
 #: api/v3/TwingleShop/Get.php
 msgid "FK to civicrm_price_set"
@@ -1392,11 +1328,27 @@ msgstr "Erstellen"
 
 #: js/twingle_shop.js
 msgid "Update"
-msgstr "Bearbeiten"
+msgstr "Aktualisieren"
 
 #: js/twingle_shop.js
 msgid "Could not create Price Field for this product"
 msgstr "Preisfeld für dieses Produkt konnte nicht erstellt werden"
+
+#: js/twingle_shop.js
+msgid "The Price Field was updated successfully."
+msgstr "Das Preisfeld wurde erfolgreich aktualisiert."
+
+#: js/twingle_shop.js
+msgid "The Price Field was created successfully."
+msgstr "Das Preisfeld wurde erfolgreich erstellt."
+
+#: js/twingle_shop.js
+msgid "Price Field updated"
+msgstr "Preisfeld aktualisiert"
+
+#: js/twingle_shop.js
+msgid "Price Field created"
+msgstr "Preisfeld erstellt"
 
 #: js/twingle_shop.js
 msgid "Delete Price Field"
@@ -1456,10 +1408,6 @@ msgid "The Price Set was created successfully."
 msgstr "Das Preisschema wurde erfolgreich erstellt."
 
 #: js/twingle_shop.js
-msgid "Price Field created"
-msgstr "Preisfeld erstellt"
-
-#: js/twingle_shop.js
 msgid "Could not create TwingleShop"
 msgstr "TwingleShop konnte nicht erstellt werden"
 
@@ -1493,6 +1441,98 @@ msgstr "Twingle-API-Konfiguration"
 #: managed/Navigation__twingle_configuration.mgd.php
 msgid "Twingle API Settings"
 msgstr "Twingle-API-Einstellungen"
+
+#: schema/TwingleProduct.entityType.php
+msgid "Twingle Product"
+msgstr "Twingle-Produkt"
+
+#: schema/TwingleProduct.entityType.php
+msgid "Twingle Products"
+msgstr "Twingle-Produkte"
+
+#: schema/TwingleProduct.entityType.php
+msgid "This table contains the Twingle Product data."
+msgstr "Diese Tabelle enthält die Daten der Twingle-Produkte."
+
+#: schema/TwingleProduct.entityType.php schema/TwingleShop.entityType.php
+msgid "ID"
+msgstr "ID"
+
+#: schema/TwingleProduct.entityType.php
+msgid "Unique TwingleProduct ID"
+msgstr "Eindeutige TwingleProduct-ID"
+
+#: schema/TwingleProduct.entityType.php
+msgid "External ID"
+msgstr "Externe ID"
+
+#: schema/TwingleProduct.entityType.php
+msgid "The ID of this product in the Twingle database"
+msgstr "Die ID dieses Produkts in der Twingle-Datenbank"
+
+#: schema/TwingleProduct.entityType.php
+msgid "FK to Price Field"
+msgstr "Fremdschlüssel zu Preisfeld"
+
+#: schema/TwingleProduct.entityType.php
+msgid "FK to Twingle Shop"
+msgstr "Fremdschlüssel zu Twingle-Shop"
+
+#: schema/TwingleProduct.entityType.php
+msgid "Created At"
+msgstr "Erstellt am"
+
+#: schema/TwingleProduct.entityType.php
+msgid "Timestamp of when the product was created in the database"
+msgstr "Zeitstempel der Erstellung des Produkts in der Datenbank"
+
+#: schema/TwingleProduct.entityType.php
+msgid "Updated At"
+msgstr "Aktualisiert am"
+
+#: schema/TwingleProduct.entityType.php
+msgid "Timestamp of when the product was last updated in the database"
+msgstr "Zeitstempel der letzten Aktualisierung des Produkts in der Datenbank"
+
+#: schema/TwingleShop.entityType.php
+msgid "Twingle Shop"
+msgstr "Twingle-Shop"
+
+#: schema/TwingleShop.entityType.php
+msgid "Twingle Shops"
+msgstr "Twingle-Shops"
+
+#: schema/TwingleShop.entityType.php
+msgid ""
+"This table contains the Twingle Shop data. Each Twingle Shop is linked to a "
+"corresponding Price Set."
+msgstr ""
+"Diese Tabelle enthält die Daten der Twingle-Shops. Jeder Twingle-Shop ist "
+"mit einem entsprechenden Preisschema verknüpft."
+
+#: schema/TwingleShop.entityType.php
+msgid "Unique TwingleShop ID"
+msgstr "Eindeutige Twingle-Shop-ID"
+
+#: schema/TwingleShop.entityType.php
+msgid "Twingle Project Identifier"
+msgstr "Twingle-Projekt-Identifikator"
+
+#: schema/TwingleShop.entityType.php
+msgid "Numerical Project ID"
+msgstr "Numerische Projekt-ID"
+
+#: schema/TwingleShop.entityType.php
+msgid "Numerical Twingle Project Identifier"
+msgstr "Numerischer Twingle-Projekt-Identifikator"
+
+#: schema/TwingleShop.entityType.php
+msgid "FK to Price Set"
+msgstr "Fremdschlüssel zu Preisschema"
+
+#: schema/TwingleShop.entityType.php
+msgid "name of the shop"
+msgstr "Name des Shops"
 
 #: templates/CRM/Twingle/Form/Profile.hlp
 msgid ""
@@ -1926,6 +1966,44 @@ msgstr "Twingle-API: Zugriff auf Twingle-API"
 #: twingle.php
 msgid "Allows access to the Twingle API actions."
 msgstr "Gewährt Zugriff auf Aktionen der Twingle-API."
+
+#: twingle.php
+msgid ""
+"Some Twingle Shop products have been created before their VAT rate was "
+"stored, so their price fields still contain the price including VAT. Please "
+"open the Twingle profiles using these shops and update the products, so that "
+"their price fields contain the net price."
+msgstr ""
+"Einige Twingle-Shop-Produkte wurden angelegt, bevor ihr Mehrwertsteuersatz "
+"gespeichert wurde. Ihre Preisfelder enthalten daher noch den Preis inklusive "
+"Mehrwertsteuer. Bitte öffnen Sie die Twingle-API-Profile, die diese Shops "
+"verwenden, und klicken Sie bei den Produkten auf \"Aktualisieren\", damit "
+"ihre Preisfelder den Nettopreis enthalten."
+
+#: twingle.php
+msgid ""
+"If you have specified a VAT rate for products in the TwingleMANAGER, you "
+"also have to configure the same VAT rate for the financial types of these "
+"products in CiviCRM, i.e. assign a financial account with this tax rate as "
+"\"Sales Tax Account\". Otherwise, no VAT will be recorded for these products."
+msgstr ""
+"Wenn Sie im TwingleMANAGER einen Mehrwertsteuersatz für Produkte angegeben "
+"haben, müssen Sie denselben Mehrwertsteuersatz auch für die Zuwendungsarten "
+"dieser Produkte in CiviCRM einrichten, d. h. ihnen ein Sachkonto mit diesem "
+"Steuersatz als Umsatzsteuerkonto (\"Sales Tax Account\") zuordnen. "
+"Andernfalls wird für diese Produkte keine Mehrwertsteuer gebucht."
+
+#: twingle.php
+msgid "Go to Twingle profiles"
+msgstr "Zu den Twingle-API-Profilen"
+
+#: twingle.php
+msgid "Documentation on VAT for Twingle Shop products"
+msgstr "Dokumentation zur Mehrwertsteuer bei Twingle-Shop-Produkten"
+
+#: twingle.php
+msgid "Twingle Shop products need to be updated"
+msgstr "Twingle-Shop-Produkte müssen aktualisiert werden"
 
 #~ msgid "Groups"
 #~ msgstr "Gruppen"

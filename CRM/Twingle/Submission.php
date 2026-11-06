@@ -18,6 +18,7 @@ declare(strict_types = 1);
 use CRM_Twingle_ExtensionUtil as E;
 use Civi\Twingle\Exceptions\BaseException;
 use Civi\Twingle\Shop\Exceptions\LineItemException;
+use Civi\Twingle\Shop\Utils\TwingleShopUtils;
 
 class CRM_Twingle_Submission {
 
@@ -1217,6 +1218,9 @@ class CRM_Twingle_Submission {
    * @param $profile
    *   The twingle profile used
    *
+   * @return list<array<string, mixed>>
+   *   The created line items.
+   *
    * @throws \CRM_Core_Exception
    * @throws \Civi\Twingle\Shop\Exceptions\LineItemException
    */
@@ -1225,6 +1229,7 @@ class CRM_Twingle_Submission {
   // phpcs:enable
     $line_items = [];
     $sum_line_items = 0;
+    $sum_tax_amount = 0.0;
 
     $contribution_id = $values['contribution']['id'];
     if (empty($contribution_id)) {
@@ -1233,6 +1238,7 @@ class CRM_Twingle_Submission {
         LineItemException::ERROR_CODE_CONTRIBUTION_NOT_FOUND
       );
     }
+    $contribution = CRM_Contribute_BAO_Contribution::findById($contribution_id);
 
     foreach ($submission['products'] as $product) {
 
@@ -1242,8 +1248,6 @@ class CRM_Twingle_Submission {
         'entity_id' => $contribution_id,
         'label' => $product['name'],
         'qty' => $product['count'],
-        'unit_price' => $product['price'],
-        'line_total' => $product['total_value'],
         'sequential' => 1,
       ];
 
@@ -1260,18 +1264,6 @@ class CRM_Twingle_Submission {
       }
       // If found, use the financial type and price field id from the price field
       if ($price_field) {
-
-        // Log warning if price is not variable and differs from the submission
-        if ($price_field->price !== NULL && (int) $price_field->price !== (int) $product['price']) {
-          Civi::log()->warning(E::LONG_NAME .
-            ': Price for product ' . $product['name'] . ' differs from the PriceField. ' .
-            'Using the price from the submission.',
-            [
-              'price_field' => $price_field->price,
-              'submission' => $product['price'],
-            ]
-          );
-        }
 
         // Log warning if name differs from the submission
         if ($price_field->name !== $product['name']) {
@@ -1306,17 +1298,62 @@ class CRM_Twingle_Submission {
         $line_item_data += self::getDefaultPriceFieldData();
       }
 
-      // Create the line item
-      $line_item = civicrm_api3('LineItem', 'create', $line_item_data);
+      $tax_rate = self::getTaxRate((int) $line_item_data['financial_type_id']);
+      $unit_price = (float) $product['price'];
+      $sum_tax_amount += self::addLineItemAmounts(
+        $line_item_data,
+        $unit_price,
+        (float) $product['total_value'],
+        $tax_rate
+      );
 
-      if (!empty($line_item['is_error'])) {
-        $line_item_name = $line_item_data['name'];
-        throw new CRM_Core_Exception(
-          E::ts("Could not create line item for product '%1'", [1 => $line_item_name]),
-          'api_error'
-        );
+      if ($price_field !== NULL) {
+        // Log warning if price is not variable and differs from the submission
+        // (both including tax). The price field contains the net price which
+        // has been calculated with the VAT rate of the Twingle product.
+        if ($price_field->price !== NULL) {
+          $price_field_gross_price = TwingleShopUtils::calculate_gross_price(
+            (float) $price_field->price,
+            (float) ($price_field->vat_rate ?? 0)
+          );
+          if ($price_field_gross_price !== round($unit_price, 2)) {
+            Civi::log()->warning(E::LONG_NAME .
+              ': Price for product ' . $product['name'] . ' differs from the PriceField. ' .
+              'Using the price from the submission.',
+              [
+                'price_field' => $price_field->price,
+                'price_field_including_tax' => $price_field_gross_price,
+                'submission_including_tax' => $product['price'],
+                'vat_rate' => $price_field->vat_rate,
+              ]
+            );
+          }
+        }
+
+        // Log warning if the VAT rate from Twingle differs from the sales tax
+        // rate of the financial type
+        if (
+          $price_field->vat_rate !== NULL
+          && round((float) $price_field->vat_rate, 2) !== round($tax_rate, 2)
+        ) {
+          Civi::log()->warning(E::LONG_NAME .
+            ': VAT rate for product ' . $product['name'] . ' differs from the ' .
+            'sales tax rate of its financial type. ' .
+            'Using the sales tax rate of the financial type.',
+            [
+              'twingle_product' => $price_field->vat_rate,
+              'financial_type' => $tax_rate,
+            ]
+          );
+        }
       }
-      $line_items[] = array_pop($line_item['values']);
+
+      // Create the line item
+      $line_items[] = self::createLineItem(
+        $line_item_data,
+        $contribution,
+        E::ts("Could not create line item for product '%1'", [1 => $line_item_data['label']])
+      );
 
       $sum_line_items += $product['total_value'];
     }
@@ -1336,8 +1373,6 @@ class CRM_Twingle_Submission {
         'entity_id' => $contribution_id,
         'label' => $donation_label,
         'qty' => 1,
-        'unit_price' => $donation_sum,
-        'line_total' => $donation_sum,
         'financial_type_id' => $donation_financial_type_id,
         // Hard-code to 1 which is the default for "contribution_amount"
         'price_field_id' => 1,
@@ -1345,19 +1380,161 @@ class CRM_Twingle_Submission {
       ];
       $donation_line_item_data += self::getDefaultPriceFieldData();
 
-      $donation_line_item = civicrm_api3('LineItem', 'create', $donation_line_item_data);
-
-      if (!empty($donation_line_item['is_error'])) {
-        throw new CRM_Core_Exception(
-          E::ts('Could not create line item for donation'),
-          'api_error'
+      // Donations do not include VAT, but if a tax rate is (wrongly) defined
+      // for this contribution type, the core would add it on top anyway.
+      // So, although it should not happen, whe have to split the tax off to
+      // keep the amounts consistent.
+      $donation_tax_rate = self::getTaxRate((int) $donation_financial_type_id);
+      if ($donation_tax_rate > 0) {
+        Civi::log()->warning(E::LONG_NAME .
+          ': The financial type for the donation part of shop orders has a ' .
+          'sales tax account. Donations should not be subject to VAT.',
+          [
+            'financial_type_id' => $donation_financial_type_id,
+            'tax_rate' => $donation_tax_rate,
+          ]
         );
       }
+      $sum_tax_amount += self::addLineItemAmounts(
+        $donation_line_item_data,
+        $donation_sum,
+        $donation_sum,
+        $donation_tax_rate
+      );
 
-      $line_items[] = array_pop($donation_line_item['values']);
+      $line_items[] = self::createLineItem(
+        $donation_line_item_data,
+        $contribution,
+        E::ts('Could not create line item for donation')
+      );
+    }
+
+    // The contribution was created without line items, so core could not
+    // calculate its tax amount.
+    if ($sum_tax_amount > 0) {
+      CRM_Core_DAO::setFieldValue(
+        'CRM_Contribute_DAO_Contribution',
+        $contribution_id,
+        'tax_amount',
+        (string) round($sum_tax_amount, 2)
+      );
     }
 
     return $line_items;
+  }
+
+  /**
+   * Create the financial items for a line item.
+   *
+   * The contribution is created with "skipLineItem", so the core neither
+   * creates line items nor financial items for it. Without financial items,
+   * later payments or status changes cannot be booked against the line items.
+   *
+   * @param int $line_item_id
+   * @param \CRM_Contribute_BAO_Contribution $contribution
+   *
+   * @throws \Exception
+   */
+  protected static function createFinancialItems(
+    int $line_item_id,
+    CRM_Contribute_BAO_Contribution $contribution,
+  ): void {
+    $line_item = CRM_Price_BAO_LineItem::findById($line_item_id);
+    CRM_Financial_BAO_FinancialItem::add($line_item, $contribution);
+    if ((float) $line_item->tax_amount !== 0.0) {
+      CRM_Financial_BAO_FinancialItem::add($line_item, $contribution, TRUE);
+    }
+  }
+
+  /**
+   * Add unit price, line total and tax amount to the line item data.
+   *
+   * Twingle submits amounts including VAT, whereas CiviCRM adds the sales tax
+   * of the line item's financial type on top of the line total. So the
+   * included tax has to be split off, so that line total and tax amount add up
+   * to the submitted amount again.
+   *
+   * The tax is calculated on the line total, so the rounded net unit price
+   * multiplied by the quantity may differ from the net line total by a cent
+   *
+   * The net line total is passed unrounded (like core does for price fields),
+   * because depending on the CiviCRM version, CRM_Price_BAO_LineItem::create()
+   * recalculates the tax amount from the line total. Calculated from the
+   * rounded line total, the tax amount may be a cent too high (e.g.
+   * 19 % of 12.61 = 2.40 instead of 2.39 for 15.00 including VAT). The line
+   * total is rounded when it is stored.
+   *
+   * The unrounded tax amount is returned, because CiviCRM core sums up the
+   * unrounded tax amounts of all line items for the contribution's tax amount
+   * (see CRM_Financial_BAO_Order::calculateLineItems()). Summing up the
+   * rounded amounts instead could differ by a cent.
+   *
+   * @param array<string, mixed> $line_item_data
+   * @param float $unit_price
+   *   Unit price including tax.
+   * @param float $line_total
+   *   Line total including tax.
+   * @param float $tax_rate
+   *   Sales tax rate of the financial type in percent.
+   *
+   * @return float
+   *   The unrounded tax amount of the line item.
+   */
+  protected static function addLineItemAmounts(
+    array &$line_item_data,
+    float $unit_price,
+    float $line_total,
+    float $tax_rate,
+  ): float {
+    $tax_amount = TwingleShopUtils::calculate_included_tax($line_total, $tax_rate);
+    $line_item_data['unit_price'] = TwingleShopUtils::calculate_net_amount($unit_price, $tax_rate);
+    $line_item_data['line_total'] = $line_total / (1 + $tax_rate / 100);
+    $line_item_data['tax_amount'] = $tax_amount;
+    $line_item_data['line_total_inclusive'] = $line_total;
+    return $line_total - $line_item_data['line_total'];
+  }
+
+  /**
+   * Create a line item along with its financial items.
+   *
+   * @param array<string, mixed> $line_item_data
+   *   Line item data including the tax amount (see addLineItemAmounts()).
+   * @param \CRM_Contribute_BAO_Contribution $contribution
+   * @param string $error_message
+   *   Message of the exception thrown if the line item cannot be created.
+   *
+   * @return array<string, mixed>
+   *   The line item.
+   *
+   * @throws \CRM_Core_Exception
+   */
+  protected static function createLineItem(
+    array $line_item_data,
+    CRM_Contribute_BAO_Contribution $contribution,
+    string $error_message,
+  ): array {
+    $line_item = civicrm_api3('LineItem', 'create', $line_item_data);
+    if (!empty($line_item['is_error'])) {
+      throw new CRM_Core_Exception($error_message, 'api_error');
+    }
+    $line_item = array_pop($line_item['values']);
+
+    self::createFinancialItems((int) $line_item['id'], $contribution);
+
+    return $line_item;
+  }
+
+  /**
+   * Get the sales tax rate of a financial type.
+   *
+   * @param int $financial_type_id
+   *
+   * @return float
+   *   The tax rate in percent, 0 if the financial type has no sales tax
+   *   account.
+   */
+  protected static function getTaxRate(int $financial_type_id): float {
+    return (float) (CRM_Core_PseudoConstant::getTaxRates()[$financial_type_id] ?? 0);
   }
 
   /**

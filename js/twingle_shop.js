@@ -155,6 +155,7 @@ class Product {
     this.name = productData.name;
     this.isActive = productData.is_active;
     this.price = productData.price;
+    this.vatRate = productData.vat_rate;
     this.sort = productData.sort;
     this.description = productData.description;
     this.projectId = productData.project_id;
@@ -170,7 +171,7 @@ class Product {
 
   /**
    * Dumps the product data.
-   * @returns {{id, name, is_active, price, sort, description, project_id, external_id, financial_type_id, tw_updated_at, twingle_shop_id: *}}
+   * @returns {{id, name, is_active, price, vat_rate, sort, description, project_id, external_id, financial_type_id, tw_updated_at, twingle_shop_id: *}}
    */
   dumpData() {
     return {
@@ -178,6 +179,7 @@ class Product {
       'name': this.name,
       'is_active': this.isActive,
       'price': this.price,
+      'vat_rate': this.vatRate,
       'sort': this.sort,
       'description': this.description,
       'project_id': this.projectId,
@@ -201,6 +203,7 @@ class Product {
     // Create button
     const button = document.createElement('button');
     button.id = action + '_twingle_product_tw_' + this.externalId;
+    button.dataset.action = action;
     button.classList.add('twingle-shop-cell-button');
 
     // Add button text
@@ -242,14 +245,19 @@ class Product {
     const self = this;
     return function (event) {
       event.preventDefault();
-      const action = event.target.innerText.includes('Update') ? 'updated' : 'created';
+      const isUpdate = event.currentTarget.dataset.action === 'update';
       CRM.api3('TwingleProduct', 'create', self.dumpData())
         .then(function (result) {
           if (result.is_error === 1) {
             cj('#create_twingle_product_tw_' + self.id).crmError(result.error_message, ts('Could not create Price Field for this product', []));
           } else {
             self.update(result.values);
-            CRM.alert(ts(`The Price Field was ${action} successfully.`, []), ts(`Price Field ${action}`, []), 'success', {'expires': 5000});
+            CRM.alert(
+              isUpdate ? ts('The Price Field was updated successfully.', []) : ts('The Price Field was created successfully.', []),
+              isUpdate ? ts('Price Field updated', []) : ts('Price Field created', []),
+              'success',
+              {'expires': 5000}
+            );
           }
         }, function (error) {
           cj('#create_twingle_product_tw_' + self.id).crmError(error.message, ts('Could not create Price Field for this product', []));
@@ -415,7 +423,7 @@ class Product {
 
       //  Enable 'create' or 'update' button if financial type is selected
       const button = document.getElementById('twingle_product_tw_' + self.externalId).getElementsByClassName('twingle-shop-cell-button')[0];
-      if (button.textContent.includes('Create') || button.textContent.includes('Update')) {
+      if (['create', 'update'].includes(button.dataset.action)) {
         button.disabled = dropdown.value === '0';
       }
 

@@ -133,7 +133,7 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
    * Add Twingle Shop
    *
    * @param string $mode
-   *  'create' or 'edit'
+   *   'create' or 'edit'
    * @return array
    * @throws \Civi\Twingle\Shop\Exceptions\ShopException
    */
@@ -301,7 +301,7 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
       $found = array_key_exists($product_from_twingle['id'], $products);
       if (!$found) {
         $product = new CRM_Twingle_BAO_TwingleProduct();
-        $product->load(CRM_Twingle_BAO_TwingleProduct::renameTwingleAttrs($product_from_twingle));
+        $product->load(CRM_Twingle_BAO_TwingleProduct::transformTwingleAttrs($product_from_twingle));
         $product->twingle_shop_id = $this->id;
         $this->products[] = $product;
       }
@@ -337,7 +337,7 @@ class CRM_Twingle_BAO_TwingleShop extends CRM_Twingle_DAO_TwingleShop {
    * Creates Twingle Shop as a price set in CiviCRM.
    *
    * @param string $mode
-   *  'create' or 'edit'
+   *   'create' or 'edit'
    * @throws \Civi\Twingle\Shop\Exceptions\ShopException
    */
   public function createPriceSet($mode = 'create') {
