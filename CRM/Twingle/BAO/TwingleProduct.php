@@ -167,6 +167,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
    *
    * @return array<string, mixed>
    */
+  // phpcs:ignore Generic.Metrics.CyclomaticComplexity.TooHigh
   public static function transformTwingleAttrs(array $values): array {
     $new_values = [];
 
