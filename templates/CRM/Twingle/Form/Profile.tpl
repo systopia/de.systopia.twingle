@@ -11,6 +11,7 @@
 | copyright header is strictly prohibited without             |
 | written permission from the original author(s).             |
 +-------------------------------------------------------------*}
+{crmScope extensionKey='de.systopia.twingle'}
 
 <div class="crm-block crm-form-block">
 
@@ -18,7 +19,7 @@
 
     <fieldset>
 
-      <legend>{ts domain="de.systopia.twingle"}General settings{/ts}</legend>
+      <legend>{ts}General settings{/ts}</legend>
 
       <table class="form-layout-compressed">
 
@@ -33,7 +34,7 @@
             <a
                     onclick='
                             CRM.help(
-                            "{ts escape='htmlattribute' domain="de.systopia.twingle"}Project IDs{/ts}",
+                            "{ts escape='htmlattribute'}Project IDs{/ts}",
                     {literal}{
                       "id": "id-project_ids",
                       "file": "CRM\/Twingle\/Form\/Profile"
@@ -42,7 +43,7 @@
                             return false;
                             '
                     href="#"
-                    title="{ts escape='htmlattribute' domain="de.systopia.twingle"}Help{/ts}"
+                    title="{ts escape='htmlattribute'}Help{/ts}"
                     class="helpicon"
             ></a>
           </td>
@@ -55,7 +56,7 @@
             <a
                     onclick='
                             CRM.help(
-                            "{ts escape='htmlattribute' domain="de.systopia.twingle"}XCM Profile{/ts}",
+                            "{ts escape='htmlattribute'}XCM Profile{/ts}",
                     {literal}{
                       "id": "id-xcm_profile",
                       "file": "CRM\/Twingle\/Form\/Profile"
@@ -64,7 +65,7 @@
                             return false;
                             '
                     href="#"
-                    title="{ts escape='htmlattribute' domain="de.systopia.twingle"}Help{/ts}"
+                    title="{ts escape='htmlattribute'}Help{/ts}"
                     class="helpicon"
             ></a>
           </td>
@@ -77,7 +78,7 @@
             <a
                     onclick='
                             CRM.help(
-                            "{ts escape='htmlattribute' domain="de.systopia.twingle"}Location type{/ts}",
+                            "{ts escape='htmlattribute'}Location type{/ts}",
                     {literal}{
                       "id": "id-location_type_id",
                       "file": "CRM\/Twingle\/Form\/Profile"
@@ -86,7 +87,7 @@
                             return false;
                             '
                     href="#"
-                    title="{ts escape='htmlattribute' domain="de.systopia.twingle"}Help{/ts}"
+                    title="{ts escape='htmlattribute'}Help{/ts}"
                     class="helpicon"
             ></a>
           </td>
@@ -99,7 +100,7 @@
             <a
               onclick='
                 CRM.help(
-                  "{ts escape='htmlattribute' domain="de.systopia.twingle"}Location type for organisations{/ts}",
+                  "{ts escape='htmlattribute'}Location type for organisations{/ts}",
                   {literal}{
                     "id": "id-location_type_id_organisation",
                     "file": "CRM\/Twingle\/Form\/Profile"
@@ -108,7 +109,7 @@
                 return false;
               '
               href="#"
-              title="{ts escape='htmlattribute' domain="de.systopia.twingle"}Help{/ts}"
+              title="{ts escape='htmlattribute'}Help{/ts}"
               class="helpicon"
             ></a>
           </td>
@@ -120,7 +121,7 @@
             <a
                     onclick='
                             CRM.help(
-                            "{ts escape='htmlattribute' domain="de.systopia.twingle"}Required address components{/ts}",
+                            "{ts escape='htmlattribute'}Required address components{/ts}",
                     {literal}{
                       "id": "id-required_address_components",
                       "file": "CRM\/Twingle\/Form\/Profile"
@@ -129,7 +130,7 @@
                             return false;
                             '
                     href="#"
-                    title="{ts escape='htmlattribute' domain="de.systopia.twingle"}Help{/ts}"
+                    title="{ts escape='htmlattribute'}Help{/ts}"
                     class="helpicon"
             ></a>
           </td>
@@ -142,7 +143,7 @@
             <a
                     onclick='
                             CRM.help(
-                            "{ts escape='htmlattribute' domain="de.systopia.twingle"}Financial type{/ts}",
+                            "{ts escape='htmlattribute'}Financial type{/ts}",
                     {literal}{
                       "id": "id-financial_type_id",
                       "file": "CRM\/Twingle\/Form\/Profile"
@@ -151,7 +152,7 @@
                             return false;
                             '
                     href="#"
-                    title="{ts escape='htmlattribute' domain="de.systopia.twingle"}Help{/ts}"
+                    title="{ts escape='htmlattribute'}Help{/ts}"
                     class="helpicon"
             ></a>
           </td>
@@ -164,7 +165,7 @@
             <a
                     onclick='
                             CRM.help(
-                            "{ts escape='htmlattribute' domain="de.systopia.twingle"}Financial type (recurring){/ts}",
+                            "{ts escape='htmlattribute'}Financial type (recurring){/ts}",
                     {literal}{
                       "id": "id-financial_type_id_recur",
                       "file": "CRM\/Twingle\/Form\/Profile"
@@ -173,7 +174,7 @@
                             return false;
                             '
                     href="#"
-                    title="{ts escape='htmlattribute' domain="de.systopia.twingle"}Help{/ts}"
+                    title="{ts escape='htmlattribute'}Help{/ts}"
                     class="helpicon"
             ></a>
           </td>
@@ -193,15 +194,15 @@
         {/if}
 
         <tr class="crm-section">
-          <td class="label">{ts domain="de.systopia.twingle"}Gender/Prefix for value 'male'{/ts}</td>
+          <td class="label">{ts}Gender/Prefix for value 'male'{/ts}</td>
           <td class="content">{$form.gender_male.html} / {$form.prefix_male.html}</td>
         </tr>
         <tr class="crm-section">
-          <td class="label">{ts domain="de.systopia.twingle"}Gender/Prefix for value 'female'{/ts}</td>
+          <td class="label">{ts}Gender/Prefix for value 'female'{/ts}</td>
           <td class="content">{$form.gender_female.html} / {$form.prefix_female.html}</td>
         </tr>
         <tr class="crm-section">
-          <td class="label">{ts domain="de.systopia.twingle"}Gender/Prefix for value 'other'{/ts}</td>
+          <td class="label">{ts}Gender/Prefix for value 'other'{/ts}</td>
           <td class="content">{$form.gender_other.html} / {$form.prefix_other.html}</td>
         </tr>
 
@@ -211,7 +212,7 @@
 
     <fieldset>
 
-      <legend>{ts domain="de.systopia.twingle"}Payment methods{/ts}</legend>
+      <legend>{ts}Payment methods{/ts}</legend>
 
       <table class="form-layout-compressed">
         {foreach key=pi_name item=pi_label from=$payment_instruments}
@@ -232,7 +233,7 @@
 
     <fieldset>
 
-      <legend>{ts domain="de.systopia.twingle"}Groups and Correlations{/ts}</legend>
+      <legend>{ts}Groups and Correlations{/ts}</legend>
 
       <table class="form-layout-compressed">
 
@@ -247,7 +248,7 @@
             <a
                     onclick='
                             CRM.help(
-                            "{ts escape='htmlattribute' domain="de.systopia.twingle"}Newsletter Double Opt-In{/ts}",
+                            "{ts escape='htmlattribute'}Newsletter Double Opt-In{/ts}",
                     {literal}{
                       "id": "id-newsletter-double-opt-in",
                       "file": "CRM\/Twingle\/Form\/Profile"
@@ -256,7 +257,7 @@
                             return false;
                             '
                     href="#"
-                    title="{ts escape='htmlattribute' domain="de.systopia.twingle"}Help{/ts}"
+                    title="{ts escape='htmlattribute'}Help{/ts}"
                     class="helpicon"
             ></a>
           </td>
@@ -304,7 +305,7 @@
             <a
                     onclick='
                             CRM.help(
-                            "{ts escape='htmlattribute' domain="de.systopia.twingle"}Membership Postprocessing{/ts}",
+                            "{ts escape='htmlattribute'}Membership Postprocessing{/ts}",
                     {literal}{
                       "id": "id-membership-postprocessing-call",
                       "file": "CRM\/Twingle\/Form\/Profile"
@@ -313,7 +314,7 @@
                             return false;
                             '
                     href="#"
-                    title="{ts escape='htmlattribute' domain="de.systopia.twingle"}Help{/ts}"
+                    title="{ts escape='htmlattribute'}Help{/ts}"
                     class="helpicon"
             ></a>
           </td>
@@ -347,7 +348,7 @@
             <a
                     onclick='
                             CRM.help(
-                            "{ts escape='htmlattribute' domain="de.systopia.twingle"}Custom field mapping{/ts}",
+                            "{ts escape='htmlattribute'}Custom field mapping{/ts}",
                     {literal}{
                       "id": "id-custom_field_mapping",
                       "file": "CRM\/Twingle\/Form\/Profile"
@@ -356,7 +357,7 @@
                             return false;
                             '
                     href="#"
-                    title="{ts escape='htmlattribute' domain="de.systopia.twingle"}Help{/ts}"
+                    title="{ts escape='htmlattribute'}Help{/ts}"
                     class="helpicon"
             ></a>
           </td>
@@ -367,7 +368,7 @@
 
       {if $twingle_use_shop eq 1}
 
-      <legend>{ts domain="de.systopia.twingle"}Shop Integration{/ts}</legend>
+      <legend>{ts}Shop Integration{/ts}</legend>
 
       <table class="form-layout-compressed">
         <tr class="crm-section">
@@ -376,7 +377,7 @@
             <a
               onclick='
                 CRM.help(
-                "{ts escape='htmlattribute' domain="de.systopia.twingle"}Enable Shop Integration{/ts}",
+                "{ts escape='htmlattribute'}Enable Shop Integration{/ts}",
               {literal}{
                 "id": "id-enable_shop_integration",
                 "file": "CRM\/Twingle\/Form\/Profile"
@@ -385,7 +386,7 @@
                 return false;
                 '
               href="#"
-              title="{ts escape='htmlattribute' domain="de.systopia.twingle"}Help{/ts}"
+              title="{ts escape='htmlattribute'}Help{/ts}"
               class="helpicon"
             ></a>
           </td>
@@ -412,7 +413,7 @@
               <a
                 onclick='
                   CRM.help(
-                  "{ts escape='htmlattribute' domain="de.systopia.twingle"}Map Products as Price Fields{/ts}",
+                  "{ts escape='htmlattribute'}Map Products as Price Fields{/ts}",
                 {literal}{
                   "id": "id-shop_map_products",
                   "file": "CRM\/Twingle\/Form\/Profile"
@@ -421,7 +422,7 @@
                   return false;
                   '
                 href="#"
-                title="{ts escape='htmlattribute' domain="de.systopia.twingle"}Help{/ts}"
+                title="{ts escape='htmlattribute'}Help{/ts}"
                 class="helpicon"
               ></a></td>
             <td class="content">{$form.shop_map_products.html}
@@ -440,12 +441,12 @@
   {elseif $op === 'delete'}
     {if $profile_name}
       {if $profile_name === 'default'}
-        <div class="status">{ts domain="de.systopia.twingle" 1=$profile_name}Are you sure you want to reset the default profile?{/ts}</div>
+        <div class="status">{ts 1=$profile_name}Are you sure you want to reset the default profile?{/ts}</div>
       {else}
-        <div class="status">{ts domain="de.systopia.twingle" 1=$profile_name}Are you sure you want to delete the profile <em>%1</em>?{/ts}</div>
+        <div class="status">{ts 1=$profile_name}Are you sure you want to delete the profile <em>%1</em>?{/ts}</div>
       {/if}
     {else}
-      <div class="crm-error">{ts domain="de.systopia.twingle"}Profile name not given or invalid.{/ts}</div>
+      <div class="crm-error">{ts}Profile name not given or invalid.{/ts}</div>
     {/if}
   {/if}
 
@@ -486,3 +487,4 @@
   twingle_membership_active_changed();
 </script>
 {/literal}
+{/crmScope}
