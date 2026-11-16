@@ -31,21 +31,7 @@
         <tr class="crm-section">
           {if not $is_default}
           <td class="label">{$form.selector.label}
-            <a
-                    onclick='
-                            CRM.help(
-                            "{ts escape='htmlattribute'}Project IDs{/ts}",
-                    {literal}{
-                      "id": "id-project_ids",
-                      "file": "CRM\/Twingle\/Form\/Profile"
-                    }{/literal}
-                            );
-                            return false;
-                            '
-                    href="#"
-                    title="{ts escape='htmlattribute'}Help{/ts}"
-                    class="helpicon"
-            ></a>
+            {help id="id-project_ids" title=$form.selector.textLabel}
           </td>
           <td id="selectors" class="content">{$form.selector.html}</td>
           {/if}
@@ -53,21 +39,7 @@
 
         <tr class="crm-section">
           <td class="label">{$form.xcm_profile.label}
-            <a
-                    onclick='
-                            CRM.help(
-                            "{ts escape='htmlattribute'}XCM Profile{/ts}",
-                    {literal}{
-                      "id": "id-xcm_profile",
-                      "file": "CRM\/Twingle\/Form\/Profile"
-                    }{/literal}
-                            );
-                            return false;
-                            '
-                    href="#"
-                    title="{ts escape='htmlattribute'}Help{/ts}"
-                    class="helpicon"
-            ></a>
+            {help id="id-xcm_profile" title=$form.xcm_profile.textLabel}
           </td>
           <td class="content">{$form.xcm_profile.html}</td>
         </tr>
@@ -75,21 +47,7 @@
         <tr class="crm-section">
           <td class="label">
             {$form.location_type_id.label}
-            <a
-                    onclick='
-                            CRM.help(
-                            "{ts escape='htmlattribute'}Location type{/ts}",
-                    {literal}{
-                      "id": "id-location_type_id",
-                      "file": "CRM\/Twingle\/Form\/Profile"
-                    }{/literal}
-                            );
-                            return false;
-                            '
-                    href="#"
-                    title="{ts escape='htmlattribute'}Help{/ts}"
-                    class="helpicon"
-            ></a>
+            {help id="id-location_type_id" title=$form.location_type_id.textLabel}
           </td>
           <td class="content">{$form.location_type_id.html}</td>
         </tr>
@@ -97,42 +55,14 @@
         <tr class="crm-section">
           <td class="label">
             {$form.location_type_id_organisation.label}
-            <a
-              onclick='
-                CRM.help(
-                  "{ts escape='htmlattribute'}Location type for organisations{/ts}",
-                  {literal}{
-                    "id": "id-location_type_id_organisation",
-                    "file": "CRM\/Twingle\/Form\/Profile"
-                  }{/literal}
-                );
-                return false;
-              '
-              href="#"
-              title="{ts escape='htmlattribute'}Help{/ts}"
-              class="helpicon"
-            ></a>
+            {help id="id-location_type_id_organisation" title=$form.location_type_id_organisation.textLabel}
           </td>
           <td class="content">{$form.location_type_id_organisation.html}</td>
         </tr>
 
         <tr class="crm-section">
           <td class="label">{$form.required_address_components.label}
-            <a
-                    onclick='
-                            CRM.help(
-                            "{ts escape='htmlattribute'}Required address components{/ts}",
-                    {literal}{
-                      "id": "id-required_address_components",
-                      "file": "CRM\/Twingle\/Form\/Profile"
-                    }{/literal}
-                            );
-                            return false;
-                            '
-                    href="#"
-                    title="{ts escape='htmlattribute'}Help{/ts}"
-                    class="helpicon"
-            ></a>
+            {help id="id-required_address_components" title=$form.required_address_components.textLabel}
           </td>
           <td class="content">{$form.required_address_components.html}</td>
         </tr>
@@ -140,21 +70,7 @@
         <tr class="crm-section">
           <td class="label">
             {$form.financial_type_id.label}
-            <a
-                    onclick='
-                            CRM.help(
-                            "{ts escape='htmlattribute'}Financial type{/ts}",
-                    {literal}{
-                      "id": "id-financial_type_id",
-                      "file": "CRM\/Twingle\/Form\/Profile"
-                    }{/literal}
-                            );
-                            return false;
-                            '
-                    href="#"
-                    title="{ts escape='htmlattribute'}Help{/ts}"
-                    class="helpicon"
-            ></a>
+            {help id="id-financial_type_id" title=$form.financial_type_id.textLabel}
           </td>
           <td class="content">{$form.financial_type_id.html}</td>
         </tr>
@@ -162,21 +78,7 @@
         <tr class="crm-section">
           <td class="label">
             {$form.financial_type_id_recur.label}
-            <a
-                    onclick='
-                            CRM.help(
-                            "{ts escape='htmlattribute'}Financial type (recurring){/ts}",
-                    {literal}{
-                      "id": "id-financial_type_id_recur",
-                      "file": "CRM\/Twingle\/Form\/Profile"
-                    }{/literal}
-                            );
-                            return false;
-                            '
-                    href="#"
-                    title="{ts escape='htmlattribute'}Help{/ts}"
-                    class="helpicon"
-            ></a>
+            {help id="id-financial_type_id_recur" title=$form.financial_type_id_recur.textLabel}
           </td>
           <td class="content">{$form.financial_type_id_recur.html}</td>
         </tr>
@@ -245,21 +147,7 @@
         <tr class="crm-section">
           <td class="label">
             {$form.newsletter_double_opt_in.label}
-            <a
-                    onclick='
-                            CRM.help(
-                            "{ts escape='htmlattribute'}Newsletter Double Opt-In{/ts}",
-                    {literal}{
-                      "id": "id-newsletter-double-opt-in",
-                      "file": "CRM\/Twingle\/Form\/Profile"
-                    }{/literal}
-                            );
-                            return false;
-                            '
-                    href="#"
-                    title="{ts escape='htmlattribute'}Help{/ts}"
-                    class="helpicon"
-            ></a>
+            {help id="id-newsletter-double-opt-in" title=$form.newsletter_double_opt_in.textLabel}
           </td>
           <td class="content">{$form.newsletter_double_opt_in.html}</td>
         </tr>
@@ -302,21 +190,7 @@
         <tr class="crm-section twingle-postprocess-call">
           <td class="label">
             {$form.membership_postprocess_call.label}
-            <a
-                    onclick='
-                            CRM.help(
-                            "{ts escape='htmlattribute'}Membership Postprocessing{/ts}",
-                    {literal}{
-                      "id": "id-membership-postprocessing-call",
-                      "file": "CRM\/Twingle\/Form\/Profile"
-                    }{/literal}
-                            );
-                            return false;
-                            '
-                    href="#"
-                    title="{ts escape='htmlattribute'}Help{/ts}"
-                    class="helpicon"
-            ></a>
+            {help id="id-membership-postprocessing-call" title=$form.membership_postprocess_call.textLabel}
           </td>
           <td class="content">{$form.membership_postprocess_call.html}</td>
         </tr>
@@ -329,7 +203,7 @@
         <tr class="crm-section">
           <td class="label">
             {$form.map_as_contribution_notes.label}
-            {help id="id-map_as_contribution_notes" title=$form.map_as_contribution_notes.label}
+            {help id="id-map_as_contribution_notes" title=$form.map_as_contribution_notes.textLabel}
           </td>
           <td class="content">{$form.map_as_contribution_notes.html}</td>
         </tr>
@@ -337,7 +211,7 @@
         <tr class="crm-section">
           <td class="label">
             {$form.map_as_contact_notes.label}
-            {help id="id-map_as_contact_notes" title=$form.map_as_contact_notes.label}
+            {help id="id-map_as_contact_notes" title=$form.map_as_contact_notes.textLabel}
           </td>
           <td class="content">{$form.map_as_contact_notes.html}</td>
         </tr>
@@ -345,21 +219,7 @@
         <tr class="crm-section">
           <td class="label">
             {$form.custom_field_mapping.label}
-            <a
-                    onclick='
-                            CRM.help(
-                            "{ts escape='htmlattribute'}Custom field mapping{/ts}",
-                    {literal}{
-                      "id": "id-custom_field_mapping",
-                      "file": "CRM\/Twingle\/Form\/Profile"
-                    }{/literal}
-                            );
-                            return false;
-                            '
-                    href="#"
-                    title="{ts escape='htmlattribute'}Help{/ts}"
-                    class="helpicon"
-            ></a>
+            {help id="id-custom_field_mapping" title=$form.custom_field_mapping.textLabel}
           </td>
           <td class="content">{$form.custom_field_mapping.html}</td>
         </tr>
@@ -374,21 +234,7 @@
         <tr class="crm-section">
           <td class="label">
               {$form.enable_shop_integration.label}
-            <a
-              onclick='
-                CRM.help(
-                "{ts escape='htmlattribute'}Enable Shop Integration{/ts}",
-              {literal}{
-                "id": "id-enable_shop_integration",
-                "file": "CRM\/Twingle\/Form\/Profile"
-              }{/literal}
-                );
-                return false;
-                '
-              href="#"
-              title="{ts escape='htmlattribute'}Help{/ts}"
-              class="helpicon"
-            ></a>
+            {help id="id-enable_shop_integration" title=$form.enable_shop_integration.textLabel}
           </td>
           <td class="content">{$form.enable_shop_integration.html}</td>
         </tr>
@@ -410,21 +256,7 @@
 
           <tr class="crm-section twingle-shop-element">
             <td class="label">{$form.shop_map_products.label}
-              <a
-                onclick='
-                  CRM.help(
-                  "{ts escape='htmlattribute'}Map Products as Price Fields{/ts}",
-                {literal}{
-                  "id": "id-shop_map_products",
-                  "file": "CRM\/Twingle\/Form\/Profile"
-                }{/literal}
-                  );
-                  return false;
-                  '
-                href="#"
-                title="{ts escape='htmlattribute'}Help{/ts}"
-                class="helpicon"
-              ></a></td>
+              {help id="id-shop_map_products" title=$form.shop_map_products.textLabel}</td>
             <td class="content">{$form.shop_map_products.html}
               <i id="twingle-shop-spinner" class="crm-i fa-spinner fa-spin"></i>
                 <div class="twingle-product-mapping">
