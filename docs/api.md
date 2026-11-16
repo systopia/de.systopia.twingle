@@ -42,10 +42,56 @@ The action accepts the following parameters:
 | <nobr>`user_city`</nobr>               | String  | The city of the contact                                                             |                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                 |
 | <nobr>`user_country`</nobr>            | String  | The country of the contact                                                          | A [ISO 3166-1 Alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Officially_assigned_code_elements)                                                                                                                                                                                                                                                                                                       |                                                                 |
 | <nobr>`user_telephone`</nobr>          | String  | The telephone number of the contact                                                 |                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                 |
-| <nobr>`user_company`</nobr>            | String  | The company of the contact                                                          |                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                 |
+| <nobr>`user_company`</nobr>            | String  | The company of the contact, see [Company donations](#company-donations)             |                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                 |
 | <nobr>`user_extrafield`</nobr>         | String  | Additional information of the contact                                               |                                                                                                                                                                                                                                                                                                                                                                                                                               |                                                                 |
 | <nobr>`user_language`</nobr>           | String  | The preferred language of the contact.                                              | A [ISO-639-1 2-digit language code](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)                                                                                                                                                                                                                                                                                                                                    |                                                                 |
 | <nobr>`campaign_id`</nobr>             | Integer | The CiviCRM ID of a campaign to assign the contribution                             | A valid CiviCRM Campaign ID. This overrides the campaign ID configured within the profile.                                                                                                                                                                                                                                                                                                                                    |                                                                 |
+
+#### Company donations
+
+When `user_company` is set, the donation is recorded as a donation of that
+company:
+
+1. The organisation is looked up or created through the XCM profile with the
+   company name, the profile's custom field values for organisations and the
+   submitted address. The address gets the profile's location type for
+   organisations.
+2. The individual is looked up or created from the donor's personal data,
+   without the address.
+3. The individual shares the organisation's address, unless it already has an
+   address of that location type.
+4. The individual gets an employer relationship to the organisation.
+5. The contribution or SEPA mandate is recorded on the organisation, and a
+   requested donation receipt adds the organisation to the donation receipt
+   groups. An instalment of a recurring donation stays on the contact of the
+   recurring contribution.
+
+Without `user_company`, the individual gets the submitted address and is the
+contributor.
+
+##### Company field holding the donor's own name
+
+Some donors enter their own name in the company field. If `user_company` is
+the donor's name, the donation is a private one, as if the field were empty:
+no organisation is looked up or created, there is no employer relationship, the
+contribution is recorded on the individual and the company value is not
+stored.
+
+The company counts as the donor's name if it reads first name and last name in
+either order, or last name, comma, first name, ignoring case and differences in
+spacing. For a donor *Erika Mustermann* these are, among others,
+`Erika Mustermann`, `mustermann erika` and `Mustermann,Erika`. Both
+`user_firstname` and `user_lastname` must be submitted.
+
+Anything else stays an organisation, for example `Erika Mustermann GmbH`,
+`Mustermann GmbH`, `Erika Mustermann e. K.`, `E. Mustermann` or a name with a
+middle name that is not part of the submitted first name.
+
+A business that uses nothing but the owner's name, such as a freelancer who
+enters `Erika Mustermann` as company, is therefore recorded as a private
+donation of the individual. Receipts and letters look the same for such a
+contact, as name and address do not differ. Where the organisation contact is
+needed, create it and move the contribution to it by hand.
 
 You may also refer to
 [the code](https://github.com/systopia/de.systopia.twingle/blob/master/api/v3/TwingleDonation/Submit.php)
