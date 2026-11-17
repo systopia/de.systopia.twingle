@@ -114,6 +114,11 @@ function twingle_civicrm_check(&$messages, $statusNames = [], $includeDisabled =
     return;
   }
 
+  // The check may run before the upgrade adding the column has been applied.
+  if (!CRM_Core_BAO_SchemaHandler::checkIfFieldExists('civicrm_twingle_product', 'vat_rate')) {
+    return;
+  }
+
   $counts = CRM_Twingle_BAO_TwingleProduct::countProductsWithoutVatRate();
   if ($counts === []) {
     return;

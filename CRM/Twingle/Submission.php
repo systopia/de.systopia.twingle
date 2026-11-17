@@ -1248,7 +1248,6 @@ class CRM_Twingle_Submission {
         'entity_id' => $contribution_id,
         'label' => $product['name'],
         'qty' => $product['count'],
-        'sequential' => 1,
       ];
 
       // Try to find the TwingleProduct with its corresponding PriceField
@@ -1376,7 +1375,6 @@ class CRM_Twingle_Submission {
         'financial_type_id' => $donation_financial_type_id,
         // Hard-code to 1 which is the default for "contribution_amount"
         'price_field_id' => 1,
-        'sequential' => 1,
       ];
       $donation_line_item_data += self::getDefaultPriceFieldData();
 
@@ -1513,11 +1511,15 @@ class CRM_Twingle_Submission {
     CRM_Contribute_BAO_Contribution $contribution,
     string $error_message,
   ): array {
-    $line_item = civicrm_api3('LineItem', 'create', $line_item_data);
-    if (!empty($line_item['is_error'])) {
-      throw new CRM_Core_Exception($error_message, 'api_error');
+    try {
+      $line_item = \Civi\Api4\LineItem::create(FALSE)
+        ->setValues($line_item_data)
+        ->execute()
+        ->single();
     }
-    $line_item = array_pop($line_item['values']);
+    catch (CRM_Core_Exception $e) {
+      throw new CRM_Core_Exception($error_message, 'api_error', [], $e);
+    }
 
     self::createFinancialItems((int) $line_item['id'], $contribution);
 

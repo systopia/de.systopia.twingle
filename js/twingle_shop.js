@@ -52,14 +52,14 @@ function twingle_fetch_products() {
       'project_identifiers': cj('#selectors :input').val(),
     }).then(function (result) {
       if (result.is_error === 1) {
-        cj('#btn_fetch_products').crmError(result.error_message, ts('Could not fetch products', []));
+        cj('#btn_fetch_products').crmError(result.error_message, ts('Could not fetch products'));
         cj('#twingle-shop-spinner').hide();
         return;
       }
       buildShopTables(result);
       cj('#twingle-shop-spinner').hide();
     }, function () {
-      cj('#btn_fetch_products').crmError(ts('Could not fetch products. Please check your Twingle API key.', []));
+      cj('#btn_fetch_products').crmError(ts('Could not fetch products. Please check your Twingle API key.'));
       cj('#twingle-shop-spinner').hide();
     });
   }
@@ -207,8 +207,8 @@ class Product {
     button.classList.add('twingle-shop-cell-button');
 
     // Add button text
-    let text = action === 'create' ? ts('Create', []) : action === 'update' ? ts('Update', []) : ts('Delete', []);
-    button.textContent = ' ' + ts(text, []);
+    let text = action === 'create' ? ts('Create') : action === 'update' ? ts('Update') : ts('Delete');
+    button.textContent = ' ' + text;
 
     // Add button handler
     if (handler) {
@@ -249,18 +249,18 @@ class Product {
       CRM.api3('TwingleProduct', 'create', self.dumpData())
         .then(function (result) {
           if (result.is_error === 1) {
-            cj('#create_twingle_product_tw_' + self.id).crmError(result.error_message, ts('Could not create Price Field for this product', []));
+            cj('#create_twingle_product_tw_' + self.id).crmError(result.error_message, ts('Could not create Price Field for this product'));
           } else {
             self.update(result.values);
             CRM.alert(
-              isUpdate ? ts('The Price Field was updated successfully.', []) : ts('The Price Field was created successfully.', []),
-              isUpdate ? ts('Price Field updated', []) : ts('Price Field created', []),
+              isUpdate ? ts('The Price Field was updated successfully.') : ts('The Price Field was created successfully.'),
+              isUpdate ? ts('Price Field updated') : ts('Price Field created'),
               'success',
               {'expires': 5000}
             );
           }
         }, function (error) {
-          cj('#create_twingle_product_tw_' + self.id).crmError(error.message, ts('Could not create Price Field for this product', []));
+          cj('#create_twingle_product_tw_' + self.id).crmError(error.message, ts('Could not create Price Field for this product'));
         });
     };
   }
@@ -275,21 +275,21 @@ class Product {
     return function (event) {
       event.preventDefault();
       const options = {
-        'title': ts('Delete Price Field', []),
-        'message': ts('Are you sure you want to delete the price field associated with this product?', []),
+        'title': ts('Delete Price Field'),
+        'message': ts('Are you sure you want to delete the price field associated with this product?'),
       };
       CRM.confirm(options)
         .on('crmConfirm:yes', function () {
           CRM.api3('TwingleProduct', 'delete', { 'id': self.id })
             .then(function (result) {
               if (result.is_error === 1) {
-                cj('#create_twingle_product_tw_' + self.id).crmError(result.error_message, ts('Could not delete Price Field', []));
+                cj('#create_twingle_product_tw_' + self.id).crmError(result.error_message, ts('Could not delete Price Field'));
               } else {
                 self.update();
               }
-              CRM.alert(ts('The Price Field was deleted successfully.', []), ts('Price Field deleted', []), 'success', {'expires': 5000});
+              CRM.alert(ts('The Price Field was deleted successfully.'), ts('Price Field deleted'), 'success', {'expires': 5000});
             }, function (error) {
-              cj('#create_twingle_product_tw_' + self.id).crmError(error.message, ts('Could not delete Price Field', []));
+              cj('#create_twingle_product_tw_' + self.id).crmError(error.message, ts('Could not delete Price Field'));
             });
         });
     };
@@ -400,7 +400,7 @@ class Product {
     if (!this.priceFieldId) {
       let option = document.createElement('option');
       option.value = '';
-      option.innerHTML = '&lt;' + ts('select financial type', []) + '&gt;';
+      option.innerHTML = '&lt;' + ts('select financial type') + '&gt;';
       option.selected = true;
       option.disabled = true;
       dropdown.appendChild(option);
@@ -542,11 +542,11 @@ class ProductsTable {
     // Add header row
     const thead = table.createTHead();
     const headerRow = thead.insertRow();
-    const headers = [ts('Product', []), ts('Financial Type', [])];
+    const headers = [ts('Product'), ts('Financial Type')];
 
     // Add price field column if price set exists
     if (this.priceSetId) {
-      headers.splice(1, 0, ts('Price Field', []));
+      headers.splice(1, 0, ts('Price Field'));
     }
 
     for (const headerText of headers) {
@@ -590,8 +590,8 @@ class ProductsTable {
     button.classList.add('crm-button', 'twingle-shop-table-button');
 
     // Add button text
-    const text = action === 'create' ? ts('Create Price Set', []) : action === 'update' ? ts('Update Price Set', []) : ts('Delete Price Set', []);
-    button.textContent = ' ' + ts(text, []);
+    const text = action === 'create' ? ts('Create Price Set') : action === 'update' ? ts('Update Price Set') : ts('Delete Price Set');
+    button.textContent = ' ' + text;
 
     // Add button handler
     button.onclick = handler;
@@ -667,13 +667,13 @@ class ProductsTable {
       CRM.api3('TwingleShop', 'create', self.dumpData())
         .then(function (result) {
           if (result.is_error === 1) {
-            cj('#btn_create_price_set_' + self.projectIdentifier).crmError(result.error_message, ts('Could not create Twingle Shop', []));
+            cj('#btn_create_price_set_' + self.projectIdentifier).crmError(result.error_message, ts('Could not create Twingle Shop'));
           } else {
             self.update();
-            CRM.alert(ts('The Price Set was created successfully.', []), ts('Price Field created', []), 'success', {'expires': 5000});
+            CRM.alert(ts('The Price Set was created successfully.'), ts('Price Field created'), 'success', {'expires': 5000});
           }
         }, function (error) {
-          cj('#btn_create_price_set_' + self.projectIdentifier).crmError(error.message, ts('Could not create TwingleShop', []));
+          cj('#btn_create_price_set_' + self.projectIdentifier).crmError(error.message, ts('Could not create TwingleShop'));
         });
     };
   }
@@ -687,8 +687,8 @@ class ProductsTable {
     return function (event) {
       event.preventDefault();
       const options = {
-        'title': ts('Delete Price Set', []),
-        'message': ts('Are you sure you want to delete the price set associated with this Twingle Shop?', []),
+        'title': ts('Delete Price Set'),
+        'message': ts('Are you sure you want to delete the price set associated with this Twingle Shop?'),
       };
       CRM.confirm(options)
         .on('crmConfirm:yes', function () {
@@ -696,13 +696,13 @@ class ProductsTable {
             'project_identifier': self.projectIdentifier,
           }).then(function (result) {
             if (result.is_error === 1) {
-              cj('#btn_create_price_set_' + self.projectIdentifier).crmError(result.error_message, ts('Could not delete Twingle Shop', []));
+              cj('#btn_create_price_set_' + self.projectIdentifier).crmError(result.error_message, ts('Could not delete Twingle Shop'));
             } else {
               self.update();
-              CRM.alert(ts('The Price Set was deleted successfully.', []), ts('Price Set deleted', []), 'success', {'expires': 5000});
+              CRM.alert(ts('The Price Set was deleted successfully.'), ts('Price Set deleted'), 'success', {'expires': 5000});
             }
           }, function (error) {
-            cj('#btn_delete_price_set_' + self.projectIdentifier).crmError(error.message, ts('Could not delete Twingle Shop', []));
+            cj('#btn_delete_price_set_' + self.projectIdentifier).crmError(error.message, ts('Could not delete Twingle Shop'));
           });
         });
     };
@@ -723,14 +723,14 @@ class ProductsTable {
         'project_identifiers': self.projectIdentifier,
       }).then(function (result) {
         if (result.is_error === 1) {
-          cj('#btn_create_price_set_' + self.projectIdentifier).crmError(result.error_message, ts('Could not delete Twingle Shop', []));
+          cj('#btn_create_price_set_' + self.projectIdentifier).crmError(result.error_message, ts('Could not delete Twingle Shop'));
           cj('#twingle-shop-spinner').hide();
         } else {
           self.update(result.values[self.projectIdentifier]);
           cj('#twingle-shop-spinner').hide();
         }
       }, function (error) {
-        cj('#btn_update_price_set_' + self.projectIdentifier).crmError(error.message, ts('Could not update Twingle Shop', []));
+        cj('#btn_update_price_set_' + self.projectIdentifier).crmError(error.message, ts('Could not update Twingle Shop'));
         cj('#twingle-shop-spinner').hide();
       });
     };

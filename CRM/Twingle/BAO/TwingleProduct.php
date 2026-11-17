@@ -505,11 +505,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
    * @throws \Civi\Core\Exception\DBQueryException
    */
   public static function countProductsWithoutVatRate(): array {
-    // The check may run before the upgrade adding the column has been applied.
-    if (!CRM_Core_BAO_SchemaHandler::checkIfFieldExists('civicrm_twingle_product', 'vat_rate')) {
-      return [];
-    }
-
+    /** @var \CRM_Core_DAO $dao */
     $dao = CRM_Core_DAO::executeQuery(
       'SELECT ts.name, COUNT(tp.id) AS product_count
       FROM civicrm_twingle_product tp
@@ -519,9 +515,7 @@ class CRM_Twingle_BAO_TwingleProduct extends CRM_Twingle_DAO_TwingleProduct {
       GROUP BY ts.id, ts.name
       ORDER BY ts.name'
     );
-    if (!$dao instanceof CRM_Core_DAO) {
-      return [];
-    }
+
     $counts = [];
     foreach ($dao->fetchMap('name', 'product_count') as $shop_name => $count) {
       $counts[(string) $shop_name] = is_numeric($count) ? (int) $count : 0;
