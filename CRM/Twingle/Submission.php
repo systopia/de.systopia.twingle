@@ -18,6 +18,7 @@ declare(strict_types = 1);
 use CRM_Twingle_ExtensionUtil as E;
 use Civi\Twingle\Exceptions\BaseException;
 use Civi\Twingle\Shop\Exceptions\LineItemException;
+use Civi\Api4\Note;
 
 class CRM_Twingle_Submission {
 
@@ -51,6 +52,23 @@ class CRM_Twingle_Submission {
     'price',
     'count',
     'total_value',
+  ];
+
+  /**
+   * List of fields in the Twingle submission that can be used to create a
+   * contribution note.
+   */
+  public const CONTRIBUTION_NOTE_TARGETS = [
+    'purpose',
+    'remarks',
+  ];
+
+  /**
+   * List of fields in the Twingle submission that can be used to create a
+   * contact note.
+   */
+  public const CONTACT_NOTE_TARGETS = [
+    'user_extrafield',
   ];
 
   /**
@@ -670,6 +688,10 @@ class CRM_Twingle_Submission {
   }
 
   // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
+
+  /**
+   * @throws \CRM_Core_Exception
+   */
   public function handleContacts(): void {
   // phpcs:enable
     $params = $this->params;
@@ -750,21 +772,7 @@ class CRM_Twingle_Submission {
       }
 
       // Create contact notes.
-      /** @phpstan-var array<string> $contact_note_mappings */
-      $contact_note_mappings = $profile->getAttribute('map_as_contact_notes', []);
-      foreach (['user_extrafield'] as $target) {
-        if (
-          isset($params[$target])
-          && '' !== $params[$target]
-          && in_array($target, $contact_note_mappings, TRUE)
-        ) {
-          \Civi\Api4\Note::create(FALSE)
-            ->addValue('entity_table', 'civicrm_contact')
-            ->addValue('entity_id', $contact_id)
-            ->addValue('note', $params[$target])
-            ->execute();
-        }
-      }
+      self::createContactNotes($contact_id, $params, $profile);
 
       // Share organisation address with individual contact, using configured
       // location type for organisation address.
@@ -931,6 +939,12 @@ class CRM_Twingle_Submission {
   }
 
   // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
+
+  /**
+   * @throws \CRM_Core_Exception
+   * @throws \Civi\Twingle\Exceptions\BaseException
+   * @throws \Civi\Twingle\Shop\Exceptions\LineItemException
+   */
   public function handleTransaction(): void {
   // phpcs:enable
     $contactId = $this->getResultValue('contact');
@@ -1029,21 +1043,7 @@ class CRM_Twingle_Submission {
       $this->setResultValue('contribution', $contribution);
 
       // Add notes to the contribution.
-      /** @phpstan-var array<string> $contribution_note_mappings */
-      $contribution_note_mappings = $profile->getAttribute('map_as_contribution_notes', []);
-      foreach (['purpose', 'remarks'] as $target) {
-        if (
-          in_array($target, $contribution_note_mappings, TRUE)
-          && isset($params[$target])
-          && '' !== $params[$target]
-        ) {
-          \Civi\Api4\Note::create(FALSE)
-            ->addValue('entity_table', 'civicrm_contribution')
-            ->addValue('entity_id', $contribution['id'])
-            ->addValue('note', $params[$target])
-            ->execute();
-        }
-      }
+      self::createContributionNotes((int) $contribution['id'], $params, $profile);
 
       // Add products as line items to the contribution
       if (!empty($params['products']) && $profile->isShopEnabled()) {
@@ -1056,6 +1056,12 @@ class CRM_Twingle_Submission {
   }
 
   // phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
+
+  /**
+   * @throws \CRM_Core_Exception
+   * @throws \Civi\Twingle\Exceptions\BaseException
+   * @throws \Civi\Twingle\Shop\Exceptions\LineItemException
+   */
   protected function createSepaMandate(array $contribution_data): void {
   // phpcs:enable
     $profile = $this->getProfile();
@@ -1159,6 +1165,9 @@ class CRM_Twingle_Submission {
         $message = E::LONG_NAME . ": could not find contribution for sepa mandate $mandate_id";
         throw new CRM_Core_Exception($message, 'api_error');
       }
+
+      // Add notes to the contribution.
+      self::createContributionNotes((int) $contribution_id, $params, $profile);
 
       // Add products as line items to the contribution
       if (!empty($params['products']) && $profile->isShopEnabled()) {
@@ -1358,6 +1367,64 @@ class CRM_Twingle_Submission {
     }
 
     return $line_items;
+  }
+
+  /**
+   * Create contact notes.
+   *
+   * @param int $contact_id
+   * @param array<string, mixed> $params
+   * @param \CRM_Twingle_Profile $profile CRM_Twingle_Profile
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public static function createContactNotes(int $contact_id, array $params, CRM_Twingle_Profile $profile): void {
+    /** @phpstan-var array<string> $contact_note_mappings */
+    $contact_note_mappings = $profile->getAttribute('map_as_contact_notes', []);
+    foreach (self::CONTACT_NOTE_TARGETS as $target) {
+      if (
+        isset($params[$target])
+        && '' !== $params[$target]
+        && in_array($target, $contact_note_mappings, TRUE)
+      ) {
+        Note::create(FALSE)
+          ->addValue('entity_table', 'civicrm_contact')
+          ->addValue('entity_id', $contact_id)
+          ->addValue('note', $params[$target])
+          ->execute();
+      }
+    }
+  }
+
+  /**
+   * Create contribution notes.
+   *
+   * @param int $contribution_id
+   * @param array<string, mixed> $params
+   * @param \CRM_Twingle_Profile $profile
+   *
+   * @throws \CRM_Core_Exception
+   */
+  public static function createContributionNotes(
+    int $contribution_id,
+    array $params,
+    CRM_Twingle_Profile $profile
+  ): void {
+    /** @phpstan-var array<string> $contribution_note_mappings */
+    $contribution_note_mappings = $profile->getAttribute('map_as_contribution_notes', []);
+    foreach (self::CONTRIBUTION_NOTE_TARGETS as $target) {
+      if (
+        in_array($target, $contribution_note_mappings, TRUE)
+        && isset($params[$target])
+        && '' !== $params[$target]
+      ) {
+        Note::create(FALSE)
+          ->addValue('entity_table', 'civicrm_contribution')
+          ->addValue('entity_id', $contribution_id)
+          ->addValue('note', $params[$target])
+          ->execute();
+      }
+    }
   }
 
   /**
