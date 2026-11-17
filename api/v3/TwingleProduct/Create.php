@@ -64,6 +64,13 @@ function _civicrm_api3_twingle_product_Create_spec(&$spec) {
     'api.required' => 0,
     'description' => E::ts('Price of the product'),
   ];
+  $spec['vat_rate'] = [
+    'name' => 'vat_rate',
+    'title' => E::ts('VAT Rate (%)'),
+    'type' => CRM_Utils_Type::T_FLOAT,
+    'api.required' => 0,
+    'description' => E::ts('VAT rate in percent which is included in the Twingle price'),
+  ];
   $spec['sort'] = [
     'name' => 'sort',
     'title' => E::ts('Sort'),

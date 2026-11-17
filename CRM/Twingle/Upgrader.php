@@ -15,8 +15,6 @@
 
 declare(strict_types = 1);
 
-use CRM_Twingle_ExtensionUtil as E;
-
 /**
  * Collection of upgrade steps.
  */
@@ -29,8 +27,8 @@ class CRM_Twingle_Upgrader extends CRM_Extension_Upgrader_Base {
     // create a DB table for the twingle profiles
     $this->executeSqlFile('sql/civicrm_twingle_profile.sql');
 
-    // create DB tables for the twingle shop
-    $this->executeSqlFile('sql/civicrm_twingle_shop.sql');
+    // The tables for the twingle shop are created by the AutomaticUpgrader
+    // since migrating to Entity Framework v2
 
     // add a default profile
     CRM_Twingle_Profile::createDefaultProfile()->saveProfile();
@@ -166,6 +164,29 @@ class CRM_Twingle_Upgrader extends CRM_Extension_Upgrader_Base {
     // With logging enabled, log_civicrm_twingle_shop needs the same change
     if ((bool) Civi::settings()->get('logging')) {
       (new CRM_Logging_Schema())->fixSchemaDifferencesFor('civicrm_twingle_shop');
+    }
+    return TRUE;
+  }
+
+  /**
+   * Add a field for the VAT rate to Twingle products.
+   *
+   * @return TRUE on success
+   */
+  public function upgrade_5191(): bool {
+    // Use the table name instead of E::schema(), as the entity may not be
+    // registered during the upgrade: the previously installed version still
+    // declares it via entity-types-php@1 from xml/schema, which does not
+    // exist anymore.
+    if (!CRM_Core_BAO_SchemaHandler::checkIfFieldExists('civicrm_twingle_product', 'vat_rate', FALSE)) {
+      $this->ctx->log->info('Adding column "vat_rate" to table "civicrm_twingle_product".');
+      CRM_Core_DAO::executeQuery(
+        'ALTER TABLE civicrm_twingle_product ADD COLUMN `vat_rate` decimal(5,2) NULL COMMENT \'VAT rate in percent\''
+      );
+      // With logging enabled, log_civicrm_twingle_product needs the same change
+      if ((bool) Civi::settings()->get('logging')) {
+        (new CRM_Logging_Schema())->fixSchemaDifferencesFor('civicrm_twingle_product');
+      }
     }
     return TRUE;
   }
